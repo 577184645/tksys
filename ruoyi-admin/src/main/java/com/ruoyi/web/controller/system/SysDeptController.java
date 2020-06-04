@@ -72,10 +72,12 @@ public class SysDeptController extends BaseController
     @ResponseBody
     public AjaxResult addSave(@Validated SysDept dept)
     {
+        System.out.println(dept.getAncestors());
         if (UserConstants.DEPT_NAME_NOT_UNIQUE.equals(deptService.checkDeptNameUnique(dept)))
         {
             return error("新增部门'" + dept.getDeptName() + "'失败，部门名称已存在");
         }
+        System.out.println(dept.getAncestors());
         dept.setCreateBy(ShiroUtils.getLoginName());
         return toAjax(deptService.insertDept(dept));
     }

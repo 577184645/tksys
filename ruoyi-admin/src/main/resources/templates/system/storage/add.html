@@ -1,0 +1,542 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org" >
+<head>
+    <th:block th:include="include :: header('新增入库单列表')" />
+    <th:block th:include="include :: layout-latest-css" />
+    <th:block th:include="include :: ztree-css" />
+    <th:block th:include="include :: bootstrap-editable-css" />
+</head>
+<body class="white-bg">
+<div class="wrapper wrapper-content animated fadeInRight ibox-content">
+    <form class="form-horizontal m" id="form-storageinbill-add">
+        <h4 class="form-header h4">入库单信息</h4>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">入库单号：</label>
+            <div class="col-sm-8">
+                <input name="stockinid" id="stockinid" readonly class="form-control" type="text">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">外协库：</label>
+            <div class="col-sm-8">
+                <div class="ui-layout-content">
+                    <div id="tree"   class="ztree"></div>
+                <input id="deptId" name="outsourcewarehouse" required hidden="hidden">
+                </div>
+
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">采购单号：</label>
+            <div class="col-sm-8">
+                <input name="purchaseid" class="form-control" type="text">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">送货人：</label>
+            <div class="col-sm-8">
+                <select  name="deliveryman" class="form-control m-b">
+                    <option value="">所有</option>
+                    <option  th:each="user:${userList}"
+                             th:value="${user.userName}"
+                             th:text="${user.userName}"
+                    ></option>
+                </select>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">库管员：</label>
+            <div class="col-sm-8">
+                <select  name="warehouseadmin" class="form-control m-b">
+                    <option value="">所有</option>
+                    <option  th:each="user:${userList}"
+                             th:value="${user.userName}"
+                             th:text="${user.userName}"
+                    ></option>
+                </select>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">备注：</label>
+            <div class="col-sm-8">
+                <input name="comments" class="form-control" type="text">
+            </div>
+        </div>
+    </form>
+
+</div>
+<h4 class="form-header h4">入库产品</h4>
+<div class="container-div">
+    <div class="btn-group-sm" id="toolbar1" role="group">
+
+        <a class="btn btn-danger multiple disabled" onclick="removeRow()">
+            <i class="fa fa-remove"></i> 删除选择行
+        </a>
+        <a class="btn btn-danger" onclick="removeRowAll()">
+            <i class="fa fa-remove"></i> 删除所有行
+        </a>
+    </div>
+<div class="col-xs-12 select-table table-striped" style="margin-bottom: 3%;">
+    <table id="bootstrap-table1"></table>
+</div>
+
+<h4 class="form-header h4" >物料列表</h4>
+
+<div class="ui-layout-center">
+    <div class="container-div">
+        <div class="row">
+            <div class="col-sm-12 search-collapse">
+                <form id="form2">
+                    <div class="select-list">
+                        <ul>
+                            <li>
+                                <label>名称：</label>
+                                <input type="text" name="name"/>
+                            </li>
+                            <li>
+                                <label>型号：</label>
+                                <input type="text" name="partnumber"/>
+                            </li>
+                            <li>
+                                <label>描述：</label>
+                                <input type="text" name="description"/>
+                            </li>
+                            <li>
+                                <a class="btn btn-primary btn-rounded btn-sm" onclick="$.table.search('form2', 'bootstrap-table2')"><i class="fa fa-search"></i>&nbsp;搜索</a>
+                                <a class="btn btn-warning btn-rounded btn-sm" onclick="$.form.reset('form2', 'bootstrap-table2')"><i class="fa fa-refresh"></i>&nbsp;重置</a>
+                            </li>
+                        </ul>
+                    </div>
+                </form>
+            </div>
+            <div class="btn-group-sm" id="toolbar2" role="group">
+
+                <a class="btn btn-success" onclick="clonerow()">
+                    <i class="fa fa-plus"></i> 移入
+                </a>
+
+            </div>
+<div class="col-xs-12 select-table table-striped" style="margin-bottom: 2%">
+    <table id="bootstrap-table2" ></table>
+</div>
+            <div class="row">
+                <div class="col-sm-offset-5 col-sm-10">
+                    <button type="button" class="btn btn-sm btn-primary" onclick="submitHandler()"><i class="fa fa-check"></i>保 存</button>&nbsp;
+                    <button type="button" class="btn btn-sm btn-danger" onclick="closeItem()"><i class="fa fa-reply-all"></i>关 闭 </button>
+                </div>
+            </div>
+<th:block th:include="include :: footer" />
+<th:block th:include="include :: layout-latest-js" />
+<th:block th:include="include :: ztree-js" /><th:block th:include="include :: bootstrap-table-editable-js" />
+<script type="text/javascript">
+    var prefix = ctx + "system/material"
+    $("#form-storageinbill-add").validate({
+        focusCleanup: true
+    });
+
+    function submitHandler() {
+
+        if($("#deptId").val()==""){
+            alert("请选择子仓库");
+            return;
+        }
+        if ($.validate.form()) {
+
+                var data = $("#" + table.options.id).bootstrapTable('getData');
+                $.ajax({
+                    url: url,
+                    type: "post",
+                    dataType: "json",
+                    data: data,
+                })
+                console.log(JSON.stringify(data))
+
+              $('#form-storageinbill-add').serialize();
+
+        }
+    }
+
+    var url = ctx + "system/storagetype/treeData";
+    var options = {
+        url: url,
+        expandLevel: 2,
+        onClick : zOnClick
+    };
+
+    $.tree.init(options);
+
+    function zOnClick(event, treeId, treeNode) {
+        if(treeNode.children==null) {
+            $("#deptId").val(treeNode.id);
+            $("#parentId").val(treeNode.pId);
+        }else{
+            alert("请选择子仓库");
+            $("#deptId").val("");
+        }
+
+    }
+
+    var options = {
+
+        id: "bootstrap-table1",
+        toolbar: "toolbar1",
+        modalName: "物料列表",
+        columns: [{
+            checkbox: true
+        },
+            {
+                field: 'id',
+                title: 'null',
+                visible: false
+            },
+            {
+                field: 'no',
+                title: '序号',
+                sortable: true,
+                align: "center",
+                width: 40,
+                formatter: function (value, row, index) {
+                    //获取每页显示的数量
+                    var pageSize=$('#bootstrap-table2').bootstrapTable('getOptions').pageSize;
+                    //获取当前是第几页
+                    var pageNumber=$('#bootstrap-table2').bootstrapTable('getOptions').pageNumber;
+                    //返回序号，注意index是从0开始的，所以要加上1
+                    return pageSize * (pageNumber - 1) + index + 1;
+                }
+            },
+            {
+                field: 'materialcode',
+                title: '物料代码'
+            },
+            {
+                field: 'name',
+                title: '物料名称'
+            },
+            {
+                field: 'partnumber',
+                title: '物料型号'
+            },
+            {
+                field: 'manufacture',
+                title: '品牌'
+            },
+
+            {
+                field: 'unit',
+                title: '单位'
+            },
+            {
+                field: 'price',
+                title: '单价',
+                editable: true
+            },
+            {
+                field: 'money',
+                title: '总价',
+                editable: true
+            },
+            {
+                field: 'counts',
+                title: '数量',
+                editable: true
+            },
+            {
+                field: 'rate',
+                title: '税率',
+                editable : {
+                    type : 'select',
+                    title : '税率',
+                    source : [
+                        {
+                            value : 0,
+                            text : ""
+                        },
+                        {
+                        value : 1,
+                        text : "3%"
+                    }, {
+                        value : 2,
+                        text : "13%"
+                    }, {
+                        value : 3,
+                        text : "11%"
+                    }, {
+                        value : 4,
+                        text : "6%"
+                    }]
+                }
+
+            },
+            {
+                field: 'taxamount',
+                title: '税额',
+                editable: true
+            },
+            {
+                field: 'serialNumber',
+                title: '序列号',
+                editable: true
+            },
+            {
+                field: 'supplier',
+                title: '供应商',
+                editable : {
+                    type : 'select',
+                    title : '供应商',
+                    source: function () {
+                        var result = [];
+                        $.ajax({
+                            url: '../supplier/findsupplier',
+                            async: false,
+                            type: "get",
+                            data: {},
+                            success: function (data, status) {
+                                $.each(data, function (key, value) {
+                                    result.push({ value: value.name, text: value.name });
+                                });
+                            }
+                        });
+                        return result;
+                    }
+
+                }
+            },
+            {
+                field: 'purchaseid',
+                title: '采购编号',
+                editable: true
+            },
+            {
+                field: 'applyid',
+                title: '申请单号',
+                editable: true
+            },
+            {
+                field: 'contractid',
+                title: '合同单号',
+                editable: true
+            }
+            ,
+            {
+                field: 'invoiceid',
+                title: '发票单号',
+                editable: true
+            }
+            ,
+            {
+                field: 'expressid',
+                title: '快递单号',
+                editable: true
+            }
+            ,
+            {
+                field: 'instoragecause',
+                title: '入库原因',
+                editable: true
+            }
+            ,
+            {
+                field: 'projectname',
+                title: '项目名称',
+                editable : {
+                    type : 'select',
+                    title : '项目名称',
+                    source: function () {
+                        var result = [];
+                        $.ajax({
+                            url: '../project/findproject',
+                            async: false,
+                            type: "get",
+                            data: {},
+                            success: function (data, status) {
+                                $.each(data, function (key, value) {
+                                    result.push({ value: value.name, text: value.name });
+                                });
+                            }
+                        });
+                        return result;
+                    }
+
+                }
+            }
+
+            ,
+            {
+                field: 'proposer',
+                title: '申请人',
+                editable : {
+                    type : 'select',
+                    title : '供应商',
+                    source: function () {
+                        var result = [];
+                        $.ajax({
+                            url: '../user/finduser',
+                            async: false,
+                            type: "get",
+                            data: {},
+                            success: function (data, status) {
+                                $.each(data, function (key, value) {
+                                    result.push({ value: value.userName, text: value.userName });
+                                });
+                            }
+                        });
+                        return result;
+                    }
+
+                }
+            }
+            ,
+            {
+                field: 'comments',
+                title: '备注',
+                editable: true
+            }
+        ]
+    };
+    $.table.init(options);
+
+
+    var options = {
+        id: "bootstrap-table2",
+        toolbar: "toolbar2",
+        url: prefix + "/list",
+        modalName: "物料列表",
+        columns: [{
+            checkbox: true
+        },
+            {
+                field: 'id',
+                title: 'null',
+                visible: false
+            },{
+                field: 'no',
+                title: '序号',
+                sortable: true,
+                align: "center",
+                width: 40,
+                formatter: function (value, row, index) {
+                    //获取每页显示的数量
+                    var pageSize=$('#bootstrap-table2').bootstrapTable('getOptions').pageSize;
+                    //获取当前是第几页
+                    var pageNumber=$('#bootstrap-table2').bootstrapTable('getOptions').pageNumber;
+                    //返回序号，注意index是从0开始的，所以要加上1
+                    return pageSize * (pageNumber - 1) + index + 1;
+                }
+            },
+            {
+                field: 'name',
+                title: '名称'
+            },
+            {
+                field: 'materialcode',
+                title: '编码'
+            },
+            {
+                field: 'partnumber',
+                title: '型号'
+            },
+            {
+                field: 'description',
+                title: '描述'
+            },
+            {
+                field: 'footprint',
+                title: '封装'
+            },
+            {
+                field: 'manufacture',
+                title: '品牌'
+            },
+            {
+                field: 'unit',
+                title: '单位'
+            },{
+                field: 'comments',
+                title: 'null',
+                visible: false,
+                formatter: function (value, row, index) {
+                    //获取每页显示的数量
+                    var pageSize=$('#bootstrap-table2').bootstrapTable('getOptions').pageSize;
+                    //获取当前是第几页
+                    var pageNumber=$('#bootstrap-table2').bootstrapTable('getOptions').pageNumber;
+                    //返回序号，注意index是从0开始的，所以要加上1
+                    return pageSize * (pageNumber - 1) + index + 1;
+                }
+            },
+        ]
+    };
+    $.table.init(options);
+
+
+    var t=new Date();
+    var y = t.getFullYear();
+    var mt = t.getMonth() + 1;
+    var day = t.getDate();
+    if(mt<10){
+        mt="0"+mt;
+    }
+    if(day<10){
+        day="0"+day;
+    }
+    $.ajax({
+        url : '../storageinbill/getstockinid',
+        dataType : 'json',
+        type : 'post',
+        success : function(result) {
+            if(result<10){
+                result="00"+result;
+            }else  if(result<100){
+                result="0"+result;
+            }
+            $("#stockinid").val("RKD-"+y+""+mt+""+day+"-"+result);
+        }
+    });
+
+    function clonerow() {
+        var data = $("#" + table.options.id).bootstrapTable('getSelections');
+        for (var i=0;i<data.length;i++){
+            data[i].comments="";
+            data[i].taxamount="";
+            data[i].rate="";
+            data[i].serialNumber="";
+            data[i].supplier="";
+            data[i].purchaseid="";
+            data[i].contractid="";
+            data[i].invoiceid="";
+            data[i].price="";
+            data[i].money="";
+            data[i].applyid="";
+            data[i].counts="";
+            data[i].expressid="";
+            data[i].instoragecause="";
+            data[i].projectname="";
+            data[i].proposer="";
+        }
+        $("#bootstrap-table1" ).bootstrapTable("append", data);
+     /*   alert(JSON.stringify(data))*/
+    }
+
+
+    /* 删除指定表格行 */
+    function removeRow(){
+        var ids = $.table.selectColumns("id");
+        if (ids.length == 0) {
+            $.modal.alertWarning("请至少选择一条记录");
+            return;
+        }
+        $("#" + table.options.id).bootstrapTable('remove', {
+            field: 'no',
+            values: ids
+        })
+    }
+
+
+
+    /* 删除所有表格行 */
+    function removeRowAll(){
+        $("#" + table.options.id).bootstrapTable('removeAll')
+    }
+    
+</script>
+</body>
+</html>

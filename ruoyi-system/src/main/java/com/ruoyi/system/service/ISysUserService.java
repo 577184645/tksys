@@ -11,6 +11,15 @@ import com.ruoyi.system.domain.SysUserRole;
  */
 public interface ISysUserService
 {
+
+
+    /**
+     * 查询所有用户
+     * @return
+     */
+
+    public List<SysUser> findList();
+
     /**
      * 根据条件分页查询用户列表
      * 

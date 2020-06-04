@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.StorageinbillMapper">
+    
+    <resultMap type="Storageinbill" id="StorageinbillResult">
+        <result property="id"    column="id"    />
+        <result property="stockinid"    column="stockinid"    />
+        <result property="outsourcewarehouse"    column="outsourcewarehouse"    />
+        <result property="purchaseid"    column="purchaseid"    />
+        <result property="deliveryman"    column="deliveryman"    />
+        <result property="warehouseadmin"    column="warehouseadmin"    />
+        <result property="storagentime"    column="storagentime"    />
+        <result property="comments"    column="comments"    />
+        <result property="delStatus"    column="del_status"    />
+        <result property="cTime"    column="c_time"    />
+        <result property="uTime"    column="u_time"    />
+    </resultMap>
+
+    <sql id="selectStorageinbillVo">
+        select id, stockinid, outsourcewarehouse, purchaseid, deliveryman, warehouseadmin, storagentime, comments, del_status, c_time, u_time from storageinbill
+    </sql>
+
+    <select id="selectStorageinbillList" parameterType="Storageinbill" resultMap="StorageinbillResult">
+        <include refid="selectStorageinbillVo"/>
+        <where>  
+            <if test="outsourcewarehouse != null  and outsourcewarehouse != ''"> and outsourcewarehouse like concat('%', #{outsourcewarehouse}, '%')</if>
+            <if test="purchaseid != null  and purchaseid != ''"> and purchaseid = #{purchaseid}</if>
+            <if test="params.beginTime != null and params.beginTime != ''"><!-- 开始时间检索 -->
+                AND date_format(storagentime,'%y%m%d') &gt;= date_format(#{params.beginTime},'%y%m%d')
+            </if>
+            <if test="params.endTime != null and params.endTime != ''"><!-- 结束时间检索 -->
+                AND date_format(storagentime,'%y%m%d') &lt;= date_format(#{params.endTime},'%y%m%d')
+            </if>
+            <if test="comments != null  and comments != ''">
+                and comments like concat('%', #{comments}, '%')
+            </if>
+        </where>
+    </select>
+    
+    <select id="selectStorageinbillById" parameterType="Long" resultMap="StorageinbillResult">
+        <include refid="selectStorageinbillVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertStorageinbill" parameterType="Storageinbill" useGeneratedKeys="true" keyProperty="id">
+        insert into storageinbill
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="stockinid != null  and stockinid != ''">stockinid,</if>
+            <if test="outsourcewarehouse != null  and outsourcewarehouse != ''">outsourcewarehouse,</if>
+            <if test="purchaseid != null  and purchaseid != ''">purchaseid,</if>
+            <if test="deliveryman != null  and deliveryman != ''">deliveryman,</if>
+            <if test="warehouseadmin != null  and warehouseadmin != ''">warehouseadmin,</if>
+            <if test="storagentime != null ">storagentime,</if>
+            <if test="comments != null  and comments != ''">comments,</if>
+            <if test="delStatus != null  and delStatus != ''">del_status,</if>
+            <if test="cTime != null ">c_time,</if>
+            <if test="uTime != null ">u_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="stockinid != null  and stockinid != ''">#{stockinid},</if>
+            <if test="outsourcewarehouse != null  and outsourcewarehouse != ''">#{outsourcewarehouse},</if>
+            <if test="purchaseid != null  and purchaseid != ''">#{purchaseid},</if>
+            <if test="deliveryman != null  and deliveryman != ''">#{deliveryman},</if>
+            <if test="warehouseadmin != null  and warehouseadmin != ''">#{warehouseadmin},</if>
+            <if test="storagentime != null ">#{storagentime},</if>
+            <if test="comments != null  and comments != ''">#{comments},</if>
+            <if test="delStatus != null  and delStatus != ''">#{delStatus},</if>
+            <if test="cTime != null ">#{cTime},</if>
+            <if test="uTime != null ">#{uTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updateStorageinbill" parameterType="Storageinbill">
+        update storageinbill
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="stockinid != null  and stockinid != ''">stockinid = #{stockinid},</if>
+            <if test="outsourcewarehouse != null  and outsourcewarehouse != ''">outsourcewarehouse = #{outsourcewarehouse},</if>
+            <if test="purchaseid != null  and purchaseid != ''">purchaseid = #{purchaseid},</if>
+            <if test="deliveryman != null  and deliveryman != ''">deliveryman = #{deliveryman},</if>
+            <if test="warehouseadmin != null  and warehouseadmin != ''">warehouseadmin = #{warehouseadmin},</if>
+            <if test="storagentime != null ">storagentime = #{storagentime},</if>
+            <if test="comments != null  and comments != ''">comments = #{comments},</if>
+            <if test="delStatus != null  and delStatus != ''">del_status = #{delStatus},</if>
+            <if test="cTime != null ">c_time = #{cTime},</if>
+            <if test="uTime != null ">u_time = #{uTime},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteStorageinbillById" parameterType="Long">
+        delete from storageinbill where id = #{id}
+    </delete>
+
+    <delete id="deleteStorageinbillByIds" parameterType="String">
+        delete from storageinbill where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    
+</mapper>

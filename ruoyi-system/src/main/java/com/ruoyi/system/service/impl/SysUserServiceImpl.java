@@ -54,6 +54,11 @@ public class SysUserServiceImpl implements ISysUserService
     @Autowired
     private ISysConfigService configService;
 
+    @Override
+    public List<SysUser> findList() {
+        return userMapper.findList();
+    }
+
     /**
      * 根据条件分页查询用户列表
      * 

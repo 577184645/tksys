@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.StorageMapper">
+    
+    <resultMap type="Storage" id="StorageResult">
+        <result property="id"    column="id"    />
+        <result property="name"    column="name"    />
+        <result property="materialcode"    column="materialcode"    />
+        <result property="partnumber"    column="partnumber"    />
+        <result property="footprint"    column="footprint"    />
+        <result property="manufacture"    column="manufacture"    />
+        <result property="unit"    column="unit"    />
+        <result property="supplier"    column="supplier"    />
+        <result property="price"    column="price"    />
+        <result property="stocks"    column="stocks"    />
+        <result property="money"    column="money"    />
+        <result property="typeId"    column="type_id"    />
+        <result property="safestock"    column="safestock"    />
+        <result property="serialNumber"    column="serial_number"    />
+        <result property="comments"    column="comments"    />
+        <result property="cTime"    column="c_time"    />
+        <result property="uTime"    column="u_time"    />
+        <association property="storagetype" column="dept_id" javaType="Storagetype" resultMap="StoragetypeResult">
+
+        </association>
+    </resultMap>
+
+    <resultMap id="StoragetypeResult" type="Storagetype">
+        <id     property="deptId"   column="dept_id"     />
+        <result property="parentId" column="parent_id"   />
+        <result property="deptName" column="dept_name"   />
+        <result property="orderNum" column="order_num"   />
+        <result property="leader"   column="leader"      />
+        <result property="status"   column="dept_status" />
+    </resultMap>
+
+
+    <sql id="selectStorageVo">
+        select id, name, materialcode, partnumber, footprint, manufacture, unit, price, stocks, money, type_id, safestock, serial_number, comments, c_time, u_time from storage
+    </sql>
+
+    <select id="selectStorageList" parameterType="Storage" resultMap="StorageResult">
+        select id, `name`, materialcode, supplier,partnumber, footprint, manufacture, unit, serial_number, type_id,  safestock, avg(price) price,sum(stocks) stocks,sum(money) money,c_time, u_time from storage u  LEFT JOIN storagetype d
+        on u.type_id=d.dept_id
+        where  1=1
+            <if test="name != null  and name != ''"> and name like concat('%', #{name}, '%')</if>
+            <if test="partnumber != null  and partnumber != ''"> and partnumber = #{partnumber}</if>
+            <if test="deptId != null and deptId != 0">
+                AND (u.type_id = #{deptId} OR u.type_id IN ( SELECT t.dept_id FROM storagetype t WHERE FIND_IN_SET (#{deptId},ancestors) ))
+            </if>
+            <if test="uTime != null "> and u_time = #{uTime}</if>
+        GROUP BY materialcode
+    </select>
+
+    <select id="selectStorageById" parameterType="Integer" resultMap="StorageResult">
+        <include refid="selectStorageVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertStorage" parameterType="Storage" useGeneratedKeys="true" keyProperty="id">
+        insert into storage
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="name != null  and name != ''">name,</if>
+            <if test="supplier != null  and supplier != ''">supplier,</if>
+            <if test="materialcode != null  and materialcode != ''">materialcode,</if>
+            <if test="partnumber != null  and partnumber != ''">partnumber,</if>
+            <if test="footprint != null  and footprint != ''">footprint,</if>
+            <if test="manufacture != null  and manufacture != ''">manufacture,</if>
+            <if test="unit != null  and unit != ''">unit,</if>
+            <if test="price != null ">price,</if>
+            <if test="stocks != null ">stocks,</if>
+            <if test="money != null ">money,</if>
+            <if test="typeId != null ">type_id,</if>
+            <if test="safestock != null ">safestock,</if>
+            <if test="serialNumber != null ">serial_number,</if>
+            <if test="comments != null  and comments != ''">comments,</if>
+            <if test="cTime != null ">c_time,</if>
+            <if test="uTime != null ">u_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="name != null  and name != ''">#{name},</if>
+            <if test="supplier != null  and supplier != ''">#{supplier},</if>
+            <if test="materialcode != null  and materialcode != ''">#{materialcode},</if>
+            <if test="partnumber != null  and partnumber != ''">#{partnumber},</if>
+            <if test="footprint != null  and footprint != ''">#{footprint},</if>
+            <if test="manufacture != null  and manufacture != ''">#{manufacture},</if>
+            <if test="unit != null  and unit != ''">#{unit},</if>
+            <if test="price != null ">#{price},</if>
+            <if test="stocks != null ">#{stocks},</if>
+            <if test="money != null ">#{money},</if>
+            <if test="typeId != null ">#{typeId},</if>
+            <if test="safestock != null ">#{safestock},</if>
+            <if test="serialNumber != null ">#{serialNumber},</if>
+            <if test="comments != null  and comments != ''">#{comments},</if>
+            <if test="cTime != null ">#{cTime},</if>
+            <if test="uTime != null ">#{uTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updateStorage" parameterType="Storage">
+        update storage
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="name != null  and name != ''">name = #{name},</if>
+            <if test="supplier != null  and supplier != ''">supplier = #{supplier},</if>
+            <if test="materialcode != null  and materialcode != ''">materialcode = #{materialcode},</if>
+            <if test="partnumber != null  and partnumber != ''">partnumber = #{partnumber},</if>
+            <if test="footprint != null  and footprint != ''">footprint = #{footprint},</if>
+            <if test="manufacture != null  and manufacture != ''">manufacture = #{manufacture},</if>
+            <if test="unit != null  and unit != ''">unit = #{unit},</if>
+            <if test="price != null ">price = #{price},</if>
+            <if test="stocks != null ">stocks = #{stocks},</if>
+            <if test="money != null ">money = #{money},</if>
+            <if test="typeId != null ">type_id = #{typeId},</if>
+            <if test="safestock != null ">safestock = #{safestock},</if>
+            <if test="serialNumber != null ">serial_number = #{serialNumber},</if>
+            <if test="comments != null  and comments != ''">comments = #{comments},</if>
+            <if test="cTime != null ">c_time = #{cTime},</if>
+            <if test="uTime != null ">u_time = #{uTime},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteStorageById" parameterType="Integer">
+        delete from storage where id = #{id}
+    </delete>
+
+    <delete id="deleteStorageByIds" parameterType="String">
+        delete from storage where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    
+</mapper>

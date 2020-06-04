@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.SupplierMapper">
+    
+    <resultMap type="Supplier" id="SupplierResult">
+        <result property="id"    column="id"    />
+        <result property="name"    column="name"    />
+        <result property="suppiertype"    column="suppiertype"    />
+        <result property="address"    column="address"    />
+        <result property="tel"    column="tel"    />
+        <result property="page"    column="page"    />
+        <result property="openbank"    column="openbank"    />
+        <result property="bankaccounts"    column="bankaccounts"    />
+        <result property="enterprisetype"    column="enterprisetype"    />
+        <result property="comments"    column="comments"    />
+        <result property="cTime"    column="c_time"    />
+        <result property="uTime"    column="u_time"    />
+    </resultMap>
+
+    <sql id="selectSupplierVo">
+        select id, name, suppiertype, address, tel, page, openbank, bankaccounts, enterprisetype, comments, c_time, u_time from supplier
+    </sql>
+
+    <select id="selectSupplierList" parameterType="Supplier" resultMap="SupplierResult">
+        <include refid="selectSupplierVo"/>
+        <where>  
+            <if test="name != null  and name != ''"> and name like concat('%', #{name}, '%')</if>
+            <if test="suppiertype != null  and suppiertype != ''"> and suppiertype = #{suppiertype}</if>
+        </where>
+
+    </select>
+    
+    <select id="selectSupplierById" parameterType="Long" resultMap="SupplierResult">
+        <include refid="selectSupplierVo"/>
+        where id = #{id}
+    </select>
+
+    <select id="findListSupplier"  resultMap="SupplierResult">
+        <include refid="selectSupplierVo"/>
+        where suppiertype='0'
+        ORDER BY CONVERT( name USING gbk ) ;
+    </select>
+
+
+    <select id="findList"  resultMap="SupplierResult">
+        <include refid="selectSupplierVo"/>
+        ORDER BY CONVERT( name USING gbk ) ;
+    </select>
+        
+    <insert id="insertSupplier" parameterType="Supplier" useGeneratedKeys="true" keyProperty="id">
+        insert into supplier
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="name != null  and name != ''">name,</if>
+            <if test="suppiertype != null  and suppiertype != ''">suppiertype,</if>
+            <if test="address != null  and address != ''">address,</if>
+            <if test="tel != null  and tel != ''">tel,</if>
+            <if test="page != null  and page != ''">page,</if>
+            <if test="openbank != null  and openbank != ''">openbank,</if>
+            <if test="bankaccounts != null  and bankaccounts != ''">bankaccounts,</if>
+            <if test="enterprisetype != null ">enterprisetype,</if>
+            <if test="comments != null  and comments != ''">comments,</if>
+            <if test="cTime != null ">c_time,</if>
+            <if test="uTime != null ">u_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="name != null  and name != ''">#{name},</if>
+            <if test="suppiertype != null  and suppiertype != ''">#{suppiertype},</if>
+            <if test="address != null  and address != ''">#{address},</if>
+            <if test="tel != null  and tel != ''">#{tel},</if>
+            <if test="page != null  and page != ''">#{page},</if>
+            <if test="openbank != null  and openbank != ''">#{openbank},</if>
+            <if test="bankaccounts != null  and bankaccounts != ''">#{bankaccounts},</if>
+            <if test="enterprisetype != null ">#{enterprisetype},</if>
+            <if test="comments != null  and comments != ''">#{comments},</if>
+            <if test="cTime != null ">#{cTime},</if>
+            <if test="uTime != null ">#{uTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updateSupplier" parameterType="Supplier">
+        update supplier
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="name != null  and name != ''">name = #{name},</if>
+            <if test="suppiertype != null  and suppiertype != ''">suppiertype = #{suppiertype},</if>
+            <if test="address != null  and address != ''">address = #{address},</if>
+            <if test="tel != null  and tel != ''">tel = #{tel},</if>
+            <if test="page != null  and page != ''">page = #{page},</if>
+            <if test="openbank != null  and openbank != ''">openbank = #{openbank},</if>
+            <if test="bankaccounts != null  and bankaccounts != ''">bankaccounts = #{bankaccounts},</if>
+            <if test="enterprisetype != null ">enterprisetype = #{enterprisetype},</if>
+            <if test="comments != null  and comments != ''">comments = #{comments},</if>
+            <if test="cTime != null ">c_time = #{cTime},</if>
+              u_time = now()
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteSupplierById" parameterType="Long">
+        delete from supplier where id = #{id}
+    </delete>
+
+    <delete id="deleteSupplierByIds" parameterType="String">
+        delete from supplier where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    
+</mapper>

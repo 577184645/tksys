@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org" xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
+<head>
+    <th:block th:include="include :: header('供应商列表列表')" />
+</head>
+<body class="gray-bg">
+     <div class="container-div">
+        <div class="row">
+            <div class="col-sm-12 search-collapse">
+                <form id="formId">
+                    <div class="select-list">
+                        <ul>
+                            <li>
+                                <label>供应商名称：</label>
+                                <input type="text" name="name"/>
+                            </li>
+                            <li>
+                                <label>厂商类型：</label>
+                                <select name="suppiertype" th:with="type=${@dict.getType('supplier_type')}">
+                                    <option value="">所有</option>
+                                    <option th:each="dict : ${type}" th:text="${dict.dictLabel}" th:value="${dict.dictValue}"></option>
+                                </select>
+                            </li>
+                            <li>
+                                <a class="btn btn-primary btn-rounded btn-sm" onclick="$.table.search()"><i class="fa fa-search"></i>&nbsp;搜索</a>
+                                <a class="btn btn-warning btn-rounded btn-sm" onclick="$.form.reset()"><i class="fa fa-refresh"></i>&nbsp;重置</a>
+                            </li>
+                        </ul>
+                    </div>
+                </form>
+            </div>
+
+            <div class="btn-group-sm" id="toolbar" role="group">
+                <a class="btn btn-success" onclick="$.operate.add()" shiro:hasPermission="system:supplier:add">
+                    <i class="fa fa-plus"></i> 添加
+                </a>
+                <a class="btn btn-primary single disabled" onclick="$.operate.edit()" shiro:hasPermission="system:supplier:edit">
+                    <i class="fa fa-edit"></i> 修改
+                </a>
+                <a class="btn btn-danger multiple disabled" onclick="$.operate.removeAll()" shiro:hasPermission="system:supplier:remove">
+                    <i class="fa fa-remove"></i> 删除
+                </a>
+                <a class="btn btn-warning" onclick="$.table.exportExcel()" shiro:hasPermission="system:supplier:export">
+                    <i class="fa fa-download"></i> 导出
+                </a>
+            </div>
+            <div class="col-sm-12 select-table table-striped">
+                <table id="bootstrap-table"></table>
+            </div>
+        </div>
+    </div>
+    <th:block th:include="include :: footer" />
+    <script th:inline="javascript">
+        var editFlag = [[${@permission.hasPermi('system:supplier:edit')}]];
+        var removeFlag = [[${@permission.hasPermi('system:supplier:remove')}]];
+        var suppiertypeDatas = [[${@dict.getType('supplier_type')}]];
+        var enterprisetypeDatas = [[${@dict.getType('supplier_managetype')}]];
+        var prefix = ctx + "system/supplier";
+
+        $(function() {
+            var options = {
+                url: prefix + "/list",
+                createUrl: prefix + "/add",
+                updateUrl: prefix + "/edit/{id}",
+                removeUrl: prefix + "/remove",
+                exportUrl: prefix + "/export",
+                modalName: "供应商列表",
+                columns: [{
+                    checkbox: true
+                },/* {
+                        field: 'no',
+                        title: '序号',
+                        sortable: true,
+                        align: "center",
+                        width: 40,
+                        formatter: function (value, row, index) {
+                            //获取每页显示的数量
+                            var pageSize=$('#bootstrap-table').bootstrapTable('getOptions').pageSize;
+                            //获取当前是第几页
+                            var pageNumber=$('#bootstrap-table').bootstrapTable('getOptions').pageNumber;
+                            //返回序号，注意index是从0开始的，所以要加上1
+                            return pageSize * (pageNumber - 1) + index + 1;
+                        }
+                    },*/
+
+                {
+                    field: 'id', 
+                    title: 'null',
+                    visible: false
+                },
+                {
+                    field: 'name', 
+                    title: '供应商名称'
+                },
+                {
+                    field: 'suppiertype', 
+                    title: '厂商类型',
+                    formatter: function(value, row, index) {
+                       return $.table.selectDictLabel(suppiertypeDatas, value);
+                    }
+                },
+                {
+                    field: 'address', 
+                    title: '地址'
+                },
+                {
+                    field: 'tel', 
+                    title: '联系方式'
+                },
+                {
+                    field: 'page', 
+                    title: '公司主页'
+                },
+                {
+                    field: 'openbank', 
+                    title: '开户行'
+                },
+                {
+                    field: 'bankaccounts', 
+                    title: '银行账户'
+                },
+                {
+                    field: 'enterprisetype', 
+                    title: '经营类型',
+                    formatter: function(value, row, index) {
+                       return $.table.selectDictLabel(enterprisetypeDatas, value);
+                    }
+                },
+                {
+                    field: 'comments', 
+                    title: '备注'
+                },
+                {
+                    field: 'cTime', 
+                    title: '创建时间'
+                },
+                {
+                    field: 'uTime', 
+                    title: '最后修改时间'
+                },
+                {
+                    title: '操作',
+                    align: 'center',
+                    formatter: function(value, row, index) {
+                        var actions = [];
+                        actions.push('<a class="btn btn-success btn-xs ' + editFlag + '" href="javascript:void(0)" onclick="$.operate.edit(\'' + row.id + '\')"><i class="fa fa-edit"></i>编辑</a> ');
+                        actions.push('<a class="btn btn-danger btn-xs ' + removeFlag + '" href="javascript:void(0)" onclick="$.operate.remove(\'' + row.id + '\')"><i class="fa fa-remove"></i>删除</a>');
+                        return actions.join('');
+                    }
+                }]
+            };
+            $.table.init(options);
+        });
+    </script>
+</body>
+</html>
