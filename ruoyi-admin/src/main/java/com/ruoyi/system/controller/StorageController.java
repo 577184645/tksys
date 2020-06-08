@@ -2,7 +2,10 @@ package com.ruoyi.system.controller;
 
 import java.util.List;
 
+import com.ruoyi.system.domain.Storageinbill;
 import com.ruoyi.system.service.ISysUserService;
+import net.sf.json.JSONArray;
+import net.sf.json.JSONObject;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -85,13 +88,14 @@ public class StorageController extends BaseController
     /**
      * 新增保存库存列表
      */
-    @RequiresPermissions("system:storage:add")
-    @Log(title = "库存列表", businessType = BusinessType.INSERT)
+   /* @RequiresPermissions("system:storage:add")*/
+    @Log(title = "入库", businessType = BusinessType.INSERT)
     @PostMapping("/add")
     @ResponseBody
-    public AjaxResult addSave(Storage storage)
+    public AjaxResult addSave(String StorageinbillList,Storageinbill Storageinbill)
     {
-        return toAjax(storageService.insertStorage(storage));
+
+        return toAjax(storageService.insertStorage(Storageinbill,StorageinbillList));
     }
 
     /**

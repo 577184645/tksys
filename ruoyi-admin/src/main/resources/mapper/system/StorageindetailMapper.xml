@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.StorageindetailMapper">
+    
+    <resultMap type="Storageindetail" id="StorageindetailResult">
+        <result property="id"    column="id"    />
+
+        <result property="footprint"    column="footprint"    />
+        <result property="serialNumber"    column="serial_number"    />
+        <result property="storageinbillid"    column="storageinbillid"    />
+        <result property="materialcode"    column="materialcode"    />
+        <result property="name"    column="name"    />
+        <result property="partnumber"    column="partnumber"    />
+        <result property="manufacture"    column="manufacture"    />
+        <result property="price"    column="price"    />
+        <result property="counts"    column="counts"    />
+        <result property="money"    column="money"    />
+        <result property="unit"    column="unit"    />
+        <result property="supplier"    column="supplier"    />
+        <result property="rate"    column="rate"    />
+        <result property="purchaseid"    column="purchaseid"    />
+        <result property="applyid"    column="applyid"    />
+        <result property="contractid"    column="contractid"    />
+        <result property="invoiceid"    column="invoiceid"    />
+        <result property="expressid"    column="expressid"    />
+        <result property="instoragecause"    column="instoragecause"    />
+        <result property="projectname"    column="projectname"    />
+        <result property="comments"    column="comments"    />
+        <result property="proposer"    column="proposer"    />
+        <result property="taxamount"    column="taxamount"    />
+        <result property="cTime"    column="c_time"    />
+        <result property="uTime"    column="u_time"    />
+    </resultMap>
+
+    <sql id="selectStorageindetailVo">
+        select id, storageinbillid,serial_number, footprint,materialcode, name, partnumber, manufacture, price, counts, money, unit, supplier, rate, purchaseid, applyid, contractid, invoiceid, expressid, instoragecause, projectname, comments, proposer, taxamount, c_time, u_time from storageindetail
+    </sql>
+
+    <select id="selectStorageindetailList" parameterType="Storageindetail" resultMap="StorageindetailResult">
+        <include refid="selectStorageindetailVo"/>
+        <where>  
+            <if test="name != null  and name != ''"> and name like concat('%', #{name}, '%')</if>
+            <if test="partnumber != null  and partnumber != ''"> and partnumber like concat('%', #{partnumber}, '%')</if>
+            <if test="manufacture != null  and manufacture != ''"> and manufacture like concat('%', #{manufacture}, '%')</if>
+            <if test="storageinbillid != null  and storageinbillid != ''"> and storageinbillid = #{storageinbillid}</if>
+
+
+        </where>
+    </select>
+    
+    <select id="selectStorageindetailById" parameterType="Long" resultMap="StorageindetailResult">
+        <include refid="selectStorageindetailVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertStorageindetail" parameterType="Storageindetail" useGeneratedKeys="true" keyProperty="id">
+        insert into storageindetail
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+
+            <if test="footprint != null  and footprint != ''">footprint,</if>
+            <if test="storageinbillid != null  and storageinbillid != ''">storageinbillid,</if>
+            <if test="materialcode != null  and materialcode != ''">materialcode,</if>
+            <if test="name != null  and name != ''">name,</if>
+            <if test="partnumber != null  and partnumber != ''">partnumber,</if>
+            <if test="manufacture != null  and manufacture != ''">manufacture,</if>
+            <if test="serialNumber != null and serialNumber!=''  ">serial_number,</if>
+            <if test="price != null and price != ''  ">price,</if>
+            <if test="counts != null and counts != '' ">counts,</if>
+            <if test="money != null and money !='' ">money,</if>
+            <if test="unit != null  and unit != ''">unit,</if>
+            <if test="supplier != null  and supplier != ''">supplier,</if>
+            <if test="rate != null  and rate != ''">rate,</if>
+            <if test="purchaseid != null  and purchaseid != ''">purchaseid,</if>
+            <if test="applyid != null  and applyid != ''">applyid,</if>
+            <if test="contractid != null  and contractid != ''">contractid,</if>
+            <if test="invoiceid != null  and invoiceid != ''">invoiceid,</if>
+            <if test="expressid != null  and expressid != ''">expressid,</if>
+            <if test="instoragecause != null  and instoragecause != ''">instoragecause,</if>
+            <if test="projectname != null  and projectname != ''">projectname,</if>
+            <if test="comments != null  and comments != ''">comments,</if>
+            <if test="proposer != null  and proposer != ''">proposer,</if>
+            <if test="taxamount != null and taxamount !='' ">taxamount,</if>
+            <if test="cTime != null ">c_time,</if>
+            <if test="uTime != null ">u_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+
+            <if test="footprint != null  and footprint != ''">#{footprint},</if>
+            <if test="storageinbillid != null  and storageinbillid != ''">#{storageinbillid},</if>
+            <if test="materialcode != null  and materialcode != ''">#{materialcode},</if>
+            <if test="name != null  and name != ''">#{name},</if>
+            <if test="partnumber != null  and partnumber != ''">#{partnumber},</if>
+            <if test="manufacture != null  and manufacture != ''">#{manufacture},</if>
+            <if test="serialNumber != null  and serialNumber != ''">#{serialNumber},</if>
+            <if test="price != null and price !=''">#{price},</if>
+            <if test="counts != null and counts !='' ">#{counts},</if>
+            <if test="money != null and money !='' ">#{money},</if>
+            <if test="unit != null  and unit != ''">#{unit},</if>
+            <if test="supplier != null  and supplier != ''">#{supplier},</if>
+            <if test="rate != null  and rate != ''">#{rate},</if>
+            <if test="purchaseid != null  and purchaseid != ''">#{purchaseid},</if>
+            <if test="applyid != null  and applyid != ''">#{applyid},</if>
+            <if test="contractid != null  and contractid != ''">#{contractid},</if>
+            <if test="invoiceid != null  and invoiceid != ''">#{invoiceid},</if>
+            <if test="expressid != null  and expressid != ''">#{expressid},</if>
+            <if test="instoragecause != null  and instoragecause != ''">#{instoragecause},</if>
+            <if test="projectname != null  and projectname != ''">#{projectname},</if>
+            <if test="comments != null  and comments != ''">#{comments},</if>
+            <if test="proposer != null  and proposer != ''">#{proposer},</if>
+            <if test="taxamount != null and taxamount!=''  ">#{taxamount},</if>
+         </trim>
+    </insert>
+
+    <update id="updateStorageindetail" parameterType="Storageindetail">
+        update storageindetail
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="storageinbillid != null  and storageinbillid != ''">storageinbillid = #{storageinbillid},</if>
+            <if test="materialcode != null  and materialcode != ''">materialcode = #{materialcode},</if>
+            <if test="name != null  and name != ''">name = #{name},</if>
+            <if test="partnumber != null  and partnumber != ''">partnumber = #{partnumber},</if>
+            <if test="manufacture != null  and manufacture != ''">manufacture = #{manufacture},</if>
+            <if test="price != null ">price = #{price},</if>
+            <if test="counts != null ">counts = #{counts},</if>
+            <if test="money != null ">money = #{money},</if>
+            <if test="unit != null  and unit != ''">unit = #{unit},</if>
+            <if test="supplier != null  and supplier != ''">supplier = #{supplier},</if>
+            <if test="rate != null  and rate != ''">rate = #{rate},</if>
+            <if test="purchaseid != null  and purchaseid != ''">purchaseid = #{purchaseid},</if>
+            <if test="applyid != null  and applyid != ''">applyid = #{applyid},</if>
+            <if test="contractid != null  and contractid != ''">contractid = #{contractid},</if>
+            <if test="invoiceid != null  and invoiceid != ''">invoiceid = #{invoiceid},</if>
+            <if test="expressid != null  and expressid != ''">expressid = #{expressid},</if>
+            <if test="instoragecause != null  and instoragecause != ''">instoragecause = #{instoragecause},</if>
+            <if test="projectname != null  and projectname != ''">projectname = #{projectname},</if>
+            <if test="comments != null  and comments != ''">comments = #{comments},</if>
+            <if test="proposer != null  and proposer != ''">proposer = #{proposer},</if>
+            <if test="taxamount != null ">taxamount = #{taxamount},</if>
+            <if test="cTime != null ">c_time = #{cTime},</if>
+            <if test="uTime != null ">u_time = #{uTime},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteStorageindetailById" parameterType="Long">
+        delete from storageindetail where id = #{id}
+    </delete>
+
+    <delete id="deleteStorageindetailByIds" parameterType="String">
+        delete from storageindetail where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    
+</mapper>

@@ -68,16 +68,13 @@ public class Storage extends BaseEntity
     @Excel(name = "供应商")
    private  String supplier;
     /** 安全库存 */
-    @Excel(name = "安全库存")
-    private Long safestock;
+
 
     /** 序列号 */
     @Excel(name = "序列号")
-    private Long serialNumber;
+    private String serialNumber;
 
-    /** 备注 */
-    @Excel(name = "备注")
-    private String comments;
+
 
     /** 创建时间 */
     @Excel(name = "创建时间", width = 30, dateFormat = "yyyy-MM-dd")
@@ -200,33 +197,17 @@ public class Storage extends BaseEntity
     {
         return typeId;
     }
-    public void setSafestock(Long safestock) 
-    {
-        this.safestock = safestock;
+
+
+    public String getSerialNumber() {
+        return serialNumber;
     }
 
-    public Long getSafestock() 
-    {
-        return safestock;
-    }
-    public void setSerialNumber(Long serialNumber) 
-    {
+    public void setSerialNumber(String serialNumber) {
         this.serialNumber = serialNumber;
     }
 
-    public Long getSerialNumber() 
-    {
-        return serialNumber;
-    }
-    public void setComments(String comments) 
-    {
-        this.comments = comments;
-    }
 
-    public String getComments() 
-    {
-        return comments;
-    }
     public void setcTime(Date cTime) 
     {
         this.cTime = cTime;
@@ -260,9 +241,7 @@ public class Storage extends BaseEntity
             .append("stocks", getStocks())
             .append("money", getMoney())
             .append("typeId", getTypeId())
-            .append("safestock", getSafestock())
             .append("serialNumber", getSerialNumber())
-            .append("comments", getComments())
             .append("cTime", getcTime())
             .append("uTime", getuTime())
             .toString();

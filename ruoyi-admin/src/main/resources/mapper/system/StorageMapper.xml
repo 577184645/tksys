@@ -17,9 +17,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="stocks"    column="stocks"    />
         <result property="money"    column="money"    />
         <result property="typeId"    column="type_id"    />
-        <result property="safestock"    column="safestock"    />
         <result property="serialNumber"    column="serial_number"    />
-        <result property="comments"    column="comments"    />
         <result property="cTime"    column="c_time"    />
         <result property="uTime"    column="u_time"    />
         <association property="storagetype" column="dept_id" javaType="Storagetype" resultMap="StoragetypeResult">
@@ -38,11 +36,11 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 
 
     <sql id="selectStorageVo">
-        select id, name, materialcode, partnumber, footprint, manufacture, unit, price, stocks, money, type_id, safestock, serial_number, comments, c_time, u_time from storage
+        select id, name, materialcode, partnumber, footprint, manufacture, unit, price, stocks, money, type_id, serial_number, comments, c_time, u_time from storage
     </sql>
 
     <select id="selectStorageList" parameterType="Storage" resultMap="StorageResult">
-        select id, `name`, materialcode, supplier,partnumber, footprint, manufacture, unit, serial_number, type_id,  safestock, avg(price) price,sum(stocks) stocks,sum(money) money,c_time, u_time from storage u  LEFT JOIN storagetype d
+        select id, `name`, materialcode, supplier,partnumber, footprint, manufacture, unit, serial_number, type_id,   avg(price) price,sum(stocks) stocks,sum(money) money,c_time, u_time from storage u  LEFT JOIN storagetype d
         on u.type_id=d.dept_id
         where  1=1
             <if test="name != null  and name != ''"> and name like concat('%', #{name}, '%')</if>
@@ -51,7 +49,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
                 AND (u.type_id = #{deptId} OR u.type_id IN ( SELECT t.dept_id FROM storagetype t WHERE FIND_IN_SET (#{deptId},ancestors) ))
             </if>
             <if test="uTime != null "> and u_time = #{uTime}</if>
-        GROUP BY materialcode
+        GROUP BY materialcode,serial_number
     </select>
 
     <select id="selectStorageById" parameterType="Integer" resultMap="StorageResult">
@@ -73,11 +71,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="stocks != null ">stocks,</if>
             <if test="money != null ">money,</if>
             <if test="typeId != null ">type_id,</if>
-            <if test="safestock != null ">safestock,</if>
             <if test="serialNumber != null ">serial_number,</if>
-            <if test="comments != null  and comments != ''">comments,</if>
             <if test="cTime != null ">c_time,</if>
-            <if test="uTime != null ">u_time,</if>
+               u_time,
          </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="name != null  and name != ''">#{name},</if>
@@ -91,11 +87,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="stocks != null ">#{stocks},</if>
             <if test="money != null ">#{money},</if>
             <if test="typeId != null ">#{typeId},</if>
-            <if test="safestock != null ">#{safestock},</if>
             <if test="serialNumber != null ">#{serialNumber},</if>
-            <if test="comments != null  and comments != ''">#{comments},</if>
             <if test="cTime != null ">#{cTime},</if>
-            <if test="uTime != null ">#{uTime},</if>
+               now(),
          </trim>
     </insert>
 
@@ -113,9 +107,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="stocks != null ">stocks = #{stocks},</if>
             <if test="money != null ">money = #{money},</if>
             <if test="typeId != null ">type_id = #{typeId},</if>
-            <if test="safestock != null ">safestock = #{safestock},</if>
             <if test="serialNumber != null ">serial_number = #{serialNumber},</if>
-            <if test="comments != null  and comments != ''">comments = #{comments},</if>
             <if test="cTime != null ">c_time = #{cTime},</if>
             <if test="uTime != null ">u_time = #{uTime},</if>
         </trim>
@@ -132,5 +124,15 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             #{id}
         </foreach>
     </delete>
-    
+
+    <select id="selectStorageByMaterialcodeAndTypeid" resultType="int">
+        select count(1) from storage where materialcode=#{materialcode} and type_id=#{typeId}
+        <if test="serialNumber!=null and serialNumber!=''">
+         and   serial_number=#{serialNumber}
+        </if>
+    </select>
+
+    <update id="updatestocks">
+        update  storage set stocks=stocks+#{stocks},money=money+#{money},price=money/stocks,u_time=now()  where materialcode=#{materialcode} and type_id=#{typeId}
+    </update>
 </mapper>

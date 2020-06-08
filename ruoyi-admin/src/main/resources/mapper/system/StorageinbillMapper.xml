@@ -7,6 +7,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     <resultMap type="Storageinbill" id="StorageinbillResult">
         <result property="id"    column="id"    />
         <result property="stockinid"    column="stockinid"    />
+        <result property="outsourcewarehouseid"    column="outsourcewarehouseid"    />
         <result property="outsourcewarehouse"    column="outsourcewarehouse"    />
         <result property="purchaseid"    column="purchaseid"    />
         <result property="deliveryman"    column="deliveryman"    />
@@ -19,7 +20,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </resultMap>
 
     <sql id="selectStorageinbillVo">
-        select id, stockinid, outsourcewarehouse, purchaseid, deliveryman, warehouseadmin, storagentime, comments, del_status, c_time, u_time from storageinbill
+        select id, stockinid, outsourcewarehouseid,outsourcewarehouse, purchaseid, deliveryman, warehouseadmin, storagentime, comments, del_status, c_time, u_time from storageinbill
     </sql>
 
     <select id="selectStorageinbillList" parameterType="Storageinbill" resultMap="StorageinbillResult">
@@ -44,11 +45,12 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         where id = #{id}
     </select>
         
-    <insert id="insertStorageinbill" parameterType="Storageinbill" useGeneratedKeys="true" keyProperty="id">
+    <insert id="insertStorageinbill"  parameterType="Storageinbill" useGeneratedKeys="true" keyProperty="id">
         insert into storageinbill
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="stockinid != null  and stockinid != ''">stockinid,</if>
             <if test="outsourcewarehouse != null  and outsourcewarehouse != ''">outsourcewarehouse,</if>
+            <if test="outsourcewarehouseid != null  and outsourcewarehouseid != ''">outsourcewarehouseid,</if>
             <if test="purchaseid != null  and purchaseid != ''">purchaseid,</if>
             <if test="deliveryman != null  and deliveryman != ''">deliveryman,</if>
             <if test="warehouseadmin != null  and warehouseadmin != ''">warehouseadmin,</if>
@@ -61,6 +63,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="stockinid != null  and stockinid != ''">#{stockinid},</if>
             <if test="outsourcewarehouse != null  and outsourcewarehouse != ''">#{outsourcewarehouse},</if>
+            <if test="outsourcewarehouseid != null  and outsourcewarehouseid != ''">#{outsourcewarehouseid},</if>
             <if test="purchaseid != null  and purchaseid != ''">#{purchaseid},</if>
             <if test="deliveryman != null  and deliveryman != ''">#{deliveryman},</if>
             <if test="warehouseadmin != null  and warehouseadmin != ''">#{warehouseadmin},</if>

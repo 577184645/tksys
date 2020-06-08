@@ -56,7 +56,17 @@ public class Storageinbill extends BaseEntity
     /** 修改时间 */
     private Date uTime;
 
-    public void setId(Long id) 
+    private Long outsourcewarehouseid;
+
+    public Long getOutsourcewarehouseid() {
+        return outsourcewarehouseid;
+    }
+
+    public void setOutsourcewarehouseid(Long outsourcewarehouseid) {
+        this.outsourcewarehouseid = outsourcewarehouseid;
+    }
+
+    public void setId(Long id)
     {
         this.id = id;
     }

@@ -29,13 +29,13 @@
         <div class="form-group">
             <label class="col-sm-3 control-label">采购单号：</label>
             <div class="col-sm-8">
-                <input name="purchaseid" class="form-control" type="text">
+                <input name="purchaseid" id="purchaseid" class="form-control" type="text">
             </div>
         </div>
         <div class="form-group">
             <label class="col-sm-3 control-label">送货人：</label>
             <div class="col-sm-8">
-                <select  name="deliveryman" class="form-control m-b">
+                <select  name="deliveryman" id="deliveryman" class="form-control m-b">
                     <option value="">所有</option>
                     <option  th:each="user:${userList}"
                              th:value="${user.userName}"
@@ -47,7 +47,7 @@
         <div class="form-group">
             <label class="col-sm-3 control-label">库管员：</label>
             <div class="col-sm-8">
-                <select  name="warehouseadmin" class="form-control m-b">
+                <select  name="warehouseadmin" id="warehouseadmin" class="form-control m-b">
                     <option value="">所有</option>
                     <option  th:each="user:${userList}"
                              th:value="${user.userName}"
@@ -59,7 +59,7 @@
         <div class="form-group">
             <label class="col-sm-3 control-label">备注：</label>
             <div class="col-sm-8">
-                <input name="comments" class="form-control" type="text">
+                <input name="comments" id="comments" class="form-control" type="text">
             </div>
         </div>
     </form>
@@ -68,7 +68,9 @@
 <h4 class="form-header h4">入库产品</h4>
 <div class="container-div">
     <div class="btn-group-sm" id="toolbar1" role="group">
-
+        <a class="btn btn-success" onclick="insertRow()">
+            <i class="fa fa-plus"></i> 新增行
+        </a>
         <a class="btn btn-danger multiple disabled" onclick="removeRow()">
             <i class="fa fa-remove"></i> 删除选择行
         </a>
@@ -125,9 +127,10 @@
                     <button type="button" class="btn btn-sm btn-danger" onclick="closeItem()"><i class="fa fa-reply-all"></i>关 闭 </button>
                 </div>
             </div>
-<th:block th:include="include :: footer" />
-<th:block th:include="include :: layout-latest-js" />
-<th:block th:include="include :: ztree-js" /><th:block th:include="include :: bootstrap-table-editable-js" />
+ <th:block th:include="include :: footer" />
+ <th:block th:include="include :: layout-latest-js" />
+ <th:block th:include="include :: ztree-js" />
+            <th:block th:include="include :: bootstrap-table-editable-js" />
 <script type="text/javascript">
     var prefix = ctx + "system/material"
     $("#form-storageinbill-add").validate({
@@ -142,18 +145,37 @@
         }
         if ($.validate.form()) {
 
-                var data = $("#" + table.options.id).bootstrapTable('getData');
+                var data = $("#bootstrap-table1" ).bootstrapTable('getData');
+                console.log(data);
+                if(data==null||data.length==0){
+                    alert("请填写入库产品");
+                    return;
+                }
+
                 $.ajax({
-                    url: url,
+                    url:  ctx + "system/storage/add",
                     type: "post",
                     dataType: "json",
-                    data: data,
+                    beforeSend: function () {
+                        $.modal.loading("正在处理中，请稍后...");
+                    },
+                    data: {
+                        "StorageinbillList": JSON.stringify(data),
+                        "stockinid": $("#stockinid").val(),
+                        "outsourcewarehouseid": $("#deptId").val(),
+                        "purchaseid": $("#purchaseid").val(),
+                        "deliveryman": $("#deliveryman").val(),
+                        "warehouseadmin": $("#warehouseadmin").val(),
+                        "comments": $("#comments").val()
+                    },
+                    success: function(result) {
+                        if (typeof callback == "function") {
+                            callback(result);
+                        }
+                        $.operate.successTabCallback(result);
+                    }
                 })
-                console.log(JSON.stringify(data))
-
-              $('#form-storageinbill-add').serialize();
-
-        }
+                };
     }
 
     var url = ctx + "system/storagetype/treeData";
@@ -176,11 +198,19 @@
 
     }
 
-    var options = {
 
+
+
+
+    var options = {
+        uniqueId: "randomId",
         id: "bootstrap-table1",
         toolbar: "toolbar1",
-        modalName: "物料列表",
+        showSearch: false,
+        showRefresh: false,
+        showColumns: false,
+        pagination: false,
+        height: 400,
         columns: [{
             checkbox: true
         },
@@ -217,6 +247,10 @@
                 title: '物料型号'
             },
             {
+                field: 'footprint',
+                title: '封装'
+            },
+            {
                 field: 'manufacture',
                 title: '品牌'
             },
@@ -228,18 +262,25 @@
             {
                 field: 'price',
                 title: '单价',
-                editable: true
-            },
-            {
-                field: 'money',
-                title: '总价',
-                editable: true
+                editable: {
+                    title : '单价'
+                }
             },
             {
                 field: 'counts',
                 title: '数量',
-                editable: true
+                editable: {
+                    title : '数量'
+                }
             },
+            {
+                field: 'money',
+                title: '总价',
+                editable: {
+                    title : '总价'
+                }
+            },
+
             {
                 field: 'rate',
                 title: '税率',
@@ -248,35 +289,36 @@
                     title : '税率',
                     source : [
                         {
-                            value : 0,
-                            text : ""
-                        },
-                        {
-                        value : 1,
-                        text : "3%"
-                    }, {
-                        value : 2,
-                        text : "13%"
-                    }, {
-                        value : 3,
-                        text : "11%"
-                    }, {
-                        value : 4,
-                        text : "6%"
-                    }]
+                            value : 1,
+                            text : "3%"
+                        }, {
+                            value : 2,
+                            text : "13%"
+                        }, {
+                            value : 3,
+                            text : "11%"
+                        }, {
+                            value : 4,
+                            text : "6%"
+                        }]
                 }
 
             },
             {
                 field: 'taxamount',
                 title: '税额',
-                editable: true
+                editable: {
+                    title : '税额'
+                }
             },
             {
                 field: 'serialNumber',
                 title: '序列号',
-                editable: true
+                editable: {
+                    title : '序列号'
+                }
             },
+
             {
                 field: 'supplier',
                 title: '供应商',
@@ -304,35 +346,47 @@
             {
                 field: 'purchaseid',
                 title: '采购编号',
-                editable: true
+                editable: {
+                    title : '采购编号'
+                }
             },
             {
                 field: 'applyid',
                 title: '申请单号',
-                editable: true
+                editable: {
+                    title : '申请单号'
+                }
             },
             {
                 field: 'contractid',
                 title: '合同单号',
-                editable: true
+                editable: {
+                    title : '合同单号'
+                }
             }
             ,
             {
                 field: 'invoiceid',
                 title: '发票单号',
-                editable: true
+                editable: {
+                    title : '发票单号'
+                }
             }
             ,
             {
                 field: 'expressid',
                 title: '快递单号',
-                editable: true
+                editable: {
+                    title : '快递单号'
+                }
             }
             ,
             {
                 field: 'instoragecause',
                 title: '入库原因',
-                editable: true
+                editable: {
+                    title : '入库原因'
+                }
             }
             ,
             {
@@ -366,7 +420,7 @@
                 title: '申请人',
                 editable : {
                     type : 'select',
-                    title : '供应商',
+                    title : '申请人',
                     source: function () {
                         var result = [];
                         $.ajax({
@@ -389,7 +443,13 @@
             {
                 field: 'comments',
                 title: '备注',
-                editable: true
+                editable: {
+                    title : '备注'
+                }
+            },{
+                field: 'randomId',
+                title: 'randomId',
+                visible: false
             }
         ]
     };
@@ -450,19 +510,7 @@
             {
                 field: 'unit',
                 title: '单位'
-            },{
-                field: 'comments',
-                title: 'null',
-                visible: false,
-                formatter: function (value, row, index) {
-                    //获取每页显示的数量
-                    var pageSize=$('#bootstrap-table2').bootstrapTable('getOptions').pageSize;
-                    //获取当前是第几页
-                    var pageNumber=$('#bootstrap-table2').bootstrapTable('getOptions').pageNumber;
-                    //返回序号，注意index是从0开始的，所以要加上1
-                    return pageSize * (pageNumber - 1) + index + 1;
-                }
-            },
+            }
         ]
     };
     $.table.init(options);
@@ -491,51 +539,117 @@
             $("#stockinid").val("RKD-"+y+""+mt+""+day+"-"+result);
         }
     });
+    //解决table缓存问题
 
     function clonerow() {
+        var randomId = 100 + ~~(Math.random() * 100)
         var data = $("#" + table.options.id).bootstrapTable('getSelections');
-        for (var i=0;i<data.length;i++){
-            data[i].comments="";
-            data[i].taxamount="";
-            data[i].rate="";
-            data[i].serialNumber="";
-            data[i].supplier="";
-            data[i].purchaseid="";
-            data[i].contractid="";
-            data[i].invoiceid="";
-            data[i].price="";
-            data[i].money="";
-            data[i].applyid="";
-            data[i].counts="";
-            data[i].expressid="";
-            data[i].instoragecause="";
-            data[i].projectname="";
-            data[i].proposer="";
-        }
-        $("#bootstrap-table1" ).bootstrapTable("append", data);
-     /*   alert(JSON.stringify(data))*/
+
+      for (var i=0;i<data.length;i++){
+          $("#bootstrap-table1").bootstrapTable('insertRow', {
+              index: 0, // 你想插入到哪，0表示第一行
+              row: {
+                  id: data[i].id,
+                  name: data[i].name,
+                  materialcode: data[i].materialcode,
+                  partnumber: data[i].partnumber,
+                  footprint: data[i].footprint,
+                  manufacture: data[i].manufacture,
+                  unit: data[i].unit,
+                  comments:"",
+                  taxamount:"",
+                  rate:"",
+                  serialNumber:"",
+                  supplier:"",
+                  purchaseid:"",
+                  contractid:"",
+                  invoiceid:"",
+                  price:"",
+                  money:"",
+                  applyid:"",
+                  counts:"",
+                  expressid:"",
+                  instoragecause:"",
+                  projectname:"",
+                  proposer:"",
+                  randomId:randomId
+              }
+          })
+      }
+
+
+
     }
 
 
+
+    function insertRow() {
+
+        var randomId = 100 + ~~(Math.random() * 100)
+        var data = $("#" + table.options.id).bootstrapTable('getSelections');
+        if (data == null || data.length == 0 || data.length > 1) {
+            alert("请选中一行");
+            return;
+        }
+        for (var i = 0; i < data.length; i++) {
+            $("#bootstrap-table1").bootstrapTable('insertRow', {
+                index: 0, // 你想插入到哪，0表示第一行
+                row: {
+                    id: data[i].id,
+                    name: data[i].name,
+                    materialcode: data[i].materialcode,
+                    partnumber: data[i].partnumber,
+                    footprint: data[i].footprint,
+                    manufacture: data[i].manufacture,
+                    unit: data[i].unit,
+                    comments:data[i].comments,
+                    taxamount:data[i].taxamount,
+                    rate:data[i].rate,
+                    serialNumber:data[i].serialNumber,
+                    supplier:data[i].supplier,
+                    purchaseid:data[i].purchaseid,
+                    contractid: data[i].contractid,
+                    invoiceid: data[i].invoiceid,
+                    price: data[i].price,
+                    money: data[i].money,
+                    applyid: data[i].applyid,
+                    counts: data[i].counts,
+                    expressid: data[i].expressid,
+                    instoragecause:  data[i].instoragecause,
+                    projectname: data[i].projectname,
+                    proposer:  data[i].proposer,
+                    randomId:randomId
+                }
+            })
+        }
+    }
     /* 删除指定表格行 */
     function removeRow(){
-        var ids = $.table.selectColumns("id");
+        var ids = $.table.selectColumns("randomId");
         if (ids.length == 0) {
             $.modal.alertWarning("请至少选择一条记录");
             return;
         }
         $("#" + table.options.id).bootstrapTable('remove', {
-            field: 'no',
+            field: 'randomId',
             values: ids
         })
     }
 
-
+    /* 查询表格所有数据值 */
+    function getData(){
+        var data = $("#" + table.options.id).bootstrapTable('getData');
+        alert(JSON.stringify(data))
+    }
 
     /* 删除所有表格行 */
     function removeRowAll(){
+
         $("#" + table.options.id).bootstrapTable('removeAll')
     }
+
+
+
     
 </script>
 </body>

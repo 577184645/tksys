@@ -2,6 +2,7 @@ package com.ruoyi.system.mapper;
 
 import java.util.List;
 import com.ruoyi.system.domain.Storage;
+import org.apache.ibatis.annotations.Param;
 
 /**
  * 库存列表Mapper接口
@@ -11,6 +12,24 @@ import com.ruoyi.system.domain.Storage;
  */
 public interface StorageMapper 
 {
+    /**
+     * 查询库存下是否有产品
+     *
+     * @param materialcode typeId
+     * @return 库存列表
+     */
+    public int selectStorageByMaterialcodeAndTypeid(@Param("materialcode") String materialcode,@Param("typeId") Long typeId,@Param("serialNumber") String serialNumber);
+
+
+
+    /**
+     * 添加库存数量
+     *
+     * @param  storage
+     * @return 库存列表
+     */
+    public int updatestocks(Storage storage);
+
     /**
      * 查询库存列表
      * 

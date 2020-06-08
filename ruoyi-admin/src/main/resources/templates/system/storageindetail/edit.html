@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org" >
+<head>
+    <th:block th:include="include :: header('修改入库产品列表')" />
+</head>
+<body class="white-bg">
+    <div class="wrapper wrapper-content animated fadeInRight ibox-content">
+        <form class="form-horizontal m" id="form-storageindetail-edit" th:object="${storageindetail}">
+            <input name="id" th:field="*{id}" type="hidden">
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">所属入库单：</label>
+                <div class="col-sm-8">
+                    <input name="storageinbillid" th:field="*{storageinbillid}" class="form-control" type="text">
+                </div>
+            </div>
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">物料代码：</label>
+                <div class="col-sm-8">
+                    <input name="materialcode" th:field="*{materialcode}" class="form-control" type="text">
+                </div>
+            </div>
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">物料名称：</label>
+                <div class="col-sm-8">
+                    <input name="name" th:field="*{name}" class="form-control" type="text">
+                </div>
+            </div>
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">物料型号：</label>
+                <div class="col-sm-8">
+                    <input name="partnumber" th:field="*{partnumber}" class="form-control" type="text">
+                </div>
+            </div>
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">品牌：</label>
+                <div class="col-sm-8">
+                    <input name="manufacture" th:field="*{manufacture}" class="form-control" type="text">
+                </div>
+            </div>
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">单价：</label>
+                <div class="col-sm-8">
+                    <input name="price" th:field="*{price}" class="form-control" type="text">
+                </div>
+            </div>
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">数量：</label>
+                <div class="col-sm-8">
+                    <input name="counts" th:field="*{counts}" class="form-control" type="text">
+                </div>
+            </div>
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">总金额：</label>
+                <div class="col-sm-8">
+                    <input name="money" th:field="*{money}" class="form-control" type="text">
+                </div>
+            </div>
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">单位：</label>
+                <div class="col-sm-8">
+                    <input name="unit" th:field="*{unit}" class="form-control" type="text">
+                </div>
+            </div>
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">供应商：</label>
+                <div class="col-sm-8">
+                    <input name="supplier" th:field="*{supplier}" class="form-control" type="text">
+                </div>
+            </div>
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">税率：</label>
+                <div class="col-sm-8">
+                    <input name="rate" th:field="*{rate}" class="form-control" type="text">
+                </div>
+            </div>
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">采购编号：</label>
+                <div class="col-sm-8">
+                    <input name="purchaseid" th:field="*{purchaseid}" class="form-control" type="text">
+                </div>
+            </div>
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">申请单号：</label>
+                <div class="col-sm-8">
+                    <input name="applyid" th:field="*{applyid}" class="form-control" type="text">
+                </div>
+            </div>
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">合同单号：</label>
+                <div class="col-sm-8">
+                    <input name="contractid" th:field="*{contractid}" class="form-control" type="text">
+                </div>
+            </div>
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">发票单号：</label>
+                <div class="col-sm-8">
+                    <input name="invoiceid" th:field="*{invoiceid}" class="form-control" type="text">
+                </div>
+            </div>
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">快递单号：</label>
+                <div class="col-sm-8">
+                    <input name="expressid" th:field="*{expressid}" class="form-control" type="text">
+                </div>
+            </div>
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">进库原因：</label>
+                <div class="col-sm-8">
+                    <input name="instoragecause" th:field="*{instoragecause}" class="form-control" type="text">
+                </div>
+            </div>
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">所属项目：</label>
+                <div class="col-sm-8">
+                    <input name="projectname" th:field="*{projectname}" class="form-control" type="text">
+                </div>
+            </div>
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">备注：</label>
+                <div class="col-sm-8">
+                    <input name="comments" th:field="*{comments}" class="form-control" type="text">
+                </div>
+            </div>
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">申请人：</label>
+                <div class="col-sm-8">
+                    <input name="proposer" th:field="*{proposer}" class="form-control" type="text">
+                </div>
+            </div>
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">税额：</label>
+                <div class="col-sm-8">
+                    <input name="taxamount" th:field="*{taxamount}" class="form-control" type="text">
+                </div>
+            </div>
+        </form>
+    </div>
+    <th:block th:include="include :: footer" />
+    <script type="text/javascript">
+        var prefix = ctx + "system/storageindetail";
+        $("#form-storageindetail-edit").validate({
+            focusCleanup: true
+        });
+
+        function submitHandler() {
+            if ($.validate.form()) {
+                $.operate.save(prefix + "/edit", $('#form-storageindetail-edit').serialize());
+            }
+        }
+    </script>
+</body>
+</html>

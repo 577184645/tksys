@@ -38,8 +38,8 @@
             </div>
 
             <div class="btn-group-sm" id="toolbar" role="group">
-                <a class="btn btn-success" onclick="$.operate.add()" shiro:hasPermission="system:storageinbill:add">
-                    <i class="fa fa-plus"></i> 添加
+                <a class="btn btn-primary single disabled" onclick="Info()"  >
+                    <i class="fa fa-edit"></i> 查看
                 </a>
                 <a class="btn btn-primary single disabled" onclick="$.operate.edit()" shiro:hasPermission="system:storageinbill:edit">
                     <i class="fa fa-edit"></i> 修改
@@ -61,12 +61,13 @@
         var editFlag = [[${@permission.hasPermi('system:storageinbill:edit')}]];
         var removeFlag = [[${@permission.hasPermi('system:storageinbill:remove')}]];
         var prefix = ctx + "system/storageinbill";
-
+        var prefix1 = ctx + "system/storageindetail";
         $(function() {
             var options = {
                 url: prefix + "/list",
                 createUrl: prefix + "/add",
-                updateUrl: prefix + "/edit/{id}",
+                updateUrl: prefix1 + "/{id}",
+                toolbar: "toolbar",
                 removeUrl: prefix + "/remove",
                 exportUrl: prefix + "/export",
                 modalName: "入库单列表",
@@ -119,6 +120,47 @@
             };
             $.table.init(options);
         });
+
+
+        function Info(id) {
+            table.set();
+            var row = $("#" + table.options.id).bootstrapTreeTable('getSelections')[0];
+
+            if($.common.isEmpty(id) && table.options.type == table_type.bootstrapTreeTable) {
+                if ($.common.isEmpty(row)) {
+                    $.modal.alertWarning("请至少选择一条记录");
+                    return;
+                }
+                var url = table.options.updateUrl.replace("{id}", row[table.options.uniqueId]);
+
+                $.modal.openTab("修改" + table.options.modalName, url);
+            } else {
+
+
+                $.modal.openTab("入库单详细信息",editUrl(id));
+
+
+            }
+        }
+
+        function editUrl(id) {
+            var url = "/404.html";
+            if ($.common.isNotEmpty(id)) {
+
+                url = table.options.updateUrl.replace("{id}", id);
+
+            } else {
+                var id = $.common.isEmpty(table.options.uniqueId) ? $.table.selectFirstColumns() : $.table.selectColumns(table.options.uniqueId);
+
+                if (id.length == 0) {
+                    $.modal.alertWarning("请至少选择一条记录");
+                    return;
+                }
+                url = prefix1+"/"+(id);
+
+            }
+            return url;
+        }
     </script>
 </body>
 </html>

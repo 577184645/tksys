@@ -41,6 +41,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         where t.dept_id = #{deptId}
 
     </select>
+
+
         
     <insert id="insertStoragetype" parameterType="Storagetype" useGeneratedKeys="true" keyProperty="deptId">
         insert into storagetype

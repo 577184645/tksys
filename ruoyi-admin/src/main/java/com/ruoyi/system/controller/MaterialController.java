@@ -1,7 +1,11 @@
 package com.ruoyi.system.controller;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
+import com.ruoyi.common.annotation.Excel;
 import com.ruoyi.system.domain.Materialtype;
 import com.ruoyi.system.domain.SysUser;
 import com.ruoyi.system.service.*;
@@ -47,6 +51,19 @@ public class MaterialController extends BaseController
     private ISupplierService iSupplierService;
 
 
+
+    @RequestMapping("/find")
+    @ResponseBody
+    public Map<String ,Object> find(Material material)
+{
+    Map<String,Object> map=new HashMap<>();
+    List<Material> list = materialService.selectMaterialList(material);
+    map.put("rows",list);
+    map.put("total",list.size());
+    return map;
+
+}
+
     @RequiresPermissions("system:material:view")
     @GetMapping()
     public String material()
@@ -56,6 +73,9 @@ public class MaterialController extends BaseController
         return prefix + "/material";
     }
 
+
+
+
     /**
      * 查询物料列表列表
      */
@@ -64,10 +84,19 @@ public class MaterialController extends BaseController
     @ResponseBody
     public TableDataInfo list(Material material)
     {
+
         List<Material> list = materialService.selectMaterialList(material);
         startPage();
         return getDataTable(list);
     }
+
+    /**
+     * 查询物料列表列表
+     */
+
+
+
+
 
     /**
      * 导出物料列表列表
