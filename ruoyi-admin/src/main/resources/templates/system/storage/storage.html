@@ -53,8 +53,12 @@
             </div>
 
             <div class="btn-group-sm" id="toolbar" role="group">
-             <a class="btn btn-success" onclick="$.operate.addTab()" shiro:hasPermission="system:user:add">
+             <a class="btn btn-success" onclick="addTab()" shiro:hasPermission="system:user:add">
                     <i class="fa fa-plus"></i> 入库
+                </a>
+
+                <a class="btn btn-warning" onclick="removeTab()" shiro:hasPermission="system:user:edit">
+                    <i class="fa fa-download"></i> 出库
                 </a>
                 <!--
               <a class="btn btn-primary single disabled" onclick="$.operate.edit()" shiro:hasPermission="system:user:edit">
@@ -164,6 +168,11 @@
                     field: 'uTime',
                     title: '最后入库时间'
                 }
+                ,
+                {
+                    field: 'oTime',
+                    title: '最后出库时间'
+                }
               /*  {
                     title: '操作',
                     align: 'center',
@@ -219,6 +228,18 @@
         var url = ctx + "system/storagetype";
         $.modal.openTab("部门管理", url);
     }
+
+    function  addTab() {
+        table.set();
+        $.modal.openTab("入库", $.operate.addUrl());
+    }
+
+
+    function  removeTab() {
+        table.set();
+        $.modal.openTab("出库",prefix + "/edit");
+    }
+
 
 </script>
 </body>

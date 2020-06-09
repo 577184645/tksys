@@ -75,7 +75,6 @@ public class Storage extends BaseEntity
     private String serialNumber;
 
 
-
     /** 创建时间 */
     @Excel(name = "创建时间", width = 30, dateFormat = "yyyy-MM-dd")
     private Date cTime;
@@ -83,6 +82,18 @@ public class Storage extends BaseEntity
     /** 最后入库时间 */
     @Excel(name = "最后入库时间", width = 30, dateFormat = "yyyy-MM-dd")
     private Date uTime;
+
+    /** 最后入库时间 */
+    @Excel(name = "最后出库时间", width = 30, dateFormat = "yyyy-MM-dd")
+    private Date oTime;
+
+    public Date getoTime() {
+        return oTime;
+    }
+
+    public void setoTime(Date oTime) {
+        this.oTime = oTime;
+    }
 
     public void setDeptId(Long deptId) {
         this.deptId = deptId;

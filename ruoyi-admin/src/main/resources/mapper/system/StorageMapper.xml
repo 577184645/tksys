@@ -20,6 +20,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="serialNumber"    column="serial_number"    />
         <result property="cTime"    column="c_time"    />
         <result property="uTime"    column="u_time"    />
+        <result property="oTime"    column="o_time"    />
+
         <association property="storagetype" column="dept_id" javaType="Storagetype" resultMap="StoragetypeResult">
 
         </association>
@@ -36,11 +38,11 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 
 
     <sql id="selectStorageVo">
-        select id, name, materialcode, partnumber, footprint, manufacture, unit, price, stocks, money, type_id, serial_number, comments, c_time, u_time from storage
+        select id, name, materialcode, partnumber, footprint, manufacture, unit, price, stocks, money, type_id, serial_number,  c_time, u_time from storage
     </sql>
 
     <select id="selectStorageList" parameterType="Storage" resultMap="StorageResult">
-        select id, `name`, materialcode, supplier,partnumber, footprint, manufacture, unit, serial_number, type_id,   avg(price) price,sum(stocks) stocks,sum(money) money,c_time, u_time from storage u  LEFT JOIN storagetype d
+        select id, `name`, o_time,materialcode, supplier,partnumber, footprint, manufacture, unit, serial_number, type_id,   avg(price) price,sum(stocks) stocks,sum(money) money,c_time, u_time from storage u  LEFT JOIN storagetype d
         on u.type_id=d.dept_id
         where  1=1
             <if test="name != null  and name != ''"> and name like concat('%', #{name}, '%')</if>
@@ -49,7 +51,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
                 AND (u.type_id = #{deptId} OR u.type_id IN ( SELECT t.dept_id FROM storagetype t WHERE FIND_IN_SET (#{deptId},ancestors) ))
             </if>
             <if test="uTime != null "> and u_time = #{uTime}</if>
-        GROUP BY materialcode,serial_number
+        GROUP BY materialcode,serial_number,supplier
     </select>
 
     <select id="selectStorageById" parameterType="Integer" resultMap="StorageResult">
@@ -118,6 +120,11 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         delete from storage where id = #{id}
     </delete>
 
+    <delete id="deleteStorageByStocksZero" >
+        delete from storage where stocks = 0
+    </delete>
+
+
     <delete id="deleteStorageByIds" parameterType="String">
         delete from storage where id in 
         <foreach item="id" collection="array" open="(" separator="," close=")">
@@ -127,12 +134,21 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 
     <select id="selectStorageByMaterialcodeAndTypeid" resultType="int">
         select count(1) from storage where materialcode=#{materialcode} and type_id=#{typeId}
-        <if test="serialNumber!=null and serialNumber!=''">
          and   serial_number=#{serialNumber}
-        </if>
+         and   supplier=#{supplier}
+
     </select>
 
     <update id="updatestocks">
         update  storage set stocks=stocks+#{stocks},money=money+#{money},price=money/stocks,u_time=now()  where materialcode=#{materialcode} and type_id=#{typeId}
+           and   serial_number=#{serialNumber}
+         and   supplier=#{supplier}
+
     </update>
+
+    <update id="removeStocks">
+        update  storage set stocks=stocks-#{stocks},money=money-#{money},price=money/stocks,o_time=now()  where id=#{id}
+    </update>
+
+
 </mapper>

@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.StorageoutbillMapper">
+    
+    <resultMap type="Storageoutbill" id="StorageoutbillResult">
+        <result property="id"    column="id"    />
+        <result property="storageoutid"    column="storageoutid"    />
+        <result property="outsourcewarehouse"    column="outsourcewarehouse"    />
+        <result property="outsourcewarehouseid"    column="outsourcewarehouseid"    />
+        <result property="stockrequisition"    column="stockrequisition"    />
+        <result property="warehouseadmin"    column="warehouseadmin"    />
+        <result property="stockpeople"    column="stockpeople"    />
+        <result property="storageouttime"    column="storageouttime"    />
+        <result property="comments"    column="comments"    />
+        <result property="cTime"    column="c_time"    />
+        <result property="uTime"    column="u_time"    />
+        <result property="delStatus"    column="del_status"    />
+    </resultMap>
+
+    <sql id="selectStorageoutbillVo">
+        select id, storageoutid, outsourcewarehouse, outsourcewarehouseid, stockrequisition, warehouseadmin, stockpeople, storageouttime, comments, c_time, u_time, del_status from storageoutbill
+    </sql>
+
+    <select id="selectStorageoutbillList" parameterType="Storageoutbill" resultMap="StorageoutbillResult">
+        <include refid="selectStorageoutbillVo"/>
+        <where>  
+            <if test="outsourcewarehouse != null  and outsourcewarehouse != ''"> and outsourcewarehouse like concat('%', #{outsourcewarehouse}, '%')</if>
+            <if test="stockrequisition != null  and stockrequisition != ''"> and stockrequisition like concat('%', #{stockrequisition}, '%')</if>
+            <if test="storageouttime != null "> and storageouttime = #{storageouttime}</if>
+            <if test="comments != null  and comments != ''"> and comments like concat('%', #{comments}, '%')</if>
+            <if test="params.beginTime != null and params.beginTime != ''"><!-- 开始时间检索 -->
+                AND date_format(storageouttime,'%y%m%d') &gt;= date_format(#{params.beginTime},'%y%m%d')
+            </if>
+            <if test="params.endTime != null and params.endTime != ''"><!-- 结束时间检索 -->
+                AND date_format(storageouttime,'%y%m%d') &lt;= date_format(#{params.endTime},'%y%m%d')
+            </if>
+        </where>
+    </select>
+    
+    <select id="selectStorageoutbillById" parameterType="Long" resultMap="StorageoutbillResult">
+        <include refid="selectStorageoutbillVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertStorageoutbill" parameterType="Storageoutbill" useGeneratedKeys="true" keyProperty="id">
+        insert into storageoutbill
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="storageoutid != null  and storageoutid != ''">storageoutid,</if>
+            <if test="outsourcewarehouse != null  and outsourcewarehouse != ''">outsourcewarehouse,</if>
+            <if test="outsourcewarehouseid != null ">outsourcewarehouseid,</if>
+            <if test="stockrequisition != null  and stockrequisition != ''">stockrequisition,</if>
+            <if test="warehouseadmin != null  and warehouseadmin != ''">warehouseadmin,</if>
+            <if test="stockpeople != null  and stockpeople != ''">stockpeople,</if>
+            <if test="storageouttime != null ">storageouttime,</if>
+            <if test="comments != null  and comments != ''">comments,</if>
+            <if test="cTime != null ">c_time,</if>
+            <if test="uTime != null ">u_time,</if>
+            <if test="delStatus != null ">del_status,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="storageoutid != null  and storageoutid != ''">#{storageoutid},</if>
+            <if test="outsourcewarehouse != null  and outsourcewarehouse != ''">#{outsourcewarehouse},</if>
+            <if test="outsourcewarehouseid != null ">#{outsourcewarehouseid},</if>
+            <if test="stockrequisition != null  and stockrequisition != ''">#{stockrequisition},</if>
+            <if test="warehouseadmin != null  and warehouseadmin != ''">#{warehouseadmin},</if>
+            <if test="stockpeople != null  and stockpeople != ''">#{stockpeople},</if>
+            <if test="storageouttime != null ">#{storageouttime},</if>
+            <if test="comments != null  and comments != ''">#{comments},</if>
+            <if test="cTime != null ">#{cTime},</if>
+            <if test="uTime != null ">#{uTime},</if>
+            <if test="delStatus != null ">#{delStatus},</if>
+         </trim>
+    </insert>
+
+    <update id="updateStorageoutbill" parameterType="Storageoutbill">
+        update storageoutbill
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="storageoutid != null  and storageoutid != ''">storageoutid = #{storageoutid},</if>
+            <if test="outsourcewarehouse != null  and outsourcewarehouse != ''">outsourcewarehouse = #{outsourcewarehouse},</if>
+            <if test="outsourcewarehouseid != null ">outsourcewarehouseid = #{outsourcewarehouseid},</if>
+            <if test="stockrequisition != null  and stockrequisition != ''">stockrequisition = #{stockrequisition},</if>
+            <if test="warehouseadmin != null  and warehouseadmin != ''">warehouseadmin = #{warehouseadmin},</if>
+            <if test="stockpeople != null  and stockpeople != ''">stockpeople = #{stockpeople},</if>
+            <if test="storageouttime != null ">storageouttime = #{storageouttime},</if>
+            <if test="comments != null  and comments != ''">comments = #{comments},</if>
+            <if test="cTime != null ">c_time = #{cTime},</if>
+            <if test="uTime != null ">u_time = #{uTime},</if>
+            <if test="delStatus != null ">del_status = #{delStatus},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteStorageoutbillById" parameterType="Long">
+        delete from storageoutbill where id = #{id}
+    </delete>
+
+    <delete id="deleteStorageoutbillByIds" parameterType="String">
+        delete from storageoutbill where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    
+</mapper>

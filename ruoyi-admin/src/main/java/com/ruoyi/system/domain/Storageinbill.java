@@ -48,7 +48,7 @@ public class Storageinbill extends BaseEntity
     private String comments;
 
     /** 删除状态 */
-    private String delStatus;
+    private Long delStatus;
 
     /** 创建时间 */
     private Date cTime;
@@ -138,16 +138,16 @@ public class Storageinbill extends BaseEntity
     {
         return comments;
     }
-    public void setDelStatus(String delStatus) 
-    {
+
+    public Long getDelStatus() {
+        return delStatus;
+    }
+
+    public void setDelStatus(Long delStatus) {
         this.delStatus = delStatus;
     }
 
-    public String getDelStatus() 
-    {
-        return delStatus;
-    }
-    public void setcTime(Date cTime) 
+    public void setcTime(Date cTime)
     {
         this.cTime = cTime;
     }

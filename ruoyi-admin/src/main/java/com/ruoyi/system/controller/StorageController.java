@@ -3,11 +3,13 @@ package com.ruoyi.system.controller;
 import java.util.List;
 
 import com.ruoyi.system.domain.Storageinbill;
+import com.ruoyi.system.domain.Storageoutbill;
 import com.ruoyi.system.service.ISysUserService;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -34,6 +36,9 @@ import com.ruoyi.common.core.page.TableDataInfo;
 @RequestMapping("/system/storage")
 public class StorageController extends BaseController
 {
+
+
+
     private String prefix = "system/storage";
 
     @Autowired
@@ -101,11 +106,10 @@ public class StorageController extends BaseController
     /**
      * 修改库存列表
      */
-    @GetMapping("/edit/{id}")
-    public String edit(@PathVariable("id") Integer id, ModelMap mmap)
+    @GetMapping("/edit")
+    public String edit(ModelMap mmap)
     {
-        Storage storage = storageService.selectStorageById(id);
-        mmap.put("storage", storage);
+        mmap.put("userList",iSysUserService.findList());
         return prefix + "/edit";
     }
 
@@ -113,12 +117,24 @@ public class StorageController extends BaseController
      * 修改保存库存列表
      */
     @RequiresPermissions("system:storage:edit")
-    @Log(title = "库存列表", businessType = BusinessType.UPDATE)
+    @Log(title = "出库", businessType = BusinessType.UPDATE)
     @PostMapping("/edit")
     @ResponseBody
-    public AjaxResult editSave(Storage storage)
+    public AjaxResult editSave(String StorageoutbillList, Storageoutbill storageoutbill)
     {
-        return toAjax(storageService.updateStorage(storage));
+
+        JSONArray productArray = JSONArray.fromObject(StorageoutbillList);
+
+        for (int i = 0; i < productArray.size(); i++) {
+            JSONObject jsonObject = productArray.getJSONObject(i);
+            Long stocks = storageService.selectStorageById(Integer.valueOf(jsonObject.getString("id"))).getStocks();
+            if(stocks<Long.valueOf(jsonObject.getString("counts"))){
+                return AjaxResult.warn("库存不足！");
+            }
+        }
+
+
+        return toAjax(storageService.updateStorage(storageoutbill,StorageoutbillList));
     }
 
     /**

@@ -3,6 +3,7 @@ package com.ruoyi.system.service;
 import java.util.List;
 import com.ruoyi.system.domain.Storage;
 import com.ruoyi.system.domain.Storageinbill;
+import com.ruoyi.system.domain.Storageoutbill;
 
 /**
  * 库存列表Service接口
@@ -31,7 +32,7 @@ public interface IStorageService
     /**
      * 新增库存列表
      * 
-     * @param storage 库存列表
+     * @param storageinbill  productList库存列表
      * @return 结果
      */
     public int insertStorage(Storageinbill storageinbill, String productList);
@@ -39,10 +40,10 @@ public interface IStorageService
     /**
      * 修改库存列表
      * 
-     * @param storage 库存列表
+     * @param storageoutbill productList 库存列表
      * @return 结果
      */
-    public int updateStorage(Storage storage);
+    public int updateStorage(Storageoutbill storageoutbill, String productList);
 
     /**
      * 批量删除库存列表

@@ -3,17 +3,12 @@ package com.ruoyi.system.service.impl;
 import java.util.List;
 
 import com.ruoyi.common.utils.StringUtils;
-import com.ruoyi.system.domain.Storageinbill;
-import com.ruoyi.system.domain.Storageindetail;
-import com.ruoyi.system.mapper.StorageinbillMapper;
-import com.ruoyi.system.mapper.StorageindetailMapper;
-import com.ruoyi.system.mapper.StoragetypeMapper;
+import com.ruoyi.system.domain.*;
+import com.ruoyi.system.mapper.*;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import com.ruoyi.system.mapper.StorageMapper;
-import com.ruoyi.system.domain.Storage;
 import com.ruoyi.system.service.IStorageService;
 import com.ruoyi.common.core.text.Convert;
 import org.springframework.transaction.annotation.Transactional;
@@ -32,10 +27,13 @@ public class StorageServiceImpl implements IStorageService
     @Autowired
     private StorageinbillMapper storageinbillMapper;
     @Autowired
+    private StorageoutbillMapper storageoutbillMapper;
+    @Autowired
     private StoragetypeMapper storagetypeMapper;
     @Autowired
     private StorageindetailMapper storageindetailMapper;
-
+    @Autowired
+    private StorageoutdetailMapper storageoutdetailMapper;
 
     /**
      * 查询库存列表
@@ -69,7 +67,6 @@ public class StorageServiceImpl implements IStorageService
         for (int i = 0; i < productArray.size(); i++) {
             JSONObject jsonObject = productArray.getJSONObject(i);
             Storage storage=new Storage();
-
             Storageindetail storageindetail = new Storageindetail();
             if(!jsonObject.getString("counts").equals("")) {
                 storageindetail.setCounts(Long.valueOf(jsonObject.getInt("counts")));
@@ -80,17 +77,28 @@ public class StorageServiceImpl implements IStorageService
             if(!jsonObject.getString("money").equals("")) {
                 storageindetail.setMoney(Double.valueOf(jsonObject.getString("money")));
             }
-            storageindetail.setFootprint(jsonObject.getString("footprint"));
+            if(!jsonObject.getString("footprint").equals("null")) {
+                storageindetail.setFootprint(jsonObject.getString("footprint"));
+            }
+
             storageindetail.setMaterialcode(jsonObject.getString("materialcode"));
-            storageindetail.setName(jsonObject.getString("name"));
-            storageindetail.setPartnumber(jsonObject.getString("partnumber"));
+            if(!jsonObject.getString("name").equals("null")) {
+                storageindetail.setName(jsonObject.getString("name"));
+            }
+            if(!jsonObject.getString("partnumber").equals("null")) {
+                storageindetail.setPartnumber(jsonObject.getString("partnumber"));
+            }
             storageindetail.setRate(jsonObject.getString("rate"));
             if(!jsonObject.getString("taxamount").equals("")) {
                 storageindetail.setTaxamount(Double.valueOf(jsonObject.getString("taxamount")));
 
             }
-
-            storageindetail.setUnit(jsonObject.getString("unit"));
+            if(!jsonObject.getString("unit").equals("null")){
+                storageindetail.setUnit(jsonObject.getString("unit"));
+            }
+            if(!jsonObject.getString("manufacture").equals("null")) {
+                storageindetail.setManufacture(jsonObject.getString("manufacture"));
+            }
             storageindetail.setSupplier(jsonObject.getString("supplier"));
             storageindetail.setPurchaseid(jsonObject.getString("purchaseid"));
             storageindetail.setApplyid(jsonObject.getString("applyid"));
@@ -101,15 +109,15 @@ public class StorageServiceImpl implements IStorageService
             storageindetail.setProjectname(jsonObject.getString("projectname"));
             storageindetail.setProposer(jsonObject.getString("proposer"));
             storageindetail.setComments(jsonObject.getString("comments"));
-            storageindetail.setManufacture(jsonObject.getString("manufacture"));
             storageindetail.setSerialNumber(jsonObject.getString("serialNumber"));
             storageindetail.setStorageinbillid(storageinbill.getStockinid());
             storageindetailMapper.insertStorageindetail(storageindetail);
-            if(storageMapper.selectStorageByMaterialcodeAndTypeid(storageindetail.getMaterialcode(),storageinbill.getOutsourcewarehouseid(),storageindetail.getSerialNumber())>0){
+            if(storageMapper.selectStorageByMaterialcodeAndTypeid(storageindetail.getMaterialcode(),storageinbill.getOutsourcewarehouseid(),storageindetail.getSerialNumber(),storageindetail.getSupplier())>0){
                 storage.setTypeId(storageinbill.getOutsourcewarehouseid());
                 storage.setMaterialcode(storageindetail.getMaterialcode());
-                storage.setMoney(Double.valueOf(jsonObject.getString("money")));
-                storage.setStocks(Long.valueOf(jsonObject.getInt("counts")));
+                storage.setSupplier(storageindetail.getSupplier());
+                storage.setMoney(storageindetail.getMoney());
+                storage.setStocks(storageindetail.getCounts());
                 storageMapper.updatestocks(storage);
             }else{
                 storage.setName(storageindetail.getName());
@@ -156,13 +164,92 @@ public class StorageServiceImpl implements IStorageService
     /**
      * 修改库存列表
      * 
-     * @param storage 库存列表
+     * @param
      * @return 结果
      */
     @Override
-    public int updateStorage(Storage storage)
+    @Transactional
+    public int updateStorage(Storageoutbill storageoutbill,String productList)
     {
-        return storageMapper.updateStorage(storage);
+        JSONArray productArray = JSONArray.fromObject(productList);
+
+
+
+
+        for (int i = 0; i < productArray.size(); i++) {
+            JSONObject jsonObject = productArray.getJSONObject(i);
+            Storage storage = new Storage();
+            Storageoutdetail storageoutdetail = new Storageoutdetail();
+            if (!jsonObject.getString("counts").equals("")) {
+                storageoutdetail.setCounts(Long.valueOf(jsonObject.getInt("counts")));
+            }
+            if (!jsonObject.getString("price").equals("")) {
+                storageoutdetail.setPrice(Double.valueOf(jsonObject.getString("price")));
+            }
+            if (!jsonObject.getString("money").equals("")) {
+                storageoutdetail.setMoney(Double.valueOf(jsonObject.getString("money")));
+            }
+            if (!jsonObject.getString("footprint").equals("null")) {
+                storageoutdetail.setFootprint(jsonObject.getString("footprint"));
+            }
+
+            storageoutdetail.setMaterialcode(jsonObject.getString("materialcode"));
+            if (!jsonObject.getString("name").equals("null")) {
+                storageoutdetail.setName(jsonObject.getString("name"));
+            }
+            if (!jsonObject.getString("partnumber").equals("null")) {
+                storageoutdetail.setPartnumber(jsonObject.getString("partnumber"));
+            }
+            storageoutdetail.setRate(jsonObject.getString("rate"));
+            if (!jsonObject.getString("taxamount").equals("")) {
+                storageoutdetail.setTaxamount(Double.valueOf(jsonObject.getString("taxamount")));
+
+            }
+            if (!jsonObject.getString("unit").equals("null")) {
+                storageoutdetail.setUnit(jsonObject.getString("unit"));
+            }
+            if (!jsonObject.getString("manufacture").equals("null")) {
+                storageoutdetail.setManufacture(jsonObject.getString("manufacture"));
+            }
+
+            if (!jsonObject.getString("supplier").equals("null")) {
+                storageoutdetail.setSupplier(jsonObject.getString("supplier"));
+            }
+            storageoutdetail.setPurchaseid(jsonObject.getString("purchaseid"));
+            storageoutdetail.setApplyid(jsonObject.getString("applyid"));
+            storageoutdetail.setContractid(jsonObject.getString("contractid"));
+            storageoutdetail.setInvoiceid(jsonObject.getString("invoiceid"));
+            storageoutdetail.setExpressid(jsonObject.getString("expressid"));
+            storageoutdetail.setInstoragecause(jsonObject.getString("instoragecause"));
+            storageoutdetail.setProjectname(jsonObject.getString("projectname"));
+            storageoutdetail.setProposer(jsonObject.getString("proposer"));
+            storageoutdetail.setComments(jsonObject.getString("comments"));
+            storageoutdetail.setSerialNumber(jsonObject.getString("serialNumber"));
+            storageoutdetail.setStorageoutbillid(storageoutbill.getStorageoutid());
+            storageoutdetailMapper.insertStorageoutdetail(storageoutdetail);
+            storage.setId(Integer.valueOf(jsonObject.getString("id")));
+            storage.setMoney(storageoutdetail.getMoney());
+            storage.setStocks(storageoutdetail.getCounts());
+            storageMapper.removeStocks(storage);
+        }
+
+        String ancestors = storagetypeMapper.selectStoragetypeById(storageoutbill.getOutsourcewarehouseid()).getAncestors();
+        String deptName = storagetypeMapper.selectStoragetypeById(storageoutbill.getOutsourcewarehouseid()).getDeptName();
+        if(ancestors.contains(",")){
+            String[] split = ancestors.split(",");
+            String Outsourcewarehouse="";
+            for (int i=0;i<split.length;i++){
+                if(Long.valueOf(split[i])!=0) {
+                    Outsourcewarehouse += storagetypeMapper.selectStoragetypeById(Long.valueOf(split[i])).getDeptName() + "-";
+                }
+            }
+            storageoutbill.setOutsourcewarehouse(Outsourcewarehouse+deptName);
+        }else{
+            storageoutbill.setOutsourcewarehouse(deptName);
+        }
+
+        return storageoutbillMapper.insertStorageoutbill(storageoutbill);
+
     }
 
     /**

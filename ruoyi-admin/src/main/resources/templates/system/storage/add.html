@@ -77,6 +77,9 @@
         <a class="btn btn-danger" onclick="removeRowAll()">
             <i class="fa fa-remove"></i> 删除所有行
         </a>
+        <a class="btn btn-warning" onclick="$.table.exportExcel()">
+            <i class="fa fa-download"></i> 导出
+        </a>
     </div>
 <div class="col-xs-12 select-table table-striped" style="margin-bottom: 3%;">
     <table id="bootstrap-table1"></table>
@@ -146,7 +149,6 @@
         if ($.validate.form()) {
 
                 var data = $("#bootstrap-table1" ).bootstrapTable('getData');
-                console.log(data);
                 if(data==null||data.length==0){
                     alert("请填写入库产品");
                     return;
@@ -210,6 +212,8 @@
         showRefresh: false,
         showColumns: false,
         pagination: false,
+        modalName: "入库产品",
+        exportUrl: ctx + "system/storageindetail" + "/export",
         height: 400,
         columns: [{
             checkbox: true
@@ -460,7 +464,7 @@
         id: "bootstrap-table2",
         toolbar: "toolbar2",
         url: prefix + "/list",
-        modalName: "物料列表",
+        modalName: "入库产品",
         columns: [{
             checkbox: true
         },
@@ -471,7 +475,6 @@
             },{
                 field: 'no',
                 title: '序号',
-                sortable: true,
                 align: "center",
                 width: 40,
                 formatter: function (value, row, index) {
@@ -544,10 +547,10 @@
     function clonerow() {
         var randomId = 100 + ~~(Math.random() * 100)
         var data = $("#" + table.options.id).bootstrapTable('getSelections');
-
+        var datas = $("#bootstrap-table1").bootstrapTable('getData');
       for (var i=0;i<data.length;i++){
           $("#bootstrap-table1").bootstrapTable('insertRow', {
-              index: 0, // 你想插入到哪，0表示第一行
+              index: datas.length+i, // 你想插入到哪，0表示第一行
               row: {
                   id: data[i].id,
                   name: data[i].name,
@@ -584,7 +587,6 @@
 
 
     function insertRow() {
-
         var randomId = 100 + ~~(Math.random() * 100)
         var data = $("#" + table.options.id).bootstrapTable('getSelections');
         if (data == null || data.length == 0 || data.length > 1) {
@@ -593,7 +595,7 @@
         }
         for (var i = 0; i < data.length; i++) {
             $("#bootstrap-table1").bootstrapTable('insertRow', {
-                index: 0, // 你想插入到哪，0表示第一行
+                index: data.length+i, // 你想插入到哪，0表示第一行
                 row: {
                     id: data[i].id,
                     name: data[i].name,
@@ -636,11 +638,7 @@
         })
     }
 
-    /* 查询表格所有数据值 */
-    function getData(){
-        var data = $("#" + table.options.id).bootstrapTable('getData');
-        alert(JSON.stringify(data))
-    }
+
 
     /* 删除所有表格行 */
     function removeRowAll(){
