@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org" >
+<head>
+    <th:block th:include="include :: header('打印入库产品')" />
+    <title>入库单打印</title>
+    <style>
+        fixed-table-body{
+            height: auto;
+        }
+      .div{
+          display: none;
+      }
+        .select-table table {
+            table-layout:fixed;
+        }
+
+        .select-table .table td {
+
+            /*规定段落中的文本不进行换行 */
+            white-space:nowrap;
+            /* 配合宽度来使用 */
+            height:40px;
+        }
+    </style>
+</head>
+<body class="white-bg">
+
+<center>
+    <div class="table-d" id="context" >
+        <h3 style="text-align: center;">入库单</h3>
+        <div class="div">
+            <span>供应商:</span> <span style="padding-right: 230;" th:text="${storageinbill.supplier}"></span> <span>日期:</span> <span th:text="${#dates.format(storageinbill.storagentime,'yyyy-MM-dd')}"></span>
+
+        </div>
+        <div class="div">
+            <span>类别:</span> <span style="padding-right: 215;" th:text="${storageinbill.outsourcewarehouse}"></span> <span>单据编号:</span> <span th:text="${storageinbill.stockinid}"></span>
+
+        </div>
+        <table style="border:1px solid #F00;border-collapse: collapse">
+            <tbody>
+            <tr style="border:1px solid #F00;">
+                <td style="border:1px solid #F00;" width="50" align="center" >序号</td>
+                <td style="border:1px solid #F00;" width="121" align="center">物品名称</td>
+                <td style="border:1px solid #F00;" width="182" align="center">规格型号</td>
+                <td style="border:1px solid #F00;" width="50" align="center">单位</td>
+                <td style="border:1px solid #F00;" width="50" align="center">数量</td>
+                <td style="border:1px solid #F00;" width="70" align="center">单价</td>
+                <td style="border:1px solid #F00;" width="70" align="center">金额</td>
+
+                <td style="border:1px solid #F00;" width="112" align="center">备注</td>
+            </tr>
+            <tr th:each="storageindetail : ${storageindetails}" style="border:1px solid #F00;">
+                <td style="border:1px solid #F00;" align="center" th:text="${storageindetail.rownum}"></td>
+                <td style="border:1px solid #F00;" align="center" th:text="${storageindetail.name}"></td>
+                <td style="border:1px solid #F00;" align="center" th:text="${storageindetail.partnumber}"></td>
+                <td style="border:1px solid #F00;" align="center" th:text="${storageindetail.unit}"> </td>
+                <td style="border:1px solid #F00;" align="center" th:text="${storageindetail.counts}"   > </td>
+                <td style="border:1px solid #F00;" align="center" th:text="${storageindetail.price}"> </td>
+                <td style="border:1px solid #F00;" align="center" th:text="${storageindetail.money}"> </td>
+
+                <td style="border:1px solid #F00;" align="center" th:text="${storageindetail.comments}"></td>
+            </tr>
+            <tr>
+                <td colspan="7" style="border:1px solid #F00;">总金额</td>
+                <td id="summoney" colspan="2" align="center" style="border:1px solid #F00;" ></td>
+            </tr>
+            </tbody>
+        </table>
+        <div class="div">
+            <span >主管</span> <span style="padding-left: 150;">记账</span> <span style="padding-left: 150;">仓库:</span> <span style="padding-left: 130px;">经办人</span>
+
+        </div>
+    </div>
+</center>
+<br/>
+<div class="row">
+    <div class="col-sm-offset-5 col-sm-10">
+        <button type="button" class="btn btn-sm btn-primary" onclick="print()"><i class="fa fa-check"></i>打 印</button>&nbsp;
+        <button type="button" class="btn btn-sm btn-danger" onclick="closeItem()"><i class="fa fa-reply-all"></i>关 闭 </button>
+    </div>
+</div>
+
+    <th:block th:include="include :: footer" />
+    <script src="http://www.jq22.com/jquery/jquery-migrate-1.2.1.min.js"></script>
+    <script type="text/javascript" th:src="@{/js/jquery.jqprint-0.3.js}"></script>
+    <script type="text/javascript">
+        var prefix = ctx + "system/storageindetail";
+
+
+
+
+        var prefix = ctx + "system/storageindetail"
+        $("#form-storageindetail-add").validate({
+            focusCleanup: true
+        });
+
+        function submitHandler() {
+            if ($.validate.form()) {
+                $.operate.save(prefix + "/add", $('#form-storageindetail-add').serialize());
+            }
+        }
+
+        function print() {
+            $("#context").jqprint();
+        }
+
+        var money= [[${storageinbill.money}]];
+        $("#summoney").html(changeNumMoneyToChinese(money));
+
+
+
+        function changeNumMoneyToChinese(money)
+        {
+            var cnNums = new Array("零", "壹", "贰", "叁", "肆", "伍", "陆", "柒", "捌", "玖"); //汉字的数字
+            var cnIntRadice = new Array("", "拾", "佰", "仟"); //基本单位
+            var cnIntUnits = new Array("", "万", "亿", "兆"); //对应整数部分扩展单位
+            var cnDecUnits = new Array("角", "分", "毫", "厘"); //对应小数部分单位
+            var cnInteger = "整"; //整数金额时后面跟的字符
+            var cnIntLast = "元"; //整型完以后的单位
+            var maxNum = 999999999999999.9999; //最大处理的数字
+            var IntegerNum; //金额整数部分
+            var DecimalNum; //金额小数部分
+            var ChineseStr = ""; //输出的中文金额字符串
+            var parts; //分离金额后用的数组，预定义
+            var Symbol="";//正负值标记
+            if (money == "") {
+                return "";
+            }
+
+            money = parseFloat(money);
+            if (money >= maxNum) {
+                alert('超出最大处理数字');
+                return "";
+            }
+            if (money == 0) {
+                ChineseStr = cnNums[0] + cnIntLast + cnInteger;
+                return ChineseStr;
+            }
+            if(money<0)
+            {
+                money=-money;
+                Symbol="负 ";
+            }
+            money = money.toString(); //转换为字符串
+            if (money.indexOf(".") == -1) {
+                IntegerNum = money;
+                DecimalNum = '';
+            } else {
+                parts = money.split(".");
+                IntegerNum = parts[0];
+                DecimalNum = parts[1].substr(0, 4);
+            }
+            if (parseInt(IntegerNum, 10) > 0) { //获取整型部分转换
+                var zeroCount = 0;
+                var IntLen = IntegerNum.length;
+                for (var i = 0; i < IntLen; i++) {
+                    var n = IntegerNum.substr(i, 1);
+                    var p = IntLen - i - 1;
+                    var q = p / 4;
+                    var m = p % 4;
+                    if (n == "0") {
+                        zeroCount++;
+                    }
+                    else {
+                        if (zeroCount > 0) {
+                            ChineseStr += cnNums[0];
+                        }
+                        zeroCount = 0; //归零
+                        ChineseStr += cnNums[parseInt(n)] + cnIntRadice[m];
+                    }
+                    if (m == 0 && zeroCount < 4) {
+                        ChineseStr += cnIntUnits[q];
+                    }
+                }
+                ChineseStr += cnIntLast;
+                //整型部分处理完毕
+            }
+            if (DecimalNum != '') { //小数部分
+                var decLen = DecimalNum.length;
+                for (var i = 0; i < decLen; i++) {
+                    var n = DecimalNum.substr(i, 1);
+                    if (n != '0') {
+                        ChineseStr += cnNums[Number(n)] + cnDecUnits[i];
+                    }
+                }
+            }
+            if (ChineseStr == '') {
+                ChineseStr += cnNums[0] + cnIntLast + cnInteger;
+            } else if (DecimalNum == '') {
+                ChineseStr += cnInteger;
+            }
+            ChineseStr = Symbol +ChineseStr;
+
+            return ChineseStr;
+        }
+    </script>
+
+</body>
+</html>

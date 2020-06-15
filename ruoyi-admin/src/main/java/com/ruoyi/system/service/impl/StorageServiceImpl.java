@@ -63,6 +63,23 @@ public class StorageServiceImpl implements IStorageService
     @Override
     @Transactional
     public int insertStorage(Storageinbill storageinbill, String productList) {
+       //如果入库出现重复
+        if (storageinbillMapper.selectStorageinbillByStockinid(storageinbill.getStockinid())!=null){
+           Storageinbill st=new Storageinbill();
+           int i = storageinbill.getStockinid().lastIndexOf("-")+1;
+           int size = storageinbillMapper.selectStorageinbillList(st).size()+1;
+           String sizes="";
+           if(size<10){
+               sizes="00"+size;
+           }else  if(size<100){
+               sizes="0"+size;
+           }else{
+               sizes=String.valueOf(size);
+
+           }
+
+           storageinbill.setStockinid( storageinbill.getStockinid().substring(0,i)+sizes);
+       }
         JSONArray productArray = JSONArray.fromObject(productList);
         for (int i = 0; i < productArray.size(); i++) {
             JSONObject jsonObject = productArray.getJSONObject(i);
@@ -115,7 +132,16 @@ public class StorageServiceImpl implements IStorageService
             if(storageMapper.selectStorageByMaterialcodeAndTypeid(storageindetail.getMaterialcode(),storageinbill.getOutsourcewarehouseid(),storageindetail.getSerialNumber(),storageindetail.getSupplier())>0){
                 storage.setTypeId(storageinbill.getOutsourcewarehouseid());
                 storage.setMaterialcode(storageindetail.getMaterialcode());
-                storage.setSupplier(storageindetail.getSupplier());
+                if (storageindetail.getSupplier()==null){
+                    storage.setSupplier("");
+                }else {
+                    storage.setSupplier(storageindetail.getSupplier());
+                }
+                if (storageindetail.getSerialNumber()==null){
+                    storage.setSerialNumber("");
+                }else {
+                    storage.setSerialNumber(storageindetail.getSerialNumber());
+                }
                 storage.setMoney(storageindetail.getMoney());
                 storage.setStocks(storageindetail.getCounts());
                 storageMapper.updatestocks(storage);
@@ -171,6 +197,24 @@ public class StorageServiceImpl implements IStorageService
     @Transactional
     public int updateStorage(Storageoutbill storageoutbill,String productList)
     {
+        //如果出库单出现重复
+        if (storageoutbillMapper.selectStorageoutbillByStorageoutId(storageoutbill.getStorageoutid())!=null){
+            Storageoutbill st=new Storageoutbill();
+            int i = storageoutbill.getStorageoutid().lastIndexOf("-")+1;
+            int size = storageoutbillMapper.selectStorageoutbillList(st).size()+1;
+           
+            String sizes="";
+            if(size<10){
+                sizes="00"+size;
+            }else  if(size<100){
+                sizes="0"+size;
+            }else{
+                sizes=String.valueOf(size);
+
+            }
+
+            storageoutbill.setStorageoutid( storageoutbill.getStorageoutid().substring(0,i)+sizes);
+        }
         JSONArray productArray = JSONArray.fromObject(productList);
 
 

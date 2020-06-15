@@ -134,6 +134,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 
     <select id="selectStorageByMaterialcodeAndTypeid" resultType="int">
         select count(1) from storage where materialcode=#{materialcode} and type_id=#{typeId}
+       <if test="serialNumber!=null and serialNumber!=''"></if>
          and   serial_number=#{serialNumber}
          and   supplier=#{supplier}
 

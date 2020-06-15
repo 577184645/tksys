@@ -38,7 +38,7 @@ public class StorageoutdetailController extends BaseController
     @Autowired
     private IStorageoutbillService iStorageoutbillService;
 
-    @RequiresPermissions("system:storageoutdetail:view")
+
     @GetMapping("/{id}")
     public String storageoutdetail(@PathVariable("id") Long id,ModelMap mmap)
     {
@@ -50,7 +50,7 @@ public class StorageoutdetailController extends BaseController
     /**
      * 查询出库产品列表列表
      */
-    @RequiresPermissions("system:storageoutdetail:list")
+
     @PostMapping("/list")
     @ResponseBody
     public TableDataInfo list(Storageoutdetail storageoutdetail)
@@ -63,7 +63,7 @@ public class StorageoutdetailController extends BaseController
     /**
      * 导出出库产品列表列表
      */
-    @RequiresPermissions("system:storageoutdetail:export")
+
     @Log(title = "出库产品列表", businessType = BusinessType.EXPORT)
     @PostMapping("/export")
     @ResponseBody

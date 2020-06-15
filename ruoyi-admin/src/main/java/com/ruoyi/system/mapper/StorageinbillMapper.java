@@ -19,6 +19,9 @@ public interface StorageinbillMapper
      */
     public Storageinbill selectStorageinbillById(Long id);
 
+
+    public Storageinbill selectStorageinbillByStockinid(String stockinid);
+
     /**
      * 查询入库单列表列表
      * 

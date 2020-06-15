@@ -19,6 +19,8 @@ public class Storageinbill extends BaseEntity
     /** null */
     private Long id;
 
+    private Double money;
+
     /** 入库单号 */
     @Excel(name = "入库单号")
     private String stockinid;
@@ -53,10 +55,28 @@ public class Storageinbill extends BaseEntity
     /** 创建时间 */
     private Date cTime;
 
+    private String Supplier;
+
     /** 修改时间 */
     private Date uTime;
 
     private Long outsourcewarehouseid;
+
+    public String getSupplier() {
+        return Supplier;
+    }
+
+    public void setSupplier(String supplier) {
+        Supplier = supplier;
+    }
+
+    public Double getMoney() {
+        return money;
+    }
+
+    public void setMoney(Double money) {
+        this.money = money;
+    }
 
     public Long getOutsourcewarehouseid() {
         return outsourcewarehouseid;

@@ -100,6 +100,7 @@ public class StorageController extends BaseController
     public AjaxResult addSave(String StorageinbillList,Storageinbill Storageinbill)
     {
 
+
         return toAjax(storageService.insertStorage(Storageinbill,StorageinbillList));
     }
 

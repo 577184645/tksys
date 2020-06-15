@@ -2,6 +2,7 @@ package com.ruoyi.system.controller;
 
 import java.util.List;
 
+import com.ruoyi.system.domain.Storageinbill;
 import com.ruoyi.system.service.IStorageinbillService;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,7 +39,7 @@ public class StorageindetailController extends BaseController
     @Autowired
     private IStorageinbillService iStorageinbillService;
 
-    @RequiresPermissions("system:storageindetail:view")
+
     @GetMapping("/{id}")
     public String storageindetail(@PathVariable("id") Long id,ModelMap mmap)
     {
@@ -50,7 +51,7 @@ public class StorageindetailController extends BaseController
     /**
      * 查询入库产品列表列表
      */
-    @RequiresPermissions("system:storageindetail:list")
+
     @PostMapping("/list")
     @ResponseBody
     public TableDataInfo list(Storageindetail storageindetail)
@@ -63,7 +64,7 @@ public class StorageindetailController extends BaseController
     /**
      * 导出入库产品列表列表
      */
-    @RequiresPermissions("system:storageindetail:export")
+
     @Log(title = "入库产品列表", businessType = BusinessType.EXPORT)
     @PostMapping("/export")
     @ResponseBody
@@ -82,6 +83,9 @@ public class StorageindetailController extends BaseController
     {
         return prefix + "/add";
     }
+
+
+
 
     /**
      * 新增保存入库产品列表

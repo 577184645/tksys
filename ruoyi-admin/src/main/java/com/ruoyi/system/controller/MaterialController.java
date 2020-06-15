@@ -13,11 +13,7 @@ import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 import com.ruoyi.common.annotation.Log;
 import com.ruoyi.common.enums.BusinessType;
 import com.ruoyi.system.domain.Material;
@@ -79,22 +75,28 @@ public class MaterialController extends BaseController
     /**
      * 查询物料列表列表
      */
-    @RequiresPermissions("system:material:list")
+
     @PostMapping("/list")
     @ResponseBody
     public TableDataInfo list(Material material)
     {
-
-        List<Material> list = materialService.selectMaterialList(material);
         startPage();
+        List<Material> list = materialService.selectMaterialList(material);
         return getDataTable(list);
     }
 
     /**
      * 查询物料列表列表
      */
-
-
+    @PostMapping("/getMaterialcode")
+    @ResponseBody
+    public Map<String,Object> getMaterialcode(@RequestParam(name = "typeId",required = false,defaultValue = "") String typeId,@RequestParam(name = "deptId",required = false,defaultValue = "") String deptId){
+      Map<String,Object> ret=new HashMap<>();
+        if(deptId!=""&&typeId!=""){
+            ret.put("materialcode", materialService.getMaterialcode(Long.valueOf(typeId),Long.valueOf(deptId)));
+      }
+        return ret;
+    }
 
 
 

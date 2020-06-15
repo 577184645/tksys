@@ -43,6 +43,10 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <include refid="selectStorageoutbillVo"/>
         where id = #{id}
     </select>
+    <select id="selectStorageoutbillByStorageoutId" resultMap="StorageoutbillResult">
+        <include refid="selectStorageoutbillVo"/>
+        where storageoutid = #{storageoutid}
+    </select>
         
     <insert id="insertStorageoutbill" parameterType="Storageoutbill" useGeneratedKeys="true" keyProperty="id">
         insert into storageoutbill
@@ -95,6 +99,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     <delete id="deleteStorageoutbillById" parameterType="Long">
         delete from storageoutbill where id = #{id}
     </delete>
+
+
+
 
     <delete id="deleteStorageoutbillByIds" parameterType="String">
         delete from storageoutbill where id in 

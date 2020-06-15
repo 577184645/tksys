@@ -7,6 +7,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     <resultMap type="Storageinbill" id="StorageinbillResult">
         <result property="id"    column="id"    />
         <result property="stockinid"    column="stockinid"    />
+        <result property="money"    column="money"    />
+        <result property="supplier"    column="supplier"    />
         <result property="outsourcewarehouseid"    column="outsourcewarehouseid"    />
         <result property="outsourcewarehouse"    column="outsourcewarehouse"    />
         <result property="purchaseid"    column="purchaseid"    />
@@ -20,14 +22,15 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </resultMap>
 
     <sql id="selectStorageinbillVo">
-        select id, stockinid, outsourcewarehouseid,outsourcewarehouse, purchaseid, deliveryman, warehouseadmin, storagentime, comments, del_status, c_time, u_time from storageinbill
+        select s.id,sum(money) as money , stockinid,storageindetail.supplier supplier ,outsourcewarehouseid,outsourcewarehouse, s.purchaseid, deliveryman, warehouseadmin, storagentime, s.comments, del_status, s.c_time, s.u_time from storageinbill s LEFT JOIN storageindetail
+				on stockinid=storageinbillid
     </sql>
 
     <select id="selectStorageinbillList" parameterType="Storageinbill" resultMap="StorageinbillResult">
         <include refid="selectStorageinbillVo"/>
         <where>  
             <if test="outsourcewarehouse != null  and outsourcewarehouse != ''"> and outsourcewarehouse like concat('%', #{outsourcewarehouse}, '%')</if>
-            <if test="purchaseid != null  and purchaseid != ''"> and purchaseid = #{purchaseid}</if>
+            <if test="purchaseid != null  and purchaseid != ''"> and s.purchaseid = #{purchaseid}</if>
             <if test="params.beginTime != null and params.beginTime != ''"><!-- 开始时间检索 -->
                 AND date_format(storagentime,'%y%m%d') &gt;= date_format(#{params.beginTime},'%y%m%d')
             </if>
@@ -35,14 +38,21 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
                 AND date_format(storagentime,'%y%m%d') &lt;= date_format(#{params.endTime},'%y%m%d')
             </if>
             <if test="comments != null  and comments != ''">
-                and comments like concat('%', #{comments}, '%')
+                and s.comments like concat('%', #{comments}, '%')
             </if>
+
         </where>
+        GROUP BY stockinid
     </select>
     
     <select id="selectStorageinbillById" parameterType="Long" resultMap="StorageinbillResult">
         <include refid="selectStorageinbillVo"/>
-        where id = #{id}
+        where s.id = #{id}
+    </select>
+
+    <select id="selectStorageinbillByStockinid" parameterType="String" resultMap="StorageinbillResult">
+        <include refid="selectStorageinbillVo"/>
+        where stockinid = #{stockinid}
     </select>
         
     <insert id="insertStorageinbill"  parameterType="Storageinbill" useGeneratedKeys="true" keyProperty="id">

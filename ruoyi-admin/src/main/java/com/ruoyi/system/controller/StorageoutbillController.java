@@ -44,7 +44,7 @@ public class StorageoutbillController extends BaseController
     }
 
 
-    @RequiresPermissions("system:storageoutbill:view")
+
     @GetMapping()
     public String storageoutbill()
     {
@@ -54,7 +54,6 @@ public class StorageoutbillController extends BaseController
     /**
      * 查询出库单列表列表
      */
-    @RequiresPermissions("system:storageoutbill:list")
     @PostMapping("/list")
     @ResponseBody
     public TableDataInfo list(Storageoutbill storageoutbill)
@@ -67,7 +66,7 @@ public class StorageoutbillController extends BaseController
     /**
      * 导出出库单列表列表
      */
-    @RequiresPermissions("system:storageoutbill:export")
+
     @Log(title = "出库单列表", businessType = BusinessType.EXPORT)
     @PostMapping("/export")
     @ResponseBody

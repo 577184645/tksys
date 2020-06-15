@@ -13,7 +13,7 @@
         <div class="form-group">
             <label class="col-sm-3 control-label">入库单号：</label>
             <div class="col-sm-8">
-                <input name="stockinid" id="stockinid" readonly class="form-control" type="text">
+                <input name="stockinid" id="stockinid"  class="form-control" type="text">
             </div>
         </div>
         <div class="form-group">
@@ -180,6 +180,8 @@
                 };
     }
 
+
+
     var url = ctx + "system/storagetype/treeData";
     var options = {
         url: url,
@@ -190,7 +192,13 @@
     $.tree.init(options);
 
     function zOnClick(event, treeId, treeNode) {
+       if(treeNode.name=="上海库"||treeNode.name=="天长库"){
+           alert("不能选择上海库或天长库,如没有子库 请刷新!");
+           return;
+       }
+
         if(treeNode.children==null) {
+
             $("#deptId").val(treeNode.id);
             $("#parentId").val(treeNode.pId);
         }else{
@@ -208,10 +216,7 @@
         uniqueId: "randomId",
         id: "bootstrap-table1",
         toolbar: "toolbar1",
-        showSearch: false,
-        showRefresh: false,
-        showColumns: false,
-        pagination: false,
+        showFooter: true,
         modalName: "入库产品",
         exportUrl: ctx + "system/storageindetail" + "/export",
         height: 400,
@@ -267,9 +272,12 @@
                 field: 'price',
                 title: '单价',
                 editable: {
-                    title : '单价'
-                }
+                    title : '单价',
+
+                },
+
             },
+
             {
                 field: 'counts',
                 title: '数量',
@@ -282,9 +290,14 @@
                 title: '总价',
                 editable: {
                     title : '总价'
+                },footerFormatter:function (value) {
+                    var sumBalance = 0;
+                    for (var i in value) {
+                        sumBalance += parseFloat(value[i].money);
+                    }
+                    return "总金额：" + sumBalance;
                 }
             },
-
             {
                 field: 'rate',
                 title: '税率',
@@ -293,20 +306,19 @@
                     title : '税率',
                     source : [
                         {
-                            value : 1,
+                            value : "3%",
                             text : "3%"
                         }, {
-                            value : 2,
+                            value : "13%",
                             text : "13%"
                         }, {
-                            value : 3,
+                            value : "11%",
                             text : "11%"
                         }, {
-                            value : 4,
+                            value : "6%",
                             text : "6%"
                         }]
                 }
-
             },
             {
                 field: 'taxamount',
@@ -455,7 +467,14 @@
                 title: 'randomId',
                 visible: false
             }
-        ]
+        ] ,onEditableSave: function (field, row, oldValue,$el) {
+
+            row.price = (row.money / row.counts).toFixed(9);
+
+            if (row.rate != "") {
+                row.taxamount =(row.money * (row.rate.substring(0, row.rate.length - 1) * 0.01)).toFixed(4);;
+            }
+        }
     };
     $.table.init(options);
 

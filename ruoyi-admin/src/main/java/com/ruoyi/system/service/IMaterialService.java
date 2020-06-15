@@ -19,6 +19,15 @@ public interface IMaterialService
      */
     public Material selectMaterialById(Integer id);
 
+
+    /**
+     * 得到物料编号
+     * @param typeId
+     * @param deptId
+     * @return
+     */
+    public String getMaterialcode(Long typeId,Long deptId );
+
     /**
      * 查询物料列表列表
      * 

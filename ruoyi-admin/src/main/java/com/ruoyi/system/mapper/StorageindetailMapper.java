@@ -19,6 +19,11 @@ public interface StorageindetailMapper
      */
     public Storageindetail selectStorageindetailById(Long id);
 
+
+    /**
+     * 查询入库产品列表
+     */
+    public List<Storageindetail> selectStorageindetailByStorageinbillId(String storageinbillid);
     /**
      * 查询入库产品列表列表
      * 

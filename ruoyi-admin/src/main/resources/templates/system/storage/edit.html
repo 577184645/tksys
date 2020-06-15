@@ -13,7 +13,7 @@
         <div class="form-group">
             <label class="col-sm-3 control-label">出库单号：</label>
             <div class="col-sm-8">
-                <input name="storageoutid" id="storageoutid" readonly class="form-control" type="text">
+                <input name="storageoutid" id="storageoutid"  class="form-control" type="text">
             </div>
         </div>
         <div class="form-group">
@@ -188,10 +188,17 @@
                     $.tree.init(options);
 
                     function zOnClick(event, treeId, treeNode) {
+
+                        if(treeNode.name=="上海库"||treeNode.name=="天长库"){
+                            alert("不能选择上海库或天长库,如没有子库 请刷新!");
+                            return;
+                        }
+
                         if(treeNode.children==null) {
                             $("#deptId").val(treeNode.id);
                             $("#deptId1").val(treeNode.id);
                             $("#parentId").val(treeNode.pId);
+                            query();
                             $.table.search('form2', 'bootstrap-table2')
                         }else{
                             alert("请选择子仓库");
@@ -208,6 +215,7 @@
                         uniqueId: "randomId",
                         id: "bootstrap-table1",
                         toolbar: "toolbar1",
+                        showFooter: true,
                         showSearch: false,
                         showRefresh: false,
                         showColumns: false,
@@ -280,6 +288,12 @@
                                 title: '总价',
                                 editable: {
                                     title : '总价'
+                                },footerFormatter:function (value) {
+                                    var sumBalance = 0;
+                                    for (var i in value) {
+                                        sumBalance += parseFloat(value[i].money);
+                                    }
+                                    return "总金额：" + sumBalance;
                                 }
                             },
 
@@ -291,16 +305,16 @@
                                     title : '税率',
                                     source : [
                                         {
-                                            value : 1,
+                                            value : "3%",
                                             text : "3%"
                                         }, {
-                                            value : 2,
+                                            value : "13%",
                                             text : "13%"
                                         }, {
-                                            value : 3,
+                                            value : "11%",
                                             text : "11%"
                                         }, {
-                                            value : 4,
+                                            value : "6%",
                                             text : "6%"
                                         }]
                                 }
@@ -453,79 +467,19 @@
                                 title: 'randomId',
                                 visible: false
                             }
-                        ]
-                    };
-                    $.table.init(options);
+                        ] ,onEditableSave: function (field, row, oldValue,$el) {
 
+                            row.money = (row.price * row.counts).toFixed(4);;
 
-                    var options = {
-                        id: "bootstrap-table2",
-                        toolbar: "toolbar2",
-                        url: prefix + "/list",
-                        modalName: "物料列表",
-                        columns: [{
-                            checkbox: true
-                        },
-                            {
-                                field: 'id',
-                                title: 'null',
-                                visible: false
-                            },{
-                                field: 'no',
-                                title: '序号',
-                                align: "center",
-                                width: 40,
-                                formatter: function (value, row, index) {
-                                    //获取每页显示的数量
-                                    var pageSize=$('#bootstrap-table2').bootstrapTable('getOptions').pageSize;
-                                    //获取当前是第几页
-                                    var pageNumber=$('#bootstrap-table2').bootstrapTable('getOptions').pageNumber;
-                                    //返回序号，注意index是从0开始的，所以要加上1
-                                    return pageSize * (pageNumber - 1) + index + 1;
-                                }
-                            },
-                            {
-                                field: 'name',
-                                title: '名称'
-                            },
-                            {
-                                field: 'materialcode',
-                                title: '编码'
-                            },
-                            {
-                                field: 'partnumber',
-                                title: '型号'
-                            },
-                            {
-                                field: 'footprint',
-                                title: '封装'
-                            },
-                            {
-                                field: 'manufacture',
-                                title: '品牌'
-                            },
-                            {
-                                field: 'unit',
-                                title: '单位'
-                            },
-                            {
-                                field: 'manufacture',
-                                title: '品牌'
-                            },
-                            {
-                                field: 'supplier',
-                                title: '供应商'
-                            },
-                            {
-                                field: 'stocks',
-                                title: '库存量'
-                            },{
-                                field: 'serialNumber',
-                                title: '序列号'
+                            if (row.rate != "") {
+                                row.taxamount =(row.money * (row.rate.substring(0, row.rate.length - 1) * 0.01)).toFixed(4);;
                             }
-                        ]
+                        }
                     };
+
                     $.table.init(options);
+
+
 
 
                     var t=new Date();
@@ -579,7 +533,7 @@
                                     purchaseid:"",
                                     contractid:"",
                                     invoiceid:"",
-                                    price:"",
+                                    price:data[i].price,
                                     money:"",
                                     applyid:"",
                                     counts:"",
@@ -659,6 +613,78 @@
                         $("#" + table.options.id).bootstrapTable('removeAll')
                     }
 
+
+                    function query() {
+                        var options = {
+                            id: "bootstrap-table2",
+                            toolbar: "toolbar2",
+                            url: prefix + "/list",
+                            modalName: "物料列表",
+                            columns: [{
+                                checkbox: true
+                            },
+                                {
+                                    field: 'id',
+                                    title: 'null',
+                                    visible: false
+                                },{
+                                    field: 'no',
+                                    title: '序号',
+                                    align: "center",
+                                    width: 40,
+                                    formatter: function (value, row, index) {
+                                        //获取每页显示的数量
+                                        var pageSize=$('#bootstrap-table2').bootstrapTable('getOptions').pageSize;
+                                        //获取当前是第几页
+                                        var pageNumber=$('#bootstrap-table2').bootstrapTable('getOptions').pageNumber;
+                                        //返回序号，注意index是从0开始的，所以要加上1
+                                        return pageSize * (pageNumber - 1) + index + 1;
+                                    }
+                                },
+                                {
+                                    field: 'name',
+                                    title: '名称'
+                                },
+                                {
+                                    field: 'materialcode',
+                                    title: '编码'
+                                },
+                                {
+                                    field: 'partnumber',
+                                    title: '型号'
+                                },
+                                {
+                                    field: 'footprint',
+                                    title: '封装'
+                                },
+                                {
+                                    field: 'manufacture',
+                                    title: '品牌'
+                                },
+                                {
+                                    field: 'unit',
+                                    title: '单位'
+                                },
+                                {
+                                    field: 'manufacture',
+                                    title: '品牌'
+                                },
+                                {
+                                    field: 'supplier',
+                                    title: '供应商'
+                                },
+                                {
+                                    field: 'stocks',
+                                    title: '库存量'
+                                },{
+                                    field: 'serialNumber',
+                                    title: '序列号'
+                                }
+                            ]
+                        };
+                        $.table.init(options);
+
+                    }
 
 
 

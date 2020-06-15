@@ -49,7 +49,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         select id, name,materialcode, partnumber, description, footprint, manufacture, unit, inputoperator, inputdate, approvedby, approveddate, approvedstatus, productmpq, productmoq, leadtime, comments, type_id, dept_id, safestock, ordernumber, buyer, c_time, u_time from material
     </sql>
 
-    <select id="selectMaterialList" parameterType="Material" resultMap="MaterialResult">
+    <select id="selectMaterialList"  resultMap="MaterialResult">
         select id, `name`, materialcode, partnumber, description, footprint, manufacture, unit, inputoperator, inputdate, approvedby, approveddate, approvedstatus, productmpq, productmoq, leadtime, comments, type_id, u.dept_id, safestock, ordernumber, buyer, c_time, u_time from material u  LEFT JOIN materialtype d
         on u.type_id=d.dept_id
        where  1=1 and u.del_flag='0'

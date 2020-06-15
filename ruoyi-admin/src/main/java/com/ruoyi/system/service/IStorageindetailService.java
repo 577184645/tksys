@@ -9,8 +9,12 @@ import com.ruoyi.system.domain.Storageindetail;
  * @author ruoyi
  * @date 2020-06-05
  */
-public interface IStorageindetailService 
+public interface IStorageindetailService
 {
+
+    public List<Storageindetail> selectStorageindetailByStorageinbillId(String storageinbillid);
+
+
     /**
      * 查询入库产品列表
      * 

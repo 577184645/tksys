@@ -20,6 +20,11 @@ public class StorageindetailServiceImpl implements IStorageindetailService
     @Autowired
     private StorageindetailMapper storageindetailMapper;
 
+    @Override
+    public List<Storageindetail> selectStorageindetailByStorageinbillId(String storageinbillid) {
+        return storageindetailMapper.selectStorageindetailByStorageinbillId(storageinbillid);
+    }
+
     /**
      * 查询入库产品列表
      * 

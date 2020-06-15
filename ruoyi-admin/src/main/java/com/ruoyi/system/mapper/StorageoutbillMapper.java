@@ -1,6 +1,8 @@
 package com.ruoyi.system.mapper;
 
 import java.util.List;
+
+import com.ruoyi.system.domain.Storageinbill;
 import com.ruoyi.system.domain.Storageoutbill;
 
 /**
@@ -18,6 +20,9 @@ public interface StorageoutbillMapper
      * @return 出库单列表
      */
     public Storageoutbill selectStorageoutbillById(Long id);
+
+
+    public Storageoutbill selectStorageoutbillByStorageoutId(String storageoutid);
 
     /**
      * 查询出库单列表列表

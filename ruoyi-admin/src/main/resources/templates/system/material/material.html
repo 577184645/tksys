@@ -4,6 +4,19 @@
 	<th:block th:include="include :: header('用户列表')" />
 	<th:block th:include="include :: layout-latest-css" />
 	<th:block th:include="include :: ztree-css" />
+	<style>
+		.select-table table {
+			table-layout:fixed;
+		}
+
+		.select-table .table td {
+
+
+
+			/* 配合宽度来使用 */
+			height:40px;
+		}
+	</style>
 </head>
 <body class="gray-bg">
 	<div class="ui-layout-west">
@@ -25,7 +38,7 @@
 			</div>
 		</div>
 	</div>
-	
+
 	<div class="ui-layout-center">
 		<div class="container-div">
 			<div class="row">
@@ -55,30 +68,30 @@
 						</div>
 					</form>
 				</div>
-				
+
 		        <div class="btn-group-sm" id="toolbar" role="group">
-		        	<a class="btn btn-success" onclick="$.operate.add()" shiro:hasPermission="system:user:add">
+		        	<a class="btn btn-success" onclick="$.operate.add()" shiro:hasPermission="system:material:add">
 		                <i class="fa fa-plus"></i> 新增
 		            </a>
-		             <a class="btn btn-primary single disabled" onclick="$.operate.edit()" shiro:hasPermission="system:user:edit">
+		             <a class="btn btn-primary single disabled" onclick="$.operate.edit()" shiro:hasPermission="system:material:edit">
 			            <i class="fa fa-edit"></i> 修改
 			        </a>
-		            <a class="btn btn-danger multiple disabled" onclick="$.operate.removeAll()" shiro:hasPermission="system:user:remove">
+		            <a class="btn btn-danger multiple disabled" onclick="$.operate.removeAll()" shiro:hasPermission="system:material:remove">
 		                <i class="fa fa-remove"></i> 删除
 		            </a>
 
-		            <a class="btn btn-warning" onclick="$.table.exportExcel()" shiro:hasPermission="system:user:export">
+		            <a class="btn btn-warning" onclick="$.table.exportExcel()" shiro:hasPermission="system:material:export">
 			            <i class="fa fa-download"></i> 导出
 			        </a>
 		        </div>
-		        
+
 		        <div class="col-sm-12 select-table table-striped">
 				    <table id="bootstrap-table"></table>
 				</div>
 			</div>
 		</div>
 	</div>
-	
+
 	<th:block th:include="include :: footer" />
 	<th:block th:include="include :: layout-latest-js" />
 	<th:block th:include="include :: ztree-js" />
@@ -105,7 +118,11 @@
                 updateUrl: prefix + "/edit/{id}",
                 removeUrl: prefix + "/remove",
                 exportUrl: prefix + "/export",
-                modalName: "物料列表",
+                modalName: "物料",
+				sortName:"materialcode",
+                pagination : true,
+                pageSize : 10,
+                pageNumber : 1,
                 columns: [{
                     checkbox: true
                 },
@@ -115,92 +132,115 @@
                         visible: false
                     },
                     {
-                        field: 'name',
-                        title: '名称'
+                        field: 'materialcode',
+                        title: '编码',
+                        width:120
+
                     },
                     {
-                        field: 'materialcode',
-                        title: '编码'
+                        field: 'name',
+                        title: '名称',
+						width:140
                     },
+
                     {
                         field: 'partnumber',
-                        title: '型号'
+                        title: '型号',
+                        width:220
                     },
-                    {
-                        field: 'description',
-                        title: '描述'
-                    },
-                    {
-                        field: 'footprint',
-                        title: '封装'
-                    },
+
+
                     {
                         field: 'manufacture',
-                        title: '品牌'
+                        title: '品牌',
+                        align : "center",
+                        width:140
+
+
                     },
                     {
                         field: 'unit',
-                        title: '单位'
+                        title: '单位',
+                        width:120
+
+                    },  {
+                        field: 'buyer',
+                        title: '采购员',
+                        width:100
                     },
                     {
                         field: 'inputoperator',
-                        title: '物料信息注册者'
+                        title: '物料信息注册者',
+                        width:100
                     },
                     {
                         field: 'inputdate',
-                        title: '物料信息注册时间'
+                        title: '物料信息注册时间',
+                        width:200
                     },
-                    {
-                        field: 'approvedby',
-                        title: '批准者'
-                    },
+
                     {
                         field: 'approveddate',
-                        title: '批准时间'
+                        title: '批准时间',
+                        width:200
                     },
                     {
                         field: 'approvedstatus',
-                        title: '批准状态'
+                        title: '批准状态',
+                        width:100
                     },
                     {
                         field: 'productmpq',
                         title: '最少包装量'
+                        ,
+                        width:100
                     },
                     {
                         field: 'productmoq',
-                        title: '最少起订量'
+                        title: '最少起订量',
+                        width:100
                     },
                     {
                         field: 'leadtime',
-                        title: '交期'
+                        title: '交期(周)',
+                        width:100
+                    },   {
+                        field: 'description',
+                        title: '描述',
+                        width:220
                     },
                     {
                         field: 'comments',
-                        title: '备注'
+                        title: '备注',
+                        width:140
                     },
                     {
                         field: 'safestock',
                         title: '安全库存'
+                        ,
+                        width:100
                     },
                     {
                         field: 'ordernumber',
-                        title: '供方料号'
+                        title: '供方料号',
+                        width:120
                     },
                     {
-                        field: 'buyer',
-                        title: '采购员'
+                        field: 'approvedby',
+                        title: '批准者',
+                        width:100
                     },
                     {
-                        field: 'cTime',
-                        title: '创建时间'
-                    },
-                    {
-                        field: 'uTime',
-                        title: '修改时间'
+                        field: 'footprint',
+                        title: '封装'
+                        ,
+                        width:120
+
                     },
                     {
                         title: '操作',
                         align: 'center',
+                        width:120,
                         formatter: function(value, row, index) {
                             var actions = [];
                             actions.push('<a class="btn btn-success btn-xs ' + editFlag + '" href="javascript:void(0)" onclick="$.operate.edit(\'' + row.id + '\')"><i class="fa fa-edit"></i>编辑</a> ');
@@ -211,7 +251,7 @@
             };
             $.table.init(options);
 		}
-		
+
 		function queryDeptTree()
 		{
 			var url = ctx + "system/materialtype/treeData";
@@ -220,29 +260,28 @@
 		        expandLevel: 2,
 		        onClick : zOnClick
 		    };
-			console.log(options);
 			$.tree.init(options);
-			
+
 			function zOnClick(event, treeId, treeNode) {
 				$("#deptId").val(treeNode.id);
 				$("#parentId").val(treeNode.pId);
 				$.table.search();
 			}
 		}
-		
+
 		$('#btnExpand').click(function() {
 			$._tree.expandAll(true);
 		    $(this).hide();
 		    $('#btnCollapse').show();
 		});
-		
+
 		$('#btnCollapse').click(function() {
 
 			$._tree.expandAll(false);
 		    $(this).hide();
 		    $('#btnExpand').show();
 		});
-		
+
 		$('#btnRefresh').click(function() {
 
 			queryDeptTree();

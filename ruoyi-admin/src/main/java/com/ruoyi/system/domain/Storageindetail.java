@@ -20,7 +20,7 @@ public class Storageindetail extends BaseEntity
     private Long id;
 
     /** 所属入库单 */
-    @Excel(name = "所属入库单")
+    @Excel(name = "所属出库单")
     private String storageinbillid;
 
     /** 物料代码 */
@@ -79,12 +79,14 @@ public class Storageindetail extends BaseEntity
     @Excel(name = "发票单号")
     private String invoiceid;
 
+    private Integer rownum;
+
     /** 快递单号 */
     @Excel(name = "快递单号")
     private String expressid;
 
     /** 进库原因 */
-    @Excel(name = "进库原因")
+    @Excel(name = "出库原因")
     private String instoragecause;
 
     /** 所属项目 */
@@ -117,6 +119,14 @@ public class Storageindetail extends BaseEntity
     /** 修改时间 */
     @Excel(name = "修改时间", width = 30, dateFormat = "yyyy-MM-dd")
     private Date uTime;
+
+    public Integer getRownum() {
+        return rownum;
+    }
+
+    public void setRownum(Integer rownum) {
+        this.rownum = rownum;
+    }
 
     public void setFootprint(String footprint) {
         this.footprint = footprint;

@@ -20,8 +20,7 @@ import com.ruoyi.common.core.text.Convert;
  * @date 2020-06-01
  */
 @Service
-public class MaterialServiceImpl implements IMaterialService 
-{
+public class MaterialServiceImpl implements IMaterialService {
     @Autowired
     private MaterialMapper materialMapper;
     @Autowired
@@ -31,16 +30,36 @@ public class MaterialServiceImpl implements IMaterialService
 
     /**
      * 查询物料列表
-     * 
+     *
      * @param id 物料列表ID
      * @return 物料列表
      */
     @Override
-    public Material selectMaterialById(Integer id)
-    {
+    public Material selectMaterialById(Integer id) {
         return materialMapper.selectMaterialById(id);
     }
 
+    @Override
+    public String getMaterialcode(Long typeId, Long deptId) {
+        String materialCode = "";
+        String code = materialtypeMapper.selectMaterialtypeById(typeId).getCode();
+        String code1 = materialdeptMapper.selectMaterialdeptById(deptId).getCode();
+        Integer count = materialMapper.selectMaterialByMaterialcode(code + code1);
+        if (count == null || count == 0) {
+            materialCode = code + code1 + "0001";
+        } else {
+            if (count < 10) {
+                materialCode = code + code1 + "000" + String.valueOf(++count);
+            } else if (count < 100) {
+                materialCode = code + code1 + "00" + String.valueOf(++count);
+            } else if (count < 1000) {
+                materialCode = code + code1 + "0" + String.valueOf(++count);
+            }
+
+        }
+        return materialCode;
+
+}
     /**
      * 查询物料列表列表
      * 

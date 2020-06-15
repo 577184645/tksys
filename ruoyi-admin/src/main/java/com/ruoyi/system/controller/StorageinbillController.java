@@ -1,6 +1,9 @@
 package com.ruoyi.system.controller;
 
 import java.util.List;
+
+import com.ruoyi.system.domain.Storageindetail;
+import com.ruoyi.system.service.IStorageindetailService;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -34,7 +37,10 @@ public class StorageinbillController extends BaseController
     @Autowired
     private IStorageinbillService storageinbillService;
 
-    @RequiresPermissions("system:storageinbill:view")
+    @Autowired
+    private IStorageindetailService iStorageindetailService;
+
+
     @GetMapping()
     public String storageinbill()
     {
@@ -51,7 +57,7 @@ public class StorageinbillController extends BaseController
     /**
      * 查询入库单列表列表
      */
-    @RequiresPermissions("system:storageinbill:list")
+
     @PostMapping("/list")
     @ResponseBody
     public TableDataInfo list(Storageinbill storageinbill)
@@ -64,7 +70,7 @@ public class StorageinbillController extends BaseController
     /**
      * 导出入库单列表列表
      */
-    @RequiresPermissions("system:storageinbill:export")
+
     @Log(title = "入库单列表", businessType = BusinessType.EXPORT)
     @PostMapping("/export")
     @ResponseBody
@@ -104,7 +110,22 @@ public class StorageinbillController extends BaseController
     {
         Storageinbill storageinbill = storageinbillService.selectStorageinbillById(id);
         mmap.put("storageinbill", storageinbill);
+        System.out.println(storageinbill);
         return prefix + "/edit";
+    }
+
+
+    /**
+     * 打印入库产品列表
+     */
+    @GetMapping("/print/{id}")
+    public String print(@PathVariable("id") Long id, ModelMap mmap)
+    {
+        Storageinbill storageinbill = storageinbillService.selectStorageinbillById(id);
+        mmap.put("storageinbill", storageinbill);
+        List<Storageindetail> storageindetails = iStorageindetailService.selectStorageindetailByStorageinbillId(storageinbill.getStockinid());
+        mmap.put("storageindetails", storageindetails);
+        return prefix + "/print";
     }
 
     /**
