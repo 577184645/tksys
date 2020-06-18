@@ -29,8 +29,14 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </select>
     
     <select id="selectMaterialdeptById" parameterType="Long" resultMap="MaterialdeptResult">
+    <include refid="selectMaterialdeptVo"/>
+    where id = #{id}
+  </select>
+
+
+    <select id="selectMaterialdeptByCode"  resultMap="MaterialdeptResult">
         <include refid="selectMaterialdeptVo"/>
-        where id = #{id}
+        where code = #{code}
     </select>
         
     <insert id="insertMaterialdept" parameterType="Materialdept" useGeneratedKeys="true" keyProperty="id">

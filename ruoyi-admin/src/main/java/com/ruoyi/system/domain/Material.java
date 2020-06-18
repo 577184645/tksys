@@ -10,7 +10,7 @@ import com.ruoyi.common.core.domain.BaseEntity;
 
 /**
  * 物料列表对象 material
- * 
+ *
  * @author ruoyi
  * @date 2020-06-01
  */
@@ -25,8 +25,22 @@ public class Material extends BaseEntity
     @Excel(name = "名称")
     private String name;
 
+
+    /** 部门 */
+    @Excel(type = Excel.Type.IMPORT,name = "部门",readConverterExp = "00=研发部,01=生产部,02=工程部,03=办公室,04=销售部,05=其他")
+    private String deptIdExcel;
+
+    /** 类型id */
+    @Excel(type = Excel.Type.IMPORT,name = "类型",readConverterExp = "01=元器件,02=半成品,03=成品,04=办公用品,05=设备设施")
+    private String typeIdExcel;
+
+    private Long typeId;
+
+    private Long deptId;
+
+
     /** 编码 */
-    @Excel(name = "编码")
+    @Excel(type=Excel.Type.EXPORT,name = "编码")
     private String materialcode;
 
     /** 型号 */
@@ -49,13 +63,30 @@ public class Material extends BaseEntity
     @Excel(name = "单位")
     private String unit;
 
+
+
+    /** 采购员 */
+    @Excel(name = "采购员")
+    private String buyer;
+
     /** 物料信息注册者 */
-    @Excel(name = "物料信息注册者")
+    @Excel(type = Excel.Type.EXPORT,name = "物料信息注册者")
     private String inputoperator;
 
+
+
+
+
     /** 物料信息注册时间 */
-    @Excel(name = "物料信息注册时间", width = 30, dateFormat = "yyyy-MM-dd")
+    @Excel(type = Excel.Type.EXPORT,name = "物料信息注册时间", width = 30, dateFormat = "yyyy-MM-dd")
     private Date inputdate;
+
+
+
+    /** 安全库存 */
+    @Excel(name = "安全库存")
+    private Long safestock;
+
 
     /** 批准者 */
     @Excel(name = "批准者")
@@ -88,31 +119,21 @@ public class Material extends BaseEntity
     @Excel(name = "备注")
     private String comments;
 
-    /** 类型id */
-    private Long typeId;
 
-    /** 部门 */
-    @Excel(name = "部门id")
-    private Long deptId;
 
-    /** 安全库存 */
-    @Excel(name = "安全库存")
-    private Long safestock;
 
     /** 供方料号 */
     @Excel(name = "供方料号")
     private String ordernumber;
 
-    /** 采购员 */
-    @Excel(name = "采购员")
-    private String buyer;
+
 
     /** 创建时间 */
-    @Excel(name = "创建时间", width = 30, dateFormat = "yyyy-MM-dd")
+    @Excel(type = Excel.Type.EXPORT,name = "创建时间", width = 30, dateFormat = "yyyy-MM-dd")
     private Date cTime;
 
     /** 修改时间 */
-    @Excel(name = "修改时间", width = 30, dateFormat = "yyyy-MM-dd")
+    @Excel(type = Excel.Type.EXPORT,name = "修改时间",width = 30, dateFormat = "yyyy-MM-dd")
     private Date uTime;
 
     public String getDelFlag() {
@@ -327,7 +348,23 @@ public class Material extends BaseEntity
         this.buyer = buyer;
     }
 
-    public String getBuyer() 
+    public String getDeptIdExcel() {
+        return deptIdExcel;
+    }
+
+    public void setDeptIdExcel(String deptIdExcel) {
+        this.deptIdExcel = deptIdExcel;
+    }
+
+    public String getTypeIdExcel() {
+        return typeIdExcel;
+    }
+
+    public void setTypeIdExcel(String typeIdExcel) {
+        this.typeIdExcel = typeIdExcel;
+    }
+
+    public String getBuyer()
     {
         return buyer;
     }

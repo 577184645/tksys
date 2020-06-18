@@ -23,6 +23,8 @@ public class Storageoutbill extends BaseEntity
     @Excel(name = "出库单号")
     private String storageoutid;
 
+
+
     /** 外协库 */
     @Excel(name = "外协库")
     private String outsourcewarehouse;
@@ -42,6 +44,42 @@ public class Storageoutbill extends BaseEntity
     @Excel(name = "领料人")
     private String stockpeople;
 
+
+
+
+    @Excel(name = "采购单号")
+    private String purchaseid;
+    /** 申请单号 */
+    @Excel(name = "申请单号")
+    private String applyid;
+
+    /** 合同单号 */
+    @Excel(name = "合同单号")
+    private String contractid;
+
+    /** 发票单号 */
+    @Excel(name = "发票单号")
+    private String invoiceid;
+
+    @Excel(name = "供应商")
+    private String customer;
+
+    /** 快递单号 */
+    @Excel(name = "快递单号")
+    private String expressid;
+
+    /** 进库原因 */
+    @Excel(name = "出库原因")
+    private String instoragecause;
+
+    /** 所属项目 */
+    @Excel(name = "所属项目")
+    private String projectname;
+
+    /** 申请人 */
+    @Excel(name = "申请人")
+    private String proposer;
+
     /** 出库日期 */
     @Excel(name = "出库日期", width = 30, dateFormat = "yyyy-MM-dd")
     private Date storageouttime;
@@ -57,6 +95,15 @@ public class Storageoutbill extends BaseEntity
     /** 修改时间 */
     @Excel(name = "修改时间", width = 30, dateFormat = "yyyy-MM-dd")
     private Date uTime;
+
+
+    public String getPurchaseid() {
+        return purchaseid;
+    }
+
+    public void setPurchaseid(String purchaseid) {
+        this.purchaseid = purchaseid;
+    }
 
     /** 删除状态 */
     private Long delStatus;
@@ -165,7 +212,71 @@ public class Storageoutbill extends BaseEntity
         this.delStatus = delStatus;
     }
 
-    public Long getDelStatus() 
+    public String getApplyid() {
+        return applyid;
+    }
+
+    public void setApplyid(String applyid) {
+        this.applyid = applyid;
+    }
+
+    public String getContractid() {
+        return contractid;
+    }
+
+    public void setContractid(String contractid) {
+        this.contractid = contractid;
+    }
+
+    public String getInvoiceid() {
+        return invoiceid;
+    }
+
+    public void setInvoiceid(String invoiceid) {
+        this.invoiceid = invoiceid;
+    }
+
+    public String getCustomer() {
+        return customer;
+    }
+
+    public void setCustomer(String customer) {
+        this.customer = customer;
+    }
+
+    public String getExpressid() {
+        return expressid;
+    }
+
+    public void setExpressid(String expressid) {
+        this.expressid = expressid;
+    }
+
+    public String getInstoragecause() {
+        return instoragecause;
+    }
+
+    public void setInstoragecause(String instoragecause) {
+        this.instoragecause = instoragecause;
+    }
+
+    public String getProjectname() {
+        return projectname;
+    }
+
+    public void setProjectname(String projectname) {
+        this.projectname = projectname;
+    }
+
+    public String getProposer() {
+        return proposer;
+    }
+
+    public void setProposer(String proposer) {
+        this.proposer = proposer;
+    }
+
+    public Long getDelStatus()
     {
         return delStatus;
     }

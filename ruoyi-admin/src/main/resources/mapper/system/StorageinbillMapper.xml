@@ -9,6 +9,13 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="stockinid"    column="stockinid"    />
         <result property="money"    column="money"    />
         <result property="supplier"    column="supplier"    />
+        <result property="applyid"    column="applyid"    />
+        <result property="contractid"    column="contractid"    />
+        <result property="invoiceid"    column="invoiceid"    />
+        <result property="expressid"    column="expressid"    />
+        <result property="instoragecause"    column="instoragecause"    />
+        <result property="projectname"    column="projectname"    />
+        <result property="proposer"    column="proposer"    />
         <result property="outsourcewarehouseid"    column="outsourcewarehouseid"    />
         <result property="outsourcewarehouse"    column="outsourcewarehouse"    />
         <result property="purchaseid"    column="purchaseid"    />
@@ -16,26 +23,30 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="warehouseadmin"    column="warehouseadmin"    />
         <result property="storagentime"    column="storagentime"    />
         <result property="comments"    column="comments"    />
-        <result property="delStatus"    column="del_status"    />
+        <result property="status"    column="status"    />
         <result property="cTime"    column="c_time"    />
         <result property="uTime"    column="u_time"    />
     </resultMap>
 
     <sql id="selectStorageinbillVo">
-        select s.id,sum(money) as money , stockinid,storageindetail.supplier supplier ,outsourcewarehouseid,outsourcewarehouse, s.purchaseid, deliveryman, warehouseadmin, storagentime, s.comments, del_status, s.c_time, s.u_time from storageinbill s LEFT JOIN storageindetail
+        select s.id,sum(money) as money ,applyid,contractid,invoiceid,expressid,instoragecause,projectname,proposer, stockinid, s.supplier ,outsourcewarehouseid,outsourcewarehouse, s.purchaseid, deliveryman, warehouseadmin, storagentime, s.comments, status, s.c_time, s.u_time from storageinbill s LEFT JOIN storageindetail
 				on stockinid=storageinbillid
     </sql>
 
     <select id="selectStorageinbillList" parameterType="Storageinbill" resultMap="StorageinbillResult">
         <include refid="selectStorageinbillVo"/>
-        <where>  
+        <where>
+            <if test="status != null  and status != ''"> and status=#{status}</if>
+
             <if test="outsourcewarehouse != null  and outsourcewarehouse != ''"> and outsourcewarehouse like concat('%', #{outsourcewarehouse}, '%')</if>
-            <if test="purchaseid != null  and purchaseid != ''"> and s.purchaseid = #{purchaseid}</if>
-            <if test="params.beginTime != null and params.beginTime != ''"><!-- 开始时间检索 -->
-                AND date_format(storagentime,'%y%m%d') &gt;= date_format(#{params.beginTime},'%y%m%d')
-            </if>
-            <if test="params.endTime != null and params.endTime != ''"><!-- 结束时间检索 -->
-                AND date_format(storagentime,'%y%m%d') &lt;= date_format(#{params.endTime},'%y%m%d')
+            <if test="supplier != null  and supplier != ''"> and s.supplier like concat('%', #{supplier}, '%')</if>
+            <if test="instoragecause != null  and instoragecause != ''"> and instoragecause like concat('%', #{instoragecause}, '%')</if>
+            <if test="projectname != null  and projectname != ''"> and projectname like concat('%', #{projectname}, '%')</if>
+            <if test="expressid != null  and expressid != ''"> and expressid like concat('%', #{expressid}, '%')</if>
+            <if test="invoiceid != null  and invoiceid != ''"> and invoiceid like concat('%', #{invoiceid}, '%')</if>
+            <if test="invoiceid != null  and contractid != ''"> and contractid like concat('%', #{contractid}, '%')</if>
+            <if test="params.beginTime != null and params.beginTime != '' and params.endTime != null and params.endTime != '' "><!-- 开始时间检索 -->
+                AND  storagentime    between  #{params.beginTime} and #{params.endTime}
             </if>
             <if test="comments != null  and comments != ''">
                 and s.comments like concat('%', #{comments}, '%')
@@ -59,31 +70,67 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         insert into storageinbill
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="stockinid != null  and stockinid != ''">stockinid,</if>
+            <if test="applyid != null  and applyid != ''">applyid,</if>
+            <if test="purchaseid != null  and purchaseid != ''">purchaseid,</if>
+            <if test="contractid != null  and contractid != ''">contractid,</if>
+            <if test="invoiceid != null  and invoiceid != ''">invoiceid,</if>
+            <if test="supplier != null  and supplier != ''">supplier,</if>
+            <if test="expressid != null  and expressid != ''">expressid,</if>
+            <if test="instoragecause != null  and instoragecause != ''">instoragecause,</if>
+            <if test="projectname != null  and projectname != ''">projectname,</if>
+            <if test="proposer != null  and proposer != ''">proposer,</if>
             <if test="outsourcewarehouse != null  and outsourcewarehouse != ''">outsourcewarehouse,</if>
             <if test="outsourcewarehouseid != null  and outsourcewarehouseid != ''">outsourcewarehouseid,</if>
-            <if test="purchaseid != null  and purchaseid != ''">purchaseid,</if>
             <if test="deliveryman != null  and deliveryman != ''">deliveryman,</if>
             <if test="warehouseadmin != null  and warehouseadmin != ''">warehouseadmin,</if>
-            <if test="storagentime != null ">storagentime,</if>
+            <if test="storagentime != null and storagentime!='' ">storagentime,</if>
             <if test="comments != null  and comments != ''">comments,</if>
-            <if test="delStatus != null  and delStatus != ''">del_status,</if>
+            <if test="status != null  and status != ''">status,</if>
             <if test="cTime != null ">c_time,</if>
             <if test="uTime != null ">u_time,</if>
          </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="stockinid != null  and stockinid != ''">#{stockinid},</if>
+            <if test="applyid != null  and applyid != ''">#{applyid},</if>
+            <if test="purchaseid != null  and purchaseid != ''">#{purchaseid},</if>
+            <if test="contractid != null  and contractid != ''">#{contractid},</if>
+            <if test="invoiceid != null  and invoiceid != ''">#{invoiceid},</if>
+            <if test="supplier != null  and supplier != ''">#{supplier},</if>
+            <if test="expressid != null  and expressid != ''">#{expressid},</if>
+            <if test="instoragecause != null  and instoragecause != ''">#{instoragecause},</if>
+            <if test="projectname != null  and projectname != ''">#{projectname},</if>
+            <if test="proposer != null  and proposer != ''">#{proposer},</if>
             <if test="outsourcewarehouse != null  and outsourcewarehouse != ''">#{outsourcewarehouse},</if>
             <if test="outsourcewarehouseid != null  and outsourcewarehouseid != ''">#{outsourcewarehouseid},</if>
-            <if test="purchaseid != null  and purchaseid != ''">#{purchaseid},</if>
             <if test="deliveryman != null  and deliveryman != ''">#{deliveryman},</if>
             <if test="warehouseadmin != null  and warehouseadmin != ''">#{warehouseadmin},</if>
-            <if test="storagentime != null ">#{storagentime},</if>
+            <if test="storagentime != null and storagentime!=''">#{storagentime},</if>
             <if test="comments != null  and comments != ''">#{comments},</if>
-            <if test="delStatus != null  and delStatus != ''">#{delStatus},</if>
+            <if test="status != null  and status != ''">#{status},</if>
             <if test="cTime != null ">#{cTime},</if>
             <if test="uTime != null ">#{uTime},</if>
          </trim>
     </insert>
+
+    <update id="updateStorageinbillApply">
+
+         update storageinbill set status=1 where id=#{id}
+
+    </update>
+
+    <update id="updateStorageinbillFatify">
+
+         update storageinbill set status=2 where id=#{id}
+
+    </update>
+
+
+    <update id="updateStorageinbillTurn">
+
+         update storageinbill set status=3 where id=#{id}
+
+    </update>
+
 
     <update id="updateStorageinbill" parameterType="Storageinbill">
         update storageinbill
@@ -95,7 +142,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="warehouseadmin != null  and warehouseadmin != ''">warehouseadmin = #{warehouseadmin},</if>
             <if test="storagentime != null ">storagentime = #{storagentime},</if>
             <if test="comments != null  and comments != ''">comments = #{comments},</if>
-            <if test="delStatus != null  and delStatus != ''">del_status = #{delStatus},</if>
+            <if test="status != null  and status != ''">status = #{status},</if>
+
             <if test="cTime != null ">c_time = #{cTime},</if>
             <if test="uTime != null ">u_time = #{uTime},</if>
         </trim>
@@ -112,5 +160,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             #{id}
         </foreach>
     </delete>
+
+
     
 </mapper>

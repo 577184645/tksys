@@ -116,15 +116,7 @@ public class StorageServiceImpl implements IStorageService
             if(!jsonObject.getString("manufacture").equals("null")) {
                 storageindetail.setManufacture(jsonObject.getString("manufacture"));
             }
-            storageindetail.setSupplier(jsonObject.getString("supplier"));
-            storageindetail.setPurchaseid(jsonObject.getString("purchaseid"));
-            storageindetail.setApplyid(jsonObject.getString("applyid"));
-            storageindetail.setContractid(jsonObject.getString("contractid"));
-            storageindetail.setInvoiceid(jsonObject.getString("invoiceid"));
-            storageindetail.setExpressid(jsonObject.getString("expressid"));
-            storageindetail.setInstoragecause(jsonObject.getString("instoragecause"));
-            storageindetail.setProjectname(jsonObject.getString("projectname"));
-            storageindetail.setProposer(jsonObject.getString("proposer"));
+            storageindetail.setSupplier(storageinbill.getSupplier());
             storageindetail.setComments(jsonObject.getString("comments"));
             storageindetail.setSerialNumber(jsonObject.getString("serialNumber"));
             storageindetail.setStorageinbillid(storageinbill.getStockinid());
@@ -244,31 +236,20 @@ public class StorageServiceImpl implements IStorageService
             if (!jsonObject.getString("partnumber").equals("null")) {
                 storageoutdetail.setPartnumber(jsonObject.getString("partnumber"));
             }
-            storageoutdetail.setRate(jsonObject.getString("rate"));
-            if (!jsonObject.getString("taxamount").equals("")) {
-                storageoutdetail.setTaxamount(Double.valueOf(jsonObject.getString("taxamount")));
 
-            }
             if (!jsonObject.getString("unit").equals("null")) {
                 storageoutdetail.setUnit(jsonObject.getString("unit"));
             }
             if (!jsonObject.getString("manufacture").equals("null")) {
                 storageoutdetail.setManufacture(jsonObject.getString("manufacture"));
             }
-
-            if (!jsonObject.getString("supplier").equals("null")) {
+            if(!jsonObject.getString("supplier").equals("null")){
                 storageoutdetail.setSupplier(jsonObject.getString("supplier"));
             }
-            storageoutdetail.setPurchaseid(jsonObject.getString("purchaseid"));
-            storageoutdetail.setApplyid(jsonObject.getString("applyid"));
-            storageoutdetail.setContractid(jsonObject.getString("contractid"));
-            storageoutdetail.setInvoiceid(jsonObject.getString("invoiceid"));
-            storageoutdetail.setExpressid(jsonObject.getString("expressid"));
-            storageoutdetail.setInstoragecause(jsonObject.getString("instoragecause"));
-            storageoutdetail.setProjectname(jsonObject.getString("projectname"));
-            storageoutdetail.setProposer(jsonObject.getString("proposer"));
+            if(!jsonObject.getString("serialNumber").equals("null")){
+                storageoutdetail.setSerialNumber(jsonObject.getString("serialNumber"));
+            }
             storageoutdetail.setComments(jsonObject.getString("comments"));
-            storageoutdetail.setSerialNumber(jsonObject.getString("serialNumber"));
             storageoutdetail.setStorageoutbillid(storageoutbill.getStorageoutid());
             storageoutdetailMapper.insertStorageoutdetail(storageoutdetail);
             storage.setId(Integer.valueOf(jsonObject.getString("id")));

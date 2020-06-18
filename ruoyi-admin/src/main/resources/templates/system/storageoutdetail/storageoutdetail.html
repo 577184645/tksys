@@ -145,94 +145,19 @@
                         title: '供应商',
                         width:230
                     },
-                    {
-                        field: 'rate',
-                        title: '税率',
-                        width:100
-                    },
-                    {
-                        field: 'taxamount',
-                        title: '税额',
-                        width:110
-                    },
+
                     {
                         field: 'serialNumber',
                         title: '序列号',
                         width:120
                     },
                     {
-                        field: 'purchaseid',
-                        title: '采购编号'
-                    },
-                    {
-                        field: 'applyid',
-                        title: '申请单号',
-                        width:130
-                    },
-                    {
-                        field: 'contractid',
-                        title: '合同单号',
-                        width:130
-                    },
-                    {
-                        field: 'invoiceid',
-                        title: '发票单号',
-                        width:130
-                    },
-                    {
-                        field: 'expressid',
-                        title: '快递单号',
-                        width:130
-                    },
-                    {
-                        field: 'instoragecause',
-                        title: '出库原因',
-                        width:130
-                    },
-                    {
-                        field: 'projectname',
-                        title: '所属项目',
-                        width:230
-                    },
-                    {
-                        field: 'proposer',
-                        title: '申请人',
-                        width:100
-                    },
-                    {
                         field: 'comments',
                         title: '备注',
-                        width:230
+                        width:170
                     },
 
-
-                    {
-                        field: 'footprint',
-                        title: '封装',
-                        width:100,
-                    },
-                    {
-                        field: 'cTime',
-                        title: '创建时间',
-                        width:160,
-                    },
-                    {
-                        field: 'uTime',
-                        title: '修改时间'
-                        ,
-                        width:160,
-                    },
-                {
-                    title: '操作',
-                    align: 'center',
-                    width:100,
-                    formatter: function(value, row, index) {
-                        var actions = [];
-                        actions.push('<a class="btn btn-success btn-xs ' + editFlag + '" href="javascript:void(0)" onclick="$.operate.edit(\'' + row.id + '\')"><i class="fa fa-edit"></i>编辑</a> ');
-                        actions.push('<a class="btn btn-danger btn-xs ' + removeFlag + '" href="javascript:void(0)" onclick="$.operate.remove(\'' + row.id + '\')"><i class="fa fa-remove"></i>删除</a>');
-                        return actions.join('');
-                    }
-                }]
+                ]
             };
             $.table.init(options);
         });

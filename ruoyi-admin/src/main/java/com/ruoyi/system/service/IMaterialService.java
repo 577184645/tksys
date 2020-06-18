@@ -3,6 +3,8 @@ package com.ruoyi.system.service;
 import java.util.List;
 import com.ruoyi.system.domain.Material;
 
+import javax.servlet.http.HttpServletRequest;
+
 /**
  * 物料列表Service接口
  * 
@@ -67,4 +69,14 @@ public interface IMaterialService
      * @return 结果
      */
     public int deleteMaterialById(Integer id);
+
+
+
+    /**
+     * 导入物料数据
+     *
+     * @param materialList 物料数据列表
+     * @return 结果
+     */
+    public String importMaterial(List<Material> materialList, HttpServletRequest request);
 }

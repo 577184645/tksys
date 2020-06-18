@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="zh" xmlns:th="http://www.thymeleaf.org" xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
 <head>
+
     <style>
         .select-table table {
             table-layout:fixed;
@@ -14,7 +15,9 @@
             height:40px;
         }
     </style>
+
     <th:block th:include="include :: header('入库单列表列表')" />
+    <th:block th:include="include :: datetimepicker-css" />
 </head>
 <body class="gray-bg">
      <div class="container-div">
@@ -28,18 +31,45 @@
                                 <input type="text" name="outsourcewarehouse"/>
                             </li>
                             <li>
-                                <label>采购单号：</label>
-                                <input type="text" name="purchaseid"/>
+                                <label>供应商：</label>
+                                <input type="text" name="supplier"/>
                             </li>
-                            <li class="select-time">
-                                <label>入库时间： </label>
-                                <input type="text" class="time-input" id="startTime" placeholder="开始时间" name="params[beginTime]"/>
-                                <span>-</span>
-                                <input type="text" class="time-input" id="endTime" placeholder="结束时间" name="params[endTime]"/>
+                            <li>
+                                <label>发票编号：</label>
+                                <input type="text" name="invoiceid"/>
+                            </li>
+                            <li>
+                                <label>合同单号：</label>
+                                <input type="text" name="contractid"/>
+                            </li>
+                            <li>
+                                <label>快递单号：</label>
+                                <input type="text" name="expressid"/>
+                            </li>
+                            <li>
+                                <label>入库原因：</label>
+                                <input type="text" name="instoragecause"/>
+                            </li>
+                            <li>
+                                <label>项目名称：</label>
+                                <input type="text" name="projectname"/>
                             </li>
                             <li>
                                 <label>备注：</label>
                                 <input type="text" name="comments"/>
+                            </li>
+                            <li class="select-time">
+                                <label>入库时间： </label>
+                                <input type="text"   class="form-control" id="datetimepicker-startTime" placeholder="开始时间" name="params[beginTime]">
+                                <span>-</span>
+                                <input type="text"   class="form-control" id="datetimepicker-endTime" placeholder="结束时间" name="params[endTime]"/>
+                            </li>
+                            <li>
+                                <label>批准状态：</label>
+                                <select name="status" th:with="type=${@dict.getType('storageinbill_status')}">
+                                    <option value="">所有</option>
+                                    <option th:each="dict : ${type}" th:text="${dict.dictLabel}" th:value="${dict.dictValue}"></option>
+                                </select>
                             </li>
                             <li>
                                 <a class="btn btn-primary btn-rounded btn-sm" onclick="$.table.search()"><i class="fa fa-search"></i>&nbsp;搜索</a>
@@ -54,15 +84,10 @@
                 <a class="btn btn-primary single disabled" onclick="Info()" shiro:hasPermission="system:storageinbill:info" >
                     <i class="fa fa-edit"></i> 查看
                 </a>
-                <a class="btn btn-primary btn-rounded btn-sm"  onclick="print()" shiro:hasPermission="system:storageinbill:print" >
+                <a class="btn btn-primary single disabled"  onclick="print()" shiro:hasPermission="system:storageinbill:print" >
                     <i class="fa fa-print"></i> 打印
                 </a>
-                <a class="btn btn-primary single disabled" onclick="$.operate.edit()" shiro:hasPermission="system:storageinbill:edit">
-                    <i class="fa fa-edit"></i> 修改
-                </a>
-                <a class="btn btn-danger multiple disabled" onclick="$.operate.removeAll()" shiro:hasPermission="system:storageinbill:remove">
-                    <i class="fa fa-remove"></i> 删除
-                </a>
+
                 <a class="btn btn-warning" onclick="$.table.exportExcel()" shiro:hasPermission="system:storageinbill:export">
                     <i class="fa fa-download"></i> 导出
                 </a>
@@ -72,13 +97,27 @@
             </div>
         </div>
     </div>
-    <th:block th:include="include :: footer" />
+
+     <th:block th:include="include :: footer" />
+     <th:block th:include="include :: datetimepicker-js" />
     <script th:inline="javascript">
-        var editFlag = [[${@permission.hasPermi('system:storageinbill:edit')}]];
-        var removeFlag = [[${@permission.hasPermi('system:storageinbill:remove')}]];
+        var applyFlag = [[${@permission.hasPermi('system:storageinbill:apply')}]];
+        var checkprintFlag = [[${@permission.hasPermi('system:storageinbill:checkprint')}]];
+        var storageinbillStatusDatas = [[${@dict.getType('storageinbill_status')}]];
+
+
         var prefix = ctx + "system/storageinbill";
         var prefix1 = ctx + "system/storageindetail";
         $(function() {
+
+            $("#datetimepicker-startTime").datetimepicker({
+                format: "yyyy-mm-dd hh:ii",
+                autoclose: true
+            });
+            $("#datetimepicker-endTime").datetimepicker({
+                format: "yyyy-mm-dd hh:ii",
+                autoclose: true
+            });
             var options = {
                 url: prefix + "/list",
                 createUrl: prefix + "/add",
@@ -125,26 +164,79 @@
                     title: '入库时间',
                     width:160
                 },
-                {
-                    field: 'comments', 
-                    title: '备注',
-                    width:200
-                },  {
+                    {
+                        field: 'supplier',
+                        title: '供应商',
+                        width:200
+                    },
+
+
+                    {
+                        field: 'invoiceid',
+                        title: '发票单号',
+                        width:120
+                    },
+                    {
+                        field: 'expressid',
+                        title: '快递单号',
+                        width:120
+                    },
+                    {
+                        field: 'proposer',
+                        title: '申请人',
+                        width:120
+                    },
+                    {
+                        field: 'projectname',
+                        title: '项目名称',
+                        width:220
+                    },
+                    {
+                        field: 'instoragecause',
+                        title: '入库原因',
+                        width:160
+                    },
+                    {
                         field: 'purchaseid',
                         title: '采购单号',
                         width:120
                     },
-                {
-                    title: '操作',
-                    align: 'center',
-                    width:100,
-                    formatter: function(value, row, index) {
-                        var actions = [];
-                        actions.push('<a class="btn btn-success btn-xs ' + editFlag + '" href="javascript:void(0)" onclick="$.operate.edit(\'' + row.id + '\')"><i class="fa fa-edit"></i>编辑</a> ');
-                        actions.push('<a class="btn btn-danger btn-xs ' + removeFlag + '" href="javascript:void(0)" onclick="$.operate.remove(\'' + row.id + '\')"><i class="fa fa-remove"></i>删除</a>');
-                        return actions.join('');
+                    {
+                        field: 'contractid',
+                        title: '合同单号',
+                        width:120
+                    },
+                    {
+                        field: 'status',
+                        title: '状态',
+                        width:120,
+                        formatter: function(value, row, index) {
+                            return $.table.selectDictLabel(storageinbillStatusDatas, value);
+                        }
+                    },
+                    {
+                        field: 'comments',
+                        title: '备注',
+                        width:200
+                    }, {
+                        title: '操作',
+                        align: 'center',
+                        width:150,
+                        formatter: function(value, row, index) {
+                            var actions = [];
+             if(row.status==3) {
+                 actions.push('<a class="btn btn-success btn-xs ' + applyFlag + '" href="javascript:void(0)" onclick="apply(\'' + row.id + '\')"><i class="fa fa-edit"></i>申请</a> ');
+             }
+                            if(row.status==2) {
+                                actions.push('<a class="btn btn-success btn-xs ' + checkprintFlag + '" href="javascript:void(0)" onclick="print1(\'' + row.id + '\')"><i class="fa fa-print"></i>打印</a> ');
+                            }
+                            return actions.join('');
+                        }
                     }
-                }]
+
+
+
+             ]
             };
             $.table.init(options);
         });
@@ -231,6 +323,45 @@
             return url;
         }
 
+
+
+
+        function print1(id) {
+            table.set();
+
+
+
+
+                $.modal.openTab("打印入库单", url = prefix+"/print1/"+(id));
+
+
+
+        }
+
+
+
+   function  apply(id) {
+       table.set();
+       $.modal.confirm("确定提交该入库单吗？", function() {
+           $.ajax({
+               url : prefix+'/apply',
+               dataType : 'json',
+               type : 'post',
+               data:{"id":id},
+               beforeSend: function () {
+                   $.modal.loading("正在处理中，请稍后...");
+               },
+               success: function(result) {
+                   if (typeof callback == "function") {
+                       callback(result);
+                   }
+                   $.operate.ajaxSuccess(result);
+                   $.table.refresh();
+               }
+           });
+           $.ajax(config)
+       });
+   }
     </script>
 </body>
 </html>

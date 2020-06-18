@@ -6,8 +6,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.ruoyi.common.annotation.Excel;
-import com.ruoyi.system.domain.Materialtype;
-import com.ruoyi.system.domain.SysUser;
+import com.ruoyi.system.domain.*;
 import com.ruoyi.system.service.*;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,11 +15,13 @@ import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
 import com.ruoyi.common.annotation.Log;
 import com.ruoyi.common.enums.BusinessType;
-import com.ruoyi.system.domain.Material;
 import com.ruoyi.common.core.controller.BaseController;
 import com.ruoyi.common.core.domain.AjaxResult;
 import com.ruoyi.common.utils.poi.ExcelUtil;
 import com.ruoyi.common.core.page.TableDataInfo;
+import org.springframework.web.multipart.MultipartFile;
+
+import javax.servlet.http.HttpServletRequest;
 
 /**
  * 物料列表Controller
@@ -59,6 +60,28 @@ public class MaterialController extends BaseController
     return map;
 
 }
+
+
+    @PostMapping("/importData")
+    @RequiresPermissions("system:material:import")
+    @ResponseBody
+    public AjaxResult importData(MultipartFile file, boolean updateSupport, HttpServletRequest request) throws Exception
+    {
+
+        ExcelUtil<Material> util = new ExcelUtil<Material>(Material.class);
+        List<Material> material  = util.importExcel(file.getInputStream());
+        String message = materialService.importMaterial(material,request);
+        return AjaxResult.success(message);
+    }
+
+
+    @GetMapping("/importTemplate")
+    @ResponseBody
+    public AjaxResult importTemplate()
+    {
+        ExcelUtil<Material> util = new ExcelUtil<Material>(Material.class);
+        return util.importTemplateExcel("物料数据");
+    }
 
     @RequiresPermissions("system:material:view")
     @GetMapping()

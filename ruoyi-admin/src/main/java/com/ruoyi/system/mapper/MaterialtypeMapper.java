@@ -19,6 +19,15 @@ public interface MaterialtypeMapper
      * @return 物料类型列表
      */
     public Materialtype selectMaterialtypeById(Long deptId);
+    /**
+     * 查询物料类型列表
+     *
+     * @param code 物料类型列表code
+     * @return 物料类型列表
+     */
+    public Materialtype selectMaterialtypeByCode(String code);
+
+
 
     /**
      * 查询物料类型列表列表

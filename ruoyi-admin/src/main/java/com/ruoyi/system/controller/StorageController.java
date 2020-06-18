@@ -4,6 +4,8 @@ import java.util.List;
 
 import com.ruoyi.system.domain.Storageinbill;
 import com.ruoyi.system.domain.Storageoutbill;
+import com.ruoyi.system.service.IProjectService;
+import com.ruoyi.system.service.ISupplierService;
 import com.ruoyi.system.service.ISysUserService;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
@@ -45,6 +47,10 @@ public class StorageController extends BaseController
     private IStorageService storageService;
     @Autowired
     private ISysUserService iSysUserService;
+    @Autowired
+    private IProjectService iProjectService;
+    @Autowired
+    private ISupplierService iSupplierService;
 
     @RequiresPermissions("system:storage:view")
     @GetMapping()
@@ -86,7 +92,11 @@ public class StorageController extends BaseController
     @GetMapping("/add")
     public String add(ModelMap mmap)
     {
+
         mmap.put("userList",iSysUserService.findList());
+        mmap.put("projectList",iProjectService.selectProjectList(null));
+        mmap.put("supplierList",iSupplierService.findListSupplier());
+
         return prefix + "/add";
     }
 
@@ -111,6 +121,8 @@ public class StorageController extends BaseController
     public String edit(ModelMap mmap)
     {
         mmap.put("userList",iSysUserService.findList());
+        mmap.put("projectList",iProjectService.selectProjectList(null));
+        mmap.put("supplierList",iSupplierService.findListSupplier());
         return prefix + "/edit";
     }
 

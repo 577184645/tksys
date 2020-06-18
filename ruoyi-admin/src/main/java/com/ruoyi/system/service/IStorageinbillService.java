@@ -1,7 +1,10 @@
 package com.ruoyi.system.service;
 
 import java.util.List;
+
+import com.ruoyi.system.domain.Material;
 import com.ruoyi.system.domain.Storageinbill;
+import com.ruoyi.system.domain.Testss;
 
 /**
  * 入库单列表Service接口
@@ -18,6 +21,28 @@ public interface IStorageinbillService
      * @return 入库单列表
      */
     public Storageinbill selectStorageinbillById(Long id);
+
+
+
+    /** 提交申请
+     * 修改status为1
+     * @param
+     * @return
+     */
+    public int updateStorageinbillApply(Long id);
+    /** 批准
+     * 修改status为2
+     * @param
+     * @return
+     */
+    public int updateStorageinbillFatify(Long id);
+
+    /**驳回
+     * 修改status为0
+     * @param
+     * @return
+     */
+    public int updateStorageinbillTurn(Long id);
 
     /**
      * 查询入库单列表列表
@@ -58,4 +83,9 @@ public interface IStorageinbillService
      * @return 结果
      */
     public int deleteStorageinbillById(Long id);
+
+
+
+
+
 }

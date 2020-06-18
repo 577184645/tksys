@@ -63,35 +63,6 @@ public class Storageindetail extends BaseEntity
     @Excel(name = "税率")
     private String rate;
 
-    /** 采购编号 */
-    @Excel(name = "采购编号")
-    private String purchaseid;
-
-    /** 申请单号 */
-    @Excel(name = "申请单号")
-    private String applyid;
-
-    /** 合同单号 */
-    @Excel(name = "合同单号")
-    private String contractid;
-
-    /** 发票单号 */
-    @Excel(name = "发票单号")
-    private String invoiceid;
-
-    private Integer rownum;
-
-    /** 快递单号 */
-    @Excel(name = "快递单号")
-    private String expressid;
-
-    /** 进库原因 */
-    @Excel(name = "出库原因")
-    private String instoragecause;
-
-    /** 所属项目 */
-    @Excel(name = "所属项目")
-    private String projectname;
 
     /** 备注 */
     @Excel(name = "备注")
@@ -100,9 +71,7 @@ public class Storageindetail extends BaseEntity
     @Excel(name = "封装")
    private String footprint;
 
-    /** 申请人 */
-    @Excel(name = "申请人")
-    private String proposer;
+
 
 
     @Excel(name = "序列号")
@@ -112,6 +81,8 @@ public class Storageindetail extends BaseEntity
     @Excel(name = "税额")
     private Double taxamount;
 
+
+
     /** 创建时间 */
     @Excel(name = "创建时间", width = 30, dateFormat = "yyyy-MM-dd")
     private Date cTime;
@@ -120,12 +91,26 @@ public class Storageindetail extends BaseEntity
     @Excel(name = "修改时间", width = 30, dateFormat = "yyyy-MM-dd")
     private Date uTime;
 
+    private Integer rownum;
+
     public Integer getRownum() {
         return rownum;
     }
 
     public void setRownum(Integer rownum) {
         this.rownum = rownum;
+    }
+
+    public String getRate() {
+        return rate;
+    }
+
+    public String getComments() {
+        return comments;
+    }
+
+    public void setComments(String comments) {
+        this.comments = comments;
     }
 
     public void setFootprint(String footprint) {
@@ -248,91 +233,7 @@ public class Storageindetail extends BaseEntity
         this.rate = rate;
     }
 
-    public String getRate() 
-    {
-        return rate;
-    }
-    public void setPurchaseid(String purchaseid) 
-    {
-        this.purchaseid = purchaseid;
-    }
 
-    public String getPurchaseid() 
-    {
-        return purchaseid;
-    }
-    public void setApplyid(String applyid) 
-    {
-        this.applyid = applyid;
-    }
-
-    public String getApplyid() 
-    {
-        return applyid;
-    }
-    public void setContractid(String contractid) 
-    {
-        this.contractid = contractid;
-    }
-
-    public String getContractid() 
-    {
-        return contractid;
-    }
-    public void setInvoiceid(String invoiceid) 
-    {
-        this.invoiceid = invoiceid;
-    }
-
-    public String getInvoiceid() 
-    {
-        return invoiceid;
-    }
-    public void setExpressid(String expressid) 
-    {
-        this.expressid = expressid;
-    }
-
-    public String getExpressid() 
-    {
-        return expressid;
-    }
-    public void setInstoragecause(String instoragecause) 
-    {
-        this.instoragecause = instoragecause;
-    }
-
-    public String getInstoragecause() 
-    {
-        return instoragecause;
-    }
-    public void setProjectname(String projectname) 
-    {
-        this.projectname = projectname;
-    }
-
-    public String getProjectname() 
-    {
-        return projectname;
-    }
-    public void setComments(String comments) 
-    {
-        this.comments = comments;
-    }
-
-    public String getComments() 
-    {
-        return comments;
-    }
-    public void setProposer(String proposer) 
-    {
-        this.proposer = proposer;
-    }
-
-    public String getProposer() 
-    {
-        return proposer;
-    }
     public void setTaxamount(Double taxamount) 
     {
         this.taxamount = taxamount;
@@ -375,16 +276,6 @@ public class Storageindetail extends BaseEntity
             .append("money", getMoney())
             .append("unit", getUnit())
             .append("supplier", getSupplier())
-            .append("rate", getRate())
-            .append("purchaseid", getPurchaseid())
-            .append("applyid", getApplyid())
-            .append("contractid", getContractid())
-            .append("invoiceid", getInvoiceid())
-            .append("expressid", getExpressid())
-            .append("instoragecause", getInstoragecause())
-            .append("projectname", getProjectname())
-            .append("comments", getComments())
-            .append("proposer", getProposer())
             .append("taxamount", getTaxamount())
             .append("cTime", getcTime())
             .append("uTime", getuTime())

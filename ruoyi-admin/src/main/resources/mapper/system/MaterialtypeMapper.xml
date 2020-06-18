@@ -42,6 +42,14 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         where t.dept_id = #{deptId}
     </select>
 
+
+    <select id="selectMaterialtypeByCode"  resultMap="MaterialtypeResult">
+        select t.dept_id, t.parent_id,t.code, t.ancestors, t.dept_name, t.order_num, t.leader, t.phone, t.email, t.status, t.del_flag, t.create_by, t.create_time, t.update_by, t.update_time, p.dept_id as parent_name
+        from materialtype t
+        left join materialtype p on p.dept_id = t.parent_id
+        where t.code = #{code}
+    </select>
+
     <insert id="insertMaterialtype" parameterType="Materialtype" useGeneratedKeys="true" keyProperty="deptId">
         insert into materialtype
         <trim prefix="(" suffix=")" suffixOverrides=",">

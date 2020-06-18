@@ -20,6 +20,25 @@ public interface StorageinbillMapper
     public Storageinbill selectStorageinbillById(Long id);
 
 
+    /**
+     * 修改status为1
+     * @param
+     * @return
+     */
+    public int updateStorageinbillApply(Long id);
+    /**
+     * 修改status为2
+     * @param
+     * @return
+     */
+    public int updateStorageinbillFatify(Long id);
+    /**
+     * 修改status为0
+     * @param
+     * @return
+     */
+    public int updateStorageinbillTurn(Long id);
+
     public Storageinbill selectStorageinbillByStockinid(String stockinid);
 
     /**

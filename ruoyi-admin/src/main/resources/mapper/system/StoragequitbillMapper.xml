@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.StoragequitbillMapper">
+    
+    <resultMap type="Storagequitbill" id="StoragequitbillResult">
+        <result property="id"    column="id"    />
+        <result property="storagequitbillid"    column="storagequitbillid"    />
+        <result property="outsourcewarehouse"    column="outsourcewarehouse"    />
+        <result property="outsourcewarehouseid"    column="outsourcewarehouseid"    />
+        <result property="outpeople"    column="outpeople"    />
+        <result property="outstoragecause"    column="outstoragecause"    />
+        <result property="comments"    column="comments"    />
+        <result property="cTime"    column="c_time"    />
+        <result property="uTime"    column="u_time"    />
+    </resultMap>
+
+    <sql id="selectStoragequitbillVo">
+        select id, storagequitbillid, outsourcewarehouse, outsourcewarehouseid, outpeople, outstoragecause, comments, c_time, u_time from storagequitbill
+    </sql>
+
+    <select id="selectStoragequitbillList" parameterType="Storagequitbill" resultMap="StoragequitbillResult">
+        <include refid="selectStoragequitbillVo"/>
+        <where>  
+            <if test="storagequitbillid != null  and storagequitbillid != ''"> and storagequitbillid like concat('%', #{storagequitbillid}, '%')</if>
+            <if test="outsourcewarehouse != null  and outsourcewarehouse != ''"> and outsourcewarehouse like concat('%', #{outsourcewarehouse}, '%')</if>
+            <if test="outpeople != null  and outpeople != ''"> and outpeople like concat('%', #{outpeople}, '%')</if>
+            <if test="outstoragecause != null  and outstoragecause != ''"> and outstoragecause like concat('%', #{outstoragecause}, '%')</if>
+            <if test="comments != null  and comments != ''"> and comments like concat('%', #{comments}, '%')</if>
+            <if test="cTime != null "> and c_time = #{cTime}</if>
+            <if test="uTime != null "> and u_time = #{uTime}</if>
+        </where>
+    </select>
+    
+    <select id="selectStoragequitbillById" parameterType="Long" resultMap="StoragequitbillResult">
+        <include refid="selectStoragequitbillVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertStoragequitbill" parameterType="Storagequitbill" useGeneratedKeys="true" keyProperty="id">
+        insert into storagequitbill
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="storagequitbillid != null  and storagequitbillid != ''">storagequitbillid,</if>
+            <if test="outsourcewarehouse != null  and outsourcewarehouse != ''">outsourcewarehouse,</if>
+            <if test="outsourcewarehouseid != null ">outsourcewarehouseid,</if>
+            <if test="outpeople != null  and outpeople != ''">outpeople,</if>
+            <if test="outstoragecause != null  and outstoragecause != ''">outstoragecause,</if>
+            <if test="comments != null  and comments != ''">comments,</if>
+            <if test="cTime != null ">c_time,</if>
+            <if test="uTime != null ">u_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="storagequitbillid != null  and storagequitbillid != ''">#{storagequitbillid},</if>
+            <if test="outsourcewarehouse != null  and outsourcewarehouse != ''">#{outsourcewarehouse},</if>
+            <if test="outsourcewarehouseid != null ">#{outsourcewarehouseid},</if>
+            <if test="outpeople != null  and outpeople != ''">#{outpeople},</if>
+            <if test="outstoragecause != null  and outstoragecause != ''">#{outstoragecause},</if>
+            <if test="comments != null  and comments != ''">#{comments},</if>
+            <if test="cTime != null ">#{cTime},</if>
+            <if test="uTime != null ">#{uTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updateStoragequitbill" parameterType="Storagequitbill">
+        update storagequitbill
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="storagequitbillid != null  and storagequitbillid != ''">storagequitbillid = #{storagequitbillid},</if>
+            <if test="outsourcewarehouse != null  and outsourcewarehouse != ''">outsourcewarehouse = #{outsourcewarehouse},</if>
+            <if test="outsourcewarehouseid != null ">outsourcewarehouseid = #{outsourcewarehouseid},</if>
+            <if test="outpeople != null  and outpeople != ''">outpeople = #{outpeople},</if>
+            <if test="outstoragecause != null  and outstoragecause != ''">outstoragecause = #{outstoragecause},</if>
+            <if test="comments != null  and comments != ''">comments = #{comments},</if>
+            <if test="cTime != null ">c_time = #{cTime},</if>
+            <if test="uTime != null ">u_time = #{uTime},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteStoragequitbillById" parameterType="Long">
+        delete from storagequitbill where id = #{id}
+    </delete>
+
+    <delete id="deleteStoragequitbillByIds" parameterType="String">
+        delete from storagequitbill where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    
+</mapper>

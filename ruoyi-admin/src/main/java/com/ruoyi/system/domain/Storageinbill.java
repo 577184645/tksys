@@ -45,12 +45,44 @@ public class Storageinbill extends BaseEntity
     @Excel(name = "入库时间", width = 30, dateFormat = "yyyy-MM-dd")
     private Date storagentime;
 
+
+    /** 申请单号 */
+    @Excel(name = "申请单号")
+    private String applyid;
+
+    /** 合同单号 */
+    @Excel(name = "合同单号")
+    private String contractid;
+
+    /** 发票单号 */
+    @Excel(name = "发票单号")
+    private String invoiceid;
+
+    @Excel(name = "供应商")
+    private String supplier;
+
+    /** 快递单号 */
+    @Excel(name = "快递单号")
+    private String expressid;
+
+    /** 进库原因 */
+    @Excel(name = "入库原因")
+    private String instoragecause;
+
+    /** 所属项目 */
+    @Excel(name = "所属项目")
+    private String projectname;
+
+    /** 申请人 */
+    @Excel(name = "申请人")
+    private String proposer;
+
     /** 备注 */
     @Excel(name = "备注")
     private String comments;
 
     /** 删除状态 */
-    private Long delStatus;
+    private Long status;
 
     /** 创建时间 */
     private Date cTime;
@@ -68,6 +100,63 @@ public class Storageinbill extends BaseEntity
 
     public void setSupplier(String supplier) {
         Supplier = supplier;
+    }
+
+
+    public String getApplyid() {
+        return applyid;
+    }
+
+    public void setApplyid(String applyid) {
+        this.applyid = applyid;
+    }
+
+    public String getContractid() {
+        return contractid;
+    }
+
+    public void setContractid(String contractid) {
+        this.contractid = contractid;
+    }
+
+    public String getInvoiceid() {
+        return invoiceid;
+    }
+
+    public void setInvoiceid(String invoiceid) {
+        this.invoiceid = invoiceid;
+    }
+
+    public String getExpressid() {
+        return expressid;
+    }
+
+    public void setExpressid(String expressid) {
+        this.expressid = expressid;
+    }
+
+    public String getInstoragecause() {
+        return instoragecause;
+    }
+
+    public void setInstoragecause(String instoragecause) {
+        this.instoragecause = instoragecause;
+    }
+
+    public String getProjectname() {
+        return projectname;
+    }
+
+    public void setProjectname(String projectname) {
+        this.projectname = projectname;
+    }
+
+    public String getProposer() {
+        return proposer;
+    }
+
+    public void setProposer(String proposer) {
+        this.proposer = proposer;
     }
 
     public Double getMoney() {
@@ -159,12 +248,12 @@ public class Storageinbill extends BaseEntity
         return comments;
     }
 
-    public Long getDelStatus() {
-        return delStatus;
+    public Long getStatus() {
+        return status;
     }
 
-    public void setDelStatus(Long delStatus) {
-        this.delStatus = delStatus;
+    public void setStatus(Long status) {
+        this.status = status;
     }
 
     public void setcTime(Date cTime)
@@ -197,7 +286,6 @@ public class Storageinbill extends BaseEntity
             .append("warehouseadmin", getWarehouseadmin())
             .append("storagentime", getStoragentime())
             .append("comments", getComments())
-            .append("delStatus", getDelStatus())
             .append("cTime", getcTime())
             .append("uTime", getuTime())
             .toString();

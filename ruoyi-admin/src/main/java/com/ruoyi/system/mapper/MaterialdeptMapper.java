@@ -20,6 +20,14 @@ public interface MaterialdeptMapper
     public Materialdept selectMaterialdeptById(Long id);
 
     /**
+     * 查询物料部门列表
+     *
+     * @param code 物料部门列表ID
+     * @return 物料部门列表
+     */
+    public Materialdept selectMaterialdeptByCode(String code);
+
+    /**
      * 查询物料部门列表列表
      * 
      * @param materialdept 物料部门列表

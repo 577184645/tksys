@@ -32,6 +32,21 @@ public class StorageinbillServiceImpl implements IStorageinbillService
         return storageinbillMapper.selectStorageinbillById(id);
     }
 
+    @Override
+    public int updateStorageinbillApply(Long id) {
+        return storageinbillMapper.updateStorageinbillApply(id);
+    }
+
+    @Override
+    public int updateStorageinbillFatify(Long id) {
+        return storageinbillMapper.updateStorageinbillFatify(id);
+    }
+
+    @Override
+    public int updateStorageinbillTurn(Long id) {
+        return storageinbillMapper.updateStorageinbillTurn(id);
+    }
+
     /**
      * 查询入库单列表列表
      * 

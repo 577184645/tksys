@@ -18,23 +18,13 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="money"    column="money"    />
         <result property="unit"    column="unit"    />
         <result property="supplier"    column="supplier"    />
-        <result property="rate"    column="rate"    />
-        <result property="purchaseid"    column="purchaseid"    />
-        <result property="applyid"    column="applyid"    />
-        <result property="contractid"    column="contractid"    />
-        <result property="invoiceid"    column="invoiceid"    />
-        <result property="expressid"    column="expressid"    />
-        <result property="instoragecause"    column="instoragecause"    />
-        <result property="projectname"    column="projectname"    />
-        <result property="proposer"    column="proposer"    />
         <result property="comments"    column="comments"    />
-        <result property="taxamount"    column="taxamount"    />
         <result property="cTime"    column="c_time"    />
         <result property="uTime"    column="u_time"    />
     </resultMap>
 
     <sql id="selectStorageoutdetailVo">
-        select id, storageoutbillid, materialcode, name, partnumber, footprint, serial_number, manufacture, price, counts, money, unit, supplier, rate, purchaseid, applyid, contractid, invoiceid, expressid, instoragecause, projectname, proposer, comments, taxamount, c_time, u_time from storageoutdetail
+        select id, storageoutbillid, materialcode, name, partnumber, footprint, serial_number, manufacture, price, counts, money, unit, supplier, comments,  c_time, u_time from storageoutdetail
     </sql>
 
     <select id="selectStorageoutdetailList" parameterType="Storageoutdetail" resultMap="StorageoutdetailResult">
@@ -68,17 +58,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="money != null ">money,</if>
             <if test="unit != null  and unit != ''">unit,</if>
             <if test="supplier != null  and supplier != ''">supplier,</if>
-            <if test="rate != null  and rate != ''">rate,</if>
-            <if test="purchaseid != null  and purchaseid != ''">purchaseid,</if>
-            <if test="applyid != null  and applyid != ''">applyid,</if>
-            <if test="contractid != null  and contractid != ''">contractid,</if>
-            <if test="invoiceid != null  and invoiceid != ''">invoiceid,</if>
-            <if test="expressid != null  and expressid != ''">expressid,</if>
-            <if test="instoragecause != null  and instoragecause != ''">instoragecause,</if>
-            <if test="projectname != null  and projectname != ''">projectname,</if>
-            <if test="proposer != null  and proposer != ''">proposer,</if>
+
             <if test="comments != null  and comments != ''">comments,</if>
-            <if test="taxamount != null ">taxamount,</if>
+
             <if test="cTime != null ">c_time,</if>
             <if test="uTime != null ">u_time,</if>
          </trim>
@@ -95,17 +77,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="money != null ">#{money},</if>
             <if test="unit != null  and unit != ''">#{unit},</if>
             <if test="supplier != null  and supplier != ''">#{supplier},</if>
-            <if test="rate != null  and rate != ''">#{rate},</if>
-            <if test="purchaseid != null  and purchaseid != ''">#{purchaseid},</if>
-            <if test="applyid != null  and applyid != ''">#{applyid},</if>
-            <if test="contractid != null  and contractid != ''">#{contractid},</if>
-            <if test="invoiceid != null  and invoiceid != ''">#{invoiceid},</if>
-            <if test="expressid != null  and expressid != ''">#{expressid},</if>
-            <if test="instoragecause != null  and instoragecause != ''">#{instoragecause},</if>
-            <if test="projectname != null  and projectname != ''">#{projectname},</if>
-            <if test="proposer != null  and proposer != ''">#{proposer},</if>
             <if test="comments != null  and comments != ''">#{comments},</if>
-            <if test="taxamount != null ">#{taxamount},</if>
             <if test="cTime != null ">#{cTime},</if>
             <if test="uTime != null ">#{uTime},</if>
          </trim>

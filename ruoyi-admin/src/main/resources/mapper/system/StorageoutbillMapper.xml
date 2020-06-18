@@ -7,6 +7,14 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     <resultMap type="Storageoutbill" id="StorageoutbillResult">
         <result property="id"    column="id"    />
         <result property="storageoutid"    column="storageoutid"    />
+        <result property="customer"    column="customer"    />
+        <result property="applyid"    column="applyid"    />
+        <result property="contractid"    column="contractid"    />
+        <result property="invoiceid"    column="invoiceid"    />
+        <result property="expressid"    column="expressid"    />
+        <result property="instoragecause"    column="instoragecause"    />
+        <result property="projectname"    column="projectname"    />
+        <result property="proposer"    column="proposer"    />
         <result property="outsourcewarehouse"    column="outsourcewarehouse"    />
         <result property="outsourcewarehouseid"    column="outsourcewarehouseid"    />
         <result property="stockrequisition"    column="stockrequisition"    />
@@ -20,22 +28,26 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </resultMap>
 
     <sql id="selectStorageoutbillVo">
-        select id, storageoutid, outsourcewarehouse, outsourcewarehouseid, stockrequisition, warehouseadmin, stockpeople, storageouttime, comments, c_time, u_time, del_status from storageoutbill
+        select customer,purchaseid,applyid,contractid,invoiceid,expressid,instoragecause,projectname,proposer,id, storageoutid, outsourcewarehouse, outsourcewarehouseid, stockrequisition, warehouseadmin, stockpeople, storageouttime, comments, c_time, u_time, del_status from storageoutbill
     </sql>
 
     <select id="selectStorageoutbillList" parameterType="Storageoutbill" resultMap="StorageoutbillResult">
         <include refid="selectStorageoutbillVo"/>
         <where>  
             <if test="outsourcewarehouse != null  and outsourcewarehouse != ''"> and outsourcewarehouse like concat('%', #{outsourcewarehouse}, '%')</if>
+            <if test="instoragecause != null  and instoragecause != ''"> and instoragecause like concat('%', #{instoragecause}, '%')</if>
+            <if test="projectname != null  and projectname != ''"> and projectname like concat('%', #{projectname}, '%')</if>
+            <if test="customer != null  and customer != ''"> and customer like concat('%', #{customer}, '%')</if>
+            <if test="expressid != null  and expressid != ''"> and expressid like concat('%', #{expressid}, '%')</if>
+            <if test="invoiceid != null  and invoiceid != ''"> and invoiceid like concat('%', #{invoiceid}, '%')</if>
+            <if test="invoiceid != null  and contractid != ''"> and contractid like concat('%', #{contractid}, '%')</if>
             <if test="stockrequisition != null  and stockrequisition != ''"> and stockrequisition like concat('%', #{stockrequisition}, '%')</if>
             <if test="storageouttime != null "> and storageouttime = #{storageouttime}</if>
             <if test="comments != null  and comments != ''"> and comments like concat('%', #{comments}, '%')</if>
-            <if test="params.beginTime != null and params.beginTime != ''"><!-- 开始时间检索 -->
-                AND date_format(storageouttime,'%y%m%d') &gt;= date_format(#{params.beginTime},'%y%m%d')
+            <if test="params.beginTime != null and params.beginTime != '' and params.endTime != null and params.endTime != '' "><!-- 开始时间检索 -->
+                AND  storageouttime    between  #{params.beginTime} and #{params.endTime}
             </if>
-            <if test="params.endTime != null and params.endTime != ''"><!-- 结束时间检索 -->
-                AND date_format(storageouttime,'%y%m%d') &lt;= date_format(#{params.endTime},'%y%m%d')
-            </if>
+
         </where>
     </select>
     
@@ -52,6 +64,16 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         insert into storageoutbill
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="storageoutid != null  and storageoutid != ''">storageoutid,</if>
+            <if test="purchaseid != null  and purchaseid != ''">purchaseid,</if>
+
+            <if test="applyid != null  and applyid != ''">applyid,</if>
+            <if test="contractid != null  and contractid != ''">contractid,</if>
+            <if test="invoiceid != null  and invoiceid != ''">invoiceid,</if>
+            <if test="customer != null  and customer != ''">customer,</if>
+            <if test="expressid != null  and expressid != ''">expressid,</if>
+            <if test="instoragecause != null  and instoragecause != ''">instoragecause,</if>
+            <if test="projectname != null  and projectname != ''">projectname,</if>
+            <if test="proposer != null  and proposer != ''">proposer,</if>
             <if test="outsourcewarehouse != null  and outsourcewarehouse != ''">outsourcewarehouse,</if>
             <if test="outsourcewarehouseid != null ">outsourcewarehouseid,</if>
             <if test="stockrequisition != null  and stockrequisition != ''">stockrequisition,</if>
@@ -65,6 +87,15 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
          </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="storageoutid != null  and storageoutid != ''">#{storageoutid},</if>
+            <if test="purchaseid != null  and purchaseid != ''">#{purchaseid},</if>
+            <if test="applyid != null  and applyid != ''">#{applyid},</if>
+            <if test="contractid != null  and contractid != ''">#{contractid},</if>
+            <if test="invoiceid != null  and invoiceid != ''">#{invoiceid},</if>
+            <if test="customer != null  and customer != ''">#{customer},</if>
+            <if test="expressid != null  and expressid != ''">#{expressid},</if>
+            <if test="instoragecause != null  and instoragecause != ''">#{instoragecause},</if>
+            <if test="projectname != null  and projectname != ''">#{projectname},</if>
+            <if test="proposer != null  and proposer != ''">#{proposer},</if>
             <if test="outsourcewarehouse != null  and outsourcewarehouse != ''">#{outsourcewarehouse},</if>
             <if test="outsourcewarehouseid != null ">#{outsourcewarehouseid},</if>
             <if test="stockrequisition != null  and stockrequisition != ''">#{stockrequisition},</if>
@@ -82,6 +113,14 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         update storageoutbill
         <trim prefix="SET" suffixOverrides=",">
             <if test="storageoutid != null  and storageoutid != ''">storageoutid = #{storageoutid},</if>
+            <if test="applyid != null  and applyid != ''">#{applyid},</if>
+            <if test="contractid != null  and contractid != ''">#{contractid},</if>
+            <if test="invoiceid != null  and invoiceid != ''">#{invoiceid},</if>
+            <if test="customer != null  and supplier != ''">#{customer},</if>
+            <if test="expressid != null  and expressid != ''">#{expressid},</if>
+            <if test="instoragecause != null  and instoragecause != ''">#{instoragecause},</if>
+            <if test="projectname != null  and projectname != ''">#{projectname},</if>
+            <if test="proposer != null  and stockinid != ''">#{proposer},</if>
             <if test="outsourcewarehouse != null  and outsourcewarehouse != ''">outsourcewarehouse = #{outsourcewarehouse},</if>
             <if test="outsourcewarehouseid != null ">outsourcewarehouseid = #{outsourcewarehouseid},</if>
             <if test="stockrequisition != null  and stockrequisition != ''">stockrequisition = #{stockrequisition},</if>

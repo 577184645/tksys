@@ -1,20 +1,22 @@
 <!DOCTYPE html>
 <html lang="zh" xmlns:th="http://www.thymeleaf.org" xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
 <head>
+
     <style>
-    .select-table table {
-        table-layout:fixed;
-    }
+        .select-table table {
+            table-layout:fixed;
+        }
 
-    .select-table .table td {
+        .select-table .table td {
 
 
 
-        /* 配合宽度来使用 */
-        height:40px;
-    }
-</style>
-    <th:block th:include="include :: header('出库单列表列表')" />
+            /* 配合宽度来使用 */
+            height:40px;
+        }
+    </style>
+
+    <th:block th:include="include :: header('入库单列表列表')" />
     <th:block th:include="include :: datetimepicker-css" />
 </head>
 <body class="gray-bg">
@@ -24,13 +26,15 @@
                 <form id="formId">
                     <div class="select-list">
                         <ul>
+                            <input type="hidden" value="1" name="status"/>
+
                             <li>
                                 <label>外协库：</label>
                                 <input type="text" name="outsourcewarehouse"/>
                             </li>
                             <li>
-                                <label>客户：</label>
-                                <input type="text" name="customer"/>
+                                <label>供应商：</label>
+                                <input type="text" name="supplier"/>
                             </li>
                             <li>
                                 <label>发票编号：</label>
@@ -45,17 +49,7 @@
                                 <input type="text" name="expressid"/>
                             </li>
                             <li>
-                                <label>领料单：</label>
-                                <input type="text" name="stockrequisition"/>
-                            </li>
-                            <li class="select-time">
-                                <label>入库时间： </label>
-                                <input type="text"   class="form-control" id="datetimepicker-startTime" placeholder="开始时间" name="params[beginTime]">
-                                <span>-</span>
-                                <input type="text"   class="form-control" id="datetimepicker-endTime" placeholder="结束时间" name="params[endTime]"/>
-                            </li>
-                            <li>
-                                <label>出库原因：</label>
+                                <label>入库原因：</label>
                                 <input type="text" name="instoragecause"/>
                             </li>
                             <li>
@@ -65,6 +59,12 @@
                             <li>
                                 <label>备注：</label>
                                 <input type="text" name="comments"/>
+                            </li>
+                            <li class="select-time">
+                                <label>入库时间： </label>
+                                <input type="text"   class="form-control" id="datetimepicker-startTime" placeholder="开始时间" name="params[beginTime]">
+                                <span>-</span>
+                                <input type="text"   class="form-control" id="datetimepicker-endTime" placeholder="结束时间" name="params[endTime]"/>
                             </li>
                             <li>
                                 <a class="btn btn-primary btn-rounded btn-sm" onclick="$.table.search()"><i class="fa fa-search"></i>&nbsp;搜索</a>
@@ -76,96 +76,86 @@
             </div>
 
             <div class="btn-group-sm" id="toolbar" role="group">
-                <a class="btn btn-primary single disabled" onclick="Info()" shiro:hasPermission="system:storageoutbill:info" >
+                <a class="btn btn-primary single disabled" onclick="Info()" shiro:hasPermission="system:storageinbill:info" >
                     <i class="fa fa-edit"></i> 查看
                 </a>
-                <a class="btn btn-primary single disabled" onclick="$.operate.edit()" shiro:hasPermission="system:storageoutbill:edit">
-                    <i class="fa fa-edit"></i> 修改
-                </a>
-                <a class="btn btn-danger multiple disabled" onclick="$.operate.removeAll()" shiro:hasPermission="system:storageoutbill:remove">
-                    <i class="fa fa-remove"></i> 删除
-                </a>
-                <a class="btn btn-warning" onclick="$.table.exportExcel()" shiro:hasPermission="system:storageoutbill:export">
-                    <i class="fa fa-download"></i> 导出
-                </a>
+
             </div>
             <div class="col-sm-12 select-table table-striped">
                 <table id="bootstrap-table"></table>
             </div>
         </div>
     </div>
-    <th:block th:include="include :: footer" />
+
+     <th:block th:include="include :: footer" />
      <th:block th:include="include :: datetimepicker-js" />
     <script th:inline="javascript">
-        var editFlag = [[${@permission.hasPermi('system:storageoutbill:edit')}]];
-        var removeFlag = [[${@permission.hasPermi('system:storageoutbill:remove')}]];
-        var prefix = ctx + "system/storageoutbill";
-        var prefix1 = ctx + "system/storageoutdetail";
+        var applyFlag = [[${@permission.hasPermi('system:storageinbill:apply')}]];
+        var ratifyFlag = [[${@permission.hasPermi('system:storageinbill:ratify')}]];
+        var checkprintFlag = [[${@permission.hasPermi('system:storageinbill:checkprint')}]];
 
 
-        $("#datetimepicker-startTime").datetimepicker({
-            format: "yyyy-mm-dd hh:ii",
-            autoclose: true
-        });
-        $("#datetimepicker-endTime").datetimepicker({
-            format: "yyyy-mm-dd hh:ii",
-            autoclose: true
-        });
+        var prefix = ctx + "system/storageinbill";
+        var prefix1 = ctx + "system/storageindetail";
         $(function() {
+
+            $("#datetimepicker-startTime").datetimepicker({
+                format: "yyyy-mm-dd hh:ii",
+                autoclose: true
+            });
+            $("#datetimepicker-endTime").datetimepicker({
+                format: "yyyy-mm-dd hh:ii",
+                autoclose: true
+            });
             var options = {
                 url: prefix + "/list",
                 createUrl: prefix + "/add",
-                updateUrl: prefix + "/edit/{id}",
+                updateUrl: prefix1 + "/{id}",
+                toolbar: "toolbar",
                 removeUrl: prefix + "/remove",
                 exportUrl: prefix + "/export",
-                modalName: "出库单列表",
+                modalName: "入库单列表",
                 columns: [{
                     checkbox: true
                 },
                 {
-                    field: 'id',
+                    field: 'id', 
                     title: 'null',
                     visible: false
                 },
                 {
-                    field: 'storageoutid',
-                    title: '出库单号',
+                    field: 'stockinid', 
+                    title: '入库单号',
                     width:155
                 },
                 {
-                    field: 'outsourcewarehouse',
+                    field: 'outsourcewarehouse', 
                     title: '外协库',
                     width:200
                 },
-
+                    {
+                        field: 'money',
+                        title: '入库金额',
+                        width:120
+                    },
                 {
-                    field: 'warehouseadmin',
+                    field: 'deliveryman', 
+                    title: '送货人',
+                    width:100
+                },
+                {
+                    field: 'warehouseadmin', 
                     title: '库管员',
                     width:100
                 },
                 {
-                    field: 'stockpeople',
-                    title: '领料人',
-                    width:100
-                },
-                {
-                    field: 'storageouttime',
-                    title: '出库日期',
+                    field: 'storagentime', 
+                    title: '入库时间',
                     width:160
                 },
-                {
-                    field: 'comments',
-                    title: '备注',
-                    width:180
-                }, {
-                        field: 'stockrequisition',
-                        title: '领料单',
-                        width:150
-                    },
-
                     {
-                        field: 'customer',
-                        title: '客户',
+                        field: 'supplier',
+                        title: '供应商',
                         width:200
                     },
 
@@ -205,7 +195,28 @@
                         title: '合同单号',
                         width:120
                     },
-                ]
+                    {
+                        field: 'comments',
+                        title: '备注',
+                        width:200
+                    }, {
+                        title: '操作',
+                        align: 'center',
+                        width:80,
+                        formatter: function(value, row, index) {
+                            var actions = [];
+                            if(row.status==1) {
+                                actions.push('<a class="btn btn-primary btn-xs " href="javascript:void(0)" onclick="ratify(\'' + row.id + '\')"><i class="fa fa-check"></i>批准</a>');
+
+                                actions.push('<a class="btn btn-danger btn-xs" href="javascript:void(0)" onclick="turn(\'' + row.id + '\')"><i class="fa fa-remove"></i>驳回</a>');
+                            }
+                            return actions.join('');
+                        }
+                    }
+
+
+
+             ]
             };
             $.table.init(options);
         });
@@ -226,7 +237,7 @@
             } else {
 
 
-                $.modal.openTab("出库单详细信息",editUrl(id));
+                $.modal.openTab("入库单详细信息",editUrl(id));
 
 
             }
@@ -249,6 +260,57 @@
 
             }
             return url;
+        }
+
+
+
+
+
+   function  ratify(id) {
+       table.set();
+       $.modal.confirm("确定批准该入库单吗？", function() {
+           $.ajax({
+               url : prefix+'/ratify',
+               dataType : 'json',
+               type : 'post',
+               data:{"id":id},
+               beforeSend: function () {
+                   $.modal.loading("正在处理中，请稍后...");
+               },
+               success: function(result) {
+                   if (typeof callback == "function") {
+                       callback(result);
+                   }
+                   $.operate.ajaxSuccess(result);
+                   $.table.refresh();
+               }
+           });
+           $.ajax(config)
+       });
+   }
+
+
+        function  turn(id) {
+            table.set();
+            $.modal.confirm("确定驳回该入库单吗？", function() {
+                $.ajax({
+                    url : prefix+'/turn',
+                    dataType : 'json',
+                    type : 'post',
+                    data:{"id":id},
+                    beforeSend: function () {
+                        $.modal.loading("正在处理中，请稍后...");
+                    },
+                    success: function(result) {
+                        if (typeof callback == "function") {
+                            callback(result);
+                        }
+                        $.operate.ajaxSuccess(result);
+                        $.table.refresh();
+                    }
+                });
+                $.ajax(config)
+            });
         }
     </script>
 </body>

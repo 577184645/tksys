@@ -48,13 +48,22 @@
                         <ul>
                             <input type="hidden" id="deptId" name="deptId">
                             <input type="hidden" id="parentId" name="parentId">
+
+                            <li>
+                                <label>物料编码：</label>
+                                <input type="text" name="materialcode"/>
+                            </li>
                             <li>
                                 <label>名称：</label>
                                 <input type="text" name="name"/>
                             </li>
                             <li>
-                                <label>型号：</label>
-                                <input type="text" name="partnumber"/>
+                            <label>型号：</label>
+                            <input type="text" name="partnumber"/>
+                        </li>
+                            <li>
+                                <label>品牌：</label>
+                                <input type="text" name="manufacture"/>
                             </li>
                             <li>
                                 <a class="btn btn-primary btn-rounded btn-sm" onclick="$.table.search()"><i class="fa fa-search"></i>&nbsp;搜索</a>
@@ -71,7 +80,12 @@
                 </a>
 
                 <a class="btn btn-warning" onclick="removeTab()" shiro:hasPermission="system:storage:edit">
-                    <i class="fa fa-download"></i> 出库
+                    <i class="fa fa-minus"></i> 出库
+                </a>
+
+
+                <a class="btn btn-danger" onclick="quitTab()" shiro:hasPermission="system:storage:quit">
+                    <i class="fa fa-minus"></i> 退料
                 </a>
                 <!--
               <a class="btn btn-primary single disabled" onclick="$.operate.edit()" shiro:hasPermission="system:user:edit">
