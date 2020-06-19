@@ -23,6 +23,7 @@ public interface StorageMapper
 
 
     /**
+     * 入库
      * 添加库存数量
      *
      * @param  storage
@@ -31,14 +32,32 @@ public interface StorageMapper
     public int updatestocks(Storage storage);
 
 
-
     /**
+     * 入库
      * 减少库存数量
      *
      * @param  storage
      * @return 库存列表
      */
-    public int removeStocks(Storage storage);
+    public int updatereducestocks(Storage storage);
+
+    /**
+     * 退库
+     *
+     * @param  storage
+     * @return 库存列表
+     */
+    public int quitstocks(Storage storage);
+
+    /**
+     * 出库
+     * 减少库存数量
+     *
+     * @param  storage
+     * @return 库存列表
+     */
+    public int removestocks(Storage storage);
+
 
 
 

@@ -21,6 +21,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="cTime"    column="c_time"    />
         <result property="uTime"    column="u_time"    />
         <result property="oTime"    column="o_time"    />
+        <result property="qTime"    column="q_time"    />
 
         <association property="storagetype" column="dept_id" javaType="Storagetype" resultMap="StoragetypeResult">
 
@@ -42,15 +43,14 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </sql>
 
     <select id="selectStorageList" parameterType="Storage" resultMap="StorageResult">
-        select id, `name`, o_time,materialcode, supplier,partnumber, footprint, manufacture, unit, serial_number, type_id,   avg(price) price,sum(stocks) stocks,sum(money) money,c_time, u_time from storage u  LEFT JOIN storagetype d
+        select id, `name`, o_time,materialcode, q_time,supplier,partnumber, footprint, manufacture, unit, serial_number, type_id,   avg(price) price,sum(stocks) stocks,sum(money) money,c_time, u_time from storage u  LEFT JOIN storagetype d
         on u.type_id=d.dept_id
         where  1=1
             <if test="name != null  and name != ''"> and name like concat('%', #{name}, '%')</if>
             <if test="partnumber != null  and partnumber != ''"> and partnumber = #{partnumber}</if>
         <if test="manufacture != null  and manufacture != ''"> and manufacture = #{manufacture}</if>
         <if test="materialcode != null  and materialcode != ''"> and materialcode = #{materialcode}</if>
-
-
+        <if test="status==2 "> and stocks > 0</if>
         <if test="deptId != null and deptId != 0">
                 AND (u.type_id = #{deptId} OR u.type_id IN ( SELECT t.dept_id FROM storagetype t WHERE FIND_IN_SET (#{deptId},ancestors) ))
             </if>
@@ -151,9 +151,22 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 
     </update>
 
-    <update id="removeStocks">
+
+    <update id="updatereducestocks">
+        update  storage set stocks=stocks-#{stocks},money=money-#{money},price=money/stocks   where materialcode=#{materialcode} and type_id=#{typeId}
+           and   serial_number=#{serialNumber}
+         and   supplier=#{supplier}
+
+    </update>
+
+
+
+    <update id="removestocks">
         update  storage set stocks=stocks-#{stocks},money=money-#{money},price=money/stocks,o_time=now()  where id=#{id}
     </update>
 
+    <update id="quitstocks">
+        update  storage set stocks=stocks+#{stocks},money=money+#{money},price=money/stocks,q_time=now()  where id=#{id}
+    </update>
 
 </mapper>

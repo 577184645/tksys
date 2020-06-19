@@ -75,6 +75,9 @@ public class Storage extends BaseEntity
     private String serialNumber;
 
 
+
+    private Integer status;
+
     /** 创建时间 */
     @Excel(name = "创建时间", width = 30, dateFormat = "yyyy-MM-dd")
     private Date cTime;
@@ -86,6 +89,9 @@ public class Storage extends BaseEntity
     /** 最后入库时间 */
     @Excel(name = "最后出库时间", width = 30, dateFormat = "yyyy-MM-dd")
     private Date oTime;
+
+    @Excel(name = "最后退料时间", width = 30, dateFormat = "yyyy-MM-dd")
+    private Date qTime;
 
     public Date getoTime() {
         return oTime;
@@ -121,7 +127,15 @@ public class Storage extends BaseEntity
         this.name = name;
     }
 
-    public String getName() 
+    public Integer getStatus() {
+        return status;
+    }
+
+    public void setStatus(Integer status) {
+        this.status = status;
+    }
+
+    public String getName()
     {
         return name;
     }
@@ -184,7 +198,13 @@ public class Storage extends BaseEntity
         this.stocks = stocks;
     }
 
+    public Date getqTime() {
+        return qTime;
+    }
 
+    public void setqTime(Date qTime) {
+        this.qTime = qTime;
+    }
 
     public Long getStocks()
     {

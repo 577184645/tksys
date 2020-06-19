@@ -34,6 +34,10 @@ public class StorageServiceImpl implements IStorageService
     private StorageindetailMapper storageindetailMapper;
     @Autowired
     private StorageoutdetailMapper storageoutdetailMapper;
+    @Autowired
+    private StoragequitbillMapper storagequitbillMapper;
+    @Autowired
+    private StoragequitdetailMapper storagequitdetailMapper;
 
     /**
      * 查询库存列表
@@ -255,7 +259,7 @@ public class StorageServiceImpl implements IStorageService
             storage.setId(Integer.valueOf(jsonObject.getString("id")));
             storage.setMoney(storageoutdetail.getMoney());
             storage.setStocks(storageoutdetail.getCounts());
-            storageMapper.removeStocks(storage);
+            storageMapper.removestocks(storage);
         }
 
         String ancestors = storagetypeMapper.selectStoragetypeById(storageoutbill.getOutsourcewarehouseid()).getAncestors();
@@ -275,6 +279,95 @@ public class StorageServiceImpl implements IStorageService
 
         return storageoutbillMapper.insertStorageoutbill(storageoutbill);
 
+    }
+
+    @Override
+    public int quitStorage(Storagequitbill storagequitbill, String productList) {
+        //如果出库单出现重复
+        if (storagequitbillMapper.selectStoragequitbillByStoragequitbillId(storagequitbill.getStoragequitbillid())!=null){
+            Storagequitbill st=new Storagequitbill();
+            int i = storagequitbill.getStoragequitbillid().lastIndexOf("-")+1;
+            int size = storagequitbillMapper.selectStoragequitbillList(st).size()+1;
+
+            String sizes="";
+            if(size<10){
+                sizes="00"+size;
+            }else  if(size<100){
+                sizes="0"+size;
+            }else{
+                sizes=String.valueOf(size);
+
+            }
+
+            storagequitbill.setStoragequitbillid( storagequitbill.getStoragequitbillid().substring(0,i)+sizes);
+        }
+        JSONArray productArray = JSONArray.fromObject(productList);
+
+
+
+
+        for (int i = 0; i < productArray.size(); i++) {
+            JSONObject jsonObject = productArray.getJSONObject(i);
+            Storage storage = new Storage();
+            Storagequitdetail storagequitdetail = new Storagequitdetail();
+            if (!jsonObject.getString("counts").equals("")) {
+                storagequitdetail.setCounts(Long.valueOf(jsonObject.getInt("counts")));
+            }
+            if (!jsonObject.getString("price").equals("")) {
+                storagequitdetail.setPrice(Double.valueOf(jsonObject.getString("price")));
+            }
+            if (!jsonObject.getString("money").equals("")) {
+                storagequitdetail.setMoney(Double.valueOf(jsonObject.getString("money")));
+            }
+            if (!jsonObject.getString("footprint").equals("null")) {
+                storagequitdetail.setFootprint(jsonObject.getString("footprint"));
+            }
+
+            storagequitdetail.setMaterialcode(jsonObject.getString("materialcode"));
+            if (!jsonObject.getString("name").equals("null")) {
+                storagequitdetail.setName(jsonObject.getString("name"));
+            }
+            if (!jsonObject.getString("partnumber").equals("null")) {
+                storagequitdetail.setPartnumber(jsonObject.getString("partnumber"));
+            }
+
+            if (!jsonObject.getString("unit").equals("null")) {
+                storagequitdetail.setUnit(jsonObject.getString("unit"));
+            }
+            if (!jsonObject.getString("manufacture").equals("null")) {
+                storagequitdetail.setManufacture(jsonObject.getString("manufacture"));
+            }
+            if(!jsonObject.getString("supplier").equals("null")){
+                storagequitdetail.setSupplier(jsonObject.getString("supplier"));
+            }
+            if(!jsonObject.getString("serialNumber").equals("null")){
+                storagequitdetail.setSerialNumber(jsonObject.getString("serialNumber"));
+            }
+            storagequitdetail.setComments(jsonObject.getString("comments"));
+            storagequitdetail.setStoragequitbillid(storagequitbill.getStoragequitbillid());
+            storagequitdetailMapper.insertStoragequitdetail(storagequitdetail);
+            storage.setId(Integer.valueOf(jsonObject.getString("id")));
+            storage.setMoney(storagequitdetail.getMoney());
+            storage.setStocks(storagequitdetail.getCounts());
+            storageMapper.quitstocks(storage);
+        }
+
+        String ancestors = storagetypeMapper.selectStoragetypeById(storagequitbill.getOutsourcewarehouseid()).getAncestors();
+        String deptName = storagetypeMapper.selectStoragetypeById(storagequitbill.getOutsourcewarehouseid()).getDeptName();
+        if(ancestors.contains(",")){
+            String[] split = ancestors.split(",");
+            String Outsourcewarehouse="";
+            for (int i=0;i<split.length;i++){
+                if(Long.valueOf(split[i])!=0) {
+                    Outsourcewarehouse += storagetypeMapper.selectStoragetypeById(Long.valueOf(split[i])).getDeptName() + "-";
+                }
+            }
+            storagequitbill.setOutsourcewarehouse(Outsourcewarehouse+deptName);
+        }else{
+            storagequitbill.setOutsourcewarehouse(deptName);
+        }
+
+      return storagequitbillMapper.insertStoragequitbill(storagequitbill);
     }
 
     /**

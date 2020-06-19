@@ -27,13 +27,13 @@
 
 <center>
     <div class="table-d" id="context" >
-        <h3 style="text-align: center;">入库单</h3>
+        <h1 style="text-align: center;">入库单</h1>
         <div class="div" style="position: relative">
-            <span>供应商:</span> <span style="padding-right: 230;" th:text="${storageinbill.supplier}"></span> <span style="position: absolute;right: 250">日期: </span> <span style="position: absolute;right: 180" th:text="${#dates.format(storageinbill.storagentime,'yyyy-MM-dd')}"></span>
+            <span>供应商:</span> <span style="padding-right: 230;" th:text="${storageinbill.supplier}"></span> <span style="position: absolute;right: 202">日期: </span> <span style="position: absolute;right: 133" th:text="${#dates.format(storageinbill.storagentime,'yyyy-MM-dd')}"></span>
 
         </div>
         <div class="div" style="position: relative">
-            <span>类别:</span> <span style="padding-right: 215;" th:text="${storageinbill.outsourcewarehouse}"></span> <span style="position: absolute;right: 225">单据编号:</span> <span style="position: absolute;right: 100" th:text="${storageinbill.stockinid}"></span>
+            <span>类别:</span> <span style="padding-right: 215;" th:text="${storageinbill.outsourcewarehouse}"></span> <span style="position: absolute;right: 175">单据编号:</span> <span style="position: absolute;right: 60" th:text="${storageinbill.stockinid}"></span>
 
         </div>
         <table style="border:1px solid #F00;border-collapse: collapse">
@@ -69,9 +69,9 @@
             </tr>
             </tbody>
         </table>
-        <br/>
-        <div class="div">
-            <span >主管</span> <span style="padding-left: 150;">记账</span> <span style="padding-left: 150;">仓库:</span> <span style="padding-left: 130px;">经办人</span>
+
+        <div class="div" style="position: relative;margin-top: 5px;">
+            <span style="position: absolute;left: 100px">主管:</span> <span style="position: absolute;left: 240px">记账:</span> <span style="position: absolute;right: 240px">仓库:</span> <span style="position: absolute;right: 100px">经办人:</span>
 
         </div>
     </div>

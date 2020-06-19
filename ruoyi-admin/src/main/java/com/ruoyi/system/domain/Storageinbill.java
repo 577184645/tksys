@@ -81,6 +81,10 @@ public class Storageinbill extends BaseEntity
     @Excel(name = "备注")
     private String comments;
 
+
+
+    private String delStatus;
+
     /** 删除状态 */
     private Long status;
 
@@ -102,6 +106,13 @@ public class Storageinbill extends BaseEntity
         Supplier = supplier;
     }
 
+    public String getDelStatus() {
+        return delStatus;
+    }
+
+    public void setDelStatus(String delStatus) {
+        this.delStatus = delStatus;
+    }
 
     public String getApplyid() {
         return applyid;

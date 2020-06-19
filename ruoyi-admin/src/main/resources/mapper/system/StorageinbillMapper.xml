@@ -6,6 +6,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     
     <resultMap type="Storageinbill" id="StorageinbillResult">
         <result property="id"    column="id"    />
+        <result property="delStatus"    column="del_status"    />
         <result property="stockinid"    column="stockinid"    />
         <result property="money"    column="money"    />
         <result property="supplier"    column="supplier"    />
@@ -29,7 +30,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </resultMap>
 
     <sql id="selectStorageinbillVo">
-        select s.id,sum(money) as money ,applyid,contractid,invoiceid,expressid,instoragecause,projectname,proposer, stockinid, s.supplier ,outsourcewarehouseid,outsourcewarehouse, s.purchaseid, deliveryman, warehouseadmin, storagentime, s.comments, status, s.c_time, s.u_time from storageinbill s LEFT JOIN storageindetail
+        select s.id,sum(money) as money,del_status ,applyid,contractid,invoiceid,expressid,instoragecause,projectname,proposer, stockinid, s.supplier ,outsourcewarehouseid,outsourcewarehouse, s.purchaseid, deliveryman, warehouseadmin, storagentime, s.comments, status, s.c_time, s.u_time from storageinbill s LEFT JOIN storageindetail
 				on stockinid=storageinbillid
     </sql>
 
@@ -149,6 +150,11 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         </trim>
         where id = #{id}
     </update>
+
+<update id="updatedelStatus">
+      update storageinbill set del_status='2' where id=#{id}
+</update>
+
 
     <delete id="deleteStorageinbillById" parameterType="Long">
         delete from storageinbill where id = #{id}

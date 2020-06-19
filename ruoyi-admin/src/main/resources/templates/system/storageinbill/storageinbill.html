@@ -91,6 +91,11 @@
                 <a class="btn btn-warning" onclick="$.table.exportExcel()" shiro:hasPermission="system:storageinbill:export">
                     <i class="fa fa-download"></i> 导出
                 </a>
+
+
+                <a class="btn btn-danger single disabled" onclick="reddashed()" shiro:hasPermission="system:storageinbill:reddashed">
+                    <i class="fa fa-exclamation"></i> 红冲
+                </a>
             </div>
             <div class="col-sm-12 select-table table-striped">
                 <table id="bootstrap-table"></table>
@@ -126,6 +131,15 @@
                 removeUrl: prefix + "/remove",
                 exportUrl: prefix + "/export",
                 modalName: "入库单列表",
+                rowStyle: function (row, index) {
+                    var style = "";
+                    if(row.delStatus==2) {
+                        style = 'danger';
+                        return {classes: style}
+                    }else{
+                        return {classes: style}
+                    }
+                },
                 columns: [{
                     checkbox: true
                 },
@@ -304,6 +318,8 @@
             }
         }
 
+
+
         function editUrl1(id) {
             var url = "/404.html";
             if ($.common.isNotEmpty(id)) {
@@ -337,6 +353,70 @@
 
 
         }
+
+
+
+
+        function reddashed(id) {
+            table.set();
+            var row = $("#" + table.options.id).bootstrapTreeTable('getSelections')[0];
+
+            if($.common.isEmpty(id) && table.options.type == table_type.bootstrapTreeTable) {
+                if ($.common.isEmpty(row)) {
+                    $.modal.alertWarning("请至少选择一条记录");
+                    return;
+                }
+                var url = table.options.updateUrl.replace("{id}", row[table.options.uniqueId]);
+
+                $.modal.openTab("修改" + table.options.modalName, url);
+            } else {
+
+    var  url= editUrl2();
+                var id= url.substring( (url.lastIndexOf("/"))+1,url.length) ;
+                $.modal.confirm("确定红冲该入库单吗？", function() {
+                    $.ajax({
+                        url : prefix+'/reddashed',
+                        dataType : 'json',
+                        type : 'post',
+                        data:{"id":id},
+                        beforeSend: function () {
+                            $.modal.loading("正在处理中，请稍后...");
+                        },
+                        success: function(result) {
+                            if (typeof callback == "function") {
+                                callback(result);
+                            }
+                            $.operate.ajaxSuccess(result);
+                            $.table.refresh();
+                        }
+                    });
+                    $.ajax(config)
+                });
+
+
+            }
+        }
+
+
+        function editUrl2(id) {
+            var url = "/404.html";
+            if ($.common.isNotEmpty(id)) {
+
+                url = table.options.updateUrl.replace("{id}", id);
+
+            } else {
+                var id = $.common.isEmpty(table.options.uniqueId) ? $.table.selectFirstColumns() : $.table.selectColumns(table.options.uniqueId);
+
+                if (id.length == 0) {
+                    $.modal.alertWarning("请至少选择一条记录");
+                    return;
+                }
+                url = prefix+"/print/"+(id);
+
+            }
+            return url;
+        }
+
 
 
 

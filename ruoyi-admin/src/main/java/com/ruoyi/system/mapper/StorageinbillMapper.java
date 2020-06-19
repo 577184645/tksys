@@ -21,6 +21,17 @@ public interface StorageinbillMapper
 
 
     /**
+     * 修改删除状态
+     *
+     * @param id 入库单列表ID
+     * @return 入库单列表
+     */
+    public int updatedelStatus(Long id);
+
+
+
+
+    /**
      * 修改status为1
      * @param
      * @return

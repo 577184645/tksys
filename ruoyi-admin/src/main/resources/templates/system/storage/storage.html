@@ -66,6 +66,18 @@
                                 <input type="text" name="manufacture"/>
                             </li>
                             <li>
+                                <label>是否显示0：</label>
+                            <div class="form-group">
+                                <div class="col-sm-8">
+                                    <div class="radio-box" th:each="dict : ${@dict.getType('storage_status')}">
+                                        <input type="radio" th:id="${dict.dictCode}" name="status" th:value="${dict.dictValue}" th:checked="${dict.default}">
+                                        <label th:for="${dict.dictCode}" th:text="${dict.dictLabel}"></label>
+                                    </div>
+                                </div>
+                            </div>
+
+                            </li>
+                            <li>
                                 <a class="btn btn-primary btn-rounded btn-sm" onclick="$.table.search()"><i class="fa fa-search"></i>&nbsp;搜索</a>
                                 <a class="btn btn-warning btn-rounded btn-sm" onclick="$.form.reset()"><i class="fa fa-refresh"></i>&nbsp;重置</a>
                             </li>
@@ -84,8 +96,8 @@
                 </a>
 
 
-                <a class="btn btn-danger" onclick="quitTab()" shiro:hasPermission="system:storage:quit">
-                    <i class="fa fa-minus"></i> 退料
+                    <a class="btn btn-danger" onclick="quitTab()" shiro:hasPermission="system:storage:quit">
+                    <i class="fa fa-exclamation"></i> 退料
                 </a>
                 <!--
               <a class="btn btn-primary single disabled" onclick="$.operate.edit()" shiro:hasPermission="system:user:edit">
@@ -142,41 +154,49 @@
                     title: 'null',
                     visible: false
                 },
-                {
-                    field: 'name',
-                    title: '名称',
-                    width:140
-                },
 
                 {
                     field: 'materialcode',
                     title: '编码',
                     width:120
-                },  {
-                    field: 'price',
-                    title: '单价',
-                    width:120
                 },
                 {
-                    field: 'stocks',
-                    title: '库存量',
-                    width:100
-                },
-                {
-                    field: 'money',
-                    title: '总价',
-                    width:120
-                },
-                {
-                    field: 'serialNumber',
-                    title: '序列号',
-                    width:120
+                    field: 'name',
+                    title: '名称',
+                    width:140
+
                 },
                 {
                     field: 'partnumber',
                     title: '型号',
                     width:220
                 },
+                {
+                    field: 'stocks',
+                    title: '库存量',
+                    width:100,
+                    cellStyle:{
+                        css:{"color":"#ed5565"}
+                    }
+                },
+                {
+                    field: 'unit',
+                    title: '单位',
+                    width:100
+                },
+                 {
+                    field: 'price',
+                    title: '单价',
+                    width:120
+                },
+
+                {
+                    field: 'money',
+                    title: '总价',
+                    width:120
+                },
+
+
 
                 {
                     field: 'manufacture',
@@ -189,9 +209,9 @@
                     width:220
                 },
                 {
-                    field: 'unit',
-                    title: '单位',
-                    width:100
+                    field: 'serialNumber',
+                    title: '序列号',
+                    width:120
                 },
 
                 {
@@ -204,7 +224,12 @@
                     field: 'oTime',
                     title: '最后出库时间',
                     width:160
+                }, {
+                    field: 'qTime',
+                    title: '最后退料时间',
+                    width:160
                 }
+
               /*  {
                     title: '操作',
                     align: 'center',
@@ -272,6 +297,12 @@
         $.modal.openTab("出库",prefix + "/edit");
     }
 
+
+
+    function  quitTab() {
+        table.set();
+        $.modal.openTab("退料",prefix + "/quit");
+    }
 
 </script>
 </body>

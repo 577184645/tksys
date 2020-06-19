@@ -1,12 +1,18 @@
 package com.ruoyi.system.service.impl;
 
 import java.util.List;
+
+import com.ruoyi.system.domain.Storage;
+import com.ruoyi.system.domain.Storageindetail;
+import com.ruoyi.system.mapper.StorageMapper;
+import com.ruoyi.system.mapper.StorageindetailMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.ruoyi.system.mapper.StorageinbillMapper;
 import com.ruoyi.system.domain.Storageinbill;
 import com.ruoyi.system.service.IStorageinbillService;
 import com.ruoyi.common.core.text.Convert;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * 入库单列表Service业务层处理
@@ -19,7 +25,10 @@ public class StorageinbillServiceImpl implements IStorageinbillService
 {
     @Autowired
     private StorageinbillMapper storageinbillMapper;
-
+    @Autowired
+    private StorageindetailMapper storageindetailMapper;
+    @Autowired
+    private StorageMapper storageMapper;
     /**
      * 查询入库单列表
      * 
@@ -105,5 +114,41 @@ public class StorageinbillServiceImpl implements IStorageinbillService
     public int deleteStorageinbillById(Long id)
     {
         return storageinbillMapper.deleteStorageinbillById(id);
+    }
+
+    @Override
+    @Transactional
+    public int reddashed(Long id) {
+        Storageinbill storageinbill = storageinbillMapper.selectStorageinbillById(id);
+        List<Storageindetail> storageindetails = storageindetailMapper.selectStorageindetailByStorageinbillId(storageinbill.getStockinid());
+        for (Storageindetail storageindetail:
+        storageindetails) {
+            Storage storage=new Storage();
+            storage.setStocks(storageindetail.getCounts());
+            storage.setMoney(storageindetail.getMoney());
+            storage.setMaterialcode(storageindetail.getMaterialcode());
+            storage.setTypeId(storageinbill.getOutsourcewarehouseid());
+            if(storageindetail.getSerialNumber()==null){
+                storage.setSerialNumber("");
+            }else{
+                storage.setSerialNumber(storageindetail.getSerialNumber());
+
+            }
+
+            if(storageindetail.getSupplier()==null){
+                storage.setSupplier("");
+            }else{
+                storage.setSupplier(storageindetail.getSupplier());
+            }
+
+            if(storageindetail.getFootprint()==null){
+                storage.setFootprint("");
+            }else{
+                storage.setFootprint(storageindetail.getFootprint());
+            }
+
+            storageMapper.updatereducestocks(storage);
+        }
+        return storageinbillMapper.updatedelStatus(id);
     }
 }

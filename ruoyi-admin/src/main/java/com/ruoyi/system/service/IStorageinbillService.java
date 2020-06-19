@@ -86,6 +86,13 @@ public interface IStorageinbillService
 
 
 
+    /**
+     * 红冲入库单
+     *
+     * @param id 入库单列表ID
+     * @return 入库单列表
+     */
+    public int reddashed(Long id);
 
 
 }

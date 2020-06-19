@@ -141,11 +141,11 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="partnumber != null  and partnumber != ''">partnumber = #{partnumber},</if>
             <if test="description != null  and description != ''">description = #{description},</if>
             <if test="footprint != null  and footprint != ''">footprint = #{footprint},</if>
-            <if test="manufacture != null  and manufacture != ''">manufacture = #{manufacture},</if>
+            manufacture = #{manufacture},
             <if test="unit != null  and unit != ''">unit = #{unit},</if>
             <if test="inputoperator != null  and inputoperator != ''">inputoperator = #{inputoperator},</if>
             <if test="inputdate != null ">inputdate = #{inputdate},</if>
-            <if test="approvedby != null  and approvedby != ''">approvedby = #{approvedby},</if>
+            approvedby = #{approvedby},
             <if test="approveddate != null ">approveddate = #{approveddate},</if>
             <if test="approvedstatus != null  and approvedstatus != ''">approvedstatus = #{approvedstatus},</if>
             <if test="productmpq != null ">productmpq = #{productmpq},</if>

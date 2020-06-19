@@ -32,10 +32,15 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="uTime != null "> and u_time = #{uTime}</if>
         </where>
     </select>
-    
+
     <select id="selectStoragequitbillById" parameterType="Long" resultMap="StoragequitbillResult">
         <include refid="selectStoragequitbillVo"/>
         where id = #{id}
+    </select>
+
+    <select id="selectStoragequitbillByStoragequitbillId"  resultMap="StoragequitbillResult">
+        <include refid="selectStoragequitbillVo"/>
+        where storagequitbillid = #{storagequitbillid}
     </select>
         
     <insert id="insertStoragequitbill" parameterType="Storagequitbill" useGeneratedKeys="true" keyProperty="id">

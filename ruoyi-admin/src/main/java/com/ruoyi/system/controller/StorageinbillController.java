@@ -61,6 +61,22 @@ public class StorageinbillController extends BaseController
     }
 
 
+
+    @Log(title = "入库单红冲", businessType = BusinessType.DELETE)
+    @PostMapping("/reddashed")
+    @ResponseBody
+    public AjaxResult reddashed(@RequestParam("id") Long id){
+       if(storageinbillService.selectStorageinbillById(id).getDelStatus().equals("2")){
+           return AjaxResult.warn("操作失败！该入库单已红冲");
+       }
+
+
+        if(storageinbillService.reddashed(id)>0){
+            return AjaxResult.warn("操作成功");
+        }
+        return    AjaxResult.warn("操作失败,请联系管理员")   ;
+    }
+
     @Log(title = "入库单批准", businessType = BusinessType.UPDATE)
     @PostMapping("/ratify")
     @ResponseBody

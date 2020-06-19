@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.ruoyi.system.domain.Storageinbill;
 import com.ruoyi.system.domain.Storageoutbill;
+import com.ruoyi.system.domain.Storagequitbill;
 import com.ruoyi.system.service.IProjectService;
 import com.ruoyi.system.service.ISupplierService;
 import com.ruoyi.system.service.ISysUserService;
@@ -148,6 +149,29 @@ public class StorageController extends BaseController
 
 
         return toAjax(storageService.updateStorage(storageoutbill,StorageoutbillList));
+    }
+
+
+
+    /**
+     * 跳转退料页面
+     */
+    @GetMapping("/quit")
+    public String quit(ModelMap mmap)
+    {
+        mmap.put("userList",iSysUserService.findList());
+        return prefix + "/quit";
+    }
+
+    @RequiresPermissions("system:storage:quit")
+    @Log(title = "退料", businessType = BusinessType.INSERT)
+    @PostMapping("/quit")
+    @ResponseBody
+    public AjaxResult quit(String StoragequitbillList, Storagequitbill storagequitbill)
+    {
+
+
+        return toAjax(storageService.quitStorage(storagequitbill,StoragequitbillList));
     }
 
     /**

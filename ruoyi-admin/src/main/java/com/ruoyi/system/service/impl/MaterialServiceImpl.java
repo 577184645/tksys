@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import com.ruoyi.system.mapper.MaterialMapper;
 import com.ruoyi.system.service.IMaterialService;
 import com.ruoyi.common.core.text.Convert;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -135,6 +136,7 @@ public class MaterialServiceImpl implements IMaterialService {
     }
 
     @Override
+    @Transactional
     public String importMaterial(List<Material> materialList, HttpServletRequest request) {
         if (StringUtils.isNull(materialList) || materialList.size() == 0) {
             throw new BusinessException("导入数据不能为空！");
@@ -145,7 +147,7 @@ public class MaterialServiceImpl implements IMaterialService {
         StringBuilder successMsg = new StringBuilder();
         StringBuilder failureMsg = new StringBuilder();
         for (Material material : materialList) {
-            try {
+
 
                 material.setInputdate(new Date());
                 material.setInputoperator(user.getUserName());
@@ -167,16 +169,11 @@ public class MaterialServiceImpl implements IMaterialService {
 
                 insertMaterial(material);
                 successNum++;
-            } catch (Exception e) {
-                failureNum++;
             }
-        }
-        if (failureNum > 0) {
-            failureMsg.insert(0, "很抱歉，导入失败！共 " + failureNum + " 条数据格式不正确，错误如下：");
-                throw new BusinessException(failureMsg.toString());
-        } else {
+                failureNum++;
+
             successMsg.insert(0, "恭喜您，数据已全部导入成功！共 " + successNum + " 条，数据如下：");
-        }
+
         return successMsg.toString();
 
     }

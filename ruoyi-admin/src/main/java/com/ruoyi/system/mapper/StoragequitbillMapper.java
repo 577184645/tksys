@@ -19,6 +19,15 @@ public interface StoragequitbillMapper
      */
     public Storagequitbill selectStoragequitbillById(Long id);
 
+
+    /**
+     * 查询退料单列表
+     *
+     * @param storagequitbillid 退料单列表ID
+     * @return 退料单列表
+     */
+    public Storagequitbill selectStoragequitbillByStoragequitbillId(String storagequitbillid);
+
     /**
      * 查询退料单列表列表
      * 

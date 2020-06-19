@@ -8,6 +8,7 @@ public class StTask {
     @Autowired
     private StorageMapper storageMapper;
     public void  deleteZerostorage(){
-        storageMapper.deleteStorageByStocksZero();
+        System.out.println("不启动删除程序");
+       /* storageMapper.deleteStorageByStocksZero();*/
     }
 }
