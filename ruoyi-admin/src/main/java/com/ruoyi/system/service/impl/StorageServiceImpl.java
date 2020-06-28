@@ -38,7 +38,8 @@ public class StorageServiceImpl implements IStorageService
     private StoragequitbillMapper storagequitbillMapper;
     @Autowired
     private StoragequitdetailMapper storagequitdetailMapper;
-
+    @Autowired
+    private WarehouseRecordMapper warehouseRecordMapper;
     /**
      * 查询库存列表
      * 
@@ -88,15 +89,16 @@ public class StorageServiceImpl implements IStorageService
         for (int i = 0; i < productArray.size(); i++) {
             JSONObject jsonObject = productArray.getJSONObject(i);
             Storage storage=new Storage();
+            WarehouseRecord warehouseRecord=new WarehouseRecord();
             Storageindetail storageindetail = new Storageindetail();
             if(!jsonObject.getString("counts").equals("")) {
                 storageindetail.setCounts(Long.valueOf(jsonObject.getInt("counts")));
             }
             if(!jsonObject.getString("price").equals("")) {
-                storageindetail.setPrice(Double.valueOf(jsonObject.getString("price")));
+                storageindetail.setPrice(Float.valueOf(jsonObject.getString("price")));
             }
             if(!jsonObject.getString("money").equals("")) {
-                storageindetail.setMoney(Double.valueOf(jsonObject.getString("money")));
+                storageindetail.setMoney(Float.valueOf(jsonObject.getString("money")));
             }
             if(!jsonObject.getString("footprint").equals("null")) {
                 storageindetail.setFootprint(jsonObject.getString("footprint"));
@@ -120,42 +122,41 @@ public class StorageServiceImpl implements IStorageService
             if(!jsonObject.getString("manufacture").equals("null")) {
                 storageindetail.setManufacture(jsonObject.getString("manufacture"));
             }
+
             storageindetail.setSupplier(storageinbill.getSupplier());
             storageindetail.setComments(jsonObject.getString("comments"));
             storageindetail.setSerialNumber(jsonObject.getString("serialNumber"));
             storageindetail.setStorageinbillid(storageinbill.getStockinid());
             storageindetailMapper.insertStorageindetail(storageindetail);
-            if(storageMapper.selectStorageByMaterialcodeAndTypeid(storageindetail.getMaterialcode(),storageinbill.getOutsourcewarehouseid(),storageindetail.getSerialNumber(),storageindetail.getSupplier())>0){
-                storage.setTypeId(storageinbill.getOutsourcewarehouseid());
-                storage.setMaterialcode(storageindetail.getMaterialcode());
-                if (storageindetail.getSupplier()==null){
-                    storage.setSupplier("");
-                }else {
-                    storage.setSupplier(storageindetail.getSupplier());
-                }
-                if (storageindetail.getSerialNumber()==null){
-                    storage.setSerialNumber("");
-                }else {
-                    storage.setSerialNumber(storageindetail.getSerialNumber());
-                }
-                storage.setMoney(storageindetail.getMoney());
-                storage.setStocks(storageindetail.getCounts());
-                storageMapper.updatestocks(storage);
+
+            storage.setTypeId(storageinbill.getOutsourcewarehouseid());
+            storage.setMaterialcode(storageindetail.getMaterialcode());
+            storage.setSupplier(storageindetail.getSupplier());
+            storage.setSerialNumber(storageindetail.getSerialNumber());
+            storage.setMoney(storageindetail.getMoney());
+            storage.setStocks(storageindetail.getCounts());
+            if(storageMapper.selectStorageByMaterialcodeAndTypeid(storage)>0){
+                 storageMapper.updatestocks(storage);
             }else{
                 storage.setName(storageindetail.getName());
-                storage.setSupplier(storageindetail.getSupplier());
-                storage.setMaterialcode(storageindetail.getMaterialcode());
                 storage.setPartnumber(storageindetail.getPartnumber());
-                storage.setFootprint(storageindetail.getFootprint());
-                storage.setSerialNumber(storageindetail.getSerialNumber());
                 storage.setManufacture(storageindetail.getManufacture());
                 storage.setPrice(storageindetail.getPrice());
-                storage.setTypeId(storageinbill.getOutsourcewarehouseid());
                 storage.setUnit(storageindetail.getUnit());
-                storage.setStocks(storageindetail.getCounts());
-                storage.setMoney(storageindetail.getMoney());
+                storage.setFootprint(storageindetail.getFootprint());
                 storageMapper.insertStorage(storage);
             }
+            warehouseRecord.setType("1");
+            warehouseRecord.setNumber(storageinbill.getStockinid());
+            warehouseRecord.setMaterialcode(jsonObject.getString("materialcode"));
+            warehouseRecord.setName(jsonObject.getString("name"));
+            warehouseRecord.setCount(storageindetail.getCounts());
+            warehouseRecord.setPrice(storageindetail.getPrice());
+            warehouseRecord.setMoney(storageindetail.getMoney());
+            warehouseRecord.setSerialNumber(jsonObject.getString("serialNumber"));
+            warehouseRecord.setSupplier(storageindetail.getSupplier());
+            warehouseRecordMapper.insertWarehouseRecord(warehouseRecord);
+
 
             }
         String ancestors = storagetypeMapper.selectStoragetypeById(storageinbill.getOutsourcewarehouseid()).getAncestors();
@@ -219,15 +220,16 @@ public class StorageServiceImpl implements IStorageService
         for (int i = 0; i < productArray.size(); i++) {
             JSONObject jsonObject = productArray.getJSONObject(i);
             Storage storage = new Storage();
+            WarehouseRecord warehouseRecord=new WarehouseRecord();
             Storageoutdetail storageoutdetail = new Storageoutdetail();
             if (!jsonObject.getString("counts").equals("")) {
                 storageoutdetail.setCounts(Long.valueOf(jsonObject.getInt("counts")));
             }
             if (!jsonObject.getString("price").equals("")) {
-                storageoutdetail.setPrice(Double.valueOf(jsonObject.getString("price")));
+                storageoutdetail.setPrice(Float.valueOf(jsonObject.getString("price")));
             }
             if (!jsonObject.getString("money").equals("")) {
-                storageoutdetail.setMoney(Double.valueOf(jsonObject.getString("money")));
+                storageoutdetail.setMoney(Float.valueOf(jsonObject.getString("money")));
             }
             if (!jsonObject.getString("footprint").equals("null")) {
                 storageoutdetail.setFootprint(jsonObject.getString("footprint"));
@@ -260,6 +262,16 @@ public class StorageServiceImpl implements IStorageService
             storage.setMoney(storageoutdetail.getMoney());
             storage.setStocks(storageoutdetail.getCounts());
             storageMapper.removestocks(storage);
+            warehouseRecord.setType("2");
+            warehouseRecord.setNumber(storageoutbill.getStorageoutid());
+            warehouseRecord.setMaterialcode(jsonObject.getString("materialcode"));
+            warehouseRecord.setName(jsonObject.getString("name"));
+            warehouseRecord.setCount(storageoutdetail.getCounts());
+            warehouseRecord.setPrice(storageoutdetail.getPrice());
+            warehouseRecord.setMoney(storageoutdetail.getMoney());
+            warehouseRecord.setSerialNumber(jsonObject.getString("serialNumber"));
+            warehouseRecord.setSupplier(storageoutdetail.getSupplier());
+            warehouseRecordMapper.insertWarehouseRecord(warehouseRecord);
         }
 
         String ancestors = storagetypeMapper.selectStoragetypeById(storageoutbill.getOutsourcewarehouseid()).getAncestors();
@@ -309,15 +321,16 @@ public class StorageServiceImpl implements IStorageService
         for (int i = 0; i < productArray.size(); i++) {
             JSONObject jsonObject = productArray.getJSONObject(i);
             Storage storage = new Storage();
+            WarehouseRecord warehouseRecord=new WarehouseRecord();
             Storagequitdetail storagequitdetail = new Storagequitdetail();
             if (!jsonObject.getString("counts").equals("")) {
                 storagequitdetail.setCounts(Long.valueOf(jsonObject.getInt("counts")));
             }
             if (!jsonObject.getString("price").equals("")) {
-                storagequitdetail.setPrice(Double.valueOf(jsonObject.getString("price")));
+                storagequitdetail.setPrice(Float.valueOf(jsonObject.getString("price")));
             }
             if (!jsonObject.getString("money").equals("")) {
-                storagequitdetail.setMoney(Double.valueOf(jsonObject.getString("money")));
+                storagequitdetail.setMoney(Float.valueOf(jsonObject.getString("money")));
             }
             if (!jsonObject.getString("footprint").equals("null")) {
                 storagequitdetail.setFootprint(jsonObject.getString("footprint"));
@@ -350,6 +363,16 @@ public class StorageServiceImpl implements IStorageService
             storage.setMoney(storagequitdetail.getMoney());
             storage.setStocks(storagequitdetail.getCounts());
             storageMapper.quitstocks(storage);
+            warehouseRecord.setType("3");
+            warehouseRecord.setNumber(storagequitdetail.getStoragequitbillid());
+            warehouseRecord.setMaterialcode(jsonObject.getString("materialcode"));
+            warehouseRecord.setName(jsonObject.getString("name"));
+            warehouseRecord.setCount(storagequitdetail.getCounts());
+            warehouseRecord.setPrice(storagequitdetail.getPrice());
+            warehouseRecord.setMoney(storagequitdetail.getMoney());
+            warehouseRecord.setSerialNumber(jsonObject.getString("serialNumber"));
+            warehouseRecord.setSupplier(storagequitdetail.getSupplier());
+            warehouseRecordMapper.insertWarehouseRecord(warehouseRecord);
         }
 
         String ancestors = storagetypeMapper.selectStoragetypeById(storagequitbill.getOutsourcewarehouseid()).getAncestors();

@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="zh" xmlns:th="http://www.thymeleaf.org" >
 <head>
-    <th:block th:include="include :: header('打印入库产品')" />
+    <th:block th:include="include :: header('打印出库产品')" />
     <title>入库单打印</title>
     <style>
         fixed-table-body{
@@ -27,13 +27,13 @@
 
 <center>
     <div class="table-d" id="context" >
-        <h1 style="text-align: center;">入库单</h1>
+        <h1 style="text-align: center;">出库单</h1>
         <div class="div" style="position: relative">
-            <span>供应商:</span> <span style="padding-right: 230;" th:text="${storageinbill.supplier}"></span> <span style="position: absolute;right: 202">日期: </span> <span style="position: absolute;right: 133" th:text="${#dates.format(storageinbill.storagentime,'yyyy-MM-dd')}"></span>
+            <span>客户:</span> <span style="padding-right: 230;" th:text="${storageoutbill.customer}"></span> <span style="position: absolute;right: 202">日期: </span> <span style="position: absolute;right: 133" th:text="${#dates.format(storageoutbill.storageouttime,'yyyy-MM-dd')}"></span>
 
         </div>
         <div class="div" style="position: relative">
-            <span>类别:</span> <span style="padding-right: 215;" th:text="${storageinbill.outsourcewarehouse}"></span> <span style="position: absolute;right: 175">单据编号:</span> <span style="position: absolute;right: 60" th:text="${storageinbill.stockinid}"></span>
+            <span>类别:</span> <span style="padding-right: 215;" th:text="${storageoutbill.outsourcewarehouse}"></span> <span style="position: absolute;right: 175">单据编号:</span> <span style="position: absolute;right: 60" th:text="${storageoutbill.storageoutid}"></span>
 
         </div>
         <table style="border:1px solid #F00;border-collapse: collapse">
@@ -50,21 +50,21 @@
                 <td style="border:1px solid #F00;" width="70" align="center">金额</td>
                 <td style="border:1px solid #F00;" width="112" align="center">备注</td>
             </tr>
-            <tr th:each="storageindetail : ${storageindetails}" style="border:1px solid #F00;">
-                <td style="border:1px solid #F00;" align="center" th:text="${storageindetail.rownum}"></td>
-                <td style="border:1px solid #F00;" align="center" th:text="${storageindetail.materialcode}"></td>
-                <td style="border:1px solid #F00;" align="center" th:text="${storageindetail.name}"></td>
-                <td style="border:1px solid #F00;" align="center" th:text="${storageindetail.partnumber}"></td>
-                <td style="border:1px solid #F00;" align="center" th:text="${storageindetail.unit}"> </td>
-                <td style="border:1px solid #F00;" align="center" th:text="${storageindetail.counts}"   > </td>
-                <td style="border:1px solid #F00;" align="center" th:text="${storageindetail.price}"> </td>
-                <td style="border:1px solid #F00;" align="center" th:text="${storageindetail.money}"> </td>
+            <tr th:each="storageoutdetail : ${storageoutdetails}" style="border:1px solid #F00;">
+                <td style="border:1px solid #F00;" align="center" th:text="${storageoutdetail.rownum}"></td>
+                <td style="border:1px solid #F00;" align="center" th:text="${storageoutdetail.materialcode}"></td>
+                <td style="border:1px solid #F00;" align="center" th:text="${storageoutdetail.name}"></td>
+                <td style="border:1px solid #F00;" align="center" th:text="${storageoutdetail.partnumber}"></td>
+                <td style="border:1px solid #F00;" align="center" th:text="${storageoutdetail.unit}"> </td>
+                <td style="border:1px solid #F00;" align="center" th:text="${storageoutdetail.counts}"   > </td>
+                <td style="border:1px solid #F00;" align="center" th:text="${storageoutdetail.price}"> </td>
+                <td style="border:1px solid #F00;" align="center" th:text="${storageoutdetail.money}"> </td>
 
-                <td style="border:1px solid #F00;" align="center" th:text="${storageindetail.comments}"></td>
+                <td style="border:1px solid #F00;" align="center" th:text="${storageoutdetail.comments}"></td>
             </tr>
             <tr>
                 <td colspan="2" style="border:1px solid #F00;" align="center">总金额</td>
-                <td colspan="5" style="border:1px solid #F00;" align="center" th:text="${storageinbill.money}"></td>
+                <td colspan="5" style="border:1px solid #F00;" align="center" th:text="${storageoutbill.money}"></td>
                 <td id="summoney" colspan="2" align="center" style="border:1px solid #F00;" ></td>
             </tr>
             </tbody>
@@ -108,8 +108,7 @@
             $("#context").jqprint();
         }
 
-        var money= [[${storageinbill.money}]];
-
+        var money= [[${storageoutbill.money}]];
         $("#summoney").html(changeNumMoneyToChinese(money));
 
 

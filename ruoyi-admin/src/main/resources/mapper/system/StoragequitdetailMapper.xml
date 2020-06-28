@@ -44,7 +44,12 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <include refid="selectStoragequitdetailVo"/>
         where id = #{id}
     </select>
-        
+
+    <select id="selectStorageindetailByStoragequitbillId"  resultMap="StoragequitdetailResult">
+        <include refid="selectStoragequitdetailVo"/>
+        where storagequitbillid = #{storagequitbillid}
+    </select>
+
     <insert id="insertStoragequitdetail" parameterType="Storagequitdetail" useGeneratedKeys="true" keyProperty="id">
         insert into storagequitdetail
         <trim prefix="(" suffix=")" suffixOverrides=",">
@@ -104,10 +109,15 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         </trim>
         where id = #{id}
     </update>
-
+    <update id="updateMaterial">
+    update  storagequitdetail set name=#{name},materialcode=#{materialcode},partnumber=#{partnumber},footprint=#{footprint},unit=#{unit},manufacture=#{manufacture} where materialcode=#{oldmaterialcode}
+    </update>
     <delete id="deleteStoragequitdetailById" parameterType="Long">
         delete from storagequitdetail where id = #{id}
     </delete>
+
+
+
 
     <delete id="deleteStoragequitdetailByIds" parameterType="String">
         delete from storagequitdetail where id in 

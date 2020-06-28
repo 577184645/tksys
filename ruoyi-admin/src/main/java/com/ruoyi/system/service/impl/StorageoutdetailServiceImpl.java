@@ -32,6 +32,11 @@ public class StorageoutdetailServiceImpl implements IStorageoutdetailService
         return storageoutdetailMapper.selectStorageoutdetailById(id);
     }
 
+    @Override
+    public List<Storageoutdetail> selectStorageindetailByStorageoutdetailId(String storageoutbillid) {
+        return storageoutdetailMapper.selectStorageindetailByStorageoutdetailId(storageoutbillid);
+    }
+
     /**
      * 查询出库产品列表列表
      * 

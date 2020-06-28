@@ -51,7 +51,17 @@ public class Storagequitbill extends BaseEntity
     @Excel(name = "修改时间", width = 30, dateFormat = "yyyy-MM-dd")
     private Date uTime;
 
-    public void setId(Long id) 
+    private Integer delStatus;
+
+    public Integer getDelStatus() {
+        return delStatus;
+    }
+
+    public void setDelStatus(Integer delStatus) {
+        this.delStatus = delStatus;
+    }
+
+    public void setId(Long id)
     {
         this.id = id;
     }

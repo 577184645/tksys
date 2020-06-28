@@ -2,6 +2,7 @@ package com.ruoyi.system.mapper;
 
 import java.util.List;
 import com.ruoyi.system.domain.Storagequitbill;
+import com.ruoyi.system.domain.Storagequitdetail;
 
 /**
  * 退料单列表Mapper接口
@@ -67,4 +68,13 @@ public interface StoragequitbillMapper
      * @return 结果
      */
     public int deleteStoragequitbillByIds(String[] ids);
+
+
+    /**
+     * 修改删除状态
+     *
+     * @param id 入库单列表ID
+     * @return 入库单列表
+     */
+    public int updatedelStatus(Long id);
 }

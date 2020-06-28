@@ -66,7 +66,7 @@
                                 <input type="text" name="manufacture"/>
                             </li>
                             <li>
-                                <label>是否显示0：</label>
+                                <label>显示库存为0的产品：</label>
                             <div class="form-group">
                                 <div class="col-sm-8">
                                     <div class="radio-box" th:each="dict : ${@dict.getType('storage_status')}">
@@ -146,6 +146,10 @@
             removeUrl: prefix + "/remove",
             exportUrl: prefix + "/export",
             modalName: "库存",
+            onDblClickRow:function(row, $element, field)
+            {
+                Info(row.id);
+            },
             columns: [{
                 checkbox: true
             },
@@ -302,6 +306,11 @@
     function  quitTab() {
         table.set();
         $.modal.openTab("退料",prefix + "/quit");
+    }
+
+    function Info(id) {
+        table.set();
+        $.modal.openTab("仓库记录", "system/record/"+id);
     }
 
 </script>

@@ -97,6 +97,8 @@ public class Storageoutbill extends BaseEntity
     private Date uTime;
 
 
+    private double money;
+
     public String getPurchaseid() {
         return purchaseid;
     }
@@ -108,7 +110,16 @@ public class Storageoutbill extends BaseEntity
     /** 删除状态 */
     private Long delStatus;
 
-    public void setId(Long id) 
+
+    public double getMoney() {
+        return money;
+    }
+
+    public void setMoney(double money) {
+        this.money = money;
+    }
+
+    public void setId(Long id)
     {
         this.id = id;
     }

@@ -3,15 +3,14 @@ package com.ruoyi.system.controller;
 import java.util.List;
 
 import com.ruoyi.system.domain.Storageinbill;
+import com.ruoyi.system.domain.Storageindetail;
+import com.ruoyi.system.domain.Storageoutdetail;
+import com.ruoyi.system.service.IStorageoutdetailService;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 import com.ruoyi.common.annotation.Log;
 import com.ruoyi.common.enums.BusinessType;
 import com.ruoyi.system.domain.Storageoutbill;
@@ -35,7 +34,8 @@ public class StorageoutbillController extends BaseController
 
     @Autowired
     private IStorageoutbillService storageoutbillService;
-
+    @Autowired
+    private IStorageoutdetailService storageoutdetailService;
 
     @PostMapping("/getstorageoutid")
     @ResponseBody
@@ -132,4 +132,36 @@ public class StorageoutbillController extends BaseController
     {
         return toAjax(storageoutbillService.deleteStorageoutbillByIds(ids));
     }
+
+
+    /**
+     * 打印入库产品列表
+     */
+    @GetMapping("/print/{id}")
+    public String print(@PathVariable("id") Long id, ModelMap mmap)
+    {
+        Storageoutbill storageoutbill = storageoutbillService.selectStorageoutbillById(id);
+        mmap.put("storageoutbill", storageoutbill);
+        List<Storageoutdetail> storageoutdetails = storageoutdetailService.selectStorageindetailByStorageoutdetailId(storageoutbill.getStorageoutid());
+        mmap.put("storageoutdetails", storageoutdetails);
+        return prefix + "/print";
+    }
+
+    @Log(title = "出库单红冲", businessType = BusinessType.DELETE)
+    @PostMapping("/reddashed")
+    @ResponseBody
+    public AjaxResult reddashed(@RequestParam("id") Long id){
+        if(storageoutbillService.selectStorageoutbillById(id).getDelStatus()==2){
+            return AjaxResult.warn("操作失败！该出库单已红冲");
+        }
+
+
+        if(storageoutbillService.reddashed(id)>0){
+            return AjaxResult.warn("操作成功");
+        }
+        return    AjaxResult.warn("操作失败,请联系管理员")   ;
+    }
+
+
+
 }

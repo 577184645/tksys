@@ -63,4 +63,14 @@ public interface StorageoutbillMapper
      * @return 结果
      */
     public int deleteStorageoutbillByIds(String[] ids);
+
+
+    /**
+     * 修改删除状态
+     *
+     * @param id 入库单列表ID
+     * @return 入库单列表
+     */
+    public int updatedelStatus(Long id);
+
 }

@@ -5,12 +5,11 @@ import java.util.List;
 
 import com.ruoyi.common.exception.BusinessException;
 import com.ruoyi.common.utils.StringUtils;
+import com.ruoyi.framework.util.ShiroUtils;
 import com.ruoyi.system.domain.*;
-import com.ruoyi.system.mapper.MaterialdeptMapper;
-import com.ruoyi.system.mapper.MaterialtypeMapper;
+import com.ruoyi.system.mapper.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import com.ruoyi.system.mapper.MaterialMapper;
 import com.ruoyi.system.service.IMaterialService;
 import com.ruoyi.common.core.text.Convert;
 import org.springframework.transaction.annotation.Transactional;
@@ -31,7 +30,16 @@ public class MaterialServiceImpl implements IMaterialService {
     private MaterialtypeMapper materialtypeMapper;
     @Autowired
     private MaterialdeptMapper materialdeptMapper;
-
+    @Autowired
+    private StorageMapper storageMapper;
+    @Autowired
+    private StorageoutdetailMapper storageoutdetailMapper;
+    @Autowired
+    private StorageindetailMapper storageindetailMapper;
+    @Autowired
+    private StoragequitdetailMapper storagequitdetailMapper;
+    @Autowired
+    private WarehouseRecordMapper warehouseRecordMapper;
     /**
      * 查询物料列表
      *
@@ -48,19 +56,27 @@ public class MaterialServiceImpl implements IMaterialService {
         String materialCode = "";
         String code = materialtypeMapper.selectMaterialtypeById(typeId).getCode();
         String code1 = materialdeptMapper.selectMaterialdeptById(deptId).getCode();
-        Integer count = materialMapper.selectMaterialByMaterialcode(code + code1);
-        if (count == null || count == 0) {
+        String materialcode = materialMapper.selectMaterialByMaterialcode(code + code1);
+        if(materialcode==null){
             materialCode = code + code1 + "0001";
-        } else {
-            if (count < 10) {
-                materialCode = code + code1 + "000" + String.valueOf(++count);
-            } else if (count < 100) {
-                materialCode = code + code1 + "00" + String.valueOf(++count);
-            } else if (count < 1000) {
-                materialCode = code + code1 + "0" + String.valueOf(++count);
-            }
+        }else{
 
+            Integer count=Integer.valueOf(materialcode.substring(4));
+
+            if (count+1 < 10) {
+                materialCode = code + code1 + "000" + String.valueOf(count+1);
+            } else if (count+1 < 100) {
+                materialCode = code + code1 + "00" + String.valueOf(count+1);
+            } else if (count+1 < 1000) {
+                materialCode = code + code1 + "0" + String.valueOf(count+1);
+            }else {
+                materialCode=String.valueOf(count+1);
+            }
         }
+
+
+
+
         return materialCode;
 
     }
@@ -84,21 +100,7 @@ public class MaterialServiceImpl implements IMaterialService {
      */
     @Override
     public int insertMaterial(Material material) {
-        String code = materialtypeMapper.selectMaterialtypeById(material.getTypeId()).getCode();
-        String code1 = materialdeptMapper.selectMaterialdeptById(material.getDeptId()).getCode();
-        Integer count = materialMapper.selectMaterialByMaterialcode(code + code1);
-        if (count == null || count == 0) {
-            material.setMaterialcode(code + code1 + "0001");
-        } else {
-            if (count < 10) {
-                material.setMaterialcode(code + code1 + "000" + String.valueOf(++count));
-            } else if (count < 100) {
-                material.setMaterialcode(code + code1 + "00" + String.valueOf(++count));
-            } else if (count < 1000) {
-                material.setMaterialcode(code + code1 + "0" + String.valueOf(++count));
-            }
 
-        }
         return materialMapper.insertMaterial(material);
     }
 
@@ -109,7 +111,21 @@ public class MaterialServiceImpl implements IMaterialService {
      * @return 结果
      */
     @Override
+    @Transactional
     public int updateMaterial(Material material) {
+
+        String oldmaterialcode = materialMapper.selectMaterialById(material.getId()).getMaterialcode();
+        String name=material.getName();
+        String materialcode=material.getMaterialcode();
+        String partnumber=material.getPartnumber();
+        String footprint=material.getFootprint();
+        String unit=material.getUnit();
+        String manufacture=material.getManufacture();
+        storagequitdetailMapper.updateMaterial(name,materialcode,partnumber,footprint,unit,manufacture,oldmaterialcode);
+        storageMapper.updateMaterial(name,materialcode,partnumber,footprint,unit,manufacture,oldmaterialcode);
+       storageindetailMapper.updateMaterial(name,materialcode,partnumber,footprint,unit,manufacture,oldmaterialcode);
+        storageoutdetailMapper.updateMaterial(name,materialcode,partnumber,footprint,unit,manufacture,oldmaterialcode);
+        warehouseRecordMapper.updateMaterial(materialcode,name,oldmaterialcode);
         return materialMapper.updateMaterial(material);
     }
 
@@ -121,6 +137,7 @@ public class MaterialServiceImpl implements IMaterialService {
      */
     @Override
     public int deleteMaterialByIds(String ids) {
+
         return materialMapper.deleteMaterialByIds(Convert.toStrArray(ids));
     }
 
@@ -141,29 +158,32 @@ public class MaterialServiceImpl implements IMaterialService {
         if (StringUtils.isNull(materialList) || materialList.size() == 0) {
             throw new BusinessException("导入数据不能为空！");
         }
-        SysUser user =(SysUser) request.getSession().getAttribute("sessionuser");
+        SysUser user = ShiroUtils.getSysUser();
         int successNum = 0;
         int failureNum = 0;
         StringBuilder successMsg = new StringBuilder();
         StringBuilder failureMsg = new StringBuilder();
         for (Material material : materialList) {
-
-
                 material.setInputdate(new Date());
                 material.setInputoperator(user.getUserName());
-                Integer count = materialMapper.selectMaterialByMaterialcode(material.getDeptIdExcel() + material.getTypeIdExcel());
-                if (count == null || count == 0) {
-                    material.setMaterialcode(material.getDeptIdExcel() + material.getTypeIdExcel() + "0001");
-                } else {
-                    if (count < 10) {
-                        material.setMaterialcode(material.getDeptIdExcel() + material.getTypeIdExcel() + "000" + String.valueOf(++count));
-                    } else if (count < 100) {
-                        material.setMaterialcode(material.getDeptIdExcel() + material.getTypeIdExcel() + "00" + String.valueOf(++count));
-                    } else if (count < 1000) {
-                        material.setMaterialcode(material.getDeptIdExcel() + material.getTypeIdExcel() + "0" + String.valueOf(++count));
-                    }
+            String code = material.getTypeIdExcel();
+            String code1 =material.getDeptIdExcel();
+            String materialcode = materialMapper.selectMaterialByMaterialcode(code + code1);
+            if(materialcode==null){
+                material.setMaterialcode(code + code1 + "0001");
+            }else{
+                Integer count=Integer.valueOf(materialcode.substring(4));
 
+                if (count+1 < 10) {
+                    material.setMaterialcode(code + code1 + "000" + String.valueOf(count+1));
+                } else if (count+1 < 100) {
+                    material.setMaterialcode( code + code1 + "00" + String.valueOf(count+1));
+                } else if (count+1 < 1000) {
+                    material.setMaterialcode(  code + code1 + "0" + String.valueOf(count+1));
+                }else {
+                    material.setMaterialcode(String.valueOf(count+1));
                 }
+            }
                 material.setDeptId(materialdeptMapper.selectMaterialdeptByCode(material.getDeptIdExcel()).getId());
                 material.setTypeId(materialtypeMapper.selectMaterialtypeByCode(material.getTypeIdExcel()).getDeptId());
 

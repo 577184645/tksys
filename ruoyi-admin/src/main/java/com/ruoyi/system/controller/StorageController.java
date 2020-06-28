@@ -2,9 +2,8 @@ package com.ruoyi.system.controller;
 
 import java.util.List;
 
-import com.ruoyi.system.domain.Storageinbill;
-import com.ruoyi.system.domain.Storageoutbill;
-import com.ruoyi.system.domain.Storagequitbill;
+import com.ruoyi.framework.util.ShiroUtils;
+import com.ruoyi.system.domain.*;
 import com.ruoyi.system.service.IProjectService;
 import com.ruoyi.system.service.ISupplierService;
 import com.ruoyi.system.service.ISysUserService;
@@ -22,7 +21,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import com.ruoyi.common.annotation.Log;
 import com.ruoyi.common.enums.BusinessType;
-import com.ruoyi.system.domain.Storage;
 import com.ruoyi.system.service.IStorageService;
 import com.ruoyi.common.core.controller.BaseController;
 import com.ruoyi.common.core.domain.AjaxResult;
@@ -121,6 +119,8 @@ public class StorageController extends BaseController
     @GetMapping("/edit")
     public String edit(ModelMap mmap)
     {
+        SysUser user = ShiroUtils.getSysUser();
+        mmap.put("userName", user.getUserName());
         mmap.put("userList",iSysUserService.findList());
         mmap.put("projectList",iProjectService.selectProjectList(null));
         mmap.put("supplierList",iSupplierService.findListSupplier());

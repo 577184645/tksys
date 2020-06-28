@@ -24,7 +24,7 @@
                 <div class="form-group">
                     <label class="col-sm-3 control-label">供应商：</label>
                     <div class="col-sm-8">
-                        <select  name="supplier" id="supplier" class="form-control m-b">
+                        <select required  name="supplier" id="supplier" class="form-control m-b">
                             <option value="">所有</option>
                             <option  th:each="supplier:${supplierList}"
                                      th:value="${supplier.name}"
@@ -38,21 +38,22 @@
 
 
         <div class="row">
-            <div class="col-sm-6">
-                <div class="form-group">
-                    <label class="col-sm-3 control-label">发票单号
-                        ：</label>
-                    <div class="col-sm-8">
-                        <input name="invoiceid" id="invoiceid" class="form-control" type="text">
-                    </div>
-                </div>
-            </div>
+
             <div class="col-sm-6">
                 <div class="form-group">
                     <label class="col-sm-3 control-label">合同单号
                         ：</label>
                     <div class="col-sm-8">
                         <input name="contractid" id="contractid" class="form-control" type="text">
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-6">
+                <div class="form-group">
+                    <label class="col-sm-3 control-label">发票单号
+                        ：</label>
+                    <div class="col-sm-8">
+                        <input name="invoiceid" id="invoiceid" class="form-control" type="text">
                     </div>
                 </div>
             </div>
@@ -224,6 +225,10 @@
                 <form id="form2">
                     <div class="select-list">
                         <ul>
+                            <li>
+                                <label>物料编码：</label>
+                                <input type="text" name="materialcode"/>
+                            </li>
                             <li>
                                 <label>名称：</label>
                                 <input type="text" name="name"/>
@@ -463,6 +468,9 @@
                         }, {
                             value : "6%",
                             text : "6%"
+                        }, {
+                            value : "1%",
+                            text : "1%"
                         }]
                 }
             },
@@ -483,10 +491,10 @@
             }
         ] ,onEditableSave: function (field, row, oldValue,$el) {
 
-            row.price = (row.money / row.counts).toFixed(9);
+            row.price = (row.money / row.counts).toFixed(4);
 
             if (row.rate != "") {
-                row.taxamount =(row.money * (row.rate.substring(0, row.rate.length - 1) * 0.01)).toFixed(4);;
+                row.taxamount =(row.money * (row.rate.substring(0, row.rate.length - 1) * 0.01)).toFixed(2);;
             }
 
             $('#bootstrap-table1').bootstrapTable('updateRow', {index: row.randomId, row: row});

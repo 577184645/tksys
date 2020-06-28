@@ -1,6 +1,10 @@
 package com.ruoyi.web.controller.system;
 
 import java.util.List;
+
+import javafx.scene.Parent;
+import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.authc.UsernamePasswordToken;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.web.servlet.server.Session;
 import org.springframework.stereotype.Controller;
@@ -33,14 +37,12 @@ public class SysIndexController extends BaseController
 
     // 系统首页
     @GetMapping("/index")
-    public String index(ModelMap mmap, HttpServletRequest request)
+    public String index(ModelMap mmap)
     {
         // 取身份信息
         SysUser user = ShiroUtils.getSysUser();
         // 根据用户id取出菜单
         List<SysMenu> menus = menuService.selectMenusByUser(user);
-        HttpSession session = request.getSession();
-        session.setAttribute("sessionuser",user);
         mmap.put("menus", menus);
         mmap.put("user", user);
         mmap.put("sideTheme", configService.selectConfigByKey("sys.index.sideTheme"));

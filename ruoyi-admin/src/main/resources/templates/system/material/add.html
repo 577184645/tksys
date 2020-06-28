@@ -82,7 +82,7 @@
                     <select  name="inputoperator" class="form-control m-b">
                         <option value="">所有</option>
                         <option   th:each="user:${userList}"
-                                  th:selected="*{session.sessionuser.userName}==${user.userName}"
+                                  th:selected="*{userName}==${user.userName}"
                                   th:value="${user.userName}"
                                  th:text="${user.userName}"
                         ></option>
@@ -221,10 +221,10 @@
 
 
                 $("#typeId").change(function () {
+
                     $.ajax({
-                        url: 'getMaterialcode',
+                        url: ctx+'system/material/getMaterialcode',
                         dataType: 'json',
-                        type: 'post',
                         data: {typeId: $("#typeId").val(),deptId: $("#deptId").val()},
                         success: function (data) {
                             $("#materialcode").val(data.materialcode);
@@ -239,9 +239,8 @@
 
                 $("#deptId").change(function () {
                     $.ajax({
-                        url: 'getMaterialcode',
+                        url: ctx+'system/material/getMaterialcode',
                         dataType: 'json',
-                        type: 'post',
                         data: {typeId: $("#typeId").val(),deptId: $("#deptId").val()},
                         success: function (data) {
 

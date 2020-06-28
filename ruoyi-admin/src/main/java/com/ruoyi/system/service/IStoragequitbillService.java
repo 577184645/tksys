@@ -58,4 +58,13 @@ public interface IStoragequitbillService
      * @return 结果
      */
     public int deleteStoragequitbillById(Long id);
+
+
+    /**
+     * 红冲退料单
+     *
+     * @param id 入库单列表ID
+     * @return 入库单列表
+     */
+      public int reddashed(Long id);
 }

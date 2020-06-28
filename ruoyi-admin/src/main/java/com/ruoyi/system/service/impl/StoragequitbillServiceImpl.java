@@ -1,12 +1,17 @@
 package com.ruoyi.system.service.impl;
 
 import java.util.List;
+
+import com.ruoyi.system.domain.*;
+import com.ruoyi.system.mapper.StorageMapper;
+import com.ruoyi.system.mapper.StoragequitdetailMapper;
+import com.ruoyi.system.mapper.WarehouseRecordMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.ruoyi.system.mapper.StoragequitbillMapper;
-import com.ruoyi.system.domain.Storagequitbill;
 import com.ruoyi.system.service.IStoragequitbillService;
 import com.ruoyi.common.core.text.Convert;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * 退料单列表Service业务层处理
@@ -19,7 +24,13 @@ public class StoragequitbillServiceImpl implements IStoragequitbillService
 {
     @Autowired
     private StoragequitbillMapper storagequitbillMapper;
+    @Autowired
+    private StoragequitdetailMapper storagequitdetailMapper;
+    @Autowired
+    private StorageMapper storageMapper;
 
+    @Autowired
+    private WarehouseRecordMapper warehouseRecordMapper;
     /**
      * 查询退料单列表
      * 
@@ -90,5 +101,34 @@ public class StoragequitbillServiceImpl implements IStoragequitbillService
     public int deleteStoragequitbillById(Long id)
     {
         return storagequitbillMapper.deleteStoragequitbillById(id);
+    }
+
+    @Override
+    @Transactional
+    public int reddashed(Long id) {
+        Storagequitbill storagequitbill = storagequitbillMapper.selectStoragequitbillById(id);
+        List<Storagequitdetail> storagequitdetails = storagequitdetailMapper.selectStorageindetailByStoragequitbillId(storagequitbill.getStoragequitbillid());
+        for (Storagequitdetail storagequitdetail: storagequitdetails) {
+            Storage storage=new Storage();
+            WarehouseRecord warehouseRecord=new WarehouseRecord();
+            storage.setStocks(storagequitdetail.getCounts());
+            storage.setMoney(storagequitdetail.getMoney());
+            storage.setMaterialcode(storagequitdetail.getMaterialcode());
+            storage.setTypeId(storagequitbill.getOutsourcewarehouseid());
+            storage.setSerialNumber(storagequitdetail.getSerialNumber());
+            storage.setSupplier(storagequitdetail.getSupplier());
+            storageMapper.updatereducestocks(storage);
+            warehouseRecord.setType("6");
+            warehouseRecord.setNumber(storagequitbill.getStoragequitbillid());
+            warehouseRecord.setMaterialcode(storagequitdetail.getMaterialcode());
+            warehouseRecord.setName(storagequitdetail.getName());
+            warehouseRecord.setCount(storagequitdetail.getCounts());
+            warehouseRecord.setPrice(storagequitdetail.getPrice());
+            warehouseRecord.setMoney(storagequitdetail.getMoney());
+            warehouseRecord.setSerialNumber(storagequitdetail.getSerialNumber());
+            warehouseRecord.setSupplier(storagequitdetail.getSupplier());
+            warehouseRecordMapper.insertWarehouseRecord(warehouseRecord);
+        }
+        return storagequitbillMapper.updatedelStatus(id);
     }
 }

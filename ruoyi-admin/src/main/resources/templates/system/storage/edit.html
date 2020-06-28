@@ -24,31 +24,7 @@
                 </div>
 
             </div>
-            <div class="col-sm-6">
-                <div class="form-group">
-                    <label class="col-sm-3 control-label">领料单：</label>
-                    <div class="col-sm-8">
-                        <input name="stockrequisition" readonly id="stockrequisition" class="form-control" type="text">
-                    </div>
-                </div>
-            </div>
-        </div>
 
-
-        <div class="row">
-            <div class="col-sm-6">
-                <label class="col-sm-3 control-label">领料人：</label>
-                <div class="col-sm-8">
-                    <select  name="stockpeople" id="stockpeople" class="form-control m-b">
-                        <option value="">所有</option>
-                        <option  th:each="user:${userList}"
-                                 th:value="${user.userName}"
-                                 th:text="${user.userName}"
-                        ></option>
-                    </select>
-                </div>
-
-            </div>
             <div class="col-sm-6">
                 <div class="form-group">
                     <label class="col-sm-3 control-label">库管员：</label>
@@ -63,6 +39,36 @@
                     </div>
                 </div>
             </div>
+
+        </div>
+
+
+        <div class="row">
+            <div class="col-sm-6">
+                <label class="col-sm-3 control-label">出库人：</label>
+                <div class="col-sm-8">
+                    <select  name="stockpeople" id="stockpeople" class="form-control m-b">
+                        <option value="">所有</option>
+                        <option  th:each="user:${userList}"
+                                 th:value="${user.userName}"
+                                 th:text="${user.userName}"
+                                 th:selected="${user.userName}==*{userName}"
+                        ></option>
+                    </select>
+                </div>
+
+            </div>
+
+            <div class="col-sm-6">
+                <div class="form-group">
+                    <label class="col-sm-3 control-label">合同单号
+                        ：</label>
+                    <div class="col-sm-8">
+                        <input name="contractid" id="contractid" class="form-control" type="text">
+                    </div>
+                </div>
+            </div>
+
         </div>
 
 
@@ -78,10 +84,11 @@
             </div>
             <div class="col-sm-6">
                 <div class="form-group">
-                    <label class="col-sm-3 control-label">合同单号
+                    <label class="col-sm-3 control-label">
+                        入库原因
                         ：</label>
                     <div class="col-sm-8">
-                        <input name="contractid" id="contractid" class="form-control" type="text">
+                        <input name="instoragecause" id="instoragecause" class="form-control" type="text">
                     </div>
                 </div>
             </div>
@@ -99,13 +106,18 @@
                     </div>
                 </div>
             </div>
+
             <div class="col-sm-6">
                 <div class="form-group">
-                    <label class="col-sm-3 control-label">
-                        入库原因
-                        ：</label>
+                    <label class="col-sm-3 control-label">送货人：</label>
                     <div class="col-sm-8">
-                        <input name="instoragecause" id="instoragecause" class="form-control" type="text">
+                        <select  name="deliveryman" id="deliveryman" class="form-control m-b">
+                            <option value="">所有</option>
+                            <option  th:each="user:${userList}"
+                                     th:value="${user.userName}"
+                                     th:text="${user.userName}"
+                            ></option>
+                        </select>
                     </div>
                 </div>
             </div>
@@ -129,15 +141,10 @@
             </div>
             <div class="col-sm-6">
                 <div class="form-group">
-                    <label class="col-sm-3 control-label">送货人：</label>
+                    <label class="col-sm-3 control-label">申请单号
+                        ：</label>
                     <div class="col-sm-8">
-                        <select  name="deliveryman" id="deliveryman" class="form-control m-b">
-                            <option value="">所有</option>
-                            <option  th:each="user:${userList}"
-                                     th:value="${user.userName}"
-                                     th:text="${user.userName}"
-                            ></option>
-                        </select>
+                        <input name="applyid" id="applyid" class="form-control" type="text">
                     </div>
                 </div>
             </div>
@@ -154,16 +161,23 @@
             </div>
             <div class="col-sm-6">
                 <div class="form-group">
-                    <label class="col-sm-3 control-label">申请单号
+                    <label class="col-sm-3 control-label">
+                        项目名称
                         ：</label>
                     <div class="col-sm-8">
-                        <input name="applyid" id="applyid" class="form-control" type="text">
+                        <select  name="projectname" id="projectname" class="form-control m-b">
+                            <option value="">所有</option>
+                            <option  th:each="project:${projectList}"
+                                     th:value="${project.name}"
+                                     th:text="${project.name}"
+                            ></option>
+                        </select>
                     </div>
                 </div>
             </div>
         </div>
 
-
+        <div class="row">
         <div class="col-sm-6">
             <div class="form-group">
                 <label class="col-sm-3 control-label">客户：</label>
@@ -177,34 +191,20 @@
                     </select>
                 </div>
             </div>
-        </div>
 
+        </div>
         <div class="col-sm-6">
-            <div class="form-group">
-                <label class="col-sm-3 control-label">
-                    项目名称
-                    ：</label>
-                <div class="col-sm-8">
-                    <select  name="projectname" id="projectname" class="form-control m-b">
-                        <option value="">所有</option>
-                        <option  th:each="project:${projectList}"
-                                 th:value="${project.name}"
-                                 th:text="${project.name}"
-                        ></option>
-                    </select>
-                </div>
+            <label class="col-sm-3 control-label">备注：</label>
+            <div class="col-sm-8">
+                <input name="comments" id="comments" class="form-control" type="text">
             </div>
+
+        </div>
         </div>
 
 
         <div class="row">
-            <div class="col-sm-6">
-                <label class="col-sm-3 control-label">备注：</label>
-                <div class="col-sm-8">
-                    <input name="comments" id="comments" class="form-control" type="text">
-                </div>
 
-            </div>
             <div class="col-sm-6">
                 <label class="col-sm-3 control-label">外协库：</label>
                 <div class="col-sm-8">
@@ -483,7 +483,7 @@
                             }
                         ] ,onEditableSave: function (field, row, oldValue,$el) {
 
-                            row.money = (row.price * row.counts).toFixed(4);;
+                            row.money = (row.price * row.counts).toFixed(2);;
                             $('#bootstrap-table1').bootstrapTable('updateRow', {index: row.randomId, row: row});
 
                         }
@@ -515,7 +515,6 @@
                                 result="0"+result;
                             }
                             $("#storageoutid").val("CKD-"+y+""+mt+""+day+"-"+result);
-                            $("#stockrequisition").val("LLD-"+y+""+mt+""+day+"-"+result);
 
                         }
                     });
@@ -540,7 +539,7 @@
                                     comments:"",
                                     serialNumber:data[i].serialNumber,
                                     supplier:data[i].supplier,
-                                    price:data[i].price,
+                                    price:data[i].price.toFixed(4),
                                     money:"",
                                     counts:"",
                                     randomId:randomId
@@ -576,7 +575,7 @@
                                     comments:data[i].comments,
                                     serialNumber:data[i].serialNumber,
                                     supplier:data[i].supplier,
-                                    price: data[i].price,
+                                    price:data[i].price.toFixed(4),
                                     money: data[i].money,
                                     counts: data[i].counts,
                                     randomId:randomId,

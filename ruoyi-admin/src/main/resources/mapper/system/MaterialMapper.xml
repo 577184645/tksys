@@ -23,6 +23,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="leadtime"    column="leadtime"    />
         <result property="comments"    column="comments"    />
         <result property="typeId"    column="type_id"    />
+        <result property="deptId"    column="dept_id"    />
         <result property="safestock"    column="safestock"    />
         <result property="ordernumber"    column="ordernumber"    />
         <result property="delFlag"    column="del_flag"    />
@@ -66,10 +67,13 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 
 
 
+    <select id="selectMaterialMaxMaterialcode" >
+        select max(materialcode) from material
 
+    </select>
 
-    <select id="selectMaterialByMaterialcode"  resultType="Int">
-        select count(1) from material
+    <select id="selectMaterialByMaterialcode" resultType="String" >
+        select max(materialcode) from material
         where left(materialcode, 4)=#{materialcode};
     </select>
     <select id="selectMaterialById" parameterType="Integer" resultMap="MaterialResult">
@@ -152,7 +156,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="productmoq != null ">productmoq = #{productmoq},</if>
             <if test="leadtime != null ">leadtime = #{leadtime},</if>
             <if test="comments != null  and comments != ''">comments = #{comments},</if>
-            <if test="typeId != null ">type_id = #{typeId},</if>
+            <if test="typeId != null and  typeId!=''">type_id = #{typeId},</if>
+            <if test="deptId != null and deptId!='' ">dept_id = #{deptId},</if>
             <if test="safestock != null ">safestock = #{safestock},</if>
             <if test="ordernumber != null  and ordernumber != ''">ordernumber = #{ordernumber},</if>
             <if test="buyer != null  and buyer != ''">buyer = #{buyer},</if>

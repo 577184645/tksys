@@ -45,7 +45,7 @@ public class Storage extends BaseEntity
 
     /** 单价 */
     @Excel(name = "单价")
-    private Double price;
+    private Float price;
 
 
     private Long deptId;
@@ -59,7 +59,7 @@ public class Storage extends BaseEntity
 
     /** 总价 */
     @Excel(name = "总价")
-    private Double money;
+    private Float money;
 
     /** 库存类别 */
     @Excel(name = "库存类别")
@@ -184,12 +184,12 @@ public class Storage extends BaseEntity
     {
         return unit;
     }
-    public void setPrice(Double price) 
+    public void setPrice(Float price)
     {
         this.price = price;
     }
 
-    public Double getPrice() 
+    public Float getPrice()
     {
         return price;
     }
@@ -210,12 +210,12 @@ public class Storage extends BaseEntity
     {
         return stocks;
     }
-    public void setMoney(Double money) 
+    public void setMoney(Float money)
     {
         this.money = money;
     }
 
-    public Double getMoney() 
+    public Float getMoney()
     {
         return money;
     }

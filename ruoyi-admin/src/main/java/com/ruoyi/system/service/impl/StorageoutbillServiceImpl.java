@@ -1,10 +1,14 @@
 package com.ruoyi.system.service.impl;
 
 import java.util.List;
+
+import com.ruoyi.system.domain.*;
+import com.ruoyi.system.mapper.StorageMapper;
+import com.ruoyi.system.mapper.StorageoutdetailMapper;
+import com.ruoyi.system.mapper.WarehouseRecordMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.ruoyi.system.mapper.StorageoutbillMapper;
-import com.ruoyi.system.domain.Storageoutbill;
 import com.ruoyi.system.service.IStorageoutbillService;
 import com.ruoyi.common.core.text.Convert;
 
@@ -19,6 +23,16 @@ public class StorageoutbillServiceImpl implements IStorageoutbillService
 {
     @Autowired
     private StorageoutbillMapper storageoutbillMapper;
+
+
+    @Autowired
+    private StorageoutdetailMapper storageoutdetailMapper;
+
+    @Autowired
+    private StorageMapper storageMapper;
+
+    @Autowired
+    private WarehouseRecordMapper warehouseRecordMapper;
 
     /**
      * 查询出库单列表
@@ -91,4 +105,33 @@ public class StorageoutbillServiceImpl implements IStorageoutbillService
     {
         return storageoutbillMapper.deleteStorageoutbillById(id);
     }
+
+    @Override
+    public int reddashed(Long id) {
+        Storageoutbill storageoutbill = storageoutbillMapper.selectStorageoutbillById(id);
+        List<Storageoutdetail> storageoutdetails = storageoutdetailMapper.selectStorageindetailByStorageoutdetailId(storageoutbill.getStorageoutid());
+        for (Storageoutdetail storageoutdetail: storageoutdetails) {
+            Storage storage=new Storage();
+            WarehouseRecord warehouseRecord=new WarehouseRecord();
+            storage.setStocks(storageoutdetail.getCounts());
+            storage.setMoney(storageoutdetail.getMoney());
+            storage.setMaterialcode(storageoutdetail.getMaterialcode());
+            storage.setTypeId(storageoutbill.getOutsourcewarehouseid());
+            storage.setSerialNumber(storageoutdetail.getSerialNumber());
+            storage.setSupplier(storageoutdetail.getSupplier());
+            storageMapper.updateaddstocks(storage);
+            warehouseRecord.setType("5");
+            warehouseRecord.setNumber(storageoutbill.getStorageoutid());
+            warehouseRecord.setMaterialcode(storageoutdetail.getMaterialcode());
+            warehouseRecord.setName(storageoutdetail.getName());
+            warehouseRecord.setCount(storageoutdetail.getCounts());
+            warehouseRecord.setPrice(storageoutdetail.getPrice());
+            warehouseRecord.setMoney(storageoutdetail.getMoney());
+            warehouseRecord.setSerialNumber(storageoutdetail.getSerialNumber());
+            warehouseRecord.setSupplier(storageoutdetail.getSupplier());
+            warehouseRecordMapper.insertWarehouseRecord(warehouseRecord);
+        }
+        return storageoutbillMapper.updatedelStatus(id);
+    }
+
 }

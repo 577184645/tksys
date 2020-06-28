@@ -27,6 +27,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="status"    column="status"    />
         <result property="cTime"    column="c_time"    />
         <result property="uTime"    column="u_time"    />
+        <result property="delStatus"    column="del_status"    />
     </resultMap>
 
     <sql id="selectStorageinbillVo">
@@ -37,8 +38,11 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     <select id="selectStorageinbillList" parameterType="Storageinbill" resultMap="StorageinbillResult">
         <include refid="selectStorageinbillVo"/>
         <where>
-            <if test="status != null  and status != ''"> and status=#{status}</if>
+            <if test="stockinid != null  and stockinid != ''"> and stockinid like concat('%', #{stockinid}, '%')</if>
 
+            <if test="status != null  and status != ''"> and status=#{status}</if>
+            <if test="delStatus == 1 "> and del_status = 1</if>
+            <if test="delStatus == 2 "> and del_status = 2</if>
             <if test="outsourcewarehouse != null  and outsourcewarehouse != ''"> and outsourcewarehouse like concat('%', #{outsourcewarehouse}, '%')</if>
             <if test="supplier != null  and supplier != ''"> and s.supplier like concat('%', #{supplier}, '%')</if>
             <if test="instoragecause != null  and instoragecause != ''"> and instoragecause like concat('%', #{instoragecause}, '%')</if>

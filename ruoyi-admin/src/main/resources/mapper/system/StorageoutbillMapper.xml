@@ -6,6 +6,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     
     <resultMap type="Storageoutbill" id="StorageoutbillResult">
         <result property="id"    column="id"    />
+        <result property="money"    column="money"    />
         <result property="storageoutid"    column="storageoutid"    />
         <result property="customer"    column="customer"    />
         <result property="applyid"    column="applyid"    />
@@ -28,12 +29,19 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </resultMap>
 
     <sql id="selectStorageoutbillVo">
-        select customer,purchaseid,applyid,contractid,invoiceid,expressid,instoragecause,projectname,proposer,id, storageoutid, outsourcewarehouse, outsourcewarehouseid, stockrequisition, warehouseadmin, stockpeople, storageouttime, comments, c_time, u_time, del_status from storageoutbill
+        select customer,sum(money) as money,purchaseid,applyid,contractid,invoiceid,expressid,instoragecause,projectname,proposer,s.id, storageoutid, outsourcewarehouse, outsourcewarehouseid, stockrequisition, warehouseadmin, stockpeople, storageouttime, s.comments, s.c_time, s.u_time, del_status
+        from storageoutbill s LEFT JOIN storageoutdetail s1
+				on storageoutid=storageoutbillid
+
+
     </sql>
 
     <select id="selectStorageoutbillList" parameterType="Storageoutbill" resultMap="StorageoutbillResult">
         <include refid="selectStorageoutbillVo"/>
-        <where>  
+        <where>
+            <if test="storageoutid != null  and storageoutid != ''"> and storageoutid like concat('%', #{storageoutid}, '%')</if>
+            <if test="delStatus == 1 "> and del_status = 1</if>
+            <if test="delStatus == 2 "> and del_status = 2</if>
             <if test="outsourcewarehouse != null  and outsourcewarehouse != ''"> and outsourcewarehouse like concat('%', #{outsourcewarehouse}, '%')</if>
             <if test="instoragecause != null  and instoragecause != ''"> and instoragecause like concat('%', #{instoragecause}, '%')</if>
             <if test="projectname != null  and projectname != ''"> and projectname like concat('%', #{projectname}, '%')</if>
@@ -49,11 +57,12 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             </if>
 
         </where>
+        GROUP BY  s.storageoutid
     </select>
     
     <select id="selectStorageoutbillById" parameterType="Long" resultMap="StorageoutbillResult">
         <include refid="selectStorageoutbillVo"/>
-        where id = #{id}
+        where s.id = #{id}
     </select>
     <select id="selectStorageoutbillByStorageoutId" resultMap="StorageoutbillResult">
         <include refid="selectStorageoutbillVo"/>
@@ -137,6 +146,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 
     <delete id="deleteStorageoutbillById" parameterType="Long">
         delete from storageoutbill where id = #{id}
+
     </delete>
 
 
@@ -148,5 +158,10 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             #{id}
         </foreach>
     </delete>
-    
+
+    <update id="updatedelStatus">
+      update storageoutbill set del_status='2' where id=#{id}
+</update>
+
+
 </mapper>

@@ -39,7 +39,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 
 
     <sql id="selectStorageVo">
-        select id, name, materialcode, partnumber, footprint, manufacture, unit, price, stocks, money, type_id, serial_number,  c_time, u_time from storage
+        select id, name, supplier,materialcode, partnumber, footprint, manufacture, unit, price, stocks, money, type_id, serial_number,  c_time, u_time from storage
     </sql>
 
     <select id="selectStorageList" parameterType="Storage" resultMap="StorageResult">
@@ -51,11 +51,12 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <if test="manufacture != null  and manufacture != ''"> and manufacture = #{manufacture}</if>
         <if test="materialcode != null  and materialcode != ''"> and materialcode = #{materialcode}</if>
         <if test="status==2 "> and stocks > 0</if>
+        <if test="status==1 "> and stocks = 0</if>
         <if test="deptId != null and deptId != 0">
                 AND (u.type_id = #{deptId} OR u.type_id IN ( SELECT t.dept_id FROM storagetype t WHERE FIND_IN_SET (#{deptId},ancestors) ))
             </if>
             <if test="uTime != null "> and u_time = #{uTime}</if>
-        GROUP BY materialcode,serial_number,supplier
+        GROUP BY materialcode,serial_number,supplier,footprint
     </select>
 
     <select id="selectStorageById" parameterType="Integer" resultMap="StorageResult">
@@ -137,18 +138,17 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </delete>
 
     <select id="selectStorageByMaterialcodeAndTypeid" resultType="int">
-        select count(1) from storage where materialcode=#{materialcode} and type_id=#{typeId}
-       <if test="serialNumber!=null and serialNumber!=''"></if>
+        select count(1) from storage where
+        materialcode=#{materialcode}
+        and type_id=#{typeId}
          and   serial_number=#{serialNumber}
          and   supplier=#{supplier}
-
     </select>
 
     <update id="updatestocks">
         update  storage set stocks=stocks+#{stocks},money=money+#{money},price=money/stocks,u_time=now()  where materialcode=#{materialcode} and type_id=#{typeId}
            and   serial_number=#{serialNumber}
          and   supplier=#{supplier}
-
     </update>
 
 
@@ -156,10 +156,19 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         update  storage set stocks=stocks-#{stocks},money=money-#{money},price=money/stocks   where materialcode=#{materialcode} and type_id=#{typeId}
            and   serial_number=#{serialNumber}
          and   supplier=#{supplier}
-
     </update>
 
 
+    <update id="updateaddstocks">
+        update  storage set stocks=stocks+#{stocks},money=money+#{money},price=money/stocks   where materialcode=#{materialcode} and type_id=#{typeId}
+           and   serial_number=#{serialNumber}
+         and   supplier=#{supplier}
+    </update>
+
+
+    <update id="updateMaterial">
+    update  storage set name=#{name},materialcode=#{materialcode},partnumber=#{partnumber},footprint=#{footprint},unit=#{unit},manufacture=#{manufacture} where materialcode=#{oldmaterialcode}
+    </update>
 
     <update id="removestocks">
         update  storage set stocks=stocks-#{stocks},money=money-#{money},price=money/stocks,o_time=now()  where id=#{id}

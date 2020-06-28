@@ -25,7 +25,7 @@ public interface MaterialMapper
      * @param materialcode 物料列表ID
      * @return 物料列表
      */
-    public Integer selectMaterialByMaterialcode(String materialcode);
+    public String selectMaterialByMaterialcode(String materialcode);
 
     /**
      * 查询物料列表列表

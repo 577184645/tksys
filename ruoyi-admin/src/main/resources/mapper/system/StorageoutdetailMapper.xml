@@ -6,6 +6,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     
     <resultMap type="Storageoutdetail" id="StorageoutdetailResult">
         <result property="id"    column="id"    />
+        <result property="rownum"    column="rownum"    />
         <result property="storageoutbillid"    column="storageoutbillid"    />
         <result property="materialcode"    column="materialcode"    />
         <result property="name"    column="name"    />
@@ -41,6 +42,16 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     <select id="selectStorageoutdetailById" parameterType="Long" resultMap="StorageoutdetailResult">
         <include refid="selectStorageoutdetailVo"/>
         where id = #{id}
+    </select>
+    <select id="selectStorageindetailByStoragequitbillId" parameterType="Long" resultMap="StorageoutdetailResult">
+        <include refid="selectStorageoutdetailVo"/>
+        where storagequitbillid = #{storagequitbillid}
+    </select>
+
+    <select id="selectStorageindetailByStorageoutdetailId"  resultMap="StorageoutdetailResult">
+   select   @rowNum:=@rowNum + 1 as rownum, id, storageoutbillid,serial_number, footprint,materialcode, name, partnumber, manufacture, price, counts, money, unit, supplier, comments,  c_time, u_time from storageoutdetail,(SELECT @rowNum:=0) b
+
+        where storageoutbillid = #{storageoutbillid}
     </select>
         
     <insert id="insertStorageoutdetail" parameterType="Storageoutdetail" useGeneratedKeys="true" keyProperty="id">
@@ -98,7 +109,6 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="money != null ">money = #{money},</if>
             <if test="unit != null  and unit != ''">unit = #{unit},</if>
             <if test="supplier != null  and supplier != ''">supplier = #{supplier},</if>
-            <if test="rate != null  and rate != ''">rate = #{rate},</if>
             <if test="purchaseid != null  and purchaseid != ''">purchaseid = #{purchaseid},</if>
             <if test="applyid != null  and applyid != ''">applyid = #{applyid},</if>
             <if test="contractid != null  and contractid != ''">contractid = #{contractid},</if>
@@ -108,13 +118,14 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="projectname != null  and projectname != ''">projectname = #{projectname},</if>
             <if test="proposer != null  and proposer != ''">proposer = #{proposer},</if>
             <if test="comments != null  and comments != ''">comments = #{comments},</if>
-            <if test="taxamount != null ">taxamount = #{taxamount},</if>
             <if test="cTime != null ">c_time = #{cTime},</if>
             <if test="uTime != null ">u_time = #{uTime},</if>
         </trim>
         where id = #{id}
     </update>
-
+    <update id="updateMaterial">
+    update  storageoutdetail set name=#{name},materialcode=#{materialcode},partnumber=#{partnumber},footprint=#{footprint},unit=#{unit},manufacture=#{manufacture} where materialcode=#{oldmaterialcode}
+    </update>
     <delete id="deleteStorageoutdetailById" parameterType="Long">
         delete from storageoutdetail where id = #{id}
     </delete>

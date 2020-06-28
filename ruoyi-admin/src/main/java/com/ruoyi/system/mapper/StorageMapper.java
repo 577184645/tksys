@@ -15,12 +15,13 @@ public interface StorageMapper
     /**
      * 查询库存下是否有产品
      *
-     * @param materialcode typeId serialNumber  supplier
+     * @param storage
      * @return 库存列表
      */
-    public int selectStorageByMaterialcodeAndTypeid(@Param("materialcode") String materialcode,@Param("typeId") Long typeId,@Param("serialNumber") String serialNumber,@Param("supplier") String supplier);
+    public int selectStorageByMaterialcodeAndTypeid(Storage storage);
 
 
+    public int updateMaterial(@Param("name") String name,@Param("materialcode") String materialcode,@Param("partnumber") String partnumber,@Param("footprint") String footprint,@Param("unit") String unit,@Param("manufacture") String manufacture,@Param("oldmaterialcode") String oldmaterialcode);
 
     /**
      * 入库
@@ -33,13 +34,23 @@ public interface StorageMapper
 
 
     /**
-     * 入库
+     *
      * 减少库存数量
      *
      * @param  storage
      * @return 库存列表
      */
     public int updatereducestocks(Storage storage);
+
+
+    /**
+     *
+     * 增加库存数量
+     *
+     * @param  storage
+     * @return 库存列表
+     */
+    public int updateaddstocks(Storage storage);
 
     /**
      * 退库
@@ -48,6 +59,8 @@ public interface StorageMapper
      * @return 库存列表
      */
     public int quitstocks(Storage storage);
+
+
 
     /**
      * 出库

@@ -19,6 +19,14 @@ public interface IStorageoutdetailService
      */
     public Storageoutdetail selectStorageoutdetailById(Long id);
 
+
+
+
+    /**
+     * 查询入库产品列表
+     */
+    public List<Storageoutdetail> selectStorageindetailByStorageoutdetailId(String storageoutbillid);
+
     /**
      * 查询出库产品列表列表
      * 

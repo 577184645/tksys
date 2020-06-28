@@ -41,7 +41,7 @@ public class Storageindetail extends BaseEntity
 
     /** 单价 */
     @Excel(name = "单价")
-    private Double price;
+    private Float price;
 
     /** 数量 */
     @Excel(name = "数量")
@@ -49,7 +49,7 @@ public class Storageindetail extends BaseEntity
 
     /** 总金额 */
     @Excel(name = "总金额")
-    private Double money;
+    private Float money;
 
     /** 单位 */
     @Excel(name = "单位")
@@ -183,12 +183,12 @@ public class Storageindetail extends BaseEntity
     {
         return manufacture;
     }
-    public void setPrice(Double price) 
+    public void setPrice(Float price)
     {
         this.price = price;
     }
 
-    public Double getPrice() 
+    public Float getPrice()
     {
         return price;
     }
@@ -201,12 +201,12 @@ public class Storageindetail extends BaseEntity
     {
         return counts;
     }
-    public void setMoney(Double money) 
+    public void setMoney(Float money)
     {
         this.money = money;
     }
 
-    public Double getMoney() 
+    public Float getMoney()
     {
         return money;
     }

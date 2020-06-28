@@ -326,7 +326,7 @@
                             }
                         ] ,onEditableSave: function (field, row, oldValue,$el) {
 
-                            row.money = (row.price * row.counts).toFixed(4);;
+                            row.money = (row.price * row.counts).toFixed(2);;
                             $('#bootstrap-table1').bootstrapTable('updateRow', {index: row.randomId, row: row});
 
                         }

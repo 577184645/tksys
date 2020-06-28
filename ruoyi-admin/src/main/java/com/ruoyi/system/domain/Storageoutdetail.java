@@ -19,6 +19,8 @@ public class Storageoutdetail extends BaseEntity
     /** null */
     private Long id;
 
+
+    private  Integer rownum;
     /** 所属入库单 */
     @Excel(name = "所属入库单")
     private String storageoutbillid;
@@ -49,7 +51,7 @@ public class Storageoutdetail extends BaseEntity
 
     /** 单价 */
     @Excel(name = "单价")
-    private Double price;
+    private Float price;
 
     /** 数量 */
     @Excel(name = "数量")
@@ -57,7 +59,7 @@ public class Storageoutdetail extends BaseEntity
 
     /** 总金额 */
     @Excel(name = "总金额")
-    private Double money;
+    private Float money;
 
     /** 单位 */
     @Excel(name = "单位")
@@ -85,6 +87,13 @@ public class Storageoutdetail extends BaseEntity
     @Excel(name = "修改时间", width = 30, dateFormat = "yyyy-MM-dd")
     private Date uTime;
 
+    public Integer getRownum() {
+        return rownum;
+    }
+
+    public void setRownum(Integer rownum) {
+        this.rownum = rownum;
+    }
 
     public String getComments() {
         return comments;
@@ -166,12 +175,12 @@ public class Storageoutdetail extends BaseEntity
     {
         return manufacture;
     }
-    public void setPrice(Double price) 
+    public void setPrice(Float price)
     {
         this.price = price;
     }
 
-    public Double getPrice() 
+    public Float getPrice()
     {
         return price;
     }
@@ -184,12 +193,12 @@ public class Storageoutdetail extends BaseEntity
     {
         return counts;
     }
-    public void setMoney(Double money) 
+    public void setMoney(Float money)
     {
         this.money = money;
     }
 
-    public Double getMoney() 
+    public Float getMoney()
     {
         return money;
     }

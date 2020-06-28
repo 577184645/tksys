@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org" xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
+<head>
+    <th:block th:include="include :: header('库存记录列表')" />
+</head>
+<body class="gray-bg">
+     <div class="container-div">
+        <div class="row">
+            <div class="col-sm-12 search-collapse">
+                <form id="formId">
+                    <div class="select-list">
+                        <ul>
+                            <li>
+                                <input type="hidden" id="materialcode" th:value="${materialcode}">
+                                <input type="hidden" id="supplier" th:value="${supplier}">
+                                <input type="hidden" id="serialNumber" th:value="${serialNumber}">
+                                <label>类型：</label>
+                                <select name="type" th:with="type=${@dict.getType('warehouse_record')}">
+                                    <option value="">所有</option>
+                                    <option th:each="dict : ${type}" th:text="${dict.dictLabel}" th:value="${dict.dictValue}"></option>
+                                </select>
+                            </li>
+                            <li>
+                                <label>单号：</label>
+                                <input type="text" name="number"/>
+                            </li>
+                            <li>
+                                <a class="btn btn-primary btn-rounded btn-sm" onclick="$.table.search()"><i class="fa fa-search"></i>&nbsp;搜索</a>
+                                <a class="btn btn-warning btn-rounded btn-sm" onclick="$.form.reset()"><i class="fa fa-refresh"></i>&nbsp;重置</a>
+                            </li>
+                        </ul>
+                    </div>
+                </form>
+            </div>
+
+
+            <div class="col-sm-12 select-table table-striped">
+                <table id="bootstrap-table"></table>
+            </div>
+        </div>
+    </div>
+    <th:block th:include="include :: footer" />
+    <script th:inline="javascript">
+        var editFlag = [[${@permission.hasPermi('system:record:edit')}]];
+        var removeFlag = [[${@permission.hasPermi('system:record:remove')}]];
+        var prefix = ctx + "system/record";
+        var warehouseRecordType = [[${@dict.getType('warehouse_record')}]];
+        $(function() {
+            var options = {
+                url: prefix + "/list",
+                createUrl: prefix + "/add",
+                updateUrl: prefix + "/edit/{id}",
+                removeUrl: prefix + "/remove",
+                exportUrl: prefix + "/export",
+                modalName: "库存记录",
+                showToggle:false,
+                showSearch:false,
+                showRefresh:false,
+                pagination:false,
+                showColumns:false,
+                queryParams : {
+                    materialcode: $("#materialcode").val(),
+                    supplier:  $("#supplier").val(),
+                    serialNumber:  $("#serialNumber").val()
+                },
+                columns: [{
+                    checkbox: true
+                },
+                {
+                    field: 'id', 
+                    title: 'id',
+                    visible: false
+                },
+                {
+                    field: 'type', 
+                    title: '类型',
+                    formatter: function(value, row, index) {
+                        return $.table.selectDictLabel(warehouseRecordType, value);
+                    }
+
+                },
+                {
+                    field: 'number', 
+                    title: '单号'
+                },
+                {
+                    field: 'materialcode', 
+                    title: '物料编号'
+                },
+                {
+                    field: 'name', 
+                    title: '商品名称'
+                },
+                {
+                    field: 'count', 
+                    title: '数量'
+                },
+                {
+                    field: 'price', 
+                    title: '单价'
+                },
+                {
+                    field: 'money', 
+                    title: '总价'
+                },
+                {
+                    field: 'supplier', 
+                    title: '供应商'
+                },
+                {
+                    field: 'serialNumber', 
+                    title: '序列号'
+                },
+                {
+                    field: 'delStatus', 
+                    title: '状态',
+                    visible: false
+                },
+                {
+                    field: 'cTime', 
+                    title: '时间'
+                }
+             ]
+            };
+            $.table.init(options);
+        });
+    </script>
+</body>
+</html>

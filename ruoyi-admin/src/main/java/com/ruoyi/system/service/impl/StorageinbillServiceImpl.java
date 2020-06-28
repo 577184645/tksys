@@ -4,8 +4,10 @@ import java.util.List;
 
 import com.ruoyi.system.domain.Storage;
 import com.ruoyi.system.domain.Storageindetail;
+import com.ruoyi.system.domain.WarehouseRecord;
 import com.ruoyi.system.mapper.StorageMapper;
 import com.ruoyi.system.mapper.StorageindetailMapper;
+import com.ruoyi.system.mapper.WarehouseRecordMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.ruoyi.system.mapper.StorageinbillMapper;
@@ -29,6 +31,8 @@ public class StorageinbillServiceImpl implements IStorageinbillService
     private StorageindetailMapper storageindetailMapper;
     @Autowired
     private StorageMapper storageMapper;
+    @Autowired
+    private WarehouseRecordMapper warehouseRecordMapper;
     /**
      * 查询入库单列表
      * 
@@ -124,30 +128,24 @@ public class StorageinbillServiceImpl implements IStorageinbillService
         for (Storageindetail storageindetail:
         storageindetails) {
             Storage storage=new Storage();
+            WarehouseRecord warehouseRecord=new WarehouseRecord();
             storage.setStocks(storageindetail.getCounts());
             storage.setMoney(storageindetail.getMoney());
             storage.setMaterialcode(storageindetail.getMaterialcode());
             storage.setTypeId(storageinbill.getOutsourcewarehouseid());
-            if(storageindetail.getSerialNumber()==null){
-                storage.setSerialNumber("");
-            }else{
-                storage.setSerialNumber(storageindetail.getSerialNumber());
-
-            }
-
-            if(storageindetail.getSupplier()==null){
-                storage.setSupplier("");
-            }else{
-                storage.setSupplier(storageindetail.getSupplier());
-            }
-
-            if(storageindetail.getFootprint()==null){
-                storage.setFootprint("");
-            }else{
-                storage.setFootprint(storageindetail.getFootprint());
-            }
-
+            storage.setSerialNumber(storageindetail.getSerialNumber());
+            storage.setSupplier(storageindetail.getSupplier());
             storageMapper.updatereducestocks(storage);
+            warehouseRecord.setType("4");
+            warehouseRecord.setNumber(storageinbill.getStockinid());
+            warehouseRecord.setMaterialcode(storageindetail.getMaterialcode());
+            warehouseRecord.setName(storageindetail.getName());
+            warehouseRecord.setCount(storageindetail.getCounts());
+            warehouseRecord.setPrice(storageindetail.getPrice());
+            warehouseRecord.setMoney(storageindetail.getMoney());
+            warehouseRecord.setSerialNumber(storageindetail.getSerialNumber());
+            warehouseRecord.setSupplier(storageindetail.getSupplier());
+            warehouseRecordMapper.insertWarehouseRecord(warehouseRecord);
         }
         return storageinbillMapper.updatedelStatus(id);
     }

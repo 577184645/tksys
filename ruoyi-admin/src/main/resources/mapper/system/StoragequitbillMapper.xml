@@ -6,6 +6,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     
     <resultMap type="Storagequitbill" id="StoragequitbillResult">
         <result property="id"    column="id"    />
+
         <result property="storagequitbillid"    column="storagequitbillid"    />
         <result property="outsourcewarehouse"    column="outsourcewarehouse"    />
         <result property="outsourcewarehouseid"    column="outsourcewarehouseid"    />
@@ -14,15 +15,19 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="comments"    column="comments"    />
         <result property="cTime"    column="c_time"    />
         <result property="uTime"    column="u_time"    />
+        <result property="delStatus"    column="del_status"    />
+
     </resultMap>
 
     <sql id="selectStoragequitbillVo">
-        select id, storagequitbillid, outsourcewarehouse, outsourcewarehouseid, outpeople, outstoragecause, comments, c_time, u_time from storagequitbill
+        select id,del_status, storagequitbillid, outsourcewarehouse, outsourcewarehouseid, outpeople, outstoragecause, comments, c_time, u_time from storagequitbill
     </sql>
 
     <select id="selectStoragequitbillList" parameterType="Storagequitbill" resultMap="StoragequitbillResult">
         <include refid="selectStoragequitbillVo"/>
-        <where>  
+        <where>
+            <if test="delStatus == 1 "> and del_status = 1</if>
+            <if test="delStatus == 2 "> and del_status = 2</if>
             <if test="storagequitbillid != null  and storagequitbillid != ''"> and storagequitbillid like concat('%', #{storagequitbillid}, '%')</if>
             <if test="outsourcewarehouse != null  and outsourcewarehouse != ''"> and outsourcewarehouse like concat('%', #{outsourcewarehouse}, '%')</if>
             <if test="outpeople != null  and outpeople != ''"> and outpeople like concat('%', #{outpeople}, '%')</if>
@@ -92,5 +97,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             #{id}
         </foreach>
     </delete>
-    
+    <update id="updatedelStatus">
+      update storagequitbill set del_status='2' where id=#{id}
+</update>
+
 </mapper>

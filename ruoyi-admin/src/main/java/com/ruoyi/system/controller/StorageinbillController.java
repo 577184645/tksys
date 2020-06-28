@@ -65,11 +65,10 @@ public class StorageinbillController extends BaseController
     @Log(title = "入库单红冲", businessType = BusinessType.DELETE)
     @PostMapping("/reddashed")
     @ResponseBody
-    public AjaxResult reddashed(@RequestParam("id") Long id){
+    public AjaxResult reddashed(Long id,String list){
        if(storageinbillService.selectStorageinbillById(id).getDelStatus().equals("2")){
            return AjaxResult.warn("操作失败！该入库单已红冲");
        }
-
 
         if(storageinbillService.reddashed(id)>0){
             return AjaxResult.warn("操作成功");

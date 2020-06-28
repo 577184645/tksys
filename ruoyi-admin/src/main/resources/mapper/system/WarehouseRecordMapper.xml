@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.WarehouseRecordMapper">
+    
+    <resultMap type="WarehouseRecord" id="WarehouseRecordResult">
+        <result property="id"    column="id"    />
+        <result property="type"    column="type"    />
+        <result property="number"    column="number"    />
+        <result property="materialcode"    column="materialcode"    />
+        <result property="name"    column="name"    />
+        <result property="count"    column="count"    />
+        <result property="price"    column="price"    />
+        <result property="money"    column="money"    />
+        <result property="supplier"    column="supplier"    />
+        <result property="serialNumber"    column="serial_number"    />
+        <result property="delStatus"    column="del_status"    />
+        <result property="cTime"    column="c_time"    />
+    </resultMap>
+
+    <sql id="selectWarehouseRecordVo">
+        select id, type, number, materialcode, name, count, price, money, supplier, serial_number, del_status, c_time from warehouse_record
+    </sql>
+
+    <select id="selectWarehouseRecordList" parameterType="WarehouseRecord" resultMap="WarehouseRecordResult">
+        <include refid="selectWarehouseRecordVo"/>
+        <where>
+            and supplier = #{supplier}
+            and serial_number = #{serialNumber}
+            and materialcode = #{materialcode}
+            <if test="type != null  and type != ''"> and type = #{type}</if>
+            <if test="number != null  and number != ''"> and number = #{number}</if>
+        </where>
+    </select>
+    
+    <select id="selectWarehouseRecordById" parameterType="Long" resultMap="WarehouseRecordResult">
+        <include refid="selectWarehouseRecordVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertWarehouseRecord" parameterType="WarehouseRecord" useGeneratedKeys="true" keyProperty="id">
+        insert into warehouse_record
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="type != null  and type != ''">type,</if>
+            <if test="number != null  and number != ''">number,</if>
+            <if test="materialcode != null  and materialcode != ''">materialcode,</if>
+            <if test="name != null  and name != ''">name,</if>
+            <if test="count != null ">count,</if>
+            <if test="price != null ">price,</if>
+            <if test="money != null ">money,</if>
+            <if test="supplier != null  and supplier != ''">supplier,</if>
+            <if test="serialNumber != null  and serialNumber != ''">serial_number,</if>
+            <if test="delStatus != null  and delStatus != ''">del_status,</if>
+            <if test="cTime != null ">c_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="type != null  and type != ''">#{type},</if>
+            <if test="number != null  and number != ''">#{number},</if>
+            <if test="materialcode != null  and materialcode != ''">#{materialcode},</if>
+            <if test="name != null  and name != ''">#{name},</if>
+            <if test="count != null ">#{count},</if>
+            <if test="price != null ">#{price},</if>
+            <if test="money != null ">#{money},</if>
+            <if test="supplier != null  and supplier != ''">#{supplier},</if>
+            <if test="serialNumber != null  and serialNumber != ''">#{serialNumber},</if>
+            <if test="delStatus != null  and delStatus != ''">#{delStatus},</if>
+            <if test="cTime != null ">#{cTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updateWarehouseRecord" parameterType="WarehouseRecord">
+        update warehouse_record
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="type != null  and type != ''">type = #{type},</if>
+            <if test="number != null  and number != ''">number = #{number},</if>
+            <if test="materialcode != null  and materialcode != ''">materialcode = #{materialcode},</if>
+            <if test="name != null  and name != ''">name = #{name},</if>
+            <if test="count != null ">count = #{count},</if>
+            <if test="price != null ">price = #{price},</if>
+            <if test="money != null ">money = #{money},</if>
+            <if test="supplier != null  and supplier != ''">supplier = #{supplier},</if>
+            <if test="serialNumber != null  and serialNumber != ''">serial_number = #{serialNumber},</if>
+            <if test="delStatus != null  and delStatus != ''">del_status = #{delStatus},</if>
+            <if test="cTime != null ">c_time = #{cTime},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteWarehouseRecordById" parameterType="Long">
+        delete from warehouse_record where id = #{id}
+    </delete>
+
+    <delete id="deleteWarehouseRecordByIds" parameterType="String">
+        delete from warehouse_record where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+  <update id="updateMaterial">
+          update  warehouse_record set materialcode=#{materialcode} ,name=#{name} where materialcode=#{oldmaterialcode}
+  </update>
+    
+</mapper>

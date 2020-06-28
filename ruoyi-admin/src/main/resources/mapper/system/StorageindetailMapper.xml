@@ -51,7 +51,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         select   @rowNum:=@rowNum + 1 as rownum, id, storageinbillid,serial_number, footprint,materialcode, name, partnumber, manufacture, price, counts, money, unit, supplier, rate, comments, taxamount, c_time, u_time from storageindetail,(SELECT @rowNum:=0) b
         where storageinbillid = #{storageinbillid}
     </select>
-        
+    <update id="updateMaterial">
+    update  storageindetail set name=#{name},materialcode=#{materialcode},partnumber=#{partnumber},footprint=#{footprint},unit=#{unit},manufacture=#{manufacture} where materialcode=#{oldmaterialcode}
+    </update>
     <insert id="insertStorageindetail" parameterType="Storageindetail" useGeneratedKeys="true" keyProperty="id">
         insert into storageindetail
         <trim prefix="(" suffix=")" suffixOverrides=",">

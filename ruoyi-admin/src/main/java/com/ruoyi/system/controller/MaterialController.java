@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.ruoyi.common.annotation.Excel;
+import com.ruoyi.framework.util.ShiroUtils;
 import com.ruoyi.system.domain.*;
 import com.ruoyi.system.service.*;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
@@ -111,7 +112,7 @@ public class MaterialController extends BaseController
     /**
      * 查询物料列表列表
      */
-    @PostMapping("/getMaterialcode")
+    @GetMapping("/getMaterialcode")
     @ResponseBody
     public Map<String,Object> getMaterialcode(@RequestParam(name = "typeId",required = false,defaultValue = "") String typeId,@RequestParam(name = "deptId",required = false,defaultValue = "") String deptId){
       Map<String,Object> ret=new HashMap<>();
@@ -145,6 +146,8 @@ public class MaterialController extends BaseController
     {
         List<Materialtype> materialtypes = iMaterialtypeService.selectMaterialtypeList(null);
         materialtypes.remove(0);
+        SysUser user = ShiroUtils.getSysUser();
+        mmap.put("userName", user.getUserName());
         mmap.put("materialtypeList",materialtypes);
         mmap.put("materialdeptList",imaterialdeptService.selectMaterialdeptList(null));
         mmap.put("supplierList",iSupplierService.findListSupplier());
@@ -170,7 +173,11 @@ public class MaterialController extends BaseController
     @GetMapping("/edit/{id}")
     public String edit(@PathVariable("id") Integer id, ModelMap mmap)
     {
+        List<Materialtype> materialtypes = iMaterialtypeService.selectMaterialtypeList(null);
+        materialtypes.remove(0);
         Material material = materialService.selectMaterialById(id);
+        mmap.put("materialtypeList",materialtypes);
+        mmap.put("materialdeptList",imaterialdeptService.selectMaterialdeptList(null));
         mmap.put("material", material);
         mmap.put("userList",iSysUserService.findList());
         mmap.put("supplierList",iSupplierService.findListSupplier());

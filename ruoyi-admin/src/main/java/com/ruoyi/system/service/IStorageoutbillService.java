@@ -19,6 +19,8 @@ public interface IStorageoutbillService
      */
     public Storageoutbill selectStorageoutbillById(Long id);
 
+
+
     /**
      * 查询出库单列表列表
      * 
@@ -58,4 +60,12 @@ public interface IStorageoutbillService
      * @return 结果
      */
     public int deleteStorageoutbillById(Long id);
+
+    /**
+     * 红冲出库单
+     *
+     * @param id 入库单列表ID
+     * @return 入库单列表
+     */
+    public int reddashed(Long id);
 }
