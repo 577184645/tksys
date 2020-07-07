@@ -31,7 +31,7 @@
                         <option  th:each="user:${userList}"
                                  th:value="${user.userName}"
                                  th:text="${user.userName}"
-                        ></option>
+                                 th:selected="${user.userName}==*{userName}"                        ></option>
                     </select>
                 </div>
         </div>
@@ -159,7 +159,12 @@
                                 alert("请填写入库产品");
                                 return;
                             }
-
+                            for(var i=0;i<data.length;i++){
+                                if(data[i].counts<=0){
+                                    alert("入库数量必须大于0!")
+                                    return;
+                                }
+                            }
                             $.ajax({
                                 url:  ctx + "system/storage/quit",
                                 type: "post",

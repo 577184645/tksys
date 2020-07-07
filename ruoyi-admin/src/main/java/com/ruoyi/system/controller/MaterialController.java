@@ -65,6 +65,7 @@ public class MaterialController extends BaseController
 
     @PostMapping("/importData")
     @RequiresPermissions("system:material:import")
+    @Log(title = "物料列表", businessType = BusinessType.IMPORT)
     @ResponseBody
     public AjaxResult importData(MultipartFile file, boolean updateSupport, HttpServletRequest request) throws Exception
     {

@@ -35,6 +35,8 @@
                                      th:value="${user.userName}"
                                      th:text="${user.userName}"
                             ></option>
+                            <option  th:selected="*{userName=='陈忠'}">陈忠</option>
+                            <option  th:selected="*{userName=='赵建忠'}">赵建忠</option>
                         </select>
                     </div>
                 </div>
@@ -52,8 +54,9 @@
                         <option  th:each="user:${userList}"
                                  th:value="${user.userName}"
                                  th:text="${user.userName}"
-                                 th:selected="${user.userName}==*{userName}"
                         ></option>
+                        <option  th:selected="*{userName=='陈忠'}">陈忠</option>
+                        <option  th:selected="*{userName=='赵建忠'}">陈荣</option>
                     </select>
                 </div>
 
@@ -117,6 +120,7 @@
                                      th:value="${user.userName}"
                                      th:text="${user.userName}"
                             ></option>
+
                         </select>
                     </div>
                 </div>
@@ -250,6 +254,7 @@
                             <ul>
                                 <input type="hidden" id="deptId1" name="deptId">
                                 <input type="hidden" id="parentId" name="parentId">
+
                                 <li>
                                     <label>名称：</label>
                                     <input type="text" name="name"/>
@@ -258,7 +263,18 @@
                                     <label>型号：</label>
                                     <input type="text" name="partnumber"/>
                                 </li>
+                                <li style="display: none">
+                                    <label>显示库存为0的产品：</label>
+                                    <div class="form-group">
+                                        <div class="col-sm-8">
+                                            <div class="radio-box" th:each="dict : ${@dict.getType('storage_status')}">
+                                                <input type="radio" th:id="${dict.dictCode}" name="status" th:value="${dict.dictValue}" th:checked="${dict.default}">
+                                                <label th:for="${dict.dictCode}" th:text="${dict.dictLabel}"></label>
+                                            </div>
+                                        </div>
+                                    </div>
 
+                                </li>
                                 <li>
                                     <a class="btn btn-primary btn-rounded btn-sm" onclick="$.table.search('form2', 'bootstrap-table2')"><i class="fa fa-search"></i>&nbsp;搜索</a>
                                     <a class="btn btn-warning btn-rounded btn-sm" onclick="$.form.reset('form2', 'bootstrap-table2')"><i class="fa fa-refresh"></i>&nbsp;重置</a>
@@ -306,7 +322,12 @@
                                 alert("请填写入库产品");
                                 return;
                             }
-
+                            for(var i=0;i<data.length;i++){
+                                if(data[i].counts<=0){
+                                    alert("入库数量必须大于0!")
+                                    return;
+                                }
+                            }
                             $.ajax({
                                 url:  ctx + "system/storage/edit",
                                 type: "post",
@@ -439,10 +460,7 @@
                             },
                             {
                                 field: 'price',
-                                title: '单价',
-                                editable: {
-                                    title : '单价'
-                                }
+                                title: '单价'
                             },
                             {
                                 field: 'counts',
@@ -539,7 +557,7 @@
                                     comments:"",
                                     serialNumber:data[i].serialNumber,
                                     supplier:data[i].supplier,
-                                    price:data[i].price.toFixed(4),
+                                    price:data[i].price,
                                     money:"",
                                     counts:"",
                                     randomId:randomId

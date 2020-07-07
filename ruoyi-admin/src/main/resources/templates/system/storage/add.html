@@ -29,6 +29,10 @@
                             <option  th:each="supplier:${supplierList}"
                                      th:value="${supplier.name}"
                                      th:text="${supplier.name}"
+
+                            ></option>
+
+
                             ></option>
                         </select>
                     </div>
@@ -95,7 +99,10 @@
                         <option  th:each="user:${userList}"
                                  th:value="${user.userName}"
                                  th:text="${user.userName}"
+
                         ></option>
+                        <option  th:selected="*{userName=='陈忠'}">陈忠</option>
+                        <option  th:selected="*{userName=='赵建忠'}">陈荣</option>
                     </select>
                 </div>
             </div>
@@ -108,6 +115,7 @@
                             <option  th:each="user:${userList}"
                                      th:value="${user.userName}"
                                      th:text="${user.userName}"
+
                             ></option>
                         </select>
                     </div>
@@ -127,6 +135,7 @@
                         <option  th:each="user:${userList}"
                                  th:value="${user.userName}"
                                  th:text="${user.userName}"
+                                 th:selected="${user.userName}==*{userName}"
                         ></option>
                     </select>
                 </div>
@@ -285,8 +294,15 @@
 
                 var data = $("#bootstrap-table1" ).bootstrapTable('getData');
                 if(data==null||data.length==0){
-                    alert("请填写入库产品");
+                    alert("请填写入库产品!");
                     return;
+                }
+
+                for(var i=0;i<data.length;i++){
+                    if(data[i].counts<=0){
+                        alert("入库数量必须大于0!")
+                        return;
+                    }
                 }
 
                 $.ajax({
@@ -375,14 +391,13 @@
             {
                 field: 'no',
                 title: '序号',
-                sortable: true,
                 align: "center",
                 width: 40,
                 formatter: function (value, row, index) {
                     //获取每页显示的数量
-                    var pageSize=$('#bootstrap-table2').bootstrapTable('getOptions').pageSize;
+                    var pageSize=$('#bootstrap-table1').bootstrapTable('getOptions').pageSize;
                     //获取当前是第几页
-                    var pageNumber=$('#bootstrap-table2').bootstrapTable('getOptions').pageNumber;
+                    var pageNumber=$('#bootstrap-table1').bootstrapTable('getOptions').pageNumber;
                     //返回序号，注意index是从0开始的，所以要加上1
                     return pageSize * (pageNumber - 1) + index + 1;
                 }
@@ -496,6 +511,7 @@
             if (row.rate != "") {
                 row.taxamount =(row.money * (row.rate.substring(0, row.rate.length - 1) * 0.01)).toFixed(2);;
             }
+
 
             $('#bootstrap-table1').bootstrapTable('updateRow', {index: row.randomId, row: row});
 
@@ -614,7 +630,7 @@
               }
           })
       }
-
+        $("#bootstrap-table2").bootstrapTable('uncheckAll');
 
 
     }
@@ -650,6 +666,7 @@
                 }
             })
         }
+        $("#bootstrap-table2").bootstrapTable('uncheckAll');
     }
     /* 删除指定表格行 */
     function removeRow(){

@@ -91,7 +91,8 @@ public class StorageController extends BaseController
     @GetMapping("/add")
     public String add(ModelMap mmap)
     {
-
+        SysUser user = ShiroUtils.getSysUser();
+        mmap.put("userName", user.getUserName());
         mmap.put("userList",iSysUserService.findList());
         mmap.put("projectList",iProjectService.selectProjectList(null));
         mmap.put("supplierList",iSupplierService.findListSupplier());
@@ -159,6 +160,8 @@ public class StorageController extends BaseController
     @GetMapping("/quit")
     public String quit(ModelMap mmap)
     {
+        SysUser user = ShiroUtils.getSysUser();
+        mmap.put("userName", user.getUserName());
         mmap.put("userList",iSysUserService.findList());
         return prefix + "/quit";
     }

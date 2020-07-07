@@ -225,7 +225,8 @@ public class StorageServiceImpl implements IStorageService
             if (!jsonObject.getString("counts").equals("")) {
                 storageoutdetail.setCounts(Long.valueOf(jsonObject.getInt("counts")));
             }
-            if (!jsonObject.getString("price").equals("")) {
+
+            if(!"null".equals(jsonObject.getString("price"))){
                 storageoutdetail.setPrice(Float.valueOf(jsonObject.getString("price")));
             }
             if (!jsonObject.getString("money").equals("")) {
