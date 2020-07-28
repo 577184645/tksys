@@ -14,6 +14,11 @@ import com.ruoyi.system.domain.Storagequitbill;
  */
 public interface IStorageService 
 {
+
+
+
+    public Storage selectStorageListBymaterialcode(String materialcode);
+
     /**
      * 查询库存列表
      * 

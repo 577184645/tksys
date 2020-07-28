@@ -192,6 +192,7 @@ public class StorageinbillController extends BaseController
     {
         Storageinbill storageinbill = storageinbillService.selectStorageinbillById(id);
         mmap.put("storageinbill", storageinbill);
+
         List<Storageindetail> storageindetails = iStorageindetailService.selectStorageindetailByStorageinbillId(storageinbill.getStockinid());
         mmap.put("storageindetails", storageindetails);
         return prefix + "/print1";

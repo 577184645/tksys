@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.BomMapper">
+    
+    <resultMap type="Bom" id="BomResult">
+        <result property="id"    column="id"    />
+        <result property="number"    column="number"    />
+        <result property="version"    column="version"    />
+        <result property="name"    column="name"    />
+        <result property="partnumber"    column="partnumber"    />
+        <result property="description"    column="description"    />
+        <result property="publishstatus"    column="publishstatus"    />
+        <result property="project"    column="project"    />
+        <result property="producttype"    column="producttype"    />
+        <result property="price"    column="price"    />
+        <result property="designer"    column="designer"    />
+        <result property="scrutineer"    column="scrutineer"    />
+        <result property="approver"    column="approver"    />
+        <result property="timeofmaking"    column="timeofmaking"    />
+        <result property="inspectiontime"    column="inspectiontime"    />
+        <result property="approvaltime"    column="approvaltime"    />
+        <result property="remark"    column="remark"    />
+        <result property="cTime"    column="c_time"    />
+        <result property="uTime"    column="u_time"    />
+    </resultMap>
+
+    <sql id="selectBomVo">
+        select id, number, version, name, partnumber, description, publishstatus, project, producttype, price, designer, scrutineer, approver, timeofmaking, inspectiontime, approvaltime, remark, c_time, u_time from bom
+    </sql>
+
+    <select id="selectBomList" parameterType="Bom" resultMap="BomResult">
+        <include refid="selectBomVo"/>
+        <where>  
+            <if test="number != null  and number != ''"> and number = #{number}</if>
+            <if test="version != null  and version != ''"> and version = #{version}</if>
+            <if test="name != null  and name != ''"> and name like concat('%', #{name}, '%')</if>
+            <if test="partnumber != null  and partnumber != ''"> and partnumber = #{partnumber}</if>
+            <if test="description != null  and description != ''"> and description = #{description}</if>
+            <if test="publishstatus != null  and publishstatus != ''"> and publishstatus = #{publishstatus}</if>
+            <if test="project != null  and project != ''"> and project = #{project}</if>
+            <if test="producttype != null  and producttype != ''"> and producttype = #{producttype}</if>
+            <if test="price != null "> and price = #{price}</if>
+            <if test="designer != null  and designer != ''"> and designer = #{designer}</if>
+            <if test="scrutineer != null  and scrutineer != ''"> and scrutineer = #{scrutineer}</if>
+            <if test="approver != null  and approver != ''"> and approver = #{approver}</if>
+            <if test="timeofmaking != null "> and timeofmaking = #{timeofmaking}</if>
+            <if test="inspectiontime != null "> and inspectiontime = #{inspectiontime}</if>
+            <if test="approvaltime != null "> and approvaltime = #{approvaltime}</if>
+            <if test="cTime != null "> and c_time = #{cTime}</if>
+            <if test="uTime != null "> and u_time = #{uTime}</if>
+        </where>
+    </select>
+    
+    <select id="selectBomById" parameterType="Long" resultMap="BomResult">
+        <include refid="selectBomVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertBom" parameterType="Bom" useGeneratedKeys="true" keyProperty="id">
+        insert into bom
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="number != null  and number != ''">number,</if>
+            <if test="version != null  and version != ''">version,</if>
+            <if test="name != null  and name != ''">name,</if>
+            <if test="partnumber != null  and partnumber != ''">partnumber,</if>
+            <if test="description != null  and description != ''">description,</if>
+            <if test="publishstatus != null  and publishstatus != ''">publishstatus,</if>
+            <if test="project != null  and project != ''">project,</if>
+            <if test="producttype != null  and producttype != ''">producttype,</if>
+            <if test="price != null ">price,</if>
+            <if test="designer != null  and designer != ''">designer,</if>
+            <if test="scrutineer != null  and scrutineer != ''">scrutineer,</if>
+            <if test="approver != null  and approver != ''">approver,</if>
+            <if test="timeofmaking != null ">timeofmaking,</if>
+            <if test="inspectiontime != null ">inspectiontime,</if>
+            <if test="approvaltime != null ">approvaltime,</if>
+            <if test="remark != null  and remark != ''">remark,</if>
+            <if test="cTime != null ">c_time,</if>
+            <if test="uTime != null ">u_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="number != null  and number != ''">#{number},</if>
+            <if test="version != null  and version != ''">#{version},</if>
+            <if test="name != null  and name != ''">#{name},</if>
+            <if test="partnumber != null  and partnumber != ''">#{partnumber},</if>
+            <if test="description != null  and description != ''">#{description},</if>
+            <if test="publishstatus != null  and publishstatus != ''">#{publishstatus},</if>
+            <if test="project != null  and project != ''">#{project},</if>
+            <if test="producttype != null  and producttype != ''">#{producttype},</if>
+            <if test="price != null ">#{price},</if>
+            <if test="designer != null  and designer != ''">#{designer},</if>
+            <if test="scrutineer != null  and scrutineer != ''">#{scrutineer},</if>
+            <if test="approver != null  and approver != ''">#{approver},</if>
+            <if test="timeofmaking != null ">#{timeofmaking},</if>
+            <if test="inspectiontime != null ">#{inspectiontime},</if>
+            <if test="approvaltime != null ">#{approvaltime},</if>
+            <if test="remark != null  and remark != ''">#{remark},</if>
+            <if test="cTime != null ">#{cTime},</if>
+            <if test="uTime != null ">#{uTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updateBom" parameterType="Bom">
+        update bom
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="number != null  and number != ''">number = #{number},</if>
+            <if test="version != null  and version != ''">version = #{version},</if>
+            <if test="name != null  and name != ''">name = #{name},</if>
+            <if test="partnumber != null  and partnumber != ''">partnumber = #{partnumber},</if>
+            <if test="description != null  and description != ''">description = #{description},</if>
+            <if test="publishstatus != null  and publishstatus != ''">publishstatus = #{publishstatus},</if>
+            <if test="project != null  and project != ''">project = #{project},</if>
+           producttype = #{producttype},
+            <if test="price != null ">price = #{price},</if>
+          designer = #{designer},
+         scrutineer = #{scrutineer},
+            approver = #{approver},
+            <if test="timeofmaking != null ">timeofmaking = #{timeofmaking},</if>
+            <if test="inspectiontime != null ">inspectiontime = #{inspectiontime},</if>
+            <if test="approvaltime != null ">approvaltime = #{approvaltime},</if>
+            <if test="remark != null  and remark != ''">remark = #{remark},</if>
+            <if test="cTime != null ">c_time = #{cTime},</if>
+            <if test="uTime != null ">u_time = #{uTime},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteBomById" parameterType="Long">
+        delete from bom where id = #{id}
+    </delete>
+
+    <delete id="deleteBomByIds" parameterType="String">
+        delete from bom where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    
+</mapper>

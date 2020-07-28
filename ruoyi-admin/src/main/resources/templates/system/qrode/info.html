@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org" >
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <th:block th:include="include :: header('商品信息')" />
+    <th:block th:include="include :: datetimepicker-css" />
+    <style>
+        body{text-align:center}
+    </style>
+</head>
+<body  >
+
+
+
+
+    <div class="container"   >
+        
+        
+        <form  class="form-horizontal mcontainer" id="form-qrode-edit" th:object="${qrode}">
+
+
+
+
+            <div>
+                <label style="position: absolute;top: 10%;left: 5%">产品名称：</label>
+                <label style="position: absolute;top: 10%;left: 40%"  th:text="*{name}"></label>
+
+            </div>
+           <div >
+                <label style="position: absolute;top: 15%;left: 5%">产品型号：</label>
+                <label style="position: absolute;top: 15%;left: 40%" th:text="*{partnumber}"></label>
+
+            </div>
+
+           <div >
+               <label style="position: absolute;top: 20%;left: 5%">序列号：</label>
+                   <label style="position: absolute;top: 20%;left: 40%" th:text="*{serialnumber}"></label>
+
+           </div>
+
+
+        </form>
+    </div>
+    <th:block th:include="include :: footer" />
+    <th:block th:include="include :: datetimepicker-js" />
+    <script type="text/javascript">
+        var prefix = ctx + "system/qrode";
+        $("#form-qrode-edit").validate({
+            focusCleanup: true
+        });
+
+        function submitHandler() {
+            if ($.validate.form()) {
+                $.operate.save(prefix + "/edit", $('#form-qrode-edit').serialize());
+            }
+        }
+
+        $("input[name='productiontime']").datetimepicker({
+            format: "yyyy-mm-dd",
+            minView: "month",
+            autoclose: true
+        });
+
+        $("input[name='leavefactorytime']").datetimepicker({
+            format: "yyyy-mm-dd",
+            minView: "month",
+            autoclose: true
+        });
+
+        $("input[name='warrantytime']").datetimepicker({
+            format: "yyyy-mm-dd",
+            minView: "month",
+            autoclose: true
+        });
+
+        $("input[name='cTime']").datetimepicker({
+            format: "yyyy-mm-dd",
+            minView: "month",
+            autoclose: true
+        });
+
+        $("input[name='uTime']").datetimepicker({
+            format: "yyyy-mm-dd",
+            minView: "month",
+            autoclose: true
+        });
+    </script>
+</body>
+</html>

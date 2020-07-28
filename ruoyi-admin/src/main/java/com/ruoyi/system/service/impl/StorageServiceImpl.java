@@ -2,6 +2,7 @@ package com.ruoyi.system.service.impl;
 
 import java.util.List;
 
+import com.ruoyi.common.core.domain.AjaxResult;
 import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.system.domain.*;
 import com.ruoyi.system.mapper.*;
@@ -40,6 +41,12 @@ public class StorageServiceImpl implements IStorageService
     private StoragequitdetailMapper storagequitdetailMapper;
     @Autowired
     private WarehouseRecordMapper warehouseRecordMapper;
+
+    @Override
+    public Storage selectStorageListBymaterialcode(String materialcode) {
+        return storageMapper.selectStorageListBymaterialcode(materialcode);
+    }
+
     /**
      * 查询库存列表
      * 
@@ -222,6 +229,16 @@ public class StorageServiceImpl implements IStorageService
             Storage storage = new Storage();
             WarehouseRecord warehouseRecord=new WarehouseRecord();
             Storageoutdetail storageoutdetail = new Storageoutdetail();
+
+
+            Long stocks = storageMapper.selectStorageById(Integer.valueOf(jsonObject.getString("id"))).getStocks();
+            if(stocks<Long.valueOf(jsonObject.getString("counts"))){
+
+               int error=1/0;
+
+            }
+
+
             if (!jsonObject.getString("counts").equals("")) {
                 storageoutdetail.setCounts(Long.valueOf(jsonObject.getInt("counts")));
             }

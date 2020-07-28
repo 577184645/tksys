@@ -35,6 +35,13 @@ public class Storage extends BaseEntity
     @Excel(name = "封装")
     private String footprint;
 
+
+
+    private  Integer leadtime;
+
+    @Excel(name = "描述")
+    private  String description;
+
     /** 品牌 */
     @Excel(name = "品牌")
     private String manufacture;
@@ -79,7 +86,6 @@ public class Storage extends BaseEntity
     private Integer status;
 
     /** 创建时间 */
-    @Excel(name = "创建时间", width = 30, dateFormat = "yyyy-MM-dd")
     private Date cTime;
 
     /** 最后入库时间 */
@@ -92,6 +98,22 @@ public class Storage extends BaseEntity
 
     @Excel(name = "最后退料时间", width = 30, dateFormat = "yyyy-MM-dd")
     private Date qTime;
+
+    public Integer getLeadtime() {
+        return leadtime;
+    }
+
+    public void setLeadtime(Integer leadtime) {
+        this.leadtime = leadtime;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
 
     public Date getoTime() {
         return oTime;

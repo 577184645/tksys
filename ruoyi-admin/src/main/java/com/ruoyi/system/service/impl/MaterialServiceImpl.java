@@ -154,13 +154,14 @@ public class MaterialServiceImpl implements IMaterialService {
 
     @Override
     @Transactional
-    public String importMaterial(List<Material> materialList, HttpServletRequest request) {
+    public String importMaterial(List<Material> materialList) {
         if (StringUtils.isNull(materialList) || materialList.size() == 0) {
             throw new BusinessException("导入数据不能为空！");
         }
         SysUser user = ShiroUtils.getSysUser();
         int successNum = 0;
         int failureNum = 0;
+        int repetitionNum = 0;
         StringBuilder successMsg = new StringBuilder();
         StringBuilder failureMsg = new StringBuilder();
         for (Material material : materialList) {
@@ -184,6 +185,12 @@ public class MaterialServiceImpl implements IMaterialService {
                     material.setMaterialcode(String.valueOf(count+1));
                 }
             }
+
+            if(materialMapper.selectMaterialRepetition(material.getName(),material.getPartnumber(),material.getFootprint(),material.getManufacture(),material.getDeptId())>0){
+                 repetitionNum++;
+                          continue;
+            }
+
                 material.setDeptId(materialdeptMapper.selectMaterialdeptByCode(material.getDeptIdExcel()).getId());
                 material.setTypeId(materialtypeMapper.selectMaterialtypeByCode(material.getTypeIdExcel()).getDeptId());
 
@@ -192,7 +199,7 @@ public class MaterialServiceImpl implements IMaterialService {
             }
                 failureNum++;
 
-            successMsg.insert(0, "恭喜您，数据已全部导入成功！共 " + successNum + " 条，数据如下：");
+            successMsg.insert(0, "恭喜您，数据已全部导入成功！共 " + successNum + " 条，其中重复数据"+repetitionNum+"条,数据如下：");
 
         return successMsg.toString();
 

@@ -40,10 +40,9 @@ public class StorageindetailController extends BaseController
     private IStorageinbillService iStorageinbillService;
 
 
-    @GetMapping("/{id}")
-    public String storageindetail(@PathVariable("id") Long id,ModelMap mmap)
+    @GetMapping("/{stockinid}")
+    public String storageindetail(@PathVariable("stockinid") String stockinid,ModelMap mmap)
     {
-        String stockinid = iStorageinbillService.selectStorageinbillById(id).getStockinid();
         mmap.put("stockinid",stockinid);
         return prefix + "/storageindetail";
     }

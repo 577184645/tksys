@@ -71,6 +71,14 @@ public class StorageController extends BaseController
         return getDataTable(list);
     }
 
+
+    @GetMapping("/findlist/{materialcode}")
+    @ResponseBody
+    public Storage findlist(@PathVariable("materialcode") String materialcode)
+    {
+         return  storageService.selectStorageListBymaterialcode(materialcode);
+    }
+
     /**
      * 导出库存列表列表
      */
@@ -144,7 +152,9 @@ public class StorageController extends BaseController
             JSONObject jsonObject = productArray.getJSONObject(i);
             Long stocks = storageService.selectStorageById(Integer.valueOf(jsonObject.getString("id"))).getStocks();
             if(stocks<Long.valueOf(jsonObject.getString("counts"))){
+
                 return AjaxResult.warn("库存不足！");
+
             }
         }
 

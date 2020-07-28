@@ -78,5 +78,5 @@ public interface IMaterialService
      * @param materialList 物料数据列表
      * @return 结果
      */
-    public String importMaterial(List<Material> materialList, HttpServletRequest request);
+    public String importMaterial(List<Material> materialList);
 }

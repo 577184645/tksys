@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.BomdetailMapper">
+    
+    <resultMap type="Bomdetail" id="BomdetailResult">
+        <result property="id"    column="id"    />
+        <result property="bomid"    column="bomid"    />
+        <result property="name"    column="name"    />
+        <result property="materialcode"    column="materialcode"    />
+        <result property="partnumber"    column="partnumber"    />
+        <result property="unit"    column="unit"    />
+        <result property="price"    column="price"    />
+        <result property="manufacture"    column="manufacture"    />
+        <result property="supplier"    column="supplier"    />
+        <result property="count"    column="count"    />
+        <result property="cTime"    column="c_time"    />
+        <result property="uTime"    column="u_time"    />
+        <result property="leadtime"    column="leadtime"    />
+        <result property="footprint"    column="footprint"    />
+        <result property="comments"    column="comments"    />
+    </resultMap>
+
+    <sql id="selectBomdetailVo">
+        select id, bomid, name, materialcode, partnumber, unit, price, manufacture, supplier, count, c_time, u_time, leadtime, footprint, comments from bomdetail
+    </sql>
+
+    <select id="selectBomdetailList" parameterType="Bomdetail" resultMap="BomdetailResult">
+        <include refid="selectBomdetailVo"/>
+        <where>  
+            <if test="bomid != null "> and bomid = #{bomid}</if>
+            <if test="name != null  and name != ''"> and name like concat('%', #{name}, '%')</if>
+            <if test="materialcode != null  and materialcode != ''"> and materialcode = #{materialcode}</if>
+            <if test="partnumber != null  and partnumber != ''"> and partnumber = #{partnumber}</if>
+            <if test="unit != null  and unit != ''"> and unit = #{unit}</if>
+            <if test="price != null "> and price = #{price}</if>
+            <if test="manufacture != null  and manufacture != ''"> and manufacture = #{manufacture}</if>
+            <if test="supplier != null  and supplier != ''"> and supplier = #{supplier}</if>
+            <if test="count != null "> and count = #{count}</if>
+            <if test="cTime != null "> and c_time = #{cTime}</if>
+            <if test="uTime != null "> and u_time = #{uTime}</if>
+            <if test="leadtime != null "> and leadtime = #{leadtime}</if>
+            <if test="footprint != null  and footprint != ''"> and footprint = #{footprint}</if>
+            <if test="comments != null  and comments != ''"> and comments = #{comments}</if>
+        </where>
+    </select>
+    
+    <select id="selectBomdetailById" parameterType="Integer" resultMap="BomdetailResult">
+        <include refid="selectBomdetailVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertBomdetail" parameterType="Bomdetail" useGeneratedKeys="true" keyProperty="id">
+        insert into bomdetail
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="bomid != null ">bomid,</if>
+            <if test="name != null  and name != ''">name,</if>
+            <if test="materialcode != null  and materialcode != ''">materialcode,</if>
+            <if test="partnumber != null  and partnumber != ''">partnumber,</if>
+            <if test="unit != null  and unit != ''">unit,</if>
+            <if test="price != null ">price,</if>
+            <if test="manufacture != null  and manufacture != ''">manufacture,</if>
+            <if test="supplier != null  and supplier != ''">supplier,</if>
+            <if test="count != null ">count,</if>
+            <if test="cTime != null ">c_time,</if>
+            <if test="uTime != null ">u_time,</if>
+            <if test="leadtime != null ">leadtime,</if>
+            <if test="footprint != null  and footprint != ''">footprint,</if>
+            <if test="comments != null  and comments != ''">comments,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="bomid != null ">#{bomid},</if>
+            <if test="name != null  and name != ''">#{name},</if>
+            <if test="materialcode != null  and materialcode != ''">#{materialcode},</if>
+            <if test="partnumber != null  and partnumber != ''">#{partnumber},</if>
+            <if test="unit != null  and unit != ''">#{unit},</if>
+            <if test="price != null ">#{price},</if>
+            <if test="manufacture != null  and manufacture != ''">#{manufacture},</if>
+            <if test="supplier != null  and supplier != ''">#{supplier},</if>
+            <if test="count != null ">#{count},</if>
+            <if test="cTime != null ">#{cTime},</if>
+            <if test="uTime != null ">#{uTime},</if>
+            <if test="leadtime != null ">#{leadtime},</if>
+            <if test="footprint != null  and footprint != ''">#{footprint},</if>
+            <if test="comments != null  and comments != ''">#{comments},</if>
+         </trim>
+    </insert>
+
+    <update id="updateBomdetail" parameterType="Bomdetail">
+        update bomdetail
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="bomid != null ">bomid = #{bomid},</if>
+            <if test="name != null  and name != ''">name = #{name},</if>
+            <if test="materialcode != null  and materialcode != ''">materialcode = #{materialcode},</if>
+            <if test="partnumber != null  and partnumber != ''">partnumber = #{partnumber},</if>
+            <if test="unit != null  and unit != ''">unit = #{unit},</if>
+            <if test="price != null ">price = #{price},</if>
+            <if test="manufacture != null  and manufacture != ''">manufacture = #{manufacture},</if>
+            <if test="supplier != null  and supplier != ''">supplier = #{supplier},</if>
+            <if test="count != null ">count = #{count},</if>
+            <if test="cTime != null ">c_time = #{cTime},</if>
+            <if test="uTime != null ">u_time = #{uTime},</if>
+            <if test="leadtime != null ">leadtime = #{leadtime},</if>
+            <if test="footprint != null  and footprint != ''">footprint = #{footprint},</if>
+            <if test="comments != null  and comments != ''">comments = #{comments},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteBomdetailById" parameterType="Integer">
+        delete from bomdetail where id = #{id}
+    </delete>
+
+    <delete id="deleteBomdetailByIds" parameterType="String">
+        delete from bomdetail where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    
+</mapper>

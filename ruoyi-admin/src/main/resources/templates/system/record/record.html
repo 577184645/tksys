@@ -32,8 +32,11 @@
                     </div>
                 </form>
             </div>
-
-
+            <div class="btn-group-sm" id="toolbar" role="group">
+                <a class="btn btn-primary single disabled" onclick="Info()"  >
+                    <i class="fa fa-edit"></i> 查看
+                </a>
+            </div>
             <div class="col-sm-12 select-table table-striped">
                 <table id="bootstrap-table"></table>
             </div>
@@ -124,6 +127,35 @@
             };
             $.table.init(options);
         });
+
+
+        function Info() {
+            table.set();
+            var row = $("#bootstrap-table").bootstrapTable('getSelections')[0];
+    var  type="";
+    var url="";
+     for (var i=0;i<warehouseRecordType.length;i++){
+       if(warehouseRecordType[i].dictValue==row.type){
+           type=warehouseRecordType[i].dictLabel;
+           if(warehouseRecordType[i].dictValue=="1"||warehouseRecordType[i].dictValue=="4") {
+               url = "system/storageindetail/"+row.number;
+
+           }else  if(warehouseRecordType[i].dictValue=="2"||warehouseRecordType[i].dictValue=="5"){
+               url = "system/storageoutdetail/"+row.number;
+
+           }else  if(warehouseRecordType[i].dictValue=="3"||warehouseRecordType[i].dictValue=="6"){
+               url = "system/storagequitdetail/"+row.number;
+
+           }
+           break;
+       }
+     }
+
+         $.modal.openTab(type+"详细信息",url);
+
+
+        }
+
     </script>
 </body>
 </html>

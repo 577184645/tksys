@@ -43,11 +43,26 @@
 		<div class="container-div">
 			<div class="row">
 				<div class="col-sm-12 search-collapse">
+
 					<form id="formId">
+						<select style="display: none;" id="materialdept"   class="form-control m-b">
+							<option  th:each="materialdept:${materialdeptList}"
+									 th:value="${materialdept.id}"
+									 th:text="${materialdept.deptname}"
+							></option>
+						</select>
+						<select  style="display: none;"  id="materialtype"  class="form-control m-b">
+							<option  th:each="materialtype:${materialtypeList}"
+									 th:value="${materialtype.deptId}"
+									 th:text="${materialtype.deptName}"
+							></option>
+						</select>
 						<div class="select-list">
 							<ul>
 								<input type="hidden" id="deptId" name="deptId">
 								<input type="hidden" id="parentId" name="parentId">
+
+
 								<li>
 									<label>物料编码：</label>
 									<input type="text" name="materialcode"/>
@@ -176,7 +191,38 @@
                         title: '单位',
                         width:120
 
-                    },  {
+                    },
+                    {
+                        field: 'deptId',
+                        title: '部门',
+                        width:120,
+                        formatter: function(value, row, index) {
+                            var str = $("#materialdept option").map(function(){
+                             if($(this).val()==value){
+                                 return $(this).text();
+							 }
+                            }).get().join(", ")
+
+                            return str;
+                        }
+
+                    },
+                    {
+                        field: 'typeId',
+                        title: '部门',
+                        width:120,
+                        formatter: function(value, row, index) {
+                            var str = $("#materialtype option").map(function(){
+                                if (value==$(this).val()){
+                                    return $(this).text();
+								}
+
+                            }).get().join(", ")
+                            return str;
+                        }
+
+                    }
+					,  {
                         field: 'buyer',
                         title: '采购员',
                         width:100

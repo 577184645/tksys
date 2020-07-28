@@ -39,10 +39,9 @@ public class StoragequitdetailController extends BaseController
     private IStoragequitbillService iStoragequitbillService;
 
     @RequiresPermissions("system:storagequitdetail:view")
-    @GetMapping("/{id}")
-    public String storagequitdetail(@PathVariable("id") Long id,ModelMap mmap)
+    @GetMapping("/{storagequitid}")
+    public String storagequitdetail(@PathVariable("storagequitid") String storagequitid,ModelMap mmap)
     {
-        String storagequitid = iStoragequitbillService.selectStoragequitbillById(id).getStoragequitbillid();
         mmap.put("storagequitid",storagequitid);
         return prefix + "/storagequitdetail";
     }

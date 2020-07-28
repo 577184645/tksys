@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org" >
+<head>
+    <th:block th:include="include :: header('商品信息')" />
+    <th:block th:include="include :: datetimepicker-css" />
+</head>
+
+<body class="white-bg">
+
+<div class="container">
+    <form class="form-horizontal m" id="form-qrode-edit" th:object="${qrode}">
+
+        <div>
+            <label style="position: absolute;top: 10%;left: 5%">产品名称：</label>
+            <label style="position: absolute;top: 10%;left: 45%"  th:text="*{name}"></label>
+
+        </div>
+        <div >
+            <label style="position: absolute;top: 15%;left: 5%">产品型号：</label>
+            <label style="position: absolute;top: 15%;left: 45%" th:text="*{partnumber}"></label>
+
+        </div>
+        <div >
+            <label style="position: absolute;top: 20%;left: 5%" >序列号：</label>
+
+            <label style="position: absolute;top: 20%;left: 45%"  th:text="*{serialnumber}"></label>
+
+        </div>
+
+        <div >
+            <label style="position: absolute;top: 25%;left: 5%" >MAC地址：</label>
+
+            <label style="position: absolute;top: 25%;left: 45%"  th:text="*{macaddress}"></label>
+
+        </div>
+        <div >
+            <label style="position: absolute;top: 30%;left: 5%" >生产日期：</label>
+
+            <label style="position: absolute;top: 30%;left: 45%"  th:text="*{#dates.format(productiontime,'yyyy-MM-dd')}"></label>
+
+        </div>
+        <div >
+            <label style="position: absolute;top: 35%;left: 5%">出厂日期：</label>
+
+            <label style="position: absolute;top: 35%;left: 45%"  th:text="*{#dates.format(leavefactorytime,'yyyy-MM-dd')}"></label>
+
+        </div>
+        <div >
+            <label style="position: absolute;top: 40%;left: 5%">保修日期：</label>
+
+            <label style="position: absolute;top: 40%;left: 45%"  th:text="*{#dates.format(warrantytime,'yyyy-MM-dd')}"></label>
+
+        </div>
+        <div >
+            <label style="position: absolute;top: 45%;left: 5%">客户：</label>
+
+            <label style="position: absolute;top: 45%;left: 45%"  th:text="*{customer}"></label>
+
+        </div>
+    </form>
+</div>
+<th:block th:include="include :: footer" />
+<th:block th:include="include :: datetimepicker-js" />
+<script type="text/javascript">
+    var prefix = ctx + "system/qrode";
+    $("#form-qrode-edit").validate({
+        focusCleanup: true
+    });
+
+    function submitHandler() {
+        if ($.validate.form()) {
+            $.operate.save(prefix + "/edit", $('#form-qrode-edit').serialize());
+        }
+    }
+
+    $("input[name='productiontime']").datetimepicker({
+        format: "yyyy-mm-dd",
+        minView: "month",
+        autoclose: true
+    });
+
+    $("input[name='leavefactorytime']").datetimepicker({
+        format: "yyyy-mm-dd",
+        minView: "month",
+        autoclose: true
+    });
+
+    $("input[name='warrantytime']").datetimepicker({
+        format: "yyyy-mm-dd",
+        minView: "month",
+        autoclose: true
+    });
+
+    $("input[name='cTime']").datetimepicker({
+        format: "yyyy-mm-dd",
+        minView: "month",
+        autoclose: true
+    });
+
+    $("input[name='uTime']").datetimepicker({
+        format: "yyyy-mm-dd",
+        minView: "month",
+        autoclose: true
+    });
+</script>
+</body>
+</html>

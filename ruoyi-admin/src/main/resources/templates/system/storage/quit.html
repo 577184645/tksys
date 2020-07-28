@@ -111,7 +111,14 @@
                                     <label>型号：</label>
                                     <input type="text" name="partnumber"/>
                                 </li>
-
+                                <li>
+                                    <label>封装：</label>
+                                    <input type="text" name="footprint"/>
+                                </li>
+                                <li>
+                                    <label>描述：</label>
+                                    <input type="text" name="description"/>
+                                </li>
                                 <li>
                                     <a class="btn btn-primary btn-rounded btn-sm" onclick="$.table.search('form2', 'bootstrap-table2')"><i class="fa fa-search"></i>&nbsp;搜索</a>
                                     <a class="btn btn-warning btn-rounded btn-sm" onclick="$.form.reset('form2', 'bootstrap-table2')"><i class="fa fa-refresh"></i>&nbsp;重置</a>
@@ -287,10 +294,8 @@
                             },
                             {
                                 field: 'price',
-                                title: '单价',
-                                editable: {
-                                    title : '单价'
-                                }
+                                title: '单价'
+
                             },
                             {
                                 field: 'counts',
@@ -507,14 +512,15 @@
                                     title: '封装'
                                 },
                                 {
-                                    field: 'manufacture',
-                                    title: '品牌'
+                                    field: 'price',
+                                    title: '单价'
                                 },
 
                                 {
                                     field: 'manufacture',
                                     title: '品牌'
                                 },
+
                                 {
                                     field: 'supplier',
                                     title: '供应商'
@@ -522,7 +528,18 @@
                                {
                                     field: 'serialNumber',
                                     title: '序列号'
-                                }
+                                },
+                                {
+                                    field: 'footprint',
+                                    title: '封装',
+                                    width:160
+                                },
+                                {
+                                    field: 'description',
+                                    title: '描述',
+                                    width:180
+
+                                },
                             ]
                         };
                         $.table.init(options);

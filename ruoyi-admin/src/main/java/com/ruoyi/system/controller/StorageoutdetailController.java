@@ -39,10 +39,9 @@ public class StorageoutdetailController extends BaseController
     private IStorageoutbillService iStorageoutbillService;
 
 
-    @GetMapping("/{id}")
-    public String storageoutdetail(@PathVariable("id") Long id,ModelMap mmap)
+    @GetMapping("/{storageoutid}")
+    public String storageoutdetail(@PathVariable("storageoutid") String storageoutid,ModelMap mmap)
     {
-        String storageoutid = iStorageoutbillService.selectStorageoutbillById(id).getStorageoutid();
         mmap.put("storageoutid",storageoutid);
         return prefix + "/storageoutdetail";
     }

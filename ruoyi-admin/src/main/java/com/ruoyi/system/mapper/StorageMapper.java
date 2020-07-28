@@ -90,6 +90,11 @@ public interface StorageMapper
      */
     public List<Storage> selectStorageList(Storage storage);
 
+
+
+    public Storage selectStorageListBymaterialcode(String materialcode);
+
+
     /**
      * 新增库存列表
      * 

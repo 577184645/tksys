@@ -263,6 +263,14 @@
                                     <label>型号：</label>
                                     <input type="text" name="partnumber"/>
                                 </li>
+                                <li>
+                                    <label>封装：</label>
+                                    <input type="text" name="footprint"/>
+                                </li>
+                                <li>
+                                    <label>描述：</label>
+                                    <input type="text" name="description"/>
+                                </li>
                                 <li style="display: none">
                                     <label>显示库存为0的产品：</label>
                                     <div class="form-group">
@@ -470,6 +478,10 @@
                                 }
                             },
                             {
+                                field: 'stocks',
+                                title: '库存量'
+                            },
+                            {
                                 field: 'money',
                                 title: '总价',
                                footerFormatter:function (value) {
@@ -560,7 +572,8 @@
                                     price:data[i].price,
                                     money:"",
                                     counts:"",
-                                    randomId:randomId
+                                    randomId:randomId,
+                                    stocks:data[i].stocks
                                 }
                             })
                         }
@@ -597,7 +610,7 @@
                                     money: data[i].money,
                                     counts: data[i].counts,
                                     randomId:randomId,
-
+                                    stocks:data[i].stocks
                                 }
                             })
                         }
@@ -672,6 +685,7 @@
                                     field: 'stocks',
                                     title: '库存量'
                                 },
+
                                 {
                                     field: 'footprint',
                                     title: '封装'
@@ -681,10 +695,7 @@
                                     title: '品牌'
                                 },
 
-                                {
-                                    field: 'manufacture',
-                                    title: '品牌'
-                                },
+
                                 {
                                     field: 'supplier',
                                     title: '供应商'
@@ -692,7 +703,18 @@
                                {
                                     field: 'serialNumber',
                                     title: '序列号'
-                                }
+                                },
+                                {
+                                    field: 'footprint',
+                                    title: '封装',
+                                    width:160
+                                },
+                                {
+                                    field: 'description',
+                                    title: '描述',
+                                    width:180
+
+                                },
                             ]
                         };
                         $.table.init(options);

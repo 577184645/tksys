@@ -67,12 +67,12 @@ public class MaterialController extends BaseController
     @RequiresPermissions("system:material:import")
     @Log(title = "物料列表", businessType = BusinessType.IMPORT)
     @ResponseBody
-    public AjaxResult importData(MultipartFile file, boolean updateSupport, HttpServletRequest request) throws Exception
+    public AjaxResult importData(MultipartFile file, boolean updateSupport) throws Exception
     {
 
         ExcelUtil<Material> util = new ExcelUtil<Material>(Material.class);
         List<Material> material  = util.importExcel(file.getInputStream());
-        String message = materialService.importMaterial(material,request);
+        String message = materialService.importMaterial(material);
         return AjaxResult.success(message);
     }
 
@@ -87,9 +87,10 @@ public class MaterialController extends BaseController
 
     @RequiresPermissions("system:material:view")
     @GetMapping()
-    public String material()
+    public String material(ModelMap mmap)
     {
- //    mmap.put("userList",iSysUserService.selectUserList(null));
+        mmap.put("materialdeptList",imaterialdeptService.selectMaterialdeptList(null));
+        mmap.put("materialtypeList",iMaterialtypeService.selectMaterialtypeList(null));
 
         return prefix + "/material";
     }

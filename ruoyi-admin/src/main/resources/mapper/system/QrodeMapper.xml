@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.QrodeMapper">
+    
+    <resultMap type="Qrode" id="QrodeResult">
+        <result property="id"    column="id"    />
+        <result property="name"    column="name"    />
+        <result property="partnumber"    column="partnumber"    />
+        <result property="serialnumber"    column="serialnumber"    />
+        <result property="customer"    column="customer"    />
+        <result property="website"    column="website"    />
+        <result property="enchiridionaddress"    column="enchiridionaddress"    />
+        <result property="productiontime"    column="productiontime"    />
+        <result property="leavefactorytime"    column="leavefactorytime"    />
+        <result property="warrantytime"    column="warrantytime"    />
+        <result property="macaddress"    column="macaddress"    />
+        <result property="cTime"    column="c_time"    />
+        <result property="uTime"    column="u_time"    />
+    </resultMap>
+
+    <sql id="selectQrodeVo">
+        select id, name, partnumber, serialnumber, customer, website, enchiridionaddress, productiontime, leavefactorytime, warrantytime, macaddress, c_time, u_time from qrode
+    </sql>
+
+    <select id="selectQrodeList" parameterType="Qrode" resultMap="QrodeResult">
+        <include refid="selectQrodeVo"/>
+        <where>  
+            <if test="name != null  and name != ''"> and name like concat('%', #{name}, '%')</if>
+            <if test="partnumber != null  and partnumber != ''"> and partnumber = #{partnumber}</if>
+            <if test="serialnumber != null  and serialnumber != ''"> and serialnumber = #{serialnumber}</if>
+        </where>
+    </select>
+    
+    <select id="selectQrodeById" parameterType="Long" resultMap="QrodeResult">
+        <include refid="selectQrodeVo"/>
+        where id = #{id}
+    </select>
+    <select id="selectQrodeBySerialnumber"  resultMap="QrodeResult">
+        <include refid="selectQrodeVo"/>
+        where serialnumber = #{serialnumber}
+    </select>
+    <insert id="insertQrode" parameterType="Qrode" useGeneratedKeys="true" keyProperty="id">
+        insert into qrode
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="name != null  and name != ''">name,</if>
+            <if test="partnumber != null  and partnumber != ''">partnumber,</if>
+            <if test="serialnumber != null  and serialnumber != ''">serialnumber,</if>
+            <if test="customer != null  and customer != ''">customer,</if>
+            <if test="website != null  and website != ''">website,</if>
+            <if test="enchiridionaddress != null  and enchiridionaddress != ''">enchiridionaddress,</if>
+            <if test="productiontime != null ">productiontime,</if>
+            <if test="leavefactorytime != null ">leavefactorytime,</if>
+            <if test="warrantytime != null ">warrantytime,</if>
+            <if test="macaddress != null  and macaddress != ''">macaddress,</if>
+            <if test="cTime != null ">c_time,</if>
+            <if test="uTime != null ">u_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="name != null  and name != ''">#{name},</if>
+            <if test="partnumber != null  and partnumber != ''">#{partnumber},</if>
+            <if test="serialnumber != null  and serialnumber != ''">#{serialnumber},</if>
+            <if test="customer != null  and customer != ''">#{customer},</if>
+            <if test="website != null  and website != ''">#{website},</if>
+            <if test="enchiridionaddress != null  and enchiridionaddress != ''">#{enchiridionaddress},</if>
+            <if test="productiontime != null ">#{productiontime},</if>
+            <if test="leavefactorytime != null ">#{leavefactorytime},</if>
+            <if test="warrantytime != null ">#{warrantytime},</if>
+            <if test="macaddress != null  and macaddress != ''">#{macaddress},</if>
+            <if test="cTime != null ">#{cTime},</if>
+            <if test="uTime != null ">#{uTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updateQrode" parameterType="Qrode">
+        update qrode
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="name != null  and name != ''">name = #{name},</if>
+            <if test="partnumber != null  and partnumber != ''">partnumber = #{partnumber},</if>
+            <if test="serialnumber != null  and serialnumber != ''">serialnumber = #{serialnumber},</if>
+            <if test="customer != null  and customer != ''">customer = #{customer},</if>
+            <if test="website != null  and website != ''">website = #{website},</if>
+            <if test="enchiridionaddress != null  and enchiridionaddress != ''">enchiridionaddress = #{enchiridionaddress},</if>
+            <if test="productiontime != null ">productiontime = #{productiontime},</if>
+            <if test="leavefactorytime != null ">leavefactorytime = #{leavefactorytime},</if>
+            <if test="warrantytime != null ">warrantytime = #{warrantytime},</if>
+            <if test="macaddress != null  and macaddress != ''">macaddress = #{macaddress},</if>
+            <if test="cTime != null ">c_time = #{cTime},</if>
+            <if test="uTime != null ">u_time = #{uTime},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteQrodeById" parameterType="Long">
+        delete from qrode where id = #{id}
+    </delete>
+
+    <delete id="deleteQrodeByIds" parameterType="String">
+        delete from qrode where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    
+</mapper>

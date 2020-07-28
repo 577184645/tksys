@@ -127,43 +127,16 @@
 
         function Info(id) {
             table.set();
-            var row = $("#" + table.options.id).bootstrapTreeTable('getSelections')[0];
-
-            if($.common.isEmpty(id) && table.options.type == table_type.bootstrapTreeTable) {
-                if ($.common.isEmpty(row)) {
-                    $.modal.alertWarning("请至少选择一条记录");
-                    return;
-                }
-                var url = table.options.updateUrl.replace("{id}", row[table.options.uniqueId]);
-
-                $.modal.openTab("修改" + table.options.modalName, url);
-            } else {
+            var row = $("#bootstrap-table").bootstrapTable('getSelections')[0];
 
 
-                $.modal.openTab("退料单详细信息",editUrl(id));
+
+                $.modal.openTab("退料单详细信息",prefix1+"/"+row.storagequitbillid);
 
 
-            }
+
         }
 
-        function editUrl(id) {
-            var url = "/404.html";
-            if ($.common.isNotEmpty(id)) {
-
-                url = table.options.updateUrl.replace("{id}", id);
-
-            } else {
-                var id = $.common.isEmpty(table.options.uniqueId) ? $.table.selectFirstColumns() : $.table.selectColumns(table.options.uniqueId);
-
-                if (id.length == 0) {
-                    $.modal.alertWarning("请至少选择一条记录");
-                    return;
-                }
-                url = prefix1+"/"+(id);
-
-            }
-            return url;
-        }
 
 
         function reddashed(id) {
