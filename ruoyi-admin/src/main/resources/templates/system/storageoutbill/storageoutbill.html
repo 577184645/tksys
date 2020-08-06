@@ -101,6 +101,9 @@
                 <a class="btn btn-warning" onclick="$.table.exportExcel()" shiro:hasPermission="system:storageoutbill:export">
                     <i class="fa fa-download"></i> 导出
                 </a>
+                <a class="btn btn-primary single disabled" onclick="$.operate.edit()" shiro:hasPermission="system:storageoutbill:edit">
+                    <i class="fa fa-edit"></i> 修改
+                </a>
                 <a class="btn btn-danger single disabled" onclick="reddashed()" shiro:hasPermission="system:storageoutbill:reddashed">
                     <i class="fa fa-exclamation"></i> 红冲
                 </a>
@@ -135,6 +138,10 @@
                 removeUrl: prefix + "/remove",
                 exportUrl: prefix + "/export",
                 modalName: "出库单列表",
+                onDblClickRow:function(row, $element, field)
+                {
+                    Infotwo(row.storageoutid);
+                },
                 rowStyle: function (row, index) {
                     var style = "";
                     if(row.delStatus==2) {
@@ -292,6 +299,11 @@
             return url;
         }
 
+
+        function Infotwo(id) {
+            table.set();
+            $.modal.openTab("出库单详细信息",prefix1+"/"+id);
+        }
         function editUrl2(id) {
             var url = "/404.html";
             if ($.common.isNotEmpty(id)) {

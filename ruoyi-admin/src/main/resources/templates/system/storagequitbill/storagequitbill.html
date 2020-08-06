@@ -64,6 +64,9 @@
                 <a class="btn btn-warning" onclick="$.table.exportExcel()" shiro:hasPermission="system:storagequitbill:export">
                     <i class="fa fa-download"></i> 导出
                 </a>
+                <a class="btn btn-primary single disabled" onclick="$.operate.edit()" shiro:hasPermission="system:storagequitbill:edit">
+                    <i class="fa fa-edit"></i> 修改
+                </a>
                 <a class="btn btn-danger single disabled" onclick="reddashed()" shiro:hasPermission="system:storagequitbill:reddashed">
                     <i class="fa fa-exclamation"></i> 红冲
                 </a>
@@ -86,7 +89,10 @@
                 removeUrl: prefix + "/remove",
                 exportUrl: prefix + "/export",
                 modalName: "退料单列表",
-
+                onDblClickRow:function(row, $element, field)
+                {
+                    Infotwo(row.storagequitbillid);
+                },
                 columns: [{
                     checkbox: true
                 },
@@ -137,7 +143,10 @@
 
         }
 
-
+        function Infotwo(id) {
+            table.set();
+            $.modal.openTab("退库单详细信息",prefix1+"/"+id);
+        }
 
         function reddashed(id) {
             table.set();

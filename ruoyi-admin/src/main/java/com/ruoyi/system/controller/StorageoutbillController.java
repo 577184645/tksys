@@ -5,7 +5,9 @@ import java.util.List;
 import com.ruoyi.system.domain.Storageinbill;
 import com.ruoyi.system.domain.Storageindetail;
 import com.ruoyi.system.domain.Storageoutdetail;
+import com.ruoyi.system.service.IProjectService;
 import com.ruoyi.system.service.IStorageoutdetailService;
+import com.ruoyi.system.service.ISysUserService;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -36,6 +38,10 @@ public class StorageoutbillController extends BaseController
     private IStorageoutbillService storageoutbillService;
     @Autowired
     private IStorageoutdetailService storageoutdetailService;
+    @Autowired
+    private ISysUserService iSysUserService;
+    @Autowired
+    private IProjectService iProjectService;
 
     @PostMapping("/getstorageoutid")
     @ResponseBody
@@ -106,6 +112,8 @@ public class StorageoutbillController extends BaseController
     {
         Storageoutbill storageoutbill = storageoutbillService.selectStorageoutbillById(id);
         mmap.put("storageoutbill", storageoutbill);
+        mmap.put("userList",iSysUserService.findList());
+        mmap.put("projectList",iProjectService.selectProjectList(null));
         return prefix + "/edit";
     }
 

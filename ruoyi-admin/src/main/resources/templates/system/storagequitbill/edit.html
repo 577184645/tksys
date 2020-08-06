@@ -11,25 +11,25 @@
             <div class="form-group">    
                 <label class="col-sm-3 control-label">退料单号：</label>
                 <div class="col-sm-8">
-                    <input name="storagequitbillid" th:field="*{storagequitbillid}" class="form-control" type="text">
+                    <input  readonly name="storagequitbillid" th:field="*{storagequitbillid}" class="form-control" type="text">
                 </div>
             </div>
             <div class="form-group">    
                 <label class="col-sm-3 control-label">外协库：</label>
                 <div class="col-sm-8">
-                    <input name="outsourcewarehouse" th:field="*{outsourcewarehouse}" class="form-control" type="text">
+                    <input readonly name="outsourcewarehouse" th:field="*{outsourcewarehouse}" class="form-control" type="text">
                 </div>
             </div>
             <div class="form-group">    
                 <label class="col-sm-3 control-label">外协库id：</label>
                 <div class="col-sm-8">
-                    <input name="outsourcewarehouseid" th:field="*{outsourcewarehouseid}" class="form-control" type="text">
+                    <input name="outsourcewarehouseid" th:field="*{outsourcewarehouseid}" class="form-control" type="hidden">
                 </div>
             </div>
             <div class="form-group">    
                 <label class="col-sm-3 control-label">退库人：</label>
                 <div class="col-sm-8">
-                    <input name="outpeople" th:field="*{outpeople}" class="form-control" type="text">
+                    <input readonly name="outpeople" th:field="*{outpeople}" class="form-control" type="text">
                 </div>
             </div>
             <div class="form-group">    
@@ -53,15 +53,7 @@
                     </div>
                 </div>
             </div>
-            <div class="form-group">    
-                <label class="col-sm-3 control-label">修改时间：</label>
-                <div class="col-sm-8">
-                    <div class="input-group date">
-                        <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
-                        <input name="uTime" th:value="${#dates.format(storagequitbill.uTime, 'yyyy-MM-dd')}" class="form-control" placeholder="yyyy-MM-dd" type="text">
-                    </div>
-                </div>
-            </div>
+
         </form>
     </div>
     <th:block th:include="include :: footer" />

@@ -46,6 +46,12 @@ public class StorageoutdetailController extends BaseController
         return prefix + "/storageoutdetail";
     }
 
+    @GetMapping()
+    public String storageoutdetaillist()
+    {
+        return prefix + "/storageoutdetail";
+    }
+
     /**
      * 查询出库产品列表列表
      */

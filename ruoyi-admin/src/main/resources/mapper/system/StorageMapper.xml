@@ -60,11 +60,12 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <if test="description != null  and description != ''"> and m.description like concat('%', #{description}, '%')</if>
         <if test="footprint != null  and footprint != ''"> and m.footprint like concat('%', #{footprint}, '%')</if>
 
-        <if test="partnumber != null  and partnumber != ''"> and u.partnumber = #{partnumber}</if>
+        <if test="partnumber != null  and partnumber != ''"> and u.partnumber like concat('%', #{partnumber}, '%')</if>
         <if test="manufacture != null  and manufacture != ''"> and u.manufacture = #{manufacture}</if>
         <if test="materialcode != null  and materialcode != ''"> and u.materialcode = #{materialcode}</if>
         <if test="status==2 "> and stocks > 0</if>
         <if test="status==1 "> and stocks = 0</if>
+
         <if test="deptId != null and deptId != 0">
                 AND (u.type_id = #{deptId} OR u.type_id IN ( SELECT t.dept_id FROM storagetype t WHERE FIND_IN_SET (#{deptId},ancestors) ))
             </if>

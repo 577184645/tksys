@@ -16,13 +16,12 @@ import org.springframework.transaction.annotation.Transactional;
 
 /**
  * 库存列表Service业务层处理
- * 
+ *
  * @author ruoyi
  * @date 2020-06-03
  */
 @Service
-public class StorageServiceImpl implements IStorageService 
-{
+public class StorageServiceImpl implements IStorageService {
     @Autowired
     private StorageMapper storageMapper;
     @Autowired
@@ -49,84 +48,82 @@ public class StorageServiceImpl implements IStorageService
 
     /**
      * 查询库存列表
-     * 
+     *
      * @param id 库存列表ID
      * @return 库存列表
      */
     @Override
-    public Storage selectStorageById(Integer id)
-    {
+    public Storage selectStorageById(Integer id) {
         return storageMapper.selectStorageById(id);
     }
 
     /**
      * 查询库存列表列表
-     * 
+     *
      * @param storage 库存列表
      * @return 库存列表
      */
 
     @Override
-    public List<Storage> selectStorageList(Storage storage)
-    {
+    public List<Storage> selectStorageList(Storage storage) {
         return storageMapper.selectStorageList(storage);
     }
 
     @Override
     @Transactional
     public int insertStorage(Storageinbill storageinbill, String productList) {
-       //如果入库出现重复
-        if (storageinbillMapper.selectStorageinbillByStockinid(storageinbill.getStockinid())!=null){
-           Storageinbill st=new Storageinbill();
-           int i = storageinbill.getStockinid().lastIndexOf("-")+1;
-           int size = storageinbillMapper.selectStorageinbillList(st).size()+1;
-           String sizes="";
-           if(size<10){
-               sizes="00"+size;
-           }else  if(size<100){
-               sizes="0"+size;
-           }else{
-               sizes=String.valueOf(size);
+        //如果入库出现重复
+        if (storageinbillMapper.selectStorageinbillByStockinid(storageinbill.getStockinid()) != null) {
+            Storageinbill st = new Storageinbill();
+            int i = storageinbill.getStockinid().lastIndexOf("-") + 1;
+            int size = storageinbillMapper.selectStorageinbillList(st).size() + 1;
+            String sizes = "";
+            if (size < 10) {
+                sizes = "00" + size;
+            } else if (size < 100) {
+                sizes = "0" + size;
+            } else {
+                sizes = String.valueOf(size);
 
-           }
+            }
 
-           storageinbill.setStockinid( storageinbill.getStockinid().substring(0,i)+sizes);
-       }
+            storageinbill.setStockinid(storageinbill.getStockinid().substring(0, i) + sizes);
+        }
         JSONArray productArray = JSONArray.fromObject(productList);
         for (int i = 0; i < productArray.size(); i++) {
             JSONObject jsonObject = productArray.getJSONObject(i);
-            Storage storage=new Storage();
-            WarehouseRecord warehouseRecord=new WarehouseRecord();
+            Storage storage = new Storage();
+            WarehouseRecord warehouseRecord = new WarehouseRecord();
             Storageindetail storageindetail = new Storageindetail();
-            if(!jsonObject.getString("counts").equals("")) {
+            if (!jsonObject.getString("counts").equals("")) {
                 storageindetail.setCounts(Long.valueOf(jsonObject.getInt("counts")));
             }
-            if(!jsonObject.getString("price").equals("")) {
+            if (!jsonObject.getString("price").equals("")) {
                 storageindetail.setPrice(Float.valueOf(jsonObject.getString("price")));
             }
-            if(!jsonObject.getString("money").equals("")) {
+            if (!jsonObject.getString("money").equals("")) {
                 storageindetail.setMoney(Float.valueOf(jsonObject.getString("money")));
             }
-            if(!jsonObject.getString("footprint").equals("null")) {
+            if (!jsonObject.getString("footprint").equals("null")) {
                 storageindetail.setFootprint(jsonObject.getString("footprint"));
             }
 
             storageindetail.setMaterialcode(jsonObject.getString("materialcode"));
-            if(!jsonObject.getString("name").equals("null")) {
+            if (!jsonObject.getString("name").equals("null")) {
                 storageindetail.setName(jsonObject.getString("name"));
             }
-            if(!jsonObject.getString("partnumber").equals("null")) {
+            if (!jsonObject.getString("partnumber").equals("null")) {
                 storageindetail.setPartnumber(jsonObject.getString("partnumber"));
             }
             storageindetail.setRate(jsonObject.getString("rate"));
-            if(!jsonObject.getString("taxamount").equals("")) {
+            if (!jsonObject.getString("taxamount").equals("")) {
                 storageindetail.setTaxamount(Double.valueOf(jsonObject.getString("taxamount")));
 
             }
-            if(!jsonObject.getString("unit").equals("null")){
+            if (!jsonObject.getString("unit").equals("null")) {
                 storageindetail.setUnit(jsonObject.getString("unit"));
             }
-            if(!jsonObject.getString("manufacture").equals("null")) {
+            if (!jsonObject.getString("manufacture").equals("null")) {
                 storageindetail.setManufacture(jsonObject.getString("manufacture"));
             }
 
@@ -142,9 +139,9 @@ public class StorageServiceImpl implements IStorageService
             storage.setSerialNumber(storageindetail.getSerialNumber());
             storage.setMoney(storageindetail.getMoney());
             storage.setStocks(storageindetail.getCounts());
-            if(storageMapper.selectStorageByMaterialcodeAndTypeid(storage)>0){
-                 storageMapper.updatestocks(storage);
-            }else{
+            if (storageMapper.selectStorageByMaterialcodeAndTypeid(storage) > 0) {
+                storageMapper.updatestocks(storage);
+            } else {
                 storage.setName(storageindetail.getName());
                 storage.setPartnumber(storageindetail.getPartnumber());
                 storage.setManufacture(storageindetail.getManufacture());
@@ -165,27 +162,27 @@ public class StorageServiceImpl implements IStorageService
             warehouseRecordMapper.insertWarehouseRecord(warehouseRecord);
 
 
-            }
+        }
         String ancestors = storagetypeMapper.selectStoragetypeById(storageinbill.getOutsourcewarehouseid()).getAncestors();
         String deptName = storagetypeMapper.selectStoragetypeById(storageinbill.getOutsourcewarehouseid()).getDeptName();
-        if(ancestors.contains(",")){
-           String[] split = ancestors.split(",");
-           String Outsourcewarehouse="";
-           for (int i=0;i<split.length;i++){
-                if(Long.valueOf(split[i])!=0) {
+        if (ancestors.contains(",")) {
+            String[] split = ancestors.split(",");
+            String Outsourcewarehouse = "";
+            for (int i = 0; i < split.length; i++) {
+                if (Long.valueOf(split[i]) != 0) {
                     Outsourcewarehouse += storagetypeMapper.selectStoragetypeById(Long.valueOf(split[i])).getDeptName() + "-";
                 }
-           }
-           storageinbill.setOutsourcewarehouse(Outsourcewarehouse+deptName);
-       }else{
-           storageinbill.setOutsourcewarehouse(deptName);
-       }
+            }
+            storageinbill.setOutsourcewarehouse(Outsourcewarehouse + deptName);
+        } else {
+            storageinbill.setOutsourcewarehouse(deptName);
+        }
         return storageinbillMapper.insertStorageinbill(storageinbill);
     }
 
     /**
      * 新增库存列表
-     * 
+     *
      * @param storage 库存列表
      * @return 结果
      */
@@ -193,48 +190,45 @@ public class StorageServiceImpl implements IStorageService
 
     /**
      * 修改库存列表
-     * 
+     *
      * @param
      * @return 结果
      */
     @Override
     @Transactional
-    public int updateStorage(Storageoutbill storageoutbill,String productList)
-    {
+    public int updateStorage(Storageoutbill storageoutbill, String productList) {
         //如果出库单出现重复
-        if (storageoutbillMapper.selectStorageoutbillByStorageoutId(storageoutbill.getStorageoutid())!=null){
-            Storageoutbill st=new Storageoutbill();
-            int i = storageoutbill.getStorageoutid().lastIndexOf("-")+1;
-            int size = storageoutbillMapper.selectStorageoutbillList(st).size()+1;
-           
-            String sizes="";
-            if(size<10){
-                sizes="00"+size;
-            }else  if(size<100){
-                sizes="0"+size;
-            }else{
-                sizes=String.valueOf(size);
+        if (storageoutbillMapper.selectStorageoutbillByStorageoutId(storageoutbill.getStorageoutid()) != null) {
+            Storageoutbill st = new Storageoutbill();
+            int i = storageoutbill.getStorageoutid().lastIndexOf("-") + 1;
+            int size = storageoutbillMapper.selectStorageoutbillList(st).size() + 1;
+
+            String sizes = "";
+            if (size < 10) {
+                sizes = "00" + size;
+            } else if (size < 100) {
+                sizes = "0" + size;
+            } else {
+                sizes = String.valueOf(size);
 
             }
 
-            storageoutbill.setStorageoutid( storageoutbill.getStorageoutid().substring(0,i)+sizes);
+            storageoutbill.setStorageoutid(storageoutbill.getStorageoutid().substring(0, i) + sizes);
         }
         JSONArray productArray = JSONArray.fromObject(productList);
-
-
 
 
         for (int i = 0; i < productArray.size(); i++) {
             JSONObject jsonObject = productArray.getJSONObject(i);
             Storage storage = new Storage();
-            WarehouseRecord warehouseRecord=new WarehouseRecord();
+            WarehouseRecord warehouseRecord = new WarehouseRecord();
             Storageoutdetail storageoutdetail = new Storageoutdetail();
 
 
             Long stocks = storageMapper.selectStorageById(Integer.valueOf(jsonObject.getString("id"))).getStocks();
-            if(stocks<Long.valueOf(jsonObject.getString("counts"))){
+            if (stocks < Long.valueOf(jsonObject.getString("counts"))) {
 
-               int error=1/0;
+                int error = 1 / 0;
 
             }
 
@@ -243,7 +237,7 @@ public class StorageServiceImpl implements IStorageService
                 storageoutdetail.setCounts(Long.valueOf(jsonObject.getInt("counts")));
             }
 
-            if(!"null".equals(jsonObject.getString("price"))){
+            if (!"null".equals(jsonObject.getString("price"))) {
                 storageoutdetail.setPrice(Float.valueOf(jsonObject.getString("price")));
             }
             if (!jsonObject.getString("money").equals("")) {
@@ -267,10 +261,10 @@ public class StorageServiceImpl implements IStorageService
             if (!jsonObject.getString("manufacture").equals("null")) {
                 storageoutdetail.setManufacture(jsonObject.getString("manufacture"));
             }
-            if(!jsonObject.getString("supplier").equals("null")){
+            if (!jsonObject.getString("supplier").equals("null")) {
                 storageoutdetail.setSupplier(jsonObject.getString("supplier"));
             }
-            if(!jsonObject.getString("serialNumber").equals("null")){
+            if (!jsonObject.getString("serialNumber").equals("null")) {
                 storageoutdetail.setSerialNumber(jsonObject.getString("serialNumber"));
             }
             storageoutdetail.setComments(jsonObject.getString("comments"));
@@ -294,16 +288,16 @@ public class StorageServiceImpl implements IStorageService
 
         String ancestors = storagetypeMapper.selectStoragetypeById(storageoutbill.getOutsourcewarehouseid()).getAncestors();
         String deptName = storagetypeMapper.selectStoragetypeById(storageoutbill.getOutsourcewarehouseid()).getDeptName();
-        if(ancestors.contains(",")){
+        if (ancestors.contains(",")) {
             String[] split = ancestors.split(",");
-            String Outsourcewarehouse="";
-            for (int i=0;i<split.length;i++){
-                if(Long.valueOf(split[i])!=0) {
+            String Outsourcewarehouse = "";
+            for (int i = 0; i < split.length; i++) {
+                if (Long.valueOf(split[i]) != 0) {
                     Outsourcewarehouse += storagetypeMapper.selectStoragetypeById(Long.valueOf(split[i])).getDeptName() + "-";
                 }
             }
-            storageoutbill.setOutsourcewarehouse(Outsourcewarehouse+deptName);
-        }else{
+            storageoutbill.setOutsourcewarehouse(Outsourcewarehouse + deptName);
+        } else {
             storageoutbill.setOutsourcewarehouse(deptName);
         }
 
@@ -314,32 +308,30 @@ public class StorageServiceImpl implements IStorageService
     @Override
     public int quitStorage(Storagequitbill storagequitbill, String productList) {
         //如果出库单出现重复
-        if (storagequitbillMapper.selectStoragequitbillByStoragequitbillId(storagequitbill.getStoragequitbillid())!=null){
-            Storagequitbill st=new Storagequitbill();
-            int i = storagequitbill.getStoragequitbillid().lastIndexOf("-")+1;
-            int size = storagequitbillMapper.selectStoragequitbillList(st).size()+1;
+        if (storagequitbillMapper.selectStoragequitbillByStoragequitbillId(storagequitbill.getStoragequitbillid()) != null) {
+            Storagequitbill st = new Storagequitbill();
+            int i = storagequitbill.getStoragequitbillid().lastIndexOf("-") + 1;
+            int size = storagequitbillMapper.selectStoragequitbillList(st).size() + 1;
 
-            String sizes="";
-            if(size<10){
-                sizes="00"+size;
-            }else  if(size<100){
-                sizes="0"+size;
-            }else{
-                sizes=String.valueOf(size);
+            String sizes = "";
+            if (size < 10) {
+                sizes = "00" + size;
+            } else if (size < 100) {
+                sizes = "0" + size;
+            } else {
+                sizes = String.valueOf(size);
 
             }
 
-            storagequitbill.setStoragequitbillid( storagequitbill.getStoragequitbillid().substring(0,i)+sizes);
+            storagequitbill.setStoragequitbillid(storagequitbill.getStoragequitbillid().substring(0, i) + sizes);
         }
         JSONArray productArray = JSONArray.fromObject(productList);
-
-
 
 
         for (int i = 0; i < productArray.size(); i++) {
             JSONObject jsonObject = productArray.getJSONObject(i);
             Storage storage = new Storage();
-            WarehouseRecord warehouseRecord=new WarehouseRecord();
+            WarehouseRecord warehouseRecord = new WarehouseRecord();
             Storagequitdetail storagequitdetail = new Storagequitdetail();
             if (!jsonObject.getString("counts").equals("")) {
                 storagequitdetail.setCounts(Long.valueOf(jsonObject.getInt("counts")));
@@ -368,10 +360,10 @@ public class StorageServiceImpl implements IStorageService
             if (!jsonObject.getString("manufacture").equals("null")) {
                 storagequitdetail.setManufacture(jsonObject.getString("manufacture"));
             }
-            if(!jsonObject.getString("supplier").equals("null")){
+            if (!jsonObject.getString("supplier").equals("null")) {
                 storagequitdetail.setSupplier(jsonObject.getString("supplier"));
             }
-            if(!jsonObject.getString("serialNumber").equals("null")){
+            if (!jsonObject.getString("serialNumber").equals("null")) {
                 storagequitdetail.setSerialNumber(jsonObject.getString("serialNumber"));
             }
             storagequitdetail.setComments(jsonObject.getString("comments"));
@@ -395,43 +387,41 @@ public class StorageServiceImpl implements IStorageService
 
         String ancestors = storagetypeMapper.selectStoragetypeById(storagequitbill.getOutsourcewarehouseid()).getAncestors();
         String deptName = storagetypeMapper.selectStoragetypeById(storagequitbill.getOutsourcewarehouseid()).getDeptName();
-        if(ancestors.contains(",")){
+        if (ancestors.contains(",")) {
             String[] split = ancestors.split(",");
-            String Outsourcewarehouse="";
-            for (int i=0;i<split.length;i++){
-                if(Long.valueOf(split[i])!=0) {
+            String Outsourcewarehouse = "";
+            for (int i = 0; i < split.length; i++) {
+                if (Long.valueOf(split[i]) != 0) {
                     Outsourcewarehouse += storagetypeMapper.selectStoragetypeById(Long.valueOf(split[i])).getDeptName() + "-";
                 }
             }
-            storagequitbill.setOutsourcewarehouse(Outsourcewarehouse+deptName);
-        }else{
+            storagequitbill.setOutsourcewarehouse(Outsourcewarehouse + deptName);
+        } else {
             storagequitbill.setOutsourcewarehouse(deptName);
         }
 
-      return storagequitbillMapper.insertStoragequitbill(storagequitbill);
+        return storagequitbillMapper.insertStoragequitbill(storagequitbill);
     }
 
     /**
      * 删除库存列表对象
-     * 
+     *
      * @param ids 需要删除的数据ID
      * @return 结果
      */
     @Override
-    public int deleteStorageByIds(String ids)
-    {
+    public int deleteStorageByIds(String ids) {
         return storageMapper.deleteStorageByIds(Convert.toStrArray(ids));
     }
 
     /**
      * 删除库存列表信息
-     * 
+     *
      * @param id 库存列表ID
      * @return 结果
      */
     @Override
-    public int deleteStorageById(Integer id)
-    {
+    public int deleteStorageById(Integer id) {
         return storageMapper.deleteStorageById(id);
     }
 }

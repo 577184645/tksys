@@ -5,7 +5,9 @@ import java.util.Map;
 
 import com.ruoyi.system.domain.Storageindetail;
 import com.ruoyi.system.domain.Testss;
+import com.ruoyi.system.service.IProjectService;
 import com.ruoyi.system.service.IStorageindetailService;
+import com.ruoyi.system.service.ISysUserService;
 import io.swagger.models.auth.In;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,6 +41,12 @@ public class StorageinbillController extends BaseController
 
     @Autowired
     private IStorageindetailService iStorageindetailService;
+
+
+    @Autowired
+    private ISysUserService iSysUserService;
+    @Autowired
+    private IProjectService iProjectService;
 
 
     @GetMapping("/bycheck")
@@ -160,8 +168,12 @@ public class StorageinbillController extends BaseController
     @GetMapping("/edit/{id}")
     public String edit(@PathVariable("id") Long id, ModelMap mmap)
     {
+
+
         Storageinbill storageinbill = storageinbillService.selectStorageinbillById(id);
         mmap.put("storageinbill", storageinbill);
+        mmap.put("userList",iSysUserService.findList());
+        mmap.put("projectList",iProjectService.selectProjectList(null));
         return prefix + "/edit";
     }
 

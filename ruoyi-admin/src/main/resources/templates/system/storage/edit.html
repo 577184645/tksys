@@ -47,7 +47,7 @@
 
         <div class="row">
             <div class="col-sm-6">
-                <label class="col-sm-3 control-label">出库人：</label>
+                <label class="col-sm-3 control-label">领料人：</label>
                 <div class="col-sm-8">
                     <select  name="stockpeople" id="stockpeople" class="form-control m-b">
                         <option value="">所有</option>
@@ -55,8 +55,7 @@
                                  th:value="${user.userName}"
                                  th:text="${user.userName}"
                         ></option>
-                        <option  th:selected="*{userName=='陈忠'}">陈忠</option>
-                        <option  th:selected="*{userName=='赵建忠'}">陈荣</option>
+
                     </select>
                 </div>
 

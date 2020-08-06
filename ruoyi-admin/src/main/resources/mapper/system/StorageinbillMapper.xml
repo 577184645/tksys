@@ -142,13 +142,22 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <trim prefix="SET" suffixOverrides=",">
             <if test="stockinid != null  and stockinid != ''">stockinid = #{stockinid},</if>
             <if test="outsourcewarehouse != null  and outsourcewarehouse != ''">outsourcewarehouse = #{outsourcewarehouse},</if>
+            <if test="outsourcewarehouseid != null ">outsourcewarehouseid = #{outsourcewarehouseid},</if>
             <if test="purchaseid != null  and purchaseid != ''">purchaseid = #{purchaseid},</if>
             <if test="deliveryman != null  and deliveryman != ''">deliveryman = #{deliveryman},</if>
             <if test="warehouseadmin != null  and warehouseadmin != ''">warehouseadmin = #{warehouseadmin},</if>
             <if test="storagentime != null ">storagentime = #{storagentime},</if>
             <if test="comments != null  and comments != ''">comments = #{comments},</if>
             <if test="status != null  and status != ''">status = #{status},</if>
-
+            <if test="applyid != null  and applyid != ''">applyid = #{applyid},</if>
+            <if test="contractid != null  and contractid != ''">contractid = #{contractid},</if>
+            <if test="invoiceid != null  and invoiceid != ''">invoiceid = #{invoiceid},</if>
+            <if test="supplier != null  and supplier != ''">supplier = #{supplier},</if>
+            <if test="expressid != null  and expressid != ''">expressid = #{expressid},</if>
+            <if test="instoragecause != null  and instoragecause != ''">instoragecause = #{instoragecause},</if>
+            <if test="projectname != null  and projectname != ''">projectname = #{projectname},</if>
+            <if test="proposer != null  and proposer != ''">proposer = #{proposer},</if>
+            <if test="delStatus != null  and delStatus != ''">del_status = #{delStatus},</if>
             <if test="cTime != null ">c_time = #{cTime},</if>
             <if test="uTime != null ">u_time = #{uTime},</if>
         </trim>

@@ -103,7 +103,9 @@
                 <a class="btn btn-primary single disabled"  onclick="print()" shiro:hasPermission="system:storageinbill:print" >
                     <i class="fa fa-print"></i> 打印
                 </a>
-
+                <a class="btn btn-primary single disabled" onclick="$.operate.edit()" shiro:hasPermission="system:storageinbill:edit">
+                    <i class="fa fa-edit"></i> 修改
+                </a>
                 <a class="btn btn-warning" onclick="$.table.exportExcel()" shiro:hasPermission="system:storageinbill:export">
                     <i class="fa fa-download"></i> 导出
                 </a>
@@ -142,7 +144,7 @@
             var options = {
                 url: prefix + "/list",
                 createUrl: prefix + "/add",
-                updateUrl: prefix1 + "/{id}",
+                updateUrl: prefix + "/edit/{id}",
                 toolbar: "toolbar",
                 removeUrl: prefix + "/remove",
                 exportUrl: prefix + "/export",
@@ -156,9 +158,14 @@
                         return {classes: style}
                     }
                 },
+                onDblClickRow:function(row, $element, field)
+                {
+                    Infotwo(row.stockinid);
+                },
                 columns: [{
                     checkbox: true
                 },
+
                 {
                     field: 'id', 
                     title: 'null',
@@ -272,6 +279,12 @@
         });
 
 
+
+        function Infotwo(id) {
+            table.set();
+            $.modal.openTab("入库单详细信息",prefix1+"/"+id);
+        }
+
         function Info(id) {
             table.set();
             var row = $("#bootstrap-table").bootstrapTable('getSelections')[0];
@@ -284,62 +297,17 @@
 
 
 
-        function print(id) {
+        function print() {
             table.set();
-            var row = $("#" + table.options.id).bootstrapTreeTable('getSelections')[0];
-
-            if($.common.isEmpty(id) && table.options.type == table_type.bootstrapTreeTable) {
-                if ($.common.isEmpty(row)) {
-                    $.modal.alertWarning("请至少选择一条记录");
-                    return;
-                }
-                var url = table.options.updateUrl.replace("{id}", row[table.options.uniqueId]);
-
-                $.modal.openTab("修改" + table.options.modalName, url);
-            } else {
-
-
-                $.modal.openTab("打印入库单",editUrl1(id));
-
-
-            }
-        }
-
-
-
-        function editUrl1(id) {
-            var url = "/404.html";
-            if ($.common.isNotEmpty(id)) {
-
-                url = table.options.updateUrl.replace("{id}", id);
-
-            } else {
-                var id = $.common.isEmpty(table.options.uniqueId) ? $.table.selectFirstColumns() : $.table.selectColumns(table.options.uniqueId);
-
-                if (id.length == 0) {
-                    $.modal.alertWarning("请至少选择一条记录");
-                    return;
-                }
-                url = prefix+"/print/"+(id);
-
-            }
-            return url;
-        }
-
-
-
-
-        function print1(id) {
-            table.set();
-
-
-
-
-                $.modal.openTab("打印入库单", url = prefix+"/print1/"+(id));
-
+            var row = $("#bootstrap-table").bootstrapTable('getSelections')[0];
+            $.modal.openTab("打印入库单",prefix+"/print/"+row.id);
 
 
         }
+
+
+
+
 
 
 
@@ -407,28 +375,6 @@
 
 
 
-   function  apply(id) {
-       table.set();
-       $.modal.confirm("确定提交该入库单吗？", function() {
-           $.ajax({
-               url : prefix+'/apply',
-               dataType : 'json',
-               type : 'post',
-               data:{"id":id},
-               beforeSend: function () {
-                   $.modal.loading("正在处理中，请稍后...");
-               },
-               success: function(result) {
-                   if (typeof callback == "function") {
-                       callback(result);
-                   }
-                   $.operate.ajaxSuccess(result);
-                   $.table.refresh();
-               }
-           });
-           $.ajax(config)
-       });
-   }
     </script>
 </body>
 </html>

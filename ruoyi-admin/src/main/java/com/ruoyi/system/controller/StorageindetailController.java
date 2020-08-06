@@ -41,9 +41,17 @@ public class StorageindetailController extends BaseController
 
 
     @GetMapping("/{stockinid}")
-    public String storageindetail(@PathVariable("stockinid") String stockinid,ModelMap mmap)
+public String storageindetail(@PathVariable("stockinid") String stockinid,ModelMap mmap)
+{
+    mmap.put("stockinid",stockinid);
+    return prefix + "/storageindetail";
+}
+
+
+    @GetMapping()
+    public String storageindetaillist()
     {
-        mmap.put("stockinid",stockinid);
+
         return prefix + "/storageindetail";
     }
 

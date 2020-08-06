@@ -122,14 +122,6 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         update storageoutbill
         <trim prefix="SET" suffixOverrides=",">
             <if test="storageoutid != null  and storageoutid != ''">storageoutid = #{storageoutid},</if>
-            <if test="applyid != null  and applyid != ''">#{applyid},</if>
-            <if test="contractid != null  and contractid != ''">#{contractid},</if>
-            <if test="invoiceid != null  and invoiceid != ''">#{invoiceid},</if>
-            <if test="customer != null  and supplier != ''">#{customer},</if>
-            <if test="expressid != null  and expressid != ''">#{expressid},</if>
-            <if test="instoragecause != null  and instoragecause != ''">#{instoragecause},</if>
-            <if test="projectname != null  and projectname != ''">#{projectname},</if>
-            <if test="proposer != null  and stockinid != ''">#{proposer},</if>
             <if test="outsourcewarehouse != null  and outsourcewarehouse != ''">outsourcewarehouse = #{outsourcewarehouse},</if>
             <if test="outsourcewarehouseid != null ">outsourcewarehouseid = #{outsourcewarehouseid},</if>
             <if test="stockrequisition != null  and stockrequisition != ''">stockrequisition = #{stockrequisition},</if>
@@ -137,13 +129,21 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="stockpeople != null  and stockpeople != ''">stockpeople = #{stockpeople},</if>
             <if test="storageouttime != null ">storageouttime = #{storageouttime},</if>
             <if test="comments != null  and comments != ''">comments = #{comments},</if>
+            <if test="customer != null  and customer != ''">customer = #{customer},</if>
+            <if test="purchaseid != null  and purchaseid != ''">purchaseid = #{purchaseid},</if>
+            <if test="applyid != null  and applyid != ''">applyid = #{applyid},</if>
+            <if test="contractid != null  and contractid != ''">contractid = #{contractid},</if>
+            <if test="invoiceid != null  and invoiceid != ''">invoiceid = #{invoiceid},</if>
+            <if test="expressid != null  and expressid != ''">expressid = #{expressid},</if>
+            <if test="instoragecause != null  and instoragecause != ''">instoragecause = #{instoragecause},</if>
+            <if test="projectname != null  and projectname != ''">projectname = #{projectname},</if>
+            <if test="proposer != null  and proposer != ''">proposer = #{proposer},</if>
             <if test="cTime != null ">c_time = #{cTime},</if>
             <if test="uTime != null ">u_time = #{uTime},</if>
-            <if test="delStatus != null ">del_status = #{delStatus},</if>
+            <if test="delStatus != null  and delStatus != ''">del_status = #{delStatus},</if>
         </trim>
         where id = #{id}
     </update>
-
     <delete id="deleteStorageoutbillById" parameterType="Long">
         delete from storageoutbill where id = #{id}
 

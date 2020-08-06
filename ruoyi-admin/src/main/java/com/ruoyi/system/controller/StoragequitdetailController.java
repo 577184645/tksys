@@ -38,7 +38,7 @@ public class StoragequitdetailController extends BaseController
     @Autowired
     private IStoragequitbillService iStoragequitbillService;
 
-    @RequiresPermissions("system:storagequitdetail:view")
+
     @GetMapping("/{storagequitid}")
     public String storagequitdetail(@PathVariable("storagequitid") String storagequitid,ModelMap mmap)
     {
@@ -46,10 +46,16 @@ public class StoragequitdetailController extends BaseController
         return prefix + "/storagequitdetail";
     }
 
+
+    @GetMapping()
+    public String storagequitdetail()
+    {
+        return prefix + "/storagequitdetail";
+    }
+
     /**
      * 查询退料列表
      */
-    @RequiresPermissions("system:storagequitdetail:list")
     @PostMapping("/list")
     @ResponseBody
     public TableDataInfo list(Storagequitdetail storagequitdetail)
