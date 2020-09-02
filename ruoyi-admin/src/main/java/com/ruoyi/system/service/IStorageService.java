@@ -5,6 +5,7 @@ import com.ruoyi.system.domain.Storage;
 import com.ruoyi.system.domain.Storageinbill;
 import com.ruoyi.system.domain.Storageoutbill;
 import com.ruoyi.system.domain.Storagequitbill;
+import org.apache.poi.ss.usermodel.Workbook;
 
 /**
  * 库存列表Service接口
@@ -25,7 +26,7 @@ public interface IStorageService
      * @param id 库存列表ID
      * @return 库存列表
      */
-    public Storage selectStorageById(Integer id);
+    public Storage selectStorageById(Long id);
 
     /**
      * 查询库存列表列表
@@ -75,4 +76,8 @@ public interface IStorageService
      * @return 结果
      */
     public int deleteStorageById(Integer id);
+
+
+    public Workbook fillExcelStorage(String date)
+            throws Exception;
 }

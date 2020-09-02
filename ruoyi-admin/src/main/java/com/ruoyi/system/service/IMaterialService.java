@@ -1,6 +1,8 @@
 package com.ruoyi.system.service;
 
 import java.util.List;
+
+import com.ruoyi.common.core.domain.AjaxResult;
 import com.ruoyi.system.domain.Material;
 
 import javax.servlet.http.HttpServletRequest;
@@ -15,11 +17,11 @@ public interface IMaterialService
 {
     /**
      * 查询物料列表
-     * 
+     *
      * @param id 物料列表ID
      * @return 物料列表
      */
-    public Material selectMaterialById(Integer id);
+    public Material selectMaterialById(Long id);
 
 
     /**
@@ -52,7 +54,7 @@ public interface IMaterialService
      * @param material 物料列表
      * @return 结果
      */
-    public int updateMaterial(Material material);
+    public AjaxResult updateMaterial(Material material);
 
     /**
      * 批量删除物料列表
@@ -60,15 +62,9 @@ public interface IMaterialService
      * @param ids 需要删除的数据ID
      * @return 结果
      */
-    public int deleteMaterialByIds(String ids);
+    public AjaxResult deleteMaterialByIds(String ids);
 
-    /**
-     * 删除物料列表信息
-     * 
-     * @param id 物料列表ID
-     * @return 结果
-     */
-    public int deleteMaterialById(Integer id);
+
 
 
 

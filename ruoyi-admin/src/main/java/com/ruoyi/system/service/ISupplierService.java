@@ -21,6 +21,8 @@ public interface ISupplierService
     public List<Supplier> findList();
 
 
+    public List<Supplier> findListCustomer();
+
     /**
      * 查询供应商列表
      *

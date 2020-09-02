@@ -6,6 +6,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     
     <resultMap type="Storagequitdetail" id="StoragequitdetailResult">
         <result property="id"    column="id"    />
+        <result property="sid"    column="sid"    />
+
         <result property="storagequitbillid"    column="storagequitbillid"    />
         <result property="materialcode"    column="materialcode"    />
         <result property="name"    column="name"    />
@@ -24,7 +26,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </resultMap>
 
     <sql id="selectStoragequitdetailVo">
-        select id, storagequitbillid, materialcode, name, partnumber, footprint, serial_number, manufacture, price, counts, money, unit, supplier, comments, c_time, u_time from storagequitdetail
+        select id,sid, storagequitbillid, materialcode, name, partnumber, footprint, serial_number, manufacture, price, counts, money, unit, supplier, comments, c_time, u_time from storagequitdetail
     </sql>
 
     <select id="selectStoragequitdetailList" parameterType="Storagequitdetail" resultMap="StoragequitdetailResult">
@@ -59,6 +61,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     <insert id="insertStoragequitdetail" parameterType="Storagequitdetail" useGeneratedKeys="true" keyProperty="id">
         insert into storagequitdetail
         <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="sid != null  and sid != ''">sid,</if>
+
             <if test="storagequitbillid != null  and storagequitbillid != ''">storagequitbillid,</if>
             <if test="materialcode != null  and materialcode != ''">materialcode,</if>
             <if test="name != null  and name != ''">name,</if>
@@ -76,6 +80,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="uTime != null ">u_time,</if>
          </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="sid != null  and sid != ''">#{sid},</if>
             <if test="storagequitbillid != null  and storagequitbillid != ''">#{storagequitbillid},</if>
             <if test="materialcode != null  and materialcode != ''">#{materialcode},</if>
             <if test="name != null  and name != ''">#{name},</if>

@@ -40,7 +40,7 @@ public class WarehouseRecordController extends BaseController
     private StorageMapper storageMapper;
     @RequiresPermissions("system:record:view")
     @GetMapping("/{id}")
-    public String record(@PathVariable("id") Integer id,ModelMap mmap)
+    public String record(@PathVariable("id") Long id,ModelMap mmap)
     {
         Storage storage = storageMapper.selectStorageById(id);
         mmap.put("materialcode",storage.getMaterialcode());

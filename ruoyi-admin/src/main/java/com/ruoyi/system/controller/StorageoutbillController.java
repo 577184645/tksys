@@ -162,6 +162,9 @@ public class StorageoutbillController extends BaseController
         if(storageoutbillService.selectStorageoutbillById(id).getDelStatus()==2){
             return AjaxResult.warn("操作失败！该出库单已红冲");
         }
+        if(storageoutbillService.selectStorageoutbillById(id).getDelStatus()==3){
+            return AjaxResult.warn("操作失败！该出库单已被管理员冻结,请联系管理员!");
+        }
 
 
         if(storageoutbillService.reddashed(id)>0){

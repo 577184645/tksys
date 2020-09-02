@@ -1,7 +1,9 @@
 package com.ruoyi.system.service.impl;
 
+import java.math.BigDecimal;
 import java.util.List;
 
+import com.ruoyi.system.common.Const;
 import com.ruoyi.system.domain.*;
 import com.ruoyi.system.mapper.StorageMapper;
 import com.ruoyi.system.mapper.StorageoutdetailMapper;
@@ -19,7 +21,7 @@ import com.ruoyi.common.core.text.Convert;
  * @date 2020-06-09
  */
 @Service
-public class StorageoutbillServiceImpl implements IStorageoutbillService 
+public class StorageoutbillServiceImpl implements IStorageoutbillService
 {
     @Autowired
     private StorageoutbillMapper storageoutbillMapper;
@@ -114,13 +116,10 @@ public class StorageoutbillServiceImpl implements IStorageoutbillService
             Storage storage=new Storage();
             WarehouseRecord warehouseRecord=new WarehouseRecord();
             storage.setStocks(storageoutdetail.getCounts());
-            storage.setMoney(storageoutdetail.getMoney());
-            storage.setMaterialcode(storageoutdetail.getMaterialcode());
-            storage.setTypeId(storageoutbill.getOutsourcewarehouseid());
-            storage.setSerialNumber(storageoutdetail.getSerialNumber());
-            storage.setSupplier(storageoutdetail.getSupplier());
+            storage.setMoney(new BigDecimal(storageoutdetail.getMoney()).setScale(2,BigDecimal.ROUND_HALF_UP));
+            storage.setId(storageoutdetail.getSid());
             storageMapper.updateaddstocks(storage);
-            warehouseRecord.setType("5");
+            warehouseRecord.setType(Const.WarehouseRecordStatus.STORAGE_OUT_HC);
             warehouseRecord.setNumber(storageoutbill.getStorageoutid());
             warehouseRecord.setMaterialcode(storageoutdetail.getMaterialcode());
             warehouseRecord.setName(storageoutdetail.getName());

@@ -1,7 +1,9 @@
 package com.ruoyi.system.service.impl;
 
+import java.math.BigDecimal;
 import java.util.List;
 
+import com.ruoyi.system.common.Const;
 import com.ruoyi.system.domain.*;
 import com.ruoyi.system.mapper.StorageMapper;
 import com.ruoyi.system.mapper.StoragequitdetailMapper;
@@ -112,13 +114,16 @@ public class StoragequitbillServiceImpl implements IStoragequitbillService
             Storage storage=new Storage();
             WarehouseRecord warehouseRecord=new WarehouseRecord();
             storage.setStocks(storagequitdetail.getCounts());
-            storage.setMoney(storagequitdetail.getMoney());
-            storage.setMaterialcode(storagequitdetail.getMaterialcode());
-            storage.setTypeId(storagequitbill.getOutsourcewarehouseid());
-            storage.setSerialNumber(storagequitdetail.getSerialNumber());
-            storage.setSupplier(storagequitdetail.getSupplier());
+            storage.setMoney(new BigDecimal(storagequitdetail.getMoney()).setScale(2,BigDecimal.ROUND_HALF_UP));
+            storage.setId(storagequitdetail.getSid());
             storageMapper.updatereducestocks(storage);
-            warehouseRecord.setType("6");
+            if(storageMapper.selectStorageById(storage.getId()).getStocks()==0){
+                Storage storage1=new Storage();
+                storage1.setId(storage.getId());
+                storage1.setMoney(new BigDecimal(0));
+                storageMapper.updateStorage(storage1);
+            }
+            warehouseRecord.setType(Const.WarehouseRecordStatus.STORAGE_QUIT_HC);
             warehouseRecord.setNumber(storagequitbill.getStoragequitbillid());
             warehouseRecord.setMaterialcode(storagequitdetail.getMaterialcode());
             warehouseRecord.setName(storagequitdetail.getName());

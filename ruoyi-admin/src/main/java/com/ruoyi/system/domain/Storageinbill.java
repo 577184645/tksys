@@ -81,7 +81,7 @@ public class Storageinbill extends BaseEntity
     @Excel(name = "备注")
     private String comments;
 
-
+   private Integer storageStatus;
 
     private String delStatus;
 
@@ -92,6 +92,9 @@ public class Storageinbill extends BaseEntity
     private Date cTime;
 
     private String Supplier;
+
+
+
 
     /** 修改时间 */
     private Date uTime;
@@ -108,6 +111,14 @@ public class Storageinbill extends BaseEntity
 
     public String getDelStatus() {
         return delStatus;
+    }
+
+    public Integer getStorageStatus() {
+        return storageStatus;
+    }
+
+    public void setStorageStatus(Integer storageStatus) {
+        this.storageStatus = storageStatus;
     }
 
     public void setDelStatus(String delStatus) {

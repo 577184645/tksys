@@ -19,6 +19,10 @@ public class Storagequitbill extends BaseEntity
     /** id */
     private Long id;
 
+
+
+    private  String outsourcewarehousecomments;
+
     /** 退料单号 */
     @Excel(name = "退料单号")
     private String storagequitbillid;
@@ -138,7 +142,15 @@ public class Storagequitbill extends BaseEntity
         this.uTime = uTime;
     }
 
-    public Date getuTime() 
+    public String getOutsourcewarehousecomments() {
+        return outsourcewarehousecomments;
+    }
+
+    public void setOutsourcewarehousecomments(String outsourcewarehousecomments) {
+        this.outsourcewarehousecomments = outsourcewarehousecomments;
+    }
+
+    public Date getuTime()
     {
         return uTime;
     }

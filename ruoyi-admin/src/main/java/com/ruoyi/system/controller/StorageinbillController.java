@@ -77,6 +77,9 @@ public class StorageinbillController extends BaseController
        if(storageinbillService.selectStorageinbillById(id).getDelStatus().equals("2")){
            return AjaxResult.warn("操作失败！该入库单已红冲");
        }
+        if(storageinbillService.selectStorageinbillById(id).getDelStatus().equals("3")){
+            return AjaxResult.warn("操作失败！该出库单已被管理员冻结,请联系管理员!");
+        }
 
         if(storageinbillService.reddashed(id)>0){
             return AjaxResult.warn("操作成功");

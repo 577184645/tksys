@@ -6,6 +6,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     
     <resultMap type="Storageoutdetail" id="StorageoutdetailResult">
         <result property="id"    column="id"    />
+        <result property="sid"    column="sid"    />
         <result property="rownum"    column="rownum"    />
         <result property="storageoutbillid"    column="storageoutbillid"    />
         <result property="materialcode"    column="materialcode"    />
@@ -22,19 +23,21 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="comments"    column="comments"    />
         <result property="cTime"    column="c_time"    />
         <result property="uTime"    column="u_time"    />
+        <result property="description"    column="description"    />
     </resultMap>
 
     <sql id="selectStorageoutdetailVo">
-        select id, storageoutbillid, materialcode, name, partnumber, footprint, serial_number, manufacture, price, counts, money, unit, supplier, comments,  c_time, u_time from storageoutdetail
+        select id, sid,storageoutbillid, materialcode, name, partnumber, footprint, serial_number, manufacture, price, counts, money, unit, supplier, comments,  c_time, u_time from storageoutdetail
     </sql>
 
     <select id="selectStorageoutdetailList" parameterType="Storageoutdetail" resultMap="StorageoutdetailResult">
-        <include refid="selectStorageoutdetailVo"/>
+        select description,s.id, sid,storageoutbillid, s.materialcode, s.name, s.partnumber, s.footprint, serial_number, s.manufacture, price, counts, money, s.unit, supplier, s.comments,  s.c_time, s.u_time from storageoutdetail s
+left join  material m on m.materialcode=s.materialcode
         <where>
             <if test="storageoutbillid != null  and storageoutbillid != ''"> and storageoutbillid=#{storageoutbillid}</if>
-            <if test="name != null  and name != ''"> and name like concat('%', #{name}, '%')</if>
-            <if test="partnumber != null  and partnumber != ''"> and partnumber like concat('%', #{partnumber}, '%')</if>
-            <if test="manufacture != null  and manufacture != ''"> and manufacture like concat('%', #{manufacture}, '%')</if>
+            <if test="name != null  and name != ''"> and s.name like concat('%', #{name}, '%')</if>
+            <if test="partnumber != null  and partnumber != ''"> and s.partnumber like concat('%', #{partnumber}, '%')</if>
+            <if test="manufacture != null  and manufacture != ''"> and s.manufacture like concat('%', #{manufacture}, '%')</if>
             <if test="supplier != null  and supplier != ''"> and supplier like concat('%', #{supplier}, '%')</if>
             <if test="params.beginTime != null and params.beginTime != ''"><!-- 开始时间检索 -->
                 and date_format(c_time,'%y%m%d') &gt;= date_format(#{params.beginTime},'%y%m%d')
@@ -55,7 +58,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </select>
 
     <select id="selectStorageindetailByStorageoutdetailId"  resultMap="StorageoutdetailResult">
-   select   @rowNum:=@rowNum + 1 as rownum, id, storageoutbillid,serial_number, footprint,materialcode, name, partnumber, manufacture, price, counts, money, unit, supplier, comments,  c_time, u_time from storageoutdetail,(SELECT @rowNum:=0) b
+   select   @rowNum:=@rowNum + 1 as rownum, sid,id, storageoutbillid,serial_number, footprint,materialcode, name, partnumber, manufacture, price, counts, money, unit, supplier, comments,  c_time, u_time from storageoutdetail,(SELECT @rowNum:=0) b
 
         where storageoutbillid = #{storageoutbillid}
     </select>
@@ -64,6 +67,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         insert into storageoutdetail
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="storageoutbillid != null  and storageoutbillid != ''">storageoutbillid,</if>
+            <if test="sid != null  and sid != ''">sid,</if>
+
             <if test="materialcode != null  and materialcode != ''">materialcode,</if>
             <if test="name != null  and name != ''">name,</if>
             <if test="partnumber != null  and partnumber != ''">partnumber,</if>
@@ -83,6 +88,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
          </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="storageoutbillid != null  and storageoutbillid != ''">#{storageoutbillid},</if>
+            <if test="sid != null  and sid != ''">#{sid},</if>
             <if test="materialcode != null  and materialcode != ''">#{materialcode},</if>
             <if test="name != null  and name != ''">#{name},</if>
             <if test="partnumber != null  and partnumber != ''">#{partnumber},</if>

@@ -69,6 +69,17 @@
 
                 </div>
             </div>
+
+
+            <div class="row">
+                <div class="col-sm-6">
+                    <label class="col-sm-3 control-label">外协库备注：</label>
+                    <div class="col-sm-8">
+                        <input name="outsourcewarehousecomments" id="outsourcewarehousecomments" class="form-control" type="text">
+                    </div>
+
+                </div>
+            </div>
     </form>
 
 </div>
@@ -185,7 +196,8 @@
                                     "outsourcewarehouseid": $("#deptId").val(),
                                     "outpeople": $("#outpeople").val(),
                                     "outstoragecause": $("#outstoragecause").val(),
-                                     "comments": $("#comments").val()
+                                     "comments": $("#comments").val(),
+                                    "outsourcewarehousecomments":$("#outsourcewarehousecomments").val()
                                 },
 
                                 success: function(result) {

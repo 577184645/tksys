@@ -48,7 +48,9 @@ public class StoragequitbillController extends BaseController
         if(storagequitbillService.selectStoragequitbillById(id).getDelStatus()==2){
             return AjaxResult.warn("操作失败！该退料单已红冲");
         }
-
+        if(storagequitbillService.selectStoragequitbillById(id).getDelStatus()==3){
+            return AjaxResult.warn("操作失败！该出库单已被管理员冻结,请联系管理员!");
+        }
 
         if(storagequitbillService.reddashed(id)>0){
             return AjaxResult.warn("操作成功");

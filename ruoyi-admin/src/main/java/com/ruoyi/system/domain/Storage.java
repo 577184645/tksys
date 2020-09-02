@@ -1,5 +1,6 @@
 package com.ruoyi.system.domain;
 
+import java.math.BigDecimal;
 import java.util.Date;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
@@ -17,7 +18,7 @@ public class Storage extends BaseEntity
     private static final long serialVersionUID = 1L;
 
     /** null */
-    private Integer id;
+    private Long id;
 
     /** 名称 */
     @Excel(name = "名称")
@@ -52,7 +53,7 @@ public class Storage extends BaseEntity
 
     /** 单价 */
     @Excel(name = "单价")
-    private Float price;
+    private BigDecimal price;
 
 
     private Long deptId;
@@ -66,7 +67,7 @@ public class Storage extends BaseEntity
 
     /** 总价 */
     @Excel(name = "总价")
-    private Float money;
+    private BigDecimal money;
 
     /** 库存类别 */
     @Excel(name = "库存类别")
@@ -98,6 +99,30 @@ public class Storage extends BaseEntity
 
     @Excel(name = "最后退料时间", width = 30, dateFormat = "yyyy-MM-dd")
     private Date qTime;
+
+      //所属位置
+    private String  ancestors;
+
+    private String   deptName;
+
+
+
+
+    public String getAncestors() {
+        return ancestors;
+    }
+
+    public void setAncestors(String ancestors) {
+        this.ancestors = ancestors;
+    }
+
+    public String getDeptName() {
+        return deptName;
+    }
+
+    public void setDeptName(String deptName) {
+        this.deptName = deptName;
+    }
 
     public Integer getLeadtime() {
         return leadtime;
@@ -135,16 +160,15 @@ public class Storage extends BaseEntity
         this.supplier = supplier;
     }
 
-    public void setId(Integer id)
-    {
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
         this.id = id;
     }
 
-    public Integer getId() 
-    {
-        return id;
-    }
-    public void setName(String name) 
+    public void setName(String name)
     {
         this.name = name;
     }
@@ -206,17 +230,13 @@ public class Storage extends BaseEntity
     {
         return unit;
     }
-    public void setPrice(Float price)
-    {
-        this.price = price;
+
+
+    public Long getStocks() {
+        return stocks;
     }
 
-    public Float getPrice()
-    {
-        return price;
-    }
-    public void setStocks(Long stocks) 
-    {
+    public void setStocks(Long stocks) {
         this.stocks = stocks;
     }
 
@@ -228,20 +248,24 @@ public class Storage extends BaseEntity
         this.qTime = qTime;
     }
 
-    public Long getStocks()
-    {
-        return stocks;
+
+    public BigDecimal getPrice() {
+        return price;
     }
-    public void setMoney(Float money)
-    {
+
+    public void setPrice(BigDecimal price) {
+        this.price = price;
+    }
+
+    public BigDecimal getMoney() {
+        return money;
+    }
+
+    public void setMoney(BigDecimal money) {
         this.money = money;
     }
 
-    public Float getMoney()
-    {
-        return money;
-    }
-    public void setTypeId(Long typeId) 
+    public void setTypeId(Long typeId)
     {
         this.typeId = typeId;
     }

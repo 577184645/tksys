@@ -1,7 +1,9 @@
 package com.ruoyi.system.mapper;
 
+import java.util.Date;
 import java.util.List;
 import com.ruoyi.system.domain.Storage;
+import com.ruoyi.vo.WarehouseBillVo;
 import org.apache.ibatis.annotations.Param;
 
 /**
@@ -20,6 +22,11 @@ public interface StorageMapper
      */
     public int selectStorageByMaterialcodeAndTypeid(Storage storage);
 
+
+    public Storage   selectStorageByMaterialcode(String materialcode);
+
+
+    public Storage   selectStorageInfoByMaterialcodeAndTypeid(Storage storage);
 
     public int updateMaterial(@Param("name") String name,@Param("materialcode") String materialcode,@Param("partnumber") String partnumber,@Param("footprint") String footprint,@Param("unit") String unit,@Param("manufacture") String manufacture,@Param("oldmaterialcode") String oldmaterialcode);
 
@@ -80,16 +87,37 @@ public interface StorageMapper
      * @param id 库存列表ID
      * @return 库存列表
      */
-    public Storage selectStorageById(Integer id);
+    public Storage selectStorageById(Long id);
+
+    /**
+     * 查询当前本月的数据
+     *
+     * @param date 库存列表
+     * @return
+     */
+
+    public List<WarehouseBillVo> selectStoragebyDate(Date date);
+
+
+    public List<WarehouseBillVo> selectStoragebyDatedashed(Date date);
+
+
+    public List<WarehouseBillVo> selectoutStoragebyDate(Date date);
+
+
+    public List<WarehouseBillVo> selectoutStoragebyDatedashed(Date date);
+
 
     /**
      * 查询库存列表列表
-     * 
+     *
      * @param storage 库存列表
      * @return 库存列表集合
      */
     public List<Storage> selectStorageList(Storage storage);
 
+
+    public List<Storage> StoragefindList();
 
 
     public Storage selectStorageListBymaterialcode(String materialcode);

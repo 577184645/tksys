@@ -6,6 +6,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     
     <resultMap type="Storageindetail" id="StorageindetailResult">
         <result property="id"    column="id"    />
+        <result property="sid"    column="sid"    />
         <result property="rownum"    column="rownum"    />
         <result property="footprint"    column="footprint"    />
         <result property="serialNumber"    column="serial_number"    />
@@ -24,6 +25,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="taxamount"    column="taxamount"    />
         <result property="cTime"    column="c_time"    />
         <result property="uTime"    column="u_time"    />
+        <result property="description"    column="description"    />
+
     </resultMap>
 
     <sql id="selectStorageindetailVo">
@@ -31,11 +34,12 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </sql>
 
     <select id="selectStorageindetailList" parameterType="Storageindetail" resultMap="StorageindetailResult">
-        <include refid="selectStorageindetailVo"/>
+        select description,s.id, storageinbillid,serial_number, s.footprint,s.materialcode, s.name, s.partnumber, s.manufacture, price, counts, money, s.unit, supplier, rate,  s.comments, taxamount, s.c_time, s.u_time from storageindetail s
+left join  material  m  on m.materialcode=s.materialcode
         <where>  
             <if test="name != null  and name != ''"> and name like concat('%', #{name}, '%')</if>
-            <if test="partnumber != null  and partnumber != ''"> and partnumber like concat('%', #{partnumber}, '%')</if>
-            <if test="manufacture != null  and manufacture != ''"> and manufacture like concat('%', #{manufacture}, '%')</if>
+            <if test="partnumber != null  and partnumber != ''"> and s.partnumber like concat('%', #{partnumber}, '%')</if>
+            <if test="manufacture != null  and manufacture != ''"> and s.manufacture like concat('%', #{manufacture}, '%')</if>
             <if test="storageinbillid != null  and storageinbillid != ''"> and storageinbillid = #{storageinbillid}</if>
             <if test="params.beginTime != null and params.beginTime != ''"><!-- 开始时间检索 -->
                 and date_format(c_time,'%y%m%d') &gt;= date_format(#{params.beginTime},'%y%m%d')
@@ -52,7 +56,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </select>
 
     <select id="selectStorageindetailByStorageinbillId"  resultMap="StorageindetailResult">
-        select   @rowNum:=@rowNum + 1 as rownum, id, storageinbillid,serial_number, footprint,materialcode, name, partnumber, manufacture, price, counts, money, unit, supplier, rate, comments, taxamount, c_time, u_time from storageindetail,(SELECT @rowNum:=0) b
+        select   @rowNum:=@rowNum + 1 as rownum, sid,id, storageinbillid,serial_number, footprint,materialcode, name, partnumber, manufacture, price, counts, money, unit, supplier, rate, comments, taxamount, c_time, u_time from storageindetail,(SELECT @rowNum:=0) b
         where storageinbillid = #{storageinbillid}
     </select>
     <update id="updateMaterial">
@@ -61,7 +65,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     <insert id="insertStorageindetail" parameterType="Storageindetail" useGeneratedKeys="true" keyProperty="id">
         insert into storageindetail
         <trim prefix="(" suffix=")" suffixOverrides=",">
-
+            <if test="sid != null  and sid != ''">sid,</if>
             <if test="footprint != null  and footprint != ''">footprint,</if>
             <if test="storageinbillid != null  and storageinbillid != ''">storageinbillid,</if>
             <if test="materialcode != null  and materialcode != ''">materialcode,</if>
@@ -69,19 +73,18 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="partnumber != null  and partnumber != ''">partnumber,</if>
             <if test="manufacture != null  and manufacture != ''">manufacture,</if>
             <if test="serialNumber != null and serialNumber!=''  ">serial_number,</if>
-            <if test="price != null and price != ''  ">price,</if>
-            <if test="counts != null and counts != '' ">counts,</if>
-            <if test="money != null and money !='' ">money,</if>
+            price,
+           counts,
+           money,
             <if test="unit != null  and unit != ''">unit,</if>
             <if test="supplier != null  and supplier != ''">supplier,</if>
             <if test="rate != null  and rate != ''">rate,</if>
             <if test="comments != null  and comments != ''">comments,</if>
             <if test="taxamount != null and taxamount !='' ">taxamount,</if>
-            <if test="cTime != null ">c_time,</if>
-            <if test="uTime != null ">u_time,</if>
+
          </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
-
+            <if test="sid != null  and sid != ''">#{sid},</if>
             <if test="footprint != null  and footprint != ''">#{footprint},</if>
             <if test="storageinbillid != null  and storageinbillid != ''">#{storageinbillid},</if>
             <if test="materialcode != null  and materialcode != ''">#{materialcode},</if>
@@ -89,9 +92,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="partnumber != null  and partnumber != ''">#{partnumber},</if>
             <if test="manufacture != null  and manufacture != ''">#{manufacture},</if>
             <if test="serialNumber != null  and serialNumber != ''">#{serialNumber},</if>
-            <if test="price != null and price !=''">#{price},</if>
-            <if test="counts != null and counts !='' ">#{counts},</if>
-            <if test="money != null and money !='' ">#{money},</if>
+            #{price},
+            #{counts},
+             #{money},
             <if test="unit != null  and unit != ''">#{unit},</if>
             <if test="supplier != null  and supplier != ''">#{supplier},</if>
             <if test="rate != null  and rate != ''">#{rate},</if>

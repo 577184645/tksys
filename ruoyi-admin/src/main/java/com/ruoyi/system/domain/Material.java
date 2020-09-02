@@ -19,7 +19,7 @@ public class Material extends BaseEntity
     private static final long serialVersionUID = 1L;
 
     /** null */
-    private Integer id;
+    private Long id;
 
     /** 名称 */
     @Excel(name = "名称")
@@ -144,16 +144,15 @@ public class Material extends BaseEntity
         this.delFlag = delFlag;
     }
 
-    public void setId(Integer id)
-    {
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
         this.id = id;
     }
 
-    public Integer getId() 
-    {
-        return id;
-    }
-    public void setName(String name) 
+    public void setName(String name)
     {
         this.name = name;
     }

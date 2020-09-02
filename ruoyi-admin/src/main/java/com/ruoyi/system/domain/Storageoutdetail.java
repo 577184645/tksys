@@ -19,6 +19,10 @@ public class Storageoutdetail extends BaseEntity
     /** null */
     private Long id;
 
+    private Long sid;
+
+
+
 
     private  Integer rownum;
     /** 所属入库单 */
@@ -36,6 +40,10 @@ public class Storageoutdetail extends BaseEntity
     /** 物料型号 */
     @Excel(name = "物料型号")
     private String partnumber;
+
+
+    @Excel(name = "描述")
+    private String description;
 
     /** 封装 */
     @Excel(name = "封装")
@@ -89,6 +97,23 @@ public class Storageoutdetail extends BaseEntity
 
     public Integer getRownum() {
         return rownum;
+    }
+
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public Long getSid() {
+        return sid;
+    }
+
+    public void setSid(Long sid) {
+        this.sid = sid;
     }
 
     public void setRownum(Integer rownum) {
@@ -215,6 +240,7 @@ public class Storageoutdetail extends BaseEntity
     {
         this.supplier = supplier;
     }
+
 
     public String getSupplier() 
     {

@@ -21,7 +21,7 @@ public class WarehouseRecord extends BaseEntity
 
     /** 类型 */
     @Excel(name = "类型")
-    private String type;
+    private Integer type;
 
     /** 单号 */
     @Excel(name = "单号")
@@ -72,16 +72,16 @@ public class WarehouseRecord extends BaseEntity
     {
         return id;
     }
-    public void setType(String type) 
-    {
+
+    public Integer getType() {
+        return type;
+    }
+
+    public void setType(Integer type) {
         this.type = type;
     }
 
-    public String getType() 
-    {
-        return type;
-    }
-    public void setNumber(String number) 
+    public void setNumber(String number)
     {
         this.number = number;
     }

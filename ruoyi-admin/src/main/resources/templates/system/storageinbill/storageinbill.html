@@ -76,6 +76,13 @@
                                 </select>
                             </li>
                             <li>
+                                <label>入库状态：</label>
+                                <select name="storageStatus" th:with="type=${@dict.getType('storageStatus')}">
+                                    <option value="">所有</option>
+                                    <option th:each="dict : ${type}" th:text="${dict.dictLabel}" th:value="${dict.dictValue}"></option>
+                                </select>
+                            </li>
+                            <li>
                                 <label>红冲状态：</label>
                                 <div class="form-group">
                                     <div class="col-sm-8">
@@ -127,6 +134,7 @@
         var applyFlag = [[${@permission.hasPermi('system:storageinbill:apply')}]];
         var checkprintFlag = [[${@permission.hasPermi('system:storageinbill:checkprint')}]];
         var storageinbillStatusDatas = [[${@dict.getType('storageinbill_status')}]];
+        var storageStutus = [[${@dict.getType('storageStatus')}]];
 
 
         var prefix = ctx + "system/storageinbill";
@@ -244,8 +252,16 @@
                         width:120
                     },
                     {
+                        field: 'storageStatus',
+                        title: '入库状态',
+                        width:120,
+                        formatter: function(value, row, index) {
+                            return $.table.selectDictLabel(storageStutus, value);
+                        }
+                    },
+                    {
                         field: 'status',
-                        title: '状态',
+                        title: '申请状态',
                         width:120,
                         formatter: function(value, row, index) {
                             return $.table.selectDictLabel(storageinbillStatusDatas, value);
@@ -373,6 +389,44 @@
         }
 
 
+        function print1(id) {
+            table.set();
+
+
+
+
+            $.modal.openTab("打印入库单", url = prefix+"/print1/"+(id));
+
+
+
+        }
+
+
+
+
+
+        function  apply(id) {
+            table.set();
+            $.modal.confirm("确定提交该入库单吗？", function() {
+                $.ajax({
+                    url : prefix+'/apply',
+                    dataType : 'json',
+                    type : 'post',
+                    data:{"id":id},
+                    beforeSend: function () {
+                        $.modal.loading("正在处理中，请稍后...");
+                    },
+                    success: function(result) {
+                        if (typeof callback == "function") {
+                            callback(result);
+                        }
+                        $.operate.ajaxSuccess(result);
+                        $.table.refresh();
+                    }
+                });
+                $.ajax(config)
+            });
+        }
 
 
     </script>

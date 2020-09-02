@@ -19,6 +19,8 @@ public class Storageindetail extends BaseEntity
     /** null */
     private Long id;
 
+    private Long sid;
+
     /** 所属入库单 */
     @Excel(name = "所属出库单")
     private String storageinbillid;
@@ -71,7 +73,8 @@ public class Storageindetail extends BaseEntity
     @Excel(name = "封装")
    private String footprint;
 
-
+    @Excel(name = "描述")
+    private String description;
 
 
     @Excel(name = "序列号")
@@ -93,6 +96,14 @@ public class Storageindetail extends BaseEntity
 
     private Integer rownum;
 
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
     public Integer getRownum() {
         return rownum;
     }
@@ -107,6 +118,15 @@ public class Storageindetail extends BaseEntity
 
     public String getComments() {
         return comments;
+    }
+
+
+    public Long getSid() {
+        return sid;
+    }
+
+    public void setSid(Long sid) {
+        this.sid = sid;
     }
 
     public void setComments(String comments) {

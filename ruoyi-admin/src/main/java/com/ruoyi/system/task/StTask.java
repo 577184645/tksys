@@ -12,17 +12,14 @@ import java.util.List;
 
 @Component("stTask")
 public class StTask {
-    @Autowired
-    private StorageMapper storageMapper;
-    @Autowired
-    private IBomService bomService;
+
 
     public void  deleteZerostorage(){
-        Bom bom=new Bom();
+       /* Bom bom=new Bom();
 
             List<Bom> list = bomService.selectBomList(bom);
             ExcelUtil<Bom> util = new ExcelUtil<Bom>(Bom.class);
-             util.exportExcel(list, "bom");
+             util.exportExcel(list, "bom");*/
 
         System.out.println("不启动删除程序");
        /* storageMapper.deleteStorageByStocksZero();*/

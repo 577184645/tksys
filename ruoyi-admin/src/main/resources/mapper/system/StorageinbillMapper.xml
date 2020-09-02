@@ -28,10 +28,13 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="cTime"    column="c_time"    />
         <result property="uTime"    column="u_time"    />
         <result property="delStatus"    column="del_status"    />
+        <result property="storageStatus"    column="storage_status"    />
+
+
     </resultMap>
 
     <sql id="selectStorageinbillVo">
-        select s.id,sum(money) as money,del_status ,applyid,contractid,invoiceid,expressid,instoragecause,projectname,proposer, stockinid, s.supplier ,outsourcewarehouseid,outsourcewarehouse, s.purchaseid, deliveryman, warehouseadmin, storagentime, s.comments, status, s.c_time, s.u_time from storageinbill s LEFT JOIN storageindetail
+        select s.id,sum(money) as money,del_status,storage_status ,applyid,contractid,invoiceid,expressid,instoragecause,projectname,proposer, stockinid, s.supplier ,outsourcewarehouseid,outsourcewarehouse, s.purchaseid, deliveryman, warehouseadmin, storagentime, s.comments, status, s.c_time, s.u_time from storageinbill s LEFT JOIN storageindetail
 				on stockinid=storageinbillid
     </sql>
 
@@ -40,8 +43,10 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <where>
             <if test="stockinid != null  and stockinid != ''"> and stockinid like concat('%', #{stockinid}, '%')</if>
 
+            <if test="storageStatus != null  and storageStatus != ''"> and storage_status=#{storageStatus}</if>
+
             <if test="status != null  and status != ''"> and status=#{status}</if>
-            <if test="delStatus == 1 "> and del_status = 1</if>
+            <if test="delStatus == 1 "> and del_status in (1,3)</if>
             <if test="delStatus == 2 "> and del_status = 2</if>
             <if test="outsourcewarehouse != null  and outsourcewarehouse != ''"> and outsourcewarehouse like concat('%', #{outsourcewarehouse}, '%')</if>
             <if test="supplier != null  and supplier != ''"> and s.supplier like concat('%', #{supplier}, '%')</if>
@@ -74,6 +79,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     <insert id="insertStorageinbill"  parameterType="Storageinbill" useGeneratedKeys="true" keyProperty="id">
         insert into storageinbill
         <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="storageStatus != null  and storageStatus != ''">storage_status,</if>
+
             <if test="stockinid != null  and stockinid != ''">stockinid,</if>
             <if test="applyid != null  and applyid != ''">applyid,</if>
             <if test="purchaseid != null  and purchaseid != ''">purchaseid,</if>
@@ -95,6 +102,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="uTime != null ">u_time,</if>
          </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="storageStatus != null  and storageStatus != ''">#{storageStatus},</if>
+
             <if test="stockinid != null  and stockinid != ''">#{stockinid},</if>
             <if test="applyid != null  and applyid != ''">#{applyid},</if>
             <if test="purchaseid != null  and purchaseid != ''">#{purchaseid},</if>
@@ -158,8 +167,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="projectname != null  and projectname != ''">projectname = #{projectname},</if>
             <if test="proposer != null  and proposer != ''">proposer = #{proposer},</if>
             <if test="delStatus != null  and delStatus != ''">del_status = #{delStatus},</if>
-            <if test="cTime != null ">c_time = #{cTime},</if>
-            <if test="uTime != null ">u_time = #{uTime},</if>
+            <if test="delStatus != null  and delStatus != ''">del_status = #{delStatus},</if>
+            <if test="storageStatus != null and storageStatus != ''">storage_status = #{storageStatus},</if>
+              u_time =now()
         </trim>
         where id = #{id}
     </update>

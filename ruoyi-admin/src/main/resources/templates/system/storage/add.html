@@ -24,7 +24,7 @@
                 <div class="form-group">
                     <label class="col-sm-3 control-label">供应商：</label>
                     <div class="col-sm-8">
-                        <select required  name="supplier" id="supplier" class="form-control m-b">
+                        <select   name="supplier" id="supplier" class="form-control m-b">
                             <option value="">所有</option>
                             <option  th:each="supplier:${supplierList}"
                                      th:value="${supplier.name}"

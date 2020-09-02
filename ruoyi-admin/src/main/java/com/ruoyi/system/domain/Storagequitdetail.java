@@ -16,6 +16,8 @@ public class Storagequitdetail extends BaseEntity
 {
     private static final long serialVersionUID = 1L;
 
+
+    private Long sid;
     /** null */
     private Long id;
 
@@ -119,7 +121,15 @@ public class Storagequitdetail extends BaseEntity
         this.partnumber = partnumber;
     }
 
-    public String getPartnumber() 
+    public Long getSid() {
+        return sid;
+    }
+
+    public void setSid(Long sid) {
+        this.sid = sid;
+    }
+
+    public String getPartnumber()
     {
         return partnumber;
     }

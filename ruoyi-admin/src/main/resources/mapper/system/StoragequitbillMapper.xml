@@ -26,8 +26,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     <select id="selectStoragequitbillList" parameterType="Storagequitbill" resultMap="StoragequitbillResult">
         <include refid="selectStoragequitbillVo"/>
         <where>
-            <if test="delStatus == 1 "> and del_status = 1</if>
-            <if test="delStatus == 2 "> and del_status = 2</if>
+            <if test="delStatus == 1 "> and del_status = 1 or del_status=3</if>
+            <if test="delStatus == 2 "> and del_status = 2   </if>
             <if test="storagequitbillid != null  and storagequitbillid != ''"> and storagequitbillid like concat('%', #{storagequitbillid}, '%')</if>
             <if test="outsourcewarehouse != null  and outsourcewarehouse != ''"> and outsourcewarehouse like concat('%', #{outsourcewarehouse}, '%')</if>
             <if test="outpeople != null  and outpeople != ''"> and outpeople like concat('%', #{outpeople}, '%')</if>

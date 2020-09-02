@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="zh" xmlns:th="http://www.thymeleaf.org" >
 <head>
-    <th:block th:include="include :: header('修改入库单列表')" />
+    <th:block th:include="include :: header('修改出库单列表')" />
     <th:block th:include="include :: layout-latest-css" />
     <th:block th:include="include :: ztree-css" />
     <th:block th:include="include :: bootstrap-editable-css" />
@@ -87,7 +87,7 @@
             <div class="col-sm-6">
                 <div class="form-group">
                     <label class="col-sm-3 control-label">
-                        入库原因
+                        出库原因
                         ：</label>
                     <div class="col-sm-8">
                         <input name="instoragecause" id="instoragecause" class="form-control" type="text">
@@ -218,6 +218,17 @@
 
                 </div>
             </div>
+
+        </div>
+
+        <div class="row">
+        <div class="col-sm-6">
+            <label class="col-sm-3 control-label">外协库备注：</label>
+            <div class="col-sm-8">
+                <input name="outsourcewarehousecomments" id="outsourcewarehousecomments" class="form-control" type="text">
+            </div>
+
+        </div>
         </div>
     </form>
 
@@ -326,12 +337,12 @@
 
                             var data = $("#bootstrap-table1" ).bootstrapTable('getData');
                             if(data==null||data.length==0){
-                                alert("请填写入库产品");
+                                alert("请填写出库产品");
                                 return;
                             }
                             for(var i=0;i<data.length;i++){
                                 if(data[i].counts<=0){
-                                    alert("入库数量必须大于0!")
+                                    alert("出库数量必须大于0!")
                                     return;
                                 }
                             }
@@ -358,7 +369,8 @@
                                      "instoragecause": $("#instoragecause").val(),
                                      "projectname": $("#projectname").val(),
                                      "proposer": $("#proposer").val(),
-                                     "comments": $("#comments").val()
+                                     "comments": $("#comments").val(),
+                                    "outsourcewarehousecomments":$("#outsourcewarehousecomments").val()
                                 },
 
                                 success: function(result) {

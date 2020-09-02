@@ -24,6 +24,12 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="uTime"    column="u_time"    />
         <result property="oTime"    column="o_time"    />
         <result property="qTime"    column="q_time"    />
+        <result property="ancestors"    column="ancestors"    />
+        <result property="deptName"    column="dept_name"    />
+        <result property="leadtime"    column="leadtime"    />
+
+
+
 
         <association property="storagetype" column="dept_id" javaType="Storagetype" resultMap="StoragetypeResult">
 
@@ -40,22 +46,84 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </resultMap>
 
 
+    <resultMap id="StorageWarehouseRecord" type="com.ruoyi.vo.WarehouseBillVo">
+        <result property="id"    column="id"    />
+        <result property="name"    column="name"    />
+        <result property="description"    column="description"    />
+        <result property="materialcode"    column="materialcode"    />
+        <result property="partnumber"    column="partnumber"    />
+        <result property="unit"    column="unit"    />
+        <result property="inprice"    column="inprice"    />
+        <result property="inmoney"    column="inmoney"    />
+        <result property="supplier"    column="supplier"    />
+        <result property="incount"    column="incount"    />
+        <result property="outmoney"    column="outmoney"    />
+        <result property="outprice"    column="outprice"    />
+        <result property="outcount"    column="outcount"    />
+        <result property="thiscount"    column="thiscount"    />
+        <result property="thismoney"    column="thismoney"    />
+        <result property="thisprice"    column="thisprice"    />
+        <result property="number"    column="number"    />
+
+
+
+    </resultMap>
+
+    <select id="selectStoragebyDate" resultMap="StorageWarehouseRecord">
+SELECT number,m.materialcode materialcode,m.`name` `name`,m.partnumber partnumber,m.description description,m.unit unit,sum(count) as incount, round((SUM(w.money)/sum(count)),2) as inprice,SUM(w.money) inmoney, w.supplier supplier FROM warehouse_record w left JOIN material m
+on w.materialcode=m.materialcode
+
+WHERE DATE_FORMAT(#{date}, '%Y%m' ) = DATE_FORMAT(w.c_time , '%Y%m' ) and w.type=1
+GROUP BY supplier,materialcode
+    </select>
+
+
+
+    <select id="selectStoragebyDatedashed" resultMap="StorageWarehouseRecord">
+SELECT number,m.materialcode materialcode,m.`name` `name`,m.partnumber partnumber,m.description description,m.unit unit,sum(count) as incount, round((SUM(w.money)/sum(count)),2) as inprice,SUM(w.money) inmoney, w.supplier supplier FROM warehouse_record w left JOIN material m
+on w.materialcode=m.materialcode
+WHERE DATE_FORMAT(#{date}, '%Y%m' ) = DATE_FORMAT( w.c_time , '%Y%m' ) and w.type=4
+GROUP BY supplier,materialcode
+    </select>
+
+
+
+    <select id="selectoutStoragebyDate" resultMap="StorageWarehouseRecord">
+SELECT number,m.materialcode materialcode,m.`name` `name`,m.partnumber partnumber,m.description description,m.unit unit,sum(count) as outcount, round((SUM(w.money)/sum(count)),2) as outprice,SUM(w.money) outmoney, w.supplier supplier FROM warehouse_record w left JOIN material m
+on w.materialcode=m.materialcode
+
+WHERE DATE_FORMAT(#{date}, '%Y%m' ) = DATE_FORMAT(w.c_time , '%Y%m' ) and w.type=2
+GROUP BY supplier,materialcode
+    </select>
+
+
+    <select id="selectoutStoragebyDatedashed" resultMap="StorageWarehouseRecord">
+SELECT number,m.materialcode materialcode,m.`name` `name`,m.partnumber partnumber,m.description description,m.unit unit,sum(count) as outcount, round((SUM(w.money)/sum(count)),2) as outprice,SUM(w.money) outmoney, w.supplier supplier FROM warehouse_record w left JOIN material m
+on w.materialcode=m.materialcode
+WHERE DATE_FORMAT(#{date}, '%Y%m' ) = DATE_FORMAT( w.c_time , '%Y%m' ) and w.type=5
+GROUP BY supplier,materialcode
+    </select>
+
+
     <sql id="selectStorageVo">
         select id, name, supplier,materialcode, partnumber, footprint, manufacture, unit, price, stocks, money, type_id, serial_number,  c_time, u_time from storage
     </sql>
+
+    <select id="StoragefindList" resultMap="StorageResult">
+    select id, name, supplier,materialcode, partnumber, footprint, manufacture, unit, avg(price) price, sum(stocks) stocks, sum(money) money, type_id, serial_number,  c_time, u_time from storage
+     group by  supplier,materialcode
+    </select>
 
 
     <select id="selectStorageListBymaterialcode" resultMap="StorageResult">
          select m.description, u.id,m.leadtime,u.`name`, o_time,u.materialcode, q_time,supplier,u.partnumber, m.footprint, u.manufacture, u.unit, u.serial_number, u.type_id,   avg(price) price,sum(stocks) stocks,sum(money) money,u.c_time,u.u_time from storage u  LEFT JOIN storagetype d
         on u.type_id=d.dept_id LEFT JOIN material m on m.materialcode=u.materialcode
         where   u.materialcode = #{materialcode}
-
+   and stocks>0
     </select>
 
     <select id="selectStorageList" parameterType="Storage" resultMap="StorageResult">
-        select m.description, u.id, u.`name`, o_time,u.materialcode, q_time,supplier,u.partnumber, u.footprint, u.manufacture, u.unit, u.serial_number, u.type_id,   avg(price) price,sum(stocks) stocks,sum(money) money,u.c_time,u.u_time from storage u  LEFT JOIN storagetype d
-        on u.type_id=d.dept_id LEFT JOIN material m on m.materialcode=u.materialcode
-        where  1=1
+        select m.leadtime,d.dept_name,d.ancestors ancestors,m.description, u.id, u.`name`, o_time,u.materialcode, q_time,supplier,u.partnumber, u.footprint, u.manufacture, u.unit, u.serial_number, u.type_id, price price,stocks,money,u.c_time,u.u_time from storage u LEFT JOIN storagetype d on u.type_id=d.dept_id LEFT JOIN material m on m.materialcode=u.materialcode where 1=1
             <if test="name != null  and name != ''"> and u.name like concat('%', #{name}, '%')</if>
         <if test="description != null  and description != ''"> and m.description like concat('%', #{description}, '%')</if>
         <if test="footprint != null  and footprint != ''"> and m.footprint like concat('%', #{footprint}, '%')</if>
@@ -70,10 +138,10 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
                 AND (u.type_id = #{deptId} OR u.type_id IN ( SELECT t.dept_id FROM storagetype t WHERE FIND_IN_SET (#{deptId},ancestors) ))
             </if>
             <if test="uTime != null "> and u_time = #{uTime}</if>
-        GROUP BY u.materialcode,serial_number,supplier,u.footprint
+        GROUP BY u.materialcode,serial_number,supplier,u.type_id
     </select>
 
-    <select id="selectStorageById" parameterType="Integer" resultMap="StorageResult">
+    <select id="selectStorageById"  resultMap="StorageResult">
         <include refid="selectStorageVo"/>
         where id = #{id}
     </select>
@@ -158,25 +226,46 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
          and   serial_number=#{serialNumber}
          and   supplier=#{supplier}
     </select>
+    <select id="selectStorageInfoByMaterialcodeAndTypeid" resultMap="StorageResult">
+
+         <include refid="selectStorageVo"/>
+       where
+        materialcode=#{materialcode}
+        and type_id=#{typeId}
+         and   serial_number=#{serialNumber}
+         and   supplier=#{supplier}
+    </select>
+
+
+    <select id="selectStorageByMaterialcode" resultMap="StorageResult">
+
+        <include refid="selectStorageVo"/>
+        where
+        materialcode=#{materialcode}
+
+    </select>
+
+
+
+
+
 
     <update id="updatestocks">
-        update  storage set stocks=stocks+#{stocks},money=money+#{money},price=money/stocks,u_time=now()  where materialcode=#{materialcode} and type_id=#{typeId}
+        update  storage set stocks=stocks+#{stocks},money=money+#{money},price=round((money/stocks),4),u_time=now()  where materialcode=#{materialcode} and type_id=#{typeId}
            and   serial_number=#{serialNumber}
          and   supplier=#{supplier}
     </update>
 
-
+  <!--入库红冲-->
     <update id="updatereducestocks">
-        update  storage set stocks=stocks-#{stocks},money=money-#{money}   where materialcode=#{materialcode} and type_id=#{typeId}
-           and   serial_number=#{serialNumber}
-         and   supplier=#{supplier}
+        update  storage set stocks=stocks-#{stocks},money=money-#{money} where
+        id=#{id}
     </update>
 
-
+    <!--出库红冲-->
     <update id="updateaddstocks">
-        update  storage set stocks=stocks+#{stocks},money=money+#{money}   where materialcode=#{materialcode} and type_id=#{typeId}
-           and   serial_number=#{serialNumber}
-         and   supplier=#{supplier}
+        update  storage set stocks=stocks+#{stocks},money=money+#{money}   where
+        id=#{id}
     </update>
 
 
@@ -184,10 +273,12 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     update  storage set name=#{name},materialcode=#{materialcode},partnumber=#{partnumber},footprint=#{footprint},unit=#{unit},manufacture=#{manufacture} where materialcode=#{oldmaterialcode}
     </update>
 
+    <!--出库-->
     <update id="removestocks">
-        update  storage set stocks=stocks-#{stocks},money=money-#{money},o_time=now()  where id=#{id}
+        update  storage set  stocks=stocks-#{stocks},money=money-#{money},o_time=now()  where id=#{id}
     </update>
 
+    <!--退库-->
     <update id="quitstocks">
         update  storage set stocks=stocks+#{stocks},money=money+#{money},q_time=now()  where id=#{id}
     </update>

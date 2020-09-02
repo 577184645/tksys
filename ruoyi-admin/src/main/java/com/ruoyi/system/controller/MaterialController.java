@@ -173,7 +173,7 @@ public class MaterialController extends BaseController
      * 修改物料列表
      */
     @GetMapping("/edit/{id}")
-    public String edit(@PathVariable("id") Integer id, ModelMap mmap)
+    public String edit(@PathVariable("id") Long id, ModelMap mmap)
     {
         List<Materialtype> materialtypes = iMaterialtypeService.selectMaterialtypeList(null);
         materialtypes.remove(0);
@@ -195,7 +195,7 @@ public class MaterialController extends BaseController
     @ResponseBody
     public AjaxResult editSave(Material material)
     {
-        return toAjax(materialService.updateMaterial(material));
+        return materialService.updateMaterial(material);
     }
 
     /**
@@ -207,6 +207,6 @@ public class MaterialController extends BaseController
     @ResponseBody
     public AjaxResult remove(String ids)
     {
-        return toAjax(materialService.deleteMaterialByIds(ids));
+        return materialService.deleteMaterialByIds(ids);
     }
 }

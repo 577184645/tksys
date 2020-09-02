@@ -40,7 +40,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <include refid="selectStorageoutbillVo"/>
         <where>
             <if test="storageoutid != null  and storageoutid != ''"> and storageoutid like concat('%', #{storageoutid}, '%')</if>
-            <if test="delStatus == 1 "> and del_status = 1</if>
+            <if test="delStatus == 1 "> and del_status in (1,3)</if>
             <if test="delStatus == 2 "> and del_status = 2</if>
             <if test="outsourcewarehouse != null  and outsourcewarehouse != ''"> and outsourcewarehouse like concat('%', #{outsourcewarehouse}, '%')</if>
             <if test="instoragecause != null  and instoragecause != ''"> and instoragecause like concat('%', #{instoragecause}, '%')</if>

@@ -53,7 +53,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     <select id="selectMaterialList"  resultMap="MaterialResult">
         select id, `name`, materialcode, partnumber, description, footprint, manufacture, unit, inputoperator, inputdate, approvedby, approveddate, approvedstatus, productmpq, productmoq, leadtime, comments, type_id, u.dept_id, safestock, ordernumber, buyer, c_time, u_time from material u  LEFT JOIN materialtype d
         on u.type_id=d.dept_id
-       where  1=1 and u.del_flag='0'
+       where  1=1
             <if test="name != null  and name != ''"> and name like concat('%', #{name}, '%')</if>
         <if test="footprint != null  and footprint != ''"> and footprint like concat('%', #{footprint}, '%')</if>
 
@@ -69,7 +69,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 
     <select id="selectMaterialRepetition" resultType="int">
         select count(0) from material where name=#{name} and partnumber=#{partnumber} and footprint=#{footprint} and manufacture=#{manufacture} and dept_id=#{deptId}
-      where del_flag=0
+
    </select>
 
 
@@ -82,14 +82,14 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         select max(materialcode) from material
         where left(materialcode, 4)=#{materialcode};
     </select>
-    <select id="selectMaterialById" parameterType="Integer" resultMap="MaterialResult">
+    <select id="selectMaterialById"  resultMap="MaterialResult">
         <include refid="selectMaterialVo"/>
         where id = #{id}
     </select>
 
 
 
-    <insert id="insertMaterial" parameterType="Material" useGeneratedKeys="true" keyProperty="id">
+    <insert id="insertMaterial"  useGeneratedKeys="true" keyProperty="id">
         insert into material
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="name != null  and name != ''">name,</if>
@@ -173,7 +173,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         where id = #{id}
     </update>
 
-    <delete id="deleteMaterialById" parameterType="Integer">
+    <delete id="deleteMaterialById" >
         delete from material where id = #{id}
     </delete>
 

@@ -24,7 +24,6 @@ public class Storageoutbill extends BaseEntity
     private String storageoutid;
 
 
-
     /** 外协库 */
     @Excel(name = "外协库")
     private String outsourcewarehouse;
@@ -60,6 +59,9 @@ public class Storageoutbill extends BaseEntity
     /** 发票单号 */
     @Excel(name = "发票单号")
     private String invoiceid;
+
+
+
 
     @Excel(name = "供应商")
     private String customer;
@@ -110,6 +112,9 @@ public class Storageoutbill extends BaseEntity
     /** 删除状态 */
     private Long delStatus;
 
+
+
+    private String outsourcewarehousecomments;
 
     public double getMoney() {
         return money;
@@ -169,7 +174,16 @@ public class Storageoutbill extends BaseEntity
         this.warehouseadmin = warehouseadmin;
     }
 
-    public String getWarehouseadmin() 
+
+    public String getOutsourcewarehousecomments() {
+        return outsourcewarehousecomments;
+    }
+
+    public void setOutsourcewarehousecomments(String outsourcewarehousecomments) {
+        this.outsourcewarehousecomments = outsourcewarehousecomments;
+    }
+
+    public String getWarehouseadmin()
     {
         return warehouseadmin;
     }

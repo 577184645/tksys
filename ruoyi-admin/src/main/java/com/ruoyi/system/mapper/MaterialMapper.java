@@ -18,7 +18,7 @@ public interface MaterialMapper
      * @param id 物料列表ID
      * @return 物料列表
      */
-    public Material selectMaterialById(Integer id);
+    public Material selectMaterialById(Long id);
 
 
 
@@ -39,6 +39,10 @@ public interface MaterialMapper
      * @return 物料列表集合
      */
     public List<Material> selectMaterialList(Material material);
+
+
+
+
 
     /**
      * 新增物料列表
@@ -62,7 +66,7 @@ public interface MaterialMapper
      * @param id 物料列表ID
      * @return 结果
      */
-    public int deleteMaterialById(Integer id);
+    public int deleteMaterialById(Long id);
 
     /**
      * 批量删除物料列表

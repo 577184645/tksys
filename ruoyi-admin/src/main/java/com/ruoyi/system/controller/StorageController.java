@@ -2,13 +2,21 @@ package com.ruoyi.system.controller;
 
 import java.util.List;
 
+import com.ruoyi.common.config.Global;
+import com.ruoyi.common.constant.Constants;
+import com.ruoyi.common.utils.StringUtils;
+import com.ruoyi.common.utils.file.FileUtils;
 import com.ruoyi.framework.util.ShiroUtils;
 import com.ruoyi.system.domain.*;
 import com.ruoyi.system.service.IProjectService;
 import com.ruoyi.system.service.ISupplierService;
 import com.ruoyi.system.service.ISysUserService;
+import com.ruoyi.system.util.WebUtil;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -26,6 +34,9 @@ import com.ruoyi.common.core.controller.BaseController;
 import com.ruoyi.common.core.domain.AjaxResult;
 import com.ruoyi.common.utils.poi.ExcelUtil;
 import com.ruoyi.common.core.page.TableDataInfo;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 /**
  * 库存列表Controller
@@ -58,6 +69,25 @@ public class StorageController extends BaseController
         return prefix + "/storage";
     }
 
+
+
+    @GetMapping("/download")
+    public void resourceDownload(String resource, HttpServletRequest request, HttpServletResponse response)
+            throws Exception
+    {
+        String date = request.getParameter("date");
+        try {
+            Workbook wb = new XSSFWorkbook();
+            wb =storageService.fillExcelStorage(date);
+            WebUtil.downloadExcel(response, wb, date.substring(0,4)+"年"+(date.substring(date.indexOf("-")+1,date.indexOf("-")+3)+"月")+"仓库出入库台账.xlsx");
+        } catch (Exception e1) {
+            // TODO Auto-generated catch block
+            e1.printStackTrace();
+        }
+    }
+
+
+
     /**
      * 查询库存列表列表
      */
@@ -70,6 +100,9 @@ public class StorageController extends BaseController
         List<Storage> list = storageService.selectStorageList(storage);
         return getDataTable(list);
     }
+
+
+
 
 
     @GetMapping("/findlist/{materialcode}")
@@ -132,7 +165,7 @@ public class StorageController extends BaseController
         mmap.put("userName", user.getUserName());
         mmap.put("userList",iSysUserService.findList());
         mmap.put("projectList",iProjectService.selectProjectList(null));
-        mmap.put("supplierList",iSupplierService.findListSupplier());
+        mmap.put("supplierList",iSupplierService.findListCustomer());
         return prefix + "/edit";
     }
 
@@ -150,7 +183,7 @@ public class StorageController extends BaseController
 
         for (int i = 0; i < productArray.size(); i++) {
             JSONObject jsonObject = productArray.getJSONObject(i);
-            Long stocks = storageService.selectStorageById(Integer.valueOf(jsonObject.getString("id"))).getStocks();
+            Long stocks = storageService.selectStorageById(jsonObject.getLong("id")).getStocks();
             if(stocks<Long.valueOf(jsonObject.getString("counts"))){
 
                 return AjaxResult.warn("库存不足！");

@@ -26,6 +26,11 @@ public class SupplierServiceImpl implements ISupplierService
     }
 
     @Override
+    public List<Supplier> findListCustomer() {
+        return supplierMapper.findListCustomer();
+    }
+
+    @Override
     public List<Supplier> findListSupplier() {
         return supplierMapper.findListSupplier();
     }

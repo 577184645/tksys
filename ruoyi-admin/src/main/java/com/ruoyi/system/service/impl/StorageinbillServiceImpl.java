@@ -1,7 +1,10 @@
 package com.ruoyi.system.service.impl;
 
+import java.math.BigDecimal;
 import java.util.List;
 
+import com.ruoyi.common.utils.StringUtils;
+import com.ruoyi.system.common.Const;
 import com.ruoyi.system.domain.Storage;
 import com.ruoyi.system.domain.Storageindetail;
 import com.ruoyi.system.domain.WarehouseRecord;
@@ -93,6 +96,9 @@ public class StorageinbillServiceImpl implements IStorageinbillService
     @Override
     public int updateStorageinbill(Storageinbill storageinbill)
     {
+        if (StringUtils.isNotEmpty(storageinbill.getInvoiceid())){
+            storageinbill.setStorageStatus(2);
+        }
         return storageinbillMapper.updateStorageinbill(storageinbill);
     }
 
@@ -129,14 +135,22 @@ public class StorageinbillServiceImpl implements IStorageinbillService
         storageindetails) {
             Storage storage=new Storage();
             WarehouseRecord warehouseRecord=new WarehouseRecord();
+            storage.setId(storageindetail.getSid());
             storage.setStocks(storageindetail.getCounts());
-            storage.setMoney(storageindetail.getMoney());
+            storage.setMoney(new BigDecimal(storageindetail.getMoney()).setScale(2,BigDecimal.ROUND_HALF_UP));
             storage.setMaterialcode(storageindetail.getMaterialcode());
             storage.setTypeId(storageinbill.getOutsourcewarehouseid());
             storage.setSerialNumber(storageindetail.getSerialNumber());
             storage.setSupplier(storageindetail.getSupplier());
             storageMapper.updatereducestocks(storage);
-            warehouseRecord.setType("4");
+            if(storageMapper.selectStorageById(storage.getId()).getStocks()==0){
+                Storage storage1=new Storage();
+                storage1.setId(storage.getId());
+                storage1.setMoney(new BigDecimal(0));
+                storage1.setPrice(new BigDecimal(0));
+                storageMapper.updateStorage(storage1);
+            }
+            warehouseRecord.setType(Const.WarehouseRecordStatus.STORAGE_IN_HC);
             warehouseRecord.setNumber(storageinbill.getStockinid());
             warehouseRecord.setMaterialcode(storageindetail.getMaterialcode());
             warehouseRecord.setName(storageindetail.getName());

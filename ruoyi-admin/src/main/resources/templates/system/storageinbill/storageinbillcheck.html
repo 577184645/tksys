@@ -112,9 +112,13 @@
                 createUrl: prefix + "/add",
                 updateUrl: prefix1 + "/{id}",
                 toolbar: "toolbar",
+                detailView: true,
                 removeUrl: prefix + "/remove",
                 exportUrl: prefix + "/export",
                 modalName: "入库单列表",
+                onExpandRow : function(index, row, $detail) {
+                    initChildTable(index, row, $detail);
+                },
                 columns: [{
                     checkbox: true
                 },
@@ -219,9 +223,66 @@
              ]
             };
             $.table.init(options);
+
+
+
         });
 
+        initChildTable = function(index, row1, $detail) {
+            var childTable = $detail.html('<table style="table-layout:fixed"></table>').find('table');
+            $(childTable).bootstrapTable({
+                url: prefix1 + "/list",
+                method: 'post',
+                sidePagination: "server",
+                contentType: "application/x-www-form-urlencoded",
+                queryParams : {
+                    storageinbillid: row1.stockinid
+                },
+                columns: [
 
+                    {
+                        field: 'id',
+                        title: 'id',
+                        visible: false
+                    },
+
+                    {
+                        field: 'name',
+                        title: '物料名称',
+                        width:140
+                    },
+
+                    {
+                        field: 'partnumber',
+                        title: '物料型号',
+                        width:230
+                    },
+
+                    {
+                        field: 'price',
+                        title: '单价',
+                        width:130
+                    },
+
+                    {
+                        field: 'counts',
+                        title: '数量',
+                        width:130
+                    },
+                    {
+                        field: 'money',
+                        title: '总金额',
+                        width:130
+                    },
+                    {
+                        field: 'serialNumber',
+                        title: '序列号',
+                        width:120
+                    }
+
+                ]
+            });
+        };
         function Info(id) {
             table.set();
 

@@ -3,6 +3,7 @@ package com.ruoyi.system.service.impl;
 import java.util.Date;
 import java.util.List;
 
+import com.ruoyi.common.core.domain.AjaxResult;
 import com.ruoyi.common.exception.BusinessException;
 import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.framework.util.ShiroUtils;
@@ -47,7 +48,7 @@ public class MaterialServiceImpl implements IMaterialService {
      * @return 物料列表
      */
     @Override
-    public Material selectMaterialById(Integer id) {
+    public Material selectMaterialById(Long id) {
         return materialMapper.selectMaterialById(id);
     }
 
@@ -111,22 +112,16 @@ public class MaterialServiceImpl implements IMaterialService {
      * @return 结果
      */
     @Override
-    @Transactional
-    public int updateMaterial(Material material) {
+    public AjaxResult updateMaterial(Material material) {
 
         String oldmaterialcode = materialMapper.selectMaterialById(material.getId()).getMaterialcode();
-        String name=material.getName();
-        String materialcode=material.getMaterialcode();
-        String partnumber=material.getPartnumber();
-        String footprint=material.getFootprint();
-        String unit=material.getUnit();
-        String manufacture=material.getManufacture();
-        storagequitdetailMapper.updateMaterial(name,materialcode,partnumber,footprint,unit,manufacture,oldmaterialcode);
-        storageMapper.updateMaterial(name,materialcode,partnumber,footprint,unit,manufacture,oldmaterialcode);
-       storageindetailMapper.updateMaterial(name,materialcode,partnumber,footprint,unit,manufacture,oldmaterialcode);
-        storageoutdetailMapper.updateMaterial(name,materialcode,partnumber,footprint,unit,manufacture,oldmaterialcode);
-        warehouseRecordMapper.updateMaterial(materialcode,name,oldmaterialcode);
-        return materialMapper.updateMaterial(material);
+        if(storageMapper.selectStorageByMaterialcode(oldmaterialcode)!=null){
+              return AjaxResult.error("该物料库存中已存在,修改失败!,请联系管理员");
+        }else{
+             materialMapper.updateMaterial(material);
+             return AjaxResult.success("修改成功!");
+        }
+
     }
 
     /**
@@ -136,21 +131,26 @@ public class MaterialServiceImpl implements IMaterialService {
      * @return 结果
      */
     @Override
-    public int deleteMaterialByIds(String ids) {
+    public AjaxResult deleteMaterialByIds(String ids) {
+        String[] strings = Convert.toStrArray(ids);
+        int sueecessscount=0;
+        int errorcount=0;
+        for (int i = 0; i < strings.length; i++) {
+            if(storageMapper.selectStorageByMaterialcode(materialMapper.selectMaterialById(Long.valueOf(strings[i])).getMaterialcode()) !=null){
+                errorcount++;
+            }else{
+                materialMapper.deleteMaterialById(Long.valueOf(strings[i]));
+                sueecessscount++;
+            }
+        }
 
-        return materialMapper.deleteMaterialByIds(Convert.toStrArray(ids));
+
+
+
+        return AjaxResult.success("操作成功,删除数据成功"+sueecessscount+"条"+"删除数据失败"+errorcount+"条,因为该物料在库存已存在！请联系管理员!");
     }
 
-    /**
-     * 删除物料列表信息
-     *
-     * @param id 物料列表ID
-     * @return 结果
-     */
-    @Override
-    public int deleteMaterialById(Integer id) {
-        return materialMapper.deleteMaterialById(id);
-    }
+
 
     @Override
     @Transactional
@@ -185,14 +185,14 @@ public class MaterialServiceImpl implements IMaterialService {
                     material.setMaterialcode(String.valueOf(count+1));
                 }
             }
-
+            material.setDeptId(materialdeptMapper.selectMaterialdeptByCode(material.getDeptIdExcel()).getId());
+            material.setTypeId(materialtypeMapper.selectMaterialtypeByCode(material.getTypeIdExcel()).getDeptId());
             if(materialMapper.selectMaterialRepetition(material.getName(),material.getPartnumber(),material.getFootprint(),material.getManufacture(),material.getDeptId())>0){
-                 repetitionNum++;
+                       repetitionNum++;
                           continue;
             }
 
-                material.setDeptId(materialdeptMapper.selectMaterialdeptByCode(material.getDeptIdExcel()).getId());
-                material.setTypeId(materialtypeMapper.selectMaterialtypeByCode(material.getTypeIdExcel()).getDeptId());
+
 
                 insertMaterial(material);
                 successNum++;

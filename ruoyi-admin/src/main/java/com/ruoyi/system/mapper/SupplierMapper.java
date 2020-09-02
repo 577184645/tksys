@@ -37,7 +37,7 @@ public interface SupplierMapper
      */
     public List<Supplier> findListSupplier();
 
-
+    public List<Supplier> findListCustomer();
     /**
      * 查询供应商列表列表
      * 

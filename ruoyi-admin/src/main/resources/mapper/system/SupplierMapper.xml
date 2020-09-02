@@ -42,6 +42,11 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         where suppiertype='0'
         ORDER BY CONVERT( name USING gbk ) ;
     </select>
+    <select id="findListCustomer"  resultMap="SupplierResult">
+        <include refid="selectSupplierVo"/>
+        where suppiertype='1'
+        ORDER BY CONVERT( name USING gbk ) ;
+    </select>
 
 
     <select id="findList"  resultMap="SupplierResult">
