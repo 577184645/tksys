@@ -34,6 +34,11 @@ public interface OfferMapper
      */
     public List<Offer> selectOfferList(Offer offer);
 
+
+
+    public List<Offer> selectOfferListByofferNumber(String offernumber);
+
+
     /**
      * 新增报价单
      * 

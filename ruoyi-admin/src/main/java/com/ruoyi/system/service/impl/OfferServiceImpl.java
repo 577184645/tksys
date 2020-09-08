@@ -34,6 +34,11 @@ public class OfferServiceImpl implements IOfferService
         return offerMapper.selectOfferById(offerId);
     }
 
+    @Override
+    public List<Offer> selectOfferListByofferNumber(String offernumber) {
+        return offerMapper.selectOfferListByofferNumber(offernumber);
+    }
+
     /**
      * 查询报价单列表
      * 
@@ -55,20 +60,21 @@ public class OfferServiceImpl implements IOfferService
     @Override
     public int insertOffer(Offer offer)
     {
-       if(StringUtils.isNotBlank(offerMapper.selectOfferMaxNumber())){
+        if (StringUtils.isBlank(offer.getOfferNumber())) {
+            if (StringUtils.isNotBlank(offerMapper.selectOfferMaxNumber())) {
 
-           Integer number =Integer.valueOf(offerMapper.selectOfferMaxNumber().substring(offerMapper.selectOfferMaxNumber().lastIndexOf("-")+1))+1;
-          if(number<10){
-              offer.setOfferNumber("TKSYSBJD-00"+number);
-          }else if(number<100){
-              offer.setOfferNumber("TKSYSBJD-0"+number);
-          }else{
-              offer.setOfferNumber("TKSYSBJD-"+number);
-          }
-       }else{
-           offer.setOfferNumber("TKSYSBJD-001");
-       }
-
+                Integer number = Integer.valueOf(offerMapper.selectOfferMaxNumber().substring(offerMapper.selectOfferMaxNumber().lastIndexOf("-") + 1)) + 1;
+                if (number < 10) {
+                    offer.setOfferNumber("TKSYSBJD-00" + number);
+                } else if (number < 100) {
+                    offer.setOfferNumber("TKSYSBJD-0" + number);
+                } else {
+                    offer.setOfferNumber("TKSYSBJD-" + number);
+                }
+            } else {
+                offer.setOfferNumber("TKSYSBJD-001");
+            }
+        }
 
         return offerMapper.insertOffer(offer);
     }

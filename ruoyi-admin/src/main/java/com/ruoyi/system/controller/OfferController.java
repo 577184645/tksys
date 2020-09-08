@@ -53,6 +53,7 @@ public class OfferController extends BaseController
     {
         startPage();
         List<Offer> list = offerService.selectOfferList(offer);
+
         return getDataTable(list);
     }
 
@@ -70,6 +71,32 @@ public class OfferController extends BaseController
         return util.exportExcel(list, "offer");
     }
 
+
+
+    @GetMapping("infoview/{offerNumber}")
+    public String infoview(@PathVariable("offerNumber") String offerNumber,ModelMap mmap)
+    {
+        mmap.put("offerNumber",offerNumber);
+        return prefix + "/offerinfo";
+    }
+
+    /**
+     * 查询报价单列表
+     */
+    @RequiresPermissions("system:offer:list")
+    @PostMapping("/info")
+    @ResponseBody
+    public TableDataInfo info(String offerNumber)
+    {
+        startPage();
+        List<Offer> list = offerService.selectOfferListByofferNumber(offerNumber);
+
+        return getDataTable(list);
+    }
+
+
+
+
     /**
      * 新增报价单
      */
@@ -79,6 +106,24 @@ public class OfferController extends BaseController
         return prefix + "/add";
     }
 
+    @GetMapping("/add/{offerNumber}")
+    public String addofferNumber(@PathVariable("offerNumber") String offerNumber,ModelMap map)
+    {
+        map.put("offerNumber",offerNumber);
+        return prefix + "/newadd";
+    }
+
+    /**
+     * 新增保存报价单
+     */
+    @RequiresPermissions("system:offer:add")
+    @Log(title = "报价单", businessType = BusinessType.INSERT)
+    @PostMapping("/add")
+    @ResponseBody
+    public AjaxResult addSave(Offer offer)
+    {
+        return toAjax(offerService.insertOffer(offer));
+    }
 
 
 
@@ -88,9 +133,9 @@ public class OfferController extends BaseController
      */
     @RequiresPermissions("system:offer:add")
     @Log(title = "报价单", businessType = BusinessType.INSERT)
-    @PostMapping("/add")
+    @PostMapping("/addfile")
     @ResponseBody
-        public AjaxResult addSave(@RequestParam("file") MultipartFile file, Offer offer) throws IOException
+        public AjaxResult addfileSave(@RequestParam("file") MultipartFile file, Offer offer) throws IOException
     {
         // 上传文件路径
         String filePath = Global.getUploadPath();
@@ -99,6 +144,33 @@ public class OfferController extends BaseController
         offer.setAccessory(fileName);
         return toAjax(offerService.insertOffer(offer));
     }
+
+
+    /**
+     * 修改保存报价单
+     */
+    @RequiresPermissions("system:offer:edit")
+    @Log(title = "报价单", businessType = BusinessType.UPDATE)
+    @PostMapping("/edit")
+    @ResponseBody
+    public AjaxResult editSave(Offer offer)
+    {
+        return toAjax(offerService.updateOffer(offer));
+    }
+
+
+
+    /**
+     * 修改报价单
+     */
+    @GetMapping("/infodetail/{offerId}")
+    public String infodetail(@PathVariable("offerId") Long offerId, ModelMap mmap)
+    {
+        Offer offer = offerService.selectOfferById(offerId);
+        mmap.put("offer", offer);
+        return prefix + "/infodetail";
+    }
+
 
     /**
      * 修改报价单
@@ -116,10 +188,15 @@ public class OfferController extends BaseController
      */
     @RequiresPermissions("system:offer:edit")
     @Log(title = "报价单", businessType = BusinessType.UPDATE)
-    @PostMapping("/edit")
+    @PostMapping("/editfile")
     @ResponseBody
-    public AjaxResult editSave(Offer offer)
+    public AjaxResult editfileSave(@RequestParam("file") MultipartFile file, Offer offer) throws IOException
     {
+        // 上传文件路径
+        String filePath = Global.getUploadPath();
+        // 上传并返回新文件名称
+        String fileName = FileUploadUtils.upload(filePath, file);
+        offer.setAccessory(fileName);
         return toAjax(offerService.updateOffer(offer));
     }
 

@@ -19,6 +19,10 @@ public interface IOfferService
      */
     public Offer selectOfferById(Long offerId);
 
+
+
+    public List<Offer> selectOfferListByofferNumber(String offernumber);
+
     /**
      * 查询报价单列表
      * 

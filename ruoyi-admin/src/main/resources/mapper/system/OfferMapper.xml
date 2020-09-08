@@ -24,25 +24,39 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </sql>
 
     <select id="selectOfferList" parameterType="Offer" resultMap="OfferResult">
-        <include refid="selectOfferVo"/>
+
+        select a.offer_id, a.offer_number, a.offer_username, a.offer_salesman, a.offer_salesmancontactway, a.offer_money, a.offer_project, a.offer_time, a.context, a.accessory, a.c_time, a.u_time from offer a INNER JOIN (SELECT offer_number,max(offer_time) offer_time from offer GROUP BY offer_number) b on   a.offer_number=b.offer_number and a.offer_time=b.offer_time
+
+
         <where>  
-            <if test="offerNumber != null  and offerNumber != ''"> and offer_number = #{offerNumber}</if>
-            <if test="offerUsername != null  and offerUsername != ''"> and offer_username like concat('%', #{offerUsername}, '%')</if>
-            <if test="offerSalesman != null  and offerSalesman != ''"> and offer_salesman = #{offerSalesman}</if>
-            <if test="offerProject != null  and offerProject != ''"> and offer_project = #{offerProject}</if>
+            <if test="offerNumber != null  and offerNumber != ''"> and a.offer_number = #{offerNumber}</if>
+            <if test="offerUsername != null  and offerUsername != ''"> and a.offer_username like concat('%', #{offerUsername}, '%')</if>
+            <if test="offerSalesman != null  and offerSalesman != ''"> and a.offer_salesman = #{offerSalesman}</if>
+            <if test="offerProject != null  and offerProject != ''"> and a.offer_project = #{offerProject}</if>
             <if test="params.beginTime != null and params.beginTime != ''"><!-- 开始时间检索 -->
-                and date_format(offer_time,'%y%m%d') &gt;= date_format(#{params.beginTime},'%y%m%d')
+                and date_format(a.offer_time,'%y%m%d') &gt;= date_format(#{params.beginTime},'%y%m%d')
             </if>
             <if test="params.endTime != null and params.endTime != ''"><!-- 结束时间检索 -->
-                and date_format(offer_time,'%y%m%d') &lt;= date_format(#{params.endTime},'%y%m%d')
+                and date_format(a.offer_time,'%y%m%d') &lt;= date_format(#{params.endTime},'%y%m%d')
             </if>
+
         </where>
+
+        order by a.offer_number
+
     </select>
     
     <select id="selectOfferById" parameterType="Long" resultMap="OfferResult">
         <include refid="selectOfferVo"/>
         where offer_id = #{offerId}
     </select>
+
+    <select id="selectOfferListByofferNumber"  resultMap="OfferResult">
+        <include refid="selectOfferVo"/>
+        where offer_number = #{offerNumber}
+        order by offer_time desc
+    </select>
+
 
     <select id="selectOfferMaxNumber"  resultType="String">
              select max(offer_number)  from offer limit 1
@@ -75,7 +89,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="offerTime != null ">#{offerTime},</if>
             <if test="context != null  and context != ''">#{context},</if>
             <if test="accessory != null  and accessory != ''">#{accessory},</if>
-         now(),
+            now(),
             <if test="uTime != null ">#{uTime},</if>
          </trim>
     </insert>
@@ -93,7 +107,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="context != null  and context != ''">context = #{context},</if>
             <if test="accessory != null  and accessory != ''">accessory = #{accessory},</if>
             <if test="cTime != null ">c_time = #{cTime},</if>
-            now(),
+           u_time= now(),
         </trim>
         where offer_id = #{offerId}
     </update>

@@ -8,7 +8,7 @@
 <body class="white-bg">
     <div class="wrapper wrapper-content animated fadeInRight ibox-content">
         <form class="form-horizontal m" id="form-offer-add">
-
+           <input id="offerNumber" type="hidden" name="offerNumber" th:value="${offerNumber}">
             <div class="form-group">    
                 <label class="col-sm-3 control-label">报价人：</label>
                 <div class="col-sm-8">
@@ -137,10 +137,7 @@
 
 
             }else{
-
-
-
-            formData.append('offerUsername', $("#offerUsername").val());
+                formData.append('offerNumber', $("#offerNumber").val());formData.append('offerUsername', $("#offerUsername").val());
             formData.append('offerSalesman', $("#offerSalesman").val());
             formData.append('offerSalesmancontactway', $("#offerSalesmancontactway").val());
             formData.append('offerMoney', $("#offerMoney").val());
