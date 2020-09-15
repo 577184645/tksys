@@ -116,7 +116,7 @@ public class StorageoutbillServiceImpl implements IStorageoutbillService
             Storage storage=new Storage();
             WarehouseRecord warehouseRecord=new WarehouseRecord();
             storage.setStocks(storageoutdetail.getCounts());
-            storage.setMoney(new BigDecimal(storageoutdetail.getMoney()).setScale(2,BigDecimal.ROUND_HALF_UP));
+            storage.setMoney(new BigDecimal(storageoutdetail.getMoney()).setScale(2,BigDecimal.ROUND_HALF_UP).doubleValue());
             storage.setId(storageoutdetail.getSid());
             storageMapper.updateaddstocks(storage);
             warehouseRecord.setType(Const.WarehouseRecordStatus.STORAGE_OUT_HC);

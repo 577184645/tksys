@@ -67,7 +67,7 @@
             <div class="form-group">
                 <label class="col-sm-3 control-label">附件：</label>
                 <div class="col-sm-8">
-                    <input id="filePath" name="accessory" th:text="*{accessory}" class="form-control" type="file">
+                    <input id="filePath" multiple name="accessory" th:text="*{accessory}" class="form-control" type="file">
                 </div>
             </div>
 
@@ -137,7 +137,10 @@
                 formData.append('offerProject', $("#offerProject").val());
                 formData.append('offerTime', $("#offerTime").val());
                 formData.append('context', $("#noticeContent").val());
-                formData.append('file', $('#filePath')[0].files[0]);
+                for(var i=0;i<$('#filePath')[0].files.length;i++){
+
+                    formData.append('file', $('#filePath')[0].files[i]);
+                }
                 $.ajax({
                     url: prefix + "/editfile",
                     type: 'post',

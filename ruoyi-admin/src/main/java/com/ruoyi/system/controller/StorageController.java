@@ -71,20 +71,7 @@ public class StorageController extends BaseController
 
 
 
-    @GetMapping("/download")
-    public void resourceDownload(String resource, HttpServletRequest request, HttpServletResponse response)
-            throws Exception
-    {
-        String date = request.getParameter("date");
-        try {
-            Workbook wb = new XSSFWorkbook();
-            wb =storageService.fillExcelStorage(date);
-            WebUtil.downloadExcel(response, wb, date.substring(0,4)+"年"+(date.substring(date.indexOf("-")+1,date.indexOf("-")+3)+"月")+"仓库出入库台账.xlsx");
-        } catch (Exception e1) {
-            // TODO Auto-generated catch block
-            e1.printStackTrace();
-        }
-    }
+
 
 
 

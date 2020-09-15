@@ -51,7 +51,7 @@ public class Storagequitdetail extends BaseEntity
 
     /** 单价 */
     @Excel(name = "单价")
-    private Float price;
+    private Double price;
 
     /** 数量 */
     @Excel(name = "数量")
@@ -59,7 +59,7 @@ public class Storagequitdetail extends BaseEntity
 
     /** 总金额 */
     @Excel(name = "总金额")
-    private Float money;
+    private Double money;
 
     /** 单位 */
     @Excel(name = "单位")
@@ -160,34 +160,32 @@ public class Storagequitdetail extends BaseEntity
     {
         return manufacture;
     }
-    public void setPrice(Float price)
-    {
+
+    public Double getPrice() {
+        return price;
+    }
+
+    public void setPrice(Double price) {
         this.price = price;
     }
 
-    public Float getPrice()
-    {
-        return price;
+    public Long getCounts() {
+        return counts;
     }
-    public void setCounts(Long counts) 
-    {
+
+    public void setCounts(Long counts) {
         this.counts = counts;
     }
 
-    public Long getCounts() 
-    {
-        return counts;
+    public Double getMoney() {
+        return money;
     }
-    public void setMoney(Float money)
-    {
+
+    public void setMoney(Double money) {
         this.money = money;
     }
 
-    public Float getMoney()
-    {
-        return money;
-    }
-    public void setUnit(String unit) 
+    public void setUnit(String unit)
     {
         this.unit = unit;
     }

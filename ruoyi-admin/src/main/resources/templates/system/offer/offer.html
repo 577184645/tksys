@@ -109,7 +109,7 @@
                     field: 'offerTime', 
                     title: '报价时间'
                 },
-           
+
                 {
                     field: 'cTime', 
                     title: '创建时间'
@@ -127,7 +127,7 @@
 
                         actions.push('<a class="btn btn-info btn-xs ' + editFlag + '" href="javascript:void(0)" onclick="Info(\'' + row.offerNumber + '\')"><i class="fa fa-edit"></i>查看历史报价</a> ');
                         if(row.accessory!=null){
-                            actions.push('<a class="btn btn-info btn-xs ' + editFlag + '" href="javascript:void(0)" onclick="downloadFile(\'' + row.accessory + '\')"><i class="fa fa-edit"></i>下载附件</a> ');
+                            actions.push('<a class="btn btn-info btn-xs ' + editFlag + '" href="javascript:void(0)" onclick="downloadFile(\'' + row.accessory + '\',\''+row.offerProject+'\',\''+row.cTime+'\')"><i class="fa fa-edit"></i>下载附件</a> ');
                         }
 
                         actions.push('<a class="btn btn-success btn-xs ' + editFlag + '" href="javascript:void(0)" onclick="editFull(\'' + row.offerNumber + '\')"><i class="fa fa-plus"></i>添加新报价</a> ');
@@ -151,8 +151,12 @@
         }
 
 
-        function downloadFile(value){
-            window.location.href = ctx + "common/download/resource?resource=" + value;
+        function downloadFile(accessory,offerProject,cTime){
+
+                window.location.href = ctx + "common/download/resourcezip?accessory=" + accessory+"&offerProject="+offerProject+"&cTime="+cTime;
+
+
+
         }
 
 

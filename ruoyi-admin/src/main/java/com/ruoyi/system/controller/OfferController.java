@@ -1,13 +1,28 @@
 package com.ruoyi.system.controller;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.List;
+import java.util.Map;
 
+import com.alibaba.fastjson.JSON;
 import com.ruoyi.common.config.Global;
+import com.ruoyi.common.constant.Constants;
+import com.ruoyi.common.utils.DateUtils;
 import com.ruoyi.common.utils.file.FileUploadUtils;
+import com.ruoyi.framework.util.ShiroUtils;
+import com.ruoyi.system.common.Const;
 import com.ruoyi.system.domain.SysFileInfo;
+import com.ruoyi.system.domain.SysUser;
+import com.ruoyi.system.util.DateUtil;
+import com.ruoyi.system.util.FileUtil;
+import com.ruoyi.vo.OfferDataVo;
+import net.sf.json.JSONArray;
+import net.sf.json.JSONObject;
+import org.apache.commons.lang.StringUtils;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
@@ -35,6 +50,9 @@ public class OfferController extends BaseController
 
     @Autowired
     private IOfferService offerService;
+
+
+
 
     @RequiresPermissions("system:offer:view")
     @GetMapping()
@@ -95,14 +113,40 @@ public class OfferController extends BaseController
     }
 
 
+    @PostMapping("/temporaryStorage")
+    @ResponseBody
+    public AjaxResult temporaryStorage(Offer offer)
+    {
+        SysUser user = ShiroUtils.getSysUser();
+     /*
+        JSONArray productArray = JSONArray.fromObject(data);
+        JSONObject jsonObject = productArray.getJSONObject(0);
+        Offer offer=new Offer();
+        offer.setOfferUsername(jsonObject.getString("offerUsername"));
+        offer.setOfferSalesman(jsonObject.getString("offerSalesman"));
+        offer.setOfferSalesmancontactway(jsonObject.getString("offerSalesmancontactway"));
+        if(StringUtils.isNotBlank(jsonObject.getString("offerMoney"))){
+            offer.setOfferMoney(jsonObject.getDouble("offerMoney"));
+        }
+        offer.setOfferProject(jsonObject.getString("offerProject"));
+       // offer.setOfferTime(DateUtils.jsonObject.getString("offerTime"));
+        offer.setContext(jsonObject.getString("context"));
+      */
+        Const.OfferData.map.put(user.getUserName(),offer);
+            return toAjax(true);
+    }
+
 
 
     /**
      * 新增报价单
      */
     @GetMapping("/add")
-    public String add()
+    public String add(ModelMap mmap)
     {
+        SysUser user = ShiroUtils.getSysUser();
+        Offer offer = Const.OfferData.map.get(user.getUserName());
+        mmap.put("offer",offer);
         return prefix + "/add";
     }
 
@@ -135,13 +179,16 @@ public class OfferController extends BaseController
     @Log(title = "报价单", businessType = BusinessType.INSERT)
     @PostMapping("/addfile")
     @ResponseBody
-        public AjaxResult addfileSave(@RequestParam("file") MultipartFile file, Offer offer) throws IOException
+        public AjaxResult addfileSave(@RequestParam("file") MultipartFile [] file, Offer offer) throws IOException
     {
         // 上传文件路径
         String filePath = Global.getUploadPath();
         // 上传并返回新文件名称
-        String fileName = FileUploadUtils.upload(filePath, file);
-        offer.setAccessory(fileName);
+        String fileName="";
+        for (int i=0;i<file.length;i++){
+            fileName += FileUploadUtils.upload(filePath, file[i])+",";
+        }
+        offer.setAccessory(fileName.substring(0,fileName.lastIndexOf(",")));
         return toAjax(offerService.insertOffer(offer));
     }
 
@@ -190,13 +237,17 @@ public class OfferController extends BaseController
     @Log(title = "报价单", businessType = BusinessType.UPDATE)
     @PostMapping("/editfile")
     @ResponseBody
-    public AjaxResult editfileSave(@RequestParam("file") MultipartFile file, Offer offer) throws IOException
+    public AjaxResult editfileSave(@RequestParam("file") MultipartFile [] file, Offer offer) throws IOException
     {
         // 上传文件路径
         String filePath = Global.getUploadPath();
+        String accessory = offerService.selectOfferById(offer.getOfferId()).getAccessory();
         // 上传并返回新文件名称
-        String fileName = FileUploadUtils.upload(filePath, file);
-        offer.setAccessory(fileName);
+        String fileName="";
+        for (int i=0;i<file.length;i++){
+            fileName += FileUploadUtils.upload(filePath, file[i])+",";
+        }
+        offer.setAccessory(fileName.substring(0,fileName.lastIndexOf(",")));
         return toAjax(offerService.updateOffer(offer));
     }
 

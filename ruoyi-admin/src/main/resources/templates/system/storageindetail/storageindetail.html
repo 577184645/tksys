@@ -10,7 +10,7 @@
         .select-table .table td {
 
             /*规定段落中的文本不进行换行 */
-            white-space:nowrap;
+
             /* 配合宽度来使用 */
             height:40px;
         }
@@ -94,7 +94,7 @@
                 {
                     field: 'storageinbillid',
                     title: '所属入库单',
-                    width:130,
+                    width:160,
                     footerFormatter:function (value) {
                         var sumBalance = 0;
                         for (var i in value) {
@@ -118,19 +118,19 @@
                 {
                     field: 'partnumber', 
                     title: '物料型号',
-                    width:230
+                    width:200
                 },
 
                     {
                         field: 'description',
                         title: '描述',
-                        width:230
+                        width:200
                     },
 
                 {
                     field: 'manufacture',
                     title: '品牌',
-                    width:130
+                    width:150
                 },
                 {
                     field: 'price',

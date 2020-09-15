@@ -138,6 +138,9 @@
                 formData.append('offerTime', $("#offerTime").val());
                 formData.append('context', $("#noticeContent").val());
                 formData.append('file', $('#filePath')[0].files[0]);
+
+
+
                 $.ajax({
                     url: prefix + "/editfile",
                     type: 'post',

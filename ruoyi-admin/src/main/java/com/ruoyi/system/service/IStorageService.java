@@ -78,6 +78,6 @@ public interface IStorageService
     public int deleteStorageById(Integer id);
 
 
-    public Workbook fillExcelStorage(String date)
+    public void fillExcelStorage(String date)
             throws Exception;
 }

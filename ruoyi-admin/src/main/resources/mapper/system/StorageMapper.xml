@@ -251,7 +251,7 @@ GROUP BY supplier,materialcode
 
 
     <update id="updatestocks">
-        update  storage set stocks=stocks+#{stocks},money=money+#{money},price=round((money/stocks),4),u_time=now()  where materialcode=#{materialcode} and type_id=#{typeId}
+        update  storage set stocks=stocks+#{stocks},money=money+#{money},price=#{price},u_time=now()  where materialcode=#{materialcode} and type_id=#{typeId}
            and   serial_number=#{serialNumber}
          and   supplier=#{supplier}
     </update>

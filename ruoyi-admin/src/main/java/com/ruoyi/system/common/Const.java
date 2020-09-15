@@ -1,5 +1,11 @@
 package com.ruoyi.system.common;
 
+import com.ruoyi.system.domain.Offer;
+import com.ruoyi.vo.OfferDataVo;
+
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * @author QC
  * @create 2020-08-21 10:23
@@ -13,6 +19,11 @@ public class Const {
         int STORAGE_IN_HC = 4;
         int STORAGE_OUT_HC = 5;
         int  STORAGE_QUIT_HC=6 ;
+    }
+
+
+    public interface OfferData{
+       Map<String,Offer>  map=new HashMap<>();
     }
 
     public enum Storagestatus{

@@ -53,5 +53,14 @@ public class BigDecimalUtil {
 
 
 
+    public static BigDecimal avg(double v1,double v2){
+        BigDecimal b1 = new BigDecimal(Double.toString(v1+v2));
+        return b1.divide(new BigDecimal(2),4, BigDecimal.ROUND_HALF_UP);
+        //除不尽的情况
+    }
+
+
+
+
 
 }

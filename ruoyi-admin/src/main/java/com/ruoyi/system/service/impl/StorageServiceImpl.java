@@ -1,5 +1,8 @@
 package com.ruoyi.system.service.impl;
 
+import java.awt.*;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -12,17 +15,30 @@ import com.ruoyi.system.domain.*;
 import com.ruoyi.system.mapper.*;
 import com.ruoyi.system.util.BigDecimalUtil;
 import com.ruoyi.vo.WarehouseBillVo;
+import java.io.File;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 import org.apache.commons.lang.StringUtils;
 import org.apache.poi.ss.usermodel.*;
+import org.apache.poi.ss.usermodel.Font;
 import org.apache.poi.ss.util.CellRangeAddress;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.FileSystemResource;
+import org.springframework.mail.MailException;
+import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
 import com.ruoyi.system.service.IStorageService;
 import com.ruoyi.common.core.text.Convert;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.mail.javamail.MimeMailMessage;
+import org.springframework.mail.javamail.MimeMessageHelper;
+
+import javax.mail.MessagingException;
+import javax.mail.internet.MimeMessage;
 
 /**
  * 库存列表Service业务层处理
@@ -50,6 +66,52 @@ public  class StorageServiceImpl implements IStorageService {
     private StoragequitdetailMapper storagequitdetailMapper;
     @Autowired
     private WarehouseRecordMapper warehouseRecordMapper;
+    @Autowired
+    private JavaMailSender javaMailSender;
+
+
+    @Value("${spring.mail.username}")
+    private String form;
+    @Value("${spring.mail.recipient}")
+    private String recipient;
+
+
+    public void SimpleMailMessage(String path) {
+        /*Workbook workbook*/
+        //复杂邮件
+        MimeMessage mimeMessage = javaMailSender.createMimeMessage();
+
+        //邮件发送助手
+        MimeMessageHelper helper = null;
+        try {
+            helper = new MimeMessageHelper(mimeMessage, true);
+            //邮件标题
+            helper.setSubject("出入库台账");
+
+
+            helper.setText("<b style='color:red'>excel附件在下面!!!</b>",true);
+            //发送者：必填
+            helper.setFrom(form);
+
+            //接收者：必填
+            helper.setTo(recipient);
+
+            helper.addAttachment("出入库台账.xlsx",new File(path));
+
+            javaMailSender.send(mimeMessage);
+        } catch (MessagingException e) {
+            e.printStackTrace();
+        }
+
+
+
+
+
+
+
+    }
+
+
 
     @Override
     public Storage selectStorageListBymaterialcode(String materialcode) {
@@ -76,6 +138,7 @@ public  class StorageServiceImpl implements IStorageService {
 
     @Override
     public List<Storage> selectStorageList(Storage storage) {
+
         List<Storage> storages = storageMapper.selectStorageList(storage);
 
         for (Storage storage1 : storages) {
@@ -126,8 +189,8 @@ public  class StorageServiceImpl implements IStorageService {
             storageindetail.setName(jsonObject.getString("name"));
             storageindetail.setMaterialcode(jsonObject.getString("materialcode"));
             storageindetail.setCounts(jsonObject.getLong("counts"));
-            storageindetail.setPrice(Float.valueOf(jsonObject.getString("price")));
-            storageindetail.setMoney(Float.valueOf(jsonObject.getString("money")));
+            storageindetail.setPrice(jsonObject.getDouble("price"));
+            storageindetail.setMoney(jsonObject.getDouble("money"));
             if(StringUtils.isNotBlank(jsonObject.getString("footprint"))&&!jsonObject.getString("footprint").equals("null")) {
                 storageindetail.setFootprint(jsonObject.getString("footprint"));
             }
@@ -163,16 +226,19 @@ public  class StorageServiceImpl implements IStorageService {
             storage.setMaterialcode(storageindetail.getMaterialcode());
             storage.setSupplier(storageindetail.getSupplier());
             storage.setSerialNumber(storageindetail.getSerialNumber());
-            storage.setMoney(new BigDecimal(storageindetail.getMoney()).setScale(2,BigDecimal.ROUND_HALF_UP));
+            storage.setMoney(new BigDecimal(storageindetail.getMoney()).setScale(2,BigDecimal.ROUND_HALF_UP).doubleValue());
             storage.setStocks(storageindetail.getCounts());
             if (storageMapper.selectStorageByMaterialcodeAndTypeid(storage) > 0) {
                 storageindetail.setSid(storageMapper.selectStorageInfoByMaterialcodeAndTypeid(storage).getId());
+                Double oldprice = storageMapper.selectStorageInfoByMaterialcodeAndTypeid(storage).getPrice();
+                Double newprice=storageindetail.getPrice();
+                storage.setPrice(BigDecimalUtil.avg(oldprice,newprice).doubleValue());
                 storageMapper.updatestocks(storage);
             } else {
                 storage.setName(storageindetail.getName());
                 storage.setPartnumber(storageindetail.getPartnumber());
                 storage.setManufacture(storageindetail.getManufacture());
-                storage.setPrice(new BigDecimal(storageindetail.getPrice()).setScale(4,BigDecimal.ROUND_HALF_UP));
+                storage.setPrice(new BigDecimal(storageindetail.getPrice()).setScale(4,BigDecimal.ROUND_HALF_UP).doubleValue());
                 storage.setUnit(storageindetail.getUnit());
                 storage.setFootprint(storageindetail.getFootprint());
                 storageMapper.insertStorage(storage);
@@ -267,8 +333,8 @@ public  class StorageServiceImpl implements IStorageService {
             }
             storageoutdetail.setSid(Long.valueOf(jsonObject.getString("id")));
             storageoutdetail.setCounts(Long.valueOf(jsonObject.getInt("counts")));
-            storageoutdetail.setPrice(Float.valueOf(jsonObject.getString("price")));
-            storageoutdetail.setMoney(Float.valueOf(jsonObject.getString("money")));
+            storageoutdetail.setPrice(jsonObject.getDouble("price"));
+            storageoutdetail.setMoney(jsonObject.getDouble("money"));
             storageoutdetail.setMaterialcode(jsonObject.getString("materialcode"));
             storageoutdetail.setStorageoutbillid(storageoutbill.getStorageoutid());
             if (StringUtils.isNotBlank(jsonObject.getString("footprint"))&&!jsonObject.getString("footprint").equals("null")) {
@@ -298,13 +364,13 @@ public  class StorageServiceImpl implements IStorageService {
             }
             storageoutdetailMapper.insertStorageoutdetail(storageoutdetail);
             storage.setId(jsonObject.getLong("id"));
-            storage.setMoney(new BigDecimal(storageoutdetail.getMoney()).setScale(2,BigDecimal.ROUND_HALF_UP));
+            storage.setMoney(new BigDecimal(storageoutdetail.getMoney()).setScale(2,BigDecimal.ROUND_HALF_UP).doubleValue());
             storage.setStocks(storageoutdetail.getCounts());
             storageMapper.removestocks(storage);
             if(storageMapper.selectStorageById(jsonObject.getLong("id")).getStocks()==0){
                Storage storage1=new Storage();
                 storage1.setId(jsonObject.getLong("id"));
-                storage1.setMoney(new BigDecimal(0));
+                storage1.setMoney(new BigDecimal(0).doubleValue());
                 storageMapper.updateStorage(storage1);
             }
             warehouseRecord.setType(Const.WarehouseRecordStatus.STORAGE_OUT);
@@ -372,8 +438,8 @@ if(storageoutbill.getOutsourcewarehousecomments().isEmpty()){
             Storagequitdetail storagequitdetail = new Storagequitdetail();
             storagequitdetail.setCounts(Long.valueOf(jsonObject.getInt("counts")));
             storagequitdetail.setSid(jsonObject.getLong("id"));
-            storagequitdetail.setPrice(Float.valueOf(jsonObject.getString("price")));
-            storagequitdetail.setMoney(Float.valueOf(jsonObject.getString("money")));
+            storagequitdetail.setPrice(jsonObject.getDouble("price"));
+            storagequitdetail.setMoney(jsonObject.getDouble("money"));
             if (!jsonObject.getString("footprint").equals("null")) {
                 storagequitdetail.setFootprint(jsonObject.getString("footprint"));
             }
@@ -401,7 +467,7 @@ if(storageoutbill.getOutsourcewarehousecomments().isEmpty()){
             storagequitdetail.setStoragequitbillid(storagequitbill.getStoragequitbillid());
             storagequitdetailMapper.insertStoragequitdetail(storagequitdetail);
             storage.setId(jsonObject.getLong("id"));
-            storage.setMoney(new BigDecimal(storagequitdetail.getMoney()).setScale(2,BigDecimal.ROUND_HALF_UP));
+            storage.setMoney(new BigDecimal(storagequitdetail.getMoney()).setScale(2,BigDecimal.ROUND_HALF_UP).doubleValue());
             storage.setStocks(storagequitdetail.getCounts());
             storageMapper.quitstocks(storage);
             warehouseRecord.setType(Const.WarehouseRecordStatus.STORAGE_QUIT);
@@ -458,8 +524,8 @@ if(storageoutbill.getOutsourcewarehousecomments().isEmpty()){
         return storageMapper.deleteStorageById(id);
     }
 
-    public  Workbook fillExcelStorage(String date)
-            throws Exception {
+    public  void fillExcelStorage(String date) throws  Exception
+             {
 
 
 
@@ -729,10 +795,11 @@ if(storageoutbill.getOutsourcewarehousecomments().isEmpty()){
 
         }
 
+        FileOutputStream fileOut=new FileOutputStream("C:\\ruoyi\\taizhang\\"+month+"仓库出入库台账.xlsx");
+        workbook.write(fileOut);
+        fileOut.close();
+        SimpleMailMessage("C:\\ruoyi\\taizhang\\"+month+"仓库出入库台账.xlsx");
 
-
-
-        return workbook;
     }
 
 }

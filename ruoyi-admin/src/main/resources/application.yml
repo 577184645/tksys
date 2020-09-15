@@ -13,6 +13,8 @@ ruoyi:
   # 获取ip地址开关
   addressEnabled: true
 
+
+
 # 开发环境配置
 server:
   # 服务器的HTTP端口，默认为80
@@ -69,7 +71,13 @@ spring:
     restart:
       # 热部署开关
       enabled: true
-
+  mail:
+    host: smtp.ym.163.com
+    username: web@tksys.com.cn #自己的邮箱账号
+    password: tksysweb  #这个不是登录密码而是163授权登录的密码
+    default-encoding: UTF-8
+    properties.mail.smtp.auth: true
+    recipient: zjz@tksys.com.cn
 # MyBatis
 mybatis:
     # 搜索指定包别名

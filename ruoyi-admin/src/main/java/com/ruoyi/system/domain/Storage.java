@@ -53,7 +53,7 @@ public class Storage extends BaseEntity
 
     /** 单价 */
     @Excel(name = "单价")
-    private BigDecimal price;
+    private Double price;
 
 
     private Long deptId;
@@ -67,7 +67,7 @@ public class Storage extends BaseEntity
 
     /** 总价 */
     @Excel(name = "总价")
-    private BigDecimal money;
+    private Double money;
 
     /** 库存类别 */
     @Excel(name = "库存类别")
@@ -249,19 +249,19 @@ public class Storage extends BaseEntity
     }
 
 
-    public BigDecimal getPrice() {
+    public Double getPrice() {
         return price;
     }
 
-    public void setPrice(BigDecimal price) {
+    public void setPrice(Double price) {
         this.price = price;
     }
 
-    public BigDecimal getMoney() {
+    public Double getMoney() {
         return money;
     }
 
-    public void setMoney(BigDecimal money) {
+    public void setMoney(Double money) {
         this.money = money;
     }
 

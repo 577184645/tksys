@@ -45,7 +45,6 @@ public class WarehouseRecordController extends BaseController
         Storage storage = storageMapper.selectStorageById(id);
         mmap.put("materialcode",storage.getMaterialcode());
         mmap.put("supplier",storage.getSupplier());
-        System.out.println(storage.getSerialNumber());
         mmap.put("serialNumber",storage.getSerialNumber());
         return prefix + "/record";
     }

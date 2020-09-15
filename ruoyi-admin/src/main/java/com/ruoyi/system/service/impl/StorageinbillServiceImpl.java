@@ -137,7 +137,7 @@ public class StorageinbillServiceImpl implements IStorageinbillService
             WarehouseRecord warehouseRecord=new WarehouseRecord();
             storage.setId(storageindetail.getSid());
             storage.setStocks(storageindetail.getCounts());
-            storage.setMoney(new BigDecimal(storageindetail.getMoney()).setScale(2,BigDecimal.ROUND_HALF_UP));
+            storage.setMoney( new BigDecimal(storageindetail.getMoney()).setScale(2,BigDecimal.ROUND_HALF_UP).doubleValue());
             storage.setMaterialcode(storageindetail.getMaterialcode());
             storage.setTypeId(storageinbill.getOutsourcewarehouseid());
             storage.setSerialNumber(storageindetail.getSerialNumber());
@@ -146,8 +146,8 @@ public class StorageinbillServiceImpl implements IStorageinbillService
             if(storageMapper.selectStorageById(storage.getId()).getStocks()==0){
                 Storage storage1=new Storage();
                 storage1.setId(storage.getId());
-                storage1.setMoney(new BigDecimal(0));
-                storage1.setPrice(new BigDecimal(0));
+                storage1.setMoney(new BigDecimal(0).doubleValue());
+                storage1.setPrice(new BigDecimal(0).doubleValue());
                 storageMapper.updateStorage(storage1);
             }
             warehouseRecord.setType(Const.WarehouseRecordStatus.STORAGE_IN_HC);

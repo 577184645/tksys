@@ -41,11 +41,11 @@ public class WarehouseRecord extends BaseEntity
 
     /** 单价 */
     @Excel(name = "单价")
-    private Float price;
+    private Double price;
 
     /** 总价 */
     @Excel(name = "总价")
-    private Float money;
+    private Double money;
 
     /** 供应商 */
     @Excel(name = "供应商")
@@ -117,25 +117,24 @@ public class WarehouseRecord extends BaseEntity
     {
         return count;
     }
-    public void setPrice(Float price)
-    {
+
+    public Double getPrice() {
+        return price;
+    }
+
+    public void setPrice(Double price) {
         this.price = price;
     }
 
-    public Float getPrice()
-    {
-        return price;
+    public Double getMoney() {
+        return money;
     }
-    public void setMoney(Float money)
-    {
+
+    public void setMoney(Double money) {
         this.money = money;
     }
 
-    public Float getMoney()
-    {
-        return money;
-    }
-    public void setSupplier(String supplier) 
+    public void setSupplier(String supplier)
     {
         this.supplier = supplier;
     }

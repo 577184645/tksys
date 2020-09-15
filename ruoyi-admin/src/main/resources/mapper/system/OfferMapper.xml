@@ -25,7 +25,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 
     <select id="selectOfferList" parameterType="Offer" resultMap="OfferResult">
 
-        select a.offer_id, a.offer_number, a.offer_username, a.offer_salesman, a.offer_salesmancontactway, a.offer_money, a.offer_project, a.offer_time, a.context, a.accessory, a.c_time, a.u_time from offer a INNER JOIN (SELECT offer_number,max(offer_time) offer_time from offer GROUP BY offer_number) b on   a.offer_number=b.offer_number and a.offer_time=b.offer_time
+        select a.offer_id, a.offer_number, a.offer_username, a.offer_salesman, a.offer_salesmancontactway, a.offer_money, a.offer_project, a.offer_time, a.context, a.accessory, a.c_time, a.u_time from offer a LEFT JOIN (SELECT offer_number,max(offer_time) offer_time from offer GROUP BY offer_number) b on   a.offer_number=b.offer_number and a.offer_time=b.offer_time
 
 
         <where>  
