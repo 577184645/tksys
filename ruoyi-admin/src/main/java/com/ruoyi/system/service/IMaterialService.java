@@ -48,6 +48,16 @@ public interface IMaterialService
      */
     public int insertMaterial(Material material);
 
+
+
+    /**
+     * 新增物料列表
+     *
+     * @param material 物料列表
+     * @return 结果
+     */
+    public int addSuffix(Material material);
+
     /**
      * 修改物料列表
      * 

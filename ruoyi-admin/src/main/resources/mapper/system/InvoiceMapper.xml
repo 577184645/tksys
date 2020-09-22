@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.InvoiceMapper">
+    
+    <resultMap type="Invoice" id="InvoiceResult">
+        <result property="invoiceId"    column="invoice_id"    />
+        <result property="contractId"    column="contract_id"    />
+        <result property="invoiceNumber"    column="invoice_number"    />
+        <result property="invoiceDate"    column="invoice_date"    />
+        <result property="invoiceMoney"    column="invoice_money"    />
+        <result property="cTime"    column="c_time"    />
+        <result property="uTime"    column="u_time"    />
+    </resultMap>
+
+    <sql id="selectInvoiceVo">
+        select invoice_id, contract_id, invoice_number, invoice_date, invoice_money, c_time, u_time from invoice
+    </sql>
+
+    <select id="selectInvoiceList" parameterType="Invoice" resultMap="InvoiceResult">
+        <include refid="selectInvoiceVo"/>
+        <where>  
+            <if test="contractId != null "> and contract_id = #{contractId}</if>
+            <if test="invoiceNumber != null  and invoiceNumber != ''"> and invoice_number = #{invoiceNumber}</if>
+            <if test="invoiceDate != null "> and invoice_date = #{invoiceDate}</if>
+            <if test="invoiceMoney != null "> and invoice_money = #{invoiceMoney}</if>
+            <if test="cTime != null "> and c_time = #{cTime}</if>
+            <if test="uTime != null "> and u_time = #{uTime}</if>
+        </where>
+    </select>
+    
+    <select id="selectInvoiceById" parameterType="Long" resultMap="InvoiceResult">
+        <include refid="selectInvoiceVo"/>
+        where invoice_id = #{invoiceId}
+    </select>
+        
+    <insert id="insertInvoice" parameterType="Invoice" useGeneratedKeys="true" keyProperty="invoiceId">
+        insert into invoice
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="contractId != null ">contract_id,</if>
+            <if test="invoiceNumber != null  and invoiceNumber != ''">invoice_number,</if>
+            <if test="invoiceDate != null ">invoice_date,</if>
+            <if test="invoiceMoney != null ">invoice_money,</if>
+            <if test="cTime != null ">c_time,</if>
+            <if test="uTime != null ">u_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="contractId != null ">#{contractId},</if>
+            <if test="invoiceNumber != null  and invoiceNumber != ''">#{invoiceNumber},</if>
+            <if test="invoiceDate != null ">#{invoiceDate},</if>
+            <if test="invoiceMoney != null ">#{invoiceMoney},</if>
+            <if test="cTime != null ">#{cTime},</if>
+            <if test="uTime != null ">#{uTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updateInvoice" parameterType="Invoice">
+        update invoice
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="contractId != null ">contract_id = #{contractId},</if>
+            <if test="invoiceNumber != null  and invoiceNumber != ''">invoice_number = #{invoiceNumber},</if>
+            <if test="invoiceDate != null ">invoice_date = #{invoiceDate},</if>
+            <if test="invoiceMoney != null ">invoice_money = #{invoiceMoney},</if>
+            <if test="cTime != null ">c_time = #{cTime},</if>
+            <if test="uTime != null ">u_time = #{uTime},</if>
+        </trim>
+        where invoice_id = #{invoiceId}
+    </update>
+
+    <delete id="deleteInvoiceById" parameterType="Long">
+        delete from invoice where invoice_id = #{invoiceId}
+    </delete>
+
+    <delete id="deleteInvoiceByIds" parameterType="String">
+        delete from invoice where invoice_id in 
+        <foreach item="invoiceId" collection="array" open="(" separator="," close=")">
+            #{invoiceId}
+        </foreach>
+    </delete>
+    
+</mapper>

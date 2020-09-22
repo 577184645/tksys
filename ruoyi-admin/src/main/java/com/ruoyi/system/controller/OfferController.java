@@ -54,6 +54,7 @@ public class OfferController extends BaseController
 
 
 
+
     @RequiresPermissions("system:offer:view")
     @GetMapping()
     public String offer()
@@ -117,7 +118,7 @@ public class OfferController extends BaseController
     @ResponseBody
     public AjaxResult temporaryStorage(Offer offer)
     {
-        SysUser user = ShiroUtils.getSysUser();
+
      /*
         JSONArray productArray = JSONArray.fromObject(data);
         JSONObject jsonObject = productArray.getJSONObject(0);
@@ -132,6 +133,7 @@ public class OfferController extends BaseController
        // offer.setOfferTime(DateUtils.jsonObject.getString("offerTime"));
         offer.setContext(jsonObject.getString("context"));
       */
+        SysUser user = ShiroUtils.getSysUser();
         Const.OfferData.map.put(user.getUserName(),offer);
             return toAjax(true);
     }
@@ -166,6 +168,8 @@ public class OfferController extends BaseController
     @ResponseBody
     public AjaxResult addSave(Offer offer)
     {
+        SysUser user = ShiroUtils.getSysUser();
+        Const.OfferData.map.remove(user.getUserName());
         return toAjax(offerService.insertOffer(offer));
     }
 
@@ -188,7 +192,9 @@ public class OfferController extends BaseController
         for (int i=0;i<file.length;i++){
             fileName += FileUploadUtils.upload(filePath, file[i])+",";
         }
+        SysUser user = ShiroUtils.getSysUser();
         offer.setAccessory(fileName.substring(0,fileName.lastIndexOf(",")));
+        Const.OfferData.map.remove(user.getUserName());
         return toAjax(offerService.insertOffer(offer));
     }
 

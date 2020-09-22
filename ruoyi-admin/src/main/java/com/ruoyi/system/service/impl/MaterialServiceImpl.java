@@ -105,6 +105,20 @@ public class MaterialServiceImpl implements IMaterialService {
         return materialMapper.insertMaterial(material);
     }
 
+    @Override
+    public int addSuffix(Material material) {
+        int index = materialMapper.selectMaterialByMaxMaterialcode(material.getMaterialcode()).indexOf("-");
+        if(index!=-1){
+            String maxMaterialcode = materialMapper.selectMaterialByMaxMaterialcode(material.getMaterialcode());
+            char c = maxMaterialcode.substring(index + 1).charAt(0);
+            c= (char) (c+1);
+            material.setMaterialcode(material.getMaterialcode()+"-"+c);
+        }else{
+            material.setMaterialcode(material.getMaterialcode()+"-A");
+        }
+        return materialMapper.insertMaterial(material);
+    }
+
     /**
      * 修改物料列表
      *

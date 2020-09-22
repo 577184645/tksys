@@ -82,6 +82,11 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         select max(materialcode) from material
         where left(materialcode, 4)=#{materialcode};
     </select>
+
+    <select id="selectMaterialByMaxMaterialcode" resultType="String" >
+        select max(materialcode) from material where materialcode like CONCAT('%',#{materialcode},'%')
+    </select>
+
     <select id="selectMaterialById"  resultMap="MaterialResult">
         <include refid="selectMaterialVo"/>
         where id = #{id}

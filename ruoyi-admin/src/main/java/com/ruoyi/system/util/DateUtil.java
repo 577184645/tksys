@@ -17,4 +17,18 @@ public class DateUtil {
         res = String.valueOf(ts);
         return res;
     }
+
+
+    public static String dateToString(Date date,String format) {
+        String newdate="";
+         try {
+             SimpleDateFormat simpleDateFormat = new SimpleDateFormat(format);
+              newdate = simpleDateFormat.format(date);
+
+         }catch (Exception e){
+            e.printStackTrace();
+         }
+
+        return newdate;
+    }
 }

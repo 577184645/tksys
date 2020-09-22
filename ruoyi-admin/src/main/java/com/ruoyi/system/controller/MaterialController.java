@@ -1,11 +1,9 @@
 package com.ruoyi.system.controller;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.ruoyi.common.annotation.Excel;
 import com.ruoyi.framework.util.ShiroUtils;
 import com.ruoyi.system.domain.*;
 import com.ruoyi.system.service.*;
@@ -21,8 +19,6 @@ import com.ruoyi.common.core.domain.AjaxResult;
 import com.ruoyi.common.utils.poi.ExcelUtil;
 import com.ruoyi.common.core.page.TableDataInfo;
 import org.springframework.web.multipart.MultipartFile;
-
-import javax.servlet.http.HttpServletRequest;
 
 /**
  * 物料列表Controller
@@ -187,6 +183,33 @@ public class MaterialController extends BaseController
         return prefix + "/edit";
     }
 
+
+    @GetMapping("/addsuffix/{id}")
+    public String addsuffix(@PathVariable("id") Long id, ModelMap mmap)
+    {
+        List<Materialtype> materialtypes = iMaterialtypeService.selectMaterialtypeList(null);
+        materialtypes.remove(0);
+        Material material = materialService.selectMaterialById(id);
+        mmap.put("materialtypeList",materialtypes);
+        mmap.put("materialdeptList",imaterialdeptService.selectMaterialdeptList(null));
+        mmap.put("material", material);
+        mmap.put("userList",iSysUserService.findList());
+        mmap.put("supplierList",iSupplierService.findListSupplier());
+        return prefix + "/addsuffix";
+    }
+
+    @RequiresPermissions("system:material:add")
+    @Log(title = "物料列表", businessType = BusinessType.INSERT)
+    @PostMapping("/addsuffix")
+    @ResponseBody
+    public AjaxResult addsuffix(Material material)
+    {
+
+        return toAjax(materialService.addSuffix(material));
+    }
+
+
+
     /**
      * 修改保存物料列表
      */
@@ -198,6 +221,8 @@ public class MaterialController extends BaseController
     {
         return materialService.updateMaterial(material);
     }
+
+
 
     /**
      * 删除物料列表

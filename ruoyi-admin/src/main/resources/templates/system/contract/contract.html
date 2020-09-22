@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org" xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
+<head>
+    <th:block th:include="include :: header('销售合同列表')" />
+</head>
+<body class="gray-bg">
+     <div class="container-div">
+        <div class="row">
+            <div class="col-sm-12 search-collapse">
+                <form id="formId">
+                    <div class="select-list">
+                        <ul>
+                            <li>
+                                <label>销售合同号：</label>
+                                <input type="text" name="contractNumber"/>
+                            </li>
+                            <li>
+                                <label>单位：</label>
+                                <input type="text" name="contractCustomer"/>
+                            </li>
+                            <li>
+                                <label>发货状态：</label>
+                                    <input type="text" name="contractDeliverstatus"/>
+                              </li>
+                            <li>
+                                <a class="btn btn-primary btn-rounded btn-sm" onclick="$.table.search()"><i class="fa fa-search"></i>&nbsp;搜索</a>
+                                <a class="btn btn-warning btn-rounded btn-sm" onclick="$.form.reset()"><i class="fa fa-refresh"></i>&nbsp;重置</a>
+                            </li>
+                        </ul>
+                    </div>
+                </form>
+            </div>
+
+            <div class="btn-group-sm" id="toolbar" role="group">
+                <a class="btn btn-success" onclick="$.operate.add()" shiro:hasPermission="system:contract:add">
+                    <i class="fa fa-plus"></i> 添加
+                </a>
+                <a class="btn btn-primary single disabled" onclick="$.operate.edit()" shiro:hasPermission="system:contract:edit">
+                    <i class="fa fa-edit"></i> 修改
+                </a>
+                <a class="btn btn-danger multiple disabled" onclick="$.operate.removeAll()" shiro:hasPermission="system:contract:remove">
+                    <i class="fa fa-remove"></i> 删除
+                </a>
+                <a class="btn btn-warning" onclick="$.table.exportExcel()" shiro:hasPermission="system:contract:export">
+                    <i class="fa fa-download"></i> 导出
+                </a>
+            </div>
+            <div class="col-sm-12 select-table table-striped">
+                <table id="bootstrap-table"></table>
+            </div>
+        </div>
+    </div>
+    <th:block th:include="include :: footer" />
+    <script th:inline="javascript">
+        var editFlag = [[${@permission.hasPermi('system:contract:edit')}]];
+        var removeFlag = [[${@permission.hasPermi('system:contract:remove')}]];
+        var prefix = ctx + "system/contract";
+        var prefix1 = ctx + "system/returned";
+        var prefix2 = ctx + "system/invoice";
+        $(function() {
+            var options = {
+                url: prefix + "/list",
+                createUrl: prefix + "/add",
+                updateUrl: prefix + "/edit/{id}",
+                removeUrl: prefix + "/remove",
+                exportUrl: prefix + "/export",
+                detailView: true,
+                onExpandRow : function(index, row, $detail) {
+                    initChildTable(index, row, $detail);
+                },
+                modalName: "销售合同",
+                columns: [{
+                    checkbox: true
+                },
+                {
+                    field: 'contractId', 
+                    title: 'null',
+                    visible: false
+                },
+                {
+                    field: 'contractNumber', 
+                    title: '销售合同号'
+                },
+                {
+                    field: 'contractCustomer', 
+                    title: '单位'
+                },
+                {
+                    field: 'contractMoney', 
+                    title: '金额'
+                },
+                {
+                    field: 'contractInvoicemoney', 
+                    title: '是否开票'
+                },
+                {
+                    field: 'contractPayment', 
+                    title: '付款方式'
+                },
+                {
+                    field: 'contractDeliverstatus', 
+                    title: '发货状态'
+                },
+                {
+                    field: 'contractReturnedmoney', 
+                    title: '回款'
+                },
+                {
+                    field: 'contractStartmoney', 
+                    title: '合同未执行完毕应付款'
+                },
+                {
+                    field: 'contractEndmoney', 
+                    title: '合同已执行完毕应付款'
+                },
+                {
+                    title: '操作',
+                    align: 'center',
+                    formatter: function(value, row, index) {
+                        var actions = [];
+                        actions.push('<a class="btn btn-success btn-xs ' + editFlag + '" href="javascript:void(0)" onclick="invoiceInfo(\'' + row.contractId + '\',\''+row.contractNumber+'\')"><i class="fa fa-edit"></i>查看历史发票记录</a> ');
+                        actions.push('<a class="btn btn-success btn-xs ' + editFlag + '" href="javascript:void(0)" onclick="addreturned(\'' + row.contractId + '\')"><i class="fa fa-plus"></i>添加回款记录</a> ');
+                        actions.push('<a class="btn btn-success btn-xs ' + editFlag + '" href="javascript:void(0)" onclick="$.operate.edit(\'' + row.contractId + '\')"><i class="fa fa-edit"></i>编辑</a> ');
+                        actions.push('<a class="btn btn-danger btn-xs ' + removeFlag + '" href="javascript:void(0)" onclick="$.operate.remove(\'' + row.contractId + '\')"><i class="fa fa-remove"></i>删除</a>');
+                        return actions.join('');
+                    }
+                }]
+            };
+            $.table.init(options);
+        });
+
+
+        initChildTable2 = function(index, row1, $detail) {
+            var childTable = $detail.html('<table style="table-layout:fixed"></table>').find('table');
+            $(childTable).bootstrapTable({
+                url: prefix2 + "/list",
+                method: 'post',
+                sidePagination: "server",
+                contentType: "application/x-www-form-urlencoded",
+                queryParams : {
+                    contractId: row1.contractId
+                },
+                columns: [
+
+                    {
+                        field: 'returnedId' ,
+                        title: 'returnedId',
+                        visible: false
+                    },
+                    {
+                        field: 'no',
+                        title: '序号',
+                        align: "center",
+                        formatter: function (value, row, index) {
+                            //获取每页显示的数量
+                            var pageSize=$('#bootstrap-table').bootstrapTable('getOptions').pageSize;
+                            //获取当前是第几页
+                            var pageNumber=$('#bootstrap-table').bootstrapTable('getOptions').pageNumber;
+                            //返回序号，注意index是从0开始的，所以要加上1
+                            return pageSize * (pageNumber - 1) + index + 1;
+                        }
+                    },
+                    {
+                        title: '操作',
+                        align: 'center',
+                        formatter: function(value, row, index) {
+                            var actions = [];
+                            actions.push('<a class="btn btn-success btn-xs ' + editFlag + '" href="javascript:void(0)" onclick="editreturned(\'' + row.returnedId + '\')"><i class="fa fa-edit"></i>编辑</a> ');
+                            actions.push('<a class="btn btn-danger btn-xs ' + removeFlag + '" href="javascript:void(0)" onclick="removereturned(\'' + row.returnedId + '\')"><i class="fa fa-remove"></i>删除</a>');
+                            return actions.join('');
+                        }
+                    }]
+            });
+
+
+        };
+
+
+
+        initChildTable = function(index, row1, $detail) {
+            var childTable = $detail.html('<table style="table-layout:fixed"></table>').find('table');
+            $(childTable).bootstrapTable({
+                url: prefix1 + "/list",
+                method: 'post',
+                sidePagination: "server",
+                contentType: "application/x-www-form-urlencoded",
+                queryParams : {
+                    contractId: row1.contractId
+                },
+                columns: [
+
+                    {
+                        field: 'returnedId' ,
+                        title: 'returnedId',
+                        visible: false
+                    },
+                    {
+                        field: 'no',
+                        title: '序号',
+                        align: "center",
+                        formatter: function (value, row, index) {
+                            //获取每页显示的数量
+                            var pageSize=$('#bootstrap-table').bootstrapTable('getOptions').pageSize;
+                            //获取当前是第几页
+                            var pageNumber=$('#bootstrap-table').bootstrapTable('getOptions').pageNumber;
+                            //返回序号，注意index是从0开始的，所以要加上1
+                            return pageSize * (pageNumber - 1) + index + 1;
+                        }
+                    },
+                    {
+                        field: 'returnedMoney',
+                        title: '回款金额'
+                    },
+                    {
+                        field: 'returnedDate',
+                        title: '回款日期'
+                    },
+                    {
+                        title: '操作',
+                        align: 'center',
+                        formatter: function(value, row, index) {
+                            var actions = [];
+                            actions.push('<a class="btn btn-success btn-xs ' + editFlag + '" href="javascript:void(0)" onclick="editreturned(\'' + row.returnedId + '\')"><i class="fa fa-edit"></i>编辑</a> ');
+                            actions.push('<a class="btn btn-danger btn-xs ' + removeFlag + '" href="javascript:void(0)" onclick="removereturned(\'' + row.returnedId + '\')"><i class="fa fa-remove"></i>删除</a>');
+                            return actions.join('');
+                        }
+                    }]
+            });
+
+
+
+
+
+
+
+
+        };
+
+
+
+        function invoiceInfo(id,contractNumber) {
+            table.set();
+            $.modal.openTab(contractNumber+"历史发票记录", prefix2+"/info/"+(id));
+        }
+        function addreturned(id) {
+            table.set();
+            $.modal.open("添加回款记录", prefix1+"/add/"+(id));
+        }
+
+        function editreturned(id) {
+            table.set();
+            $.modal.open("修改回款记录", prefix1+"/edit/"+(id));
+        }
+        function removereturned(id) {
+            table.set();
+            $.modal.confirm("确定删除该条回款记录吗？", function() {
+                var url =prefix1+"/remove";
+                var data = { "ids": id };
+                $.operate.submit(url, "post", "json", data);
+            });
+
+        }
+
+    </script>
+</body>
+</html>

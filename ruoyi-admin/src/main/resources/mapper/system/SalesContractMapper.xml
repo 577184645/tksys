@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.SalesContractMapper">
+    
+    <resultMap type="SalesContract" id="SalesContractResult">
+        <result property="contractId"    column="contract_id"    />
+        <result property="contractNumber"    column="contract_number"    />
+        <result property="contractCustomer"    column="contract_customer"    />
+        <result property="contractMoney"    column="contract_money"    />
+        <result property="contractInvoicemoney"    column="contract_invoicemoney"    />
+        <result property="contractPayment"    column="contract_payment"    />
+        <result property="contractDeliverstatus"    column="contract_deliverstatus"    />
+        <result property="contractReturnedmoney"    column="contract_returnedmoney"    />
+        <result property="contractStartmoney"    column="contract_startmoney"    />
+        <result property="contractEndmoney"    column="contract_endmoney"    />
+        <result property="cTime"    column="c_time"    />
+        <result property="uTime"    column="u_time"    />
+    </resultMap>
+
+    <sql id="selectSalesContractVo">
+        select contract_id, contract_number, contract_customer, contract_money, contract_invoicemoney, contract_payment, contract_deliverstatus, contract_returnedmoney, contract_startmoney, contract_endmoney, c_time, u_time from sales_contract
+    </sql>
+
+    <select id="selectSalesContractList" parameterType="SalesContract" resultMap="SalesContractResult">
+        <include refid="selectSalesContractVo"/>
+        <where>  
+            <if test="contractNumber != null  and contractNumber != ''"> and contract_number = #{contractNumber}</if>
+            <if test="contractCustomer != null  and contractCustomer != ''"> and contract_customer = #{contractCustomer}</if>
+            <if test="contractDeliverstatus != null  and contractDeliverstatus != ''"> and contract_deliverstatus = #{contractDeliverstatus}</if>
+        </where>
+    </select>
+    
+    <select id="selectSalesContractById" parameterType="Long" resultMap="SalesContractResult">
+        <include refid="selectSalesContractVo"/>
+        where contract_id = #{contractId}
+    </select>
+    <select id="selectSalesContractbyMaxNumber" resultType="String">
+        select max(contract_number) contract_number
+				from sales_contract
+        where contract_number like concat('%',#{yyyy} ,'%')
+    </select>
+
+
+        
+    <insert id="insertSalesContract" parameterType="SalesContract" useGeneratedKeys="true" keyProperty="contractId">
+        insert into sales_contract
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="contractNumber != null  and contractNumber != ''">contract_number,</if>
+            <if test="contractCustomer != null  and contractCustomer != ''">contract_customer,</if>
+            <if test="contractMoney != null ">contract_money,</if>
+            <if test="contractInvoicemoney != null ">contract_invoicemoney,</if>
+            <if test="contractPayment != null  and contractPayment != ''">contract_payment,</if>
+            <if test="contractDeliverstatus != null  and contractDeliverstatus != ''">contract_deliverstatus,</if>
+            <if test="contractReturnedmoney != null ">contract_returnedmoney,</if>
+            <if test="contractStartmoney != null ">contract_startmoney,</if>
+            <if test="contractEndmoney != null ">contract_endmoney,</if>
+           c_time,
+            <if test="uTime != null ">u_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="contractNumber != null  and contractNumber != ''">#{contractNumber},</if>
+            <if test="contractCustomer != null  and contractCustomer != ''">#{contractCustomer},</if>
+            <if test="contractMoney != null ">#{contractMoney},</if>
+            <if test="contractInvoicemoney != null ">#{contractInvoicemoney},</if>
+            <if test="contractPayment != null  and contractPayment != ''">#{contractPayment},</if>
+            <if test="contractDeliverstatus != null  and contractDeliverstatus != ''">#{contractDeliverstatus},</if>
+            <if test="contractReturnedmoney != null ">#{contractReturnedmoney},</if>
+            <if test="contractStartmoney != null ">#{contractStartmoney},</if>
+            <if test="contractEndmoney != null ">#{contractEndmoney},</if>
+          now(),
+            <if test="uTime != null ">#{uTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updateSalesContract" parameterType="SalesContract">
+        update sales_contract
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="contractNumber != null  and contractNumber != ''">contract_number = #{contractNumber},</if>
+            <if test="contractCustomer != null  and contractCustomer != ''">contract_customer = #{contractCustomer},</if>
+            <if test="contractMoney != null ">contract_money = #{contractMoney},</if>
+            <if test="contractInvoicemoney != null ">contract_invoicemoney = #{contractInvoicemoney},</if>
+            <if test="contractPayment != null  and contractPayment != ''">contract_payment = #{contractPayment},</if>
+            <if test="contractDeliverstatus != null  and contractDeliverstatus != ''">contract_deliverstatus = #{contractDeliverstatus},</if>
+            <if test="contractReturnedmoney != null ">contract_returnedmoney = #{contractReturnedmoney},</if>
+            <if test="contractStartmoney != null ">contract_startmoney = #{contractStartmoney},</if>
+            <if test="contractEndmoney != null ">contract_endmoney = #{contractEndmoney},</if>
+            <if test="cTime != null ">c_time = #{cTime},</if>
+            u_time =now(),
+        </trim>
+        where contract_id = #{contractId}
+    </update>
+
+    <delete id="deleteSalesContractById" parameterType="Long">
+        delete from sales_contract where contract_id = #{contractId}
+    </delete>
+
+    <delete id="deleteSalesContractByIds" parameterType="String">
+        delete from sales_contract where contract_id in 
+        <foreach item="contractId" collection="array" open="(" separator="," close=")">
+            #{contractId}
+        </foreach>
+    </delete>
+    
+</mapper>

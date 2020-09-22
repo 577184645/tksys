@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.ReturnedMapper">
+    
+    <resultMap type="Returned" id="ReturnedResult">
+        <result property="returnedId"    column="returned_id"    />
+        <result property="contractId"    column="contract_id"    />
+        <result property="returnedMoney"    column="returned_money"    />
+        <result property="returnedDate"    column="returned_date"    />
+        <result property="cTime"    column="c_time"    />
+        <result property="uTime"    column="u_time"    />
+    </resultMap>
+
+    <sql id="selectReturnedVo">
+        select returned_id, contract_id, returned_money, returned_date, c_time, u_time from returned
+    </sql>
+
+    <select id="selectReturnedList" parameterType="Returned" resultMap="ReturnedResult">
+        <include refid="selectReturnedVo"/>
+        <where>  
+            <if test="contractId != null "> and contract_id = #{contractId}</if>
+            <if test="returnedMoney != null "> and returned_money = #{returnedMoney}</if>
+            <if test="returnedDate != null "> and returned_date = #{returnedDate}</if>
+            <if test="cTime != null "> and c_time = #{cTime}</if>
+            <if test="uTime != null "> and u_time = #{uTime}</if>
+        </where>
+    </select>
+    
+    <select id="selectReturnedById" parameterType="Long" resultMap="ReturnedResult">
+        <include refid="selectReturnedVo"/>
+        where returned_id = #{returnedId}
+    </select>
+        
+    <insert id="insertReturned" parameterType="Returned" useGeneratedKeys="true" keyProperty="returnedId">
+        insert into returned
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="contractId != null ">contract_id,</if>
+            <if test="returnedMoney != null ">returned_money,</if>
+            <if test="returnedDate != null ">returned_date,</if>
+            <if test="cTime != null ">c_time,</if>
+            <if test="uTime != null ">u_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="contractId != null ">#{contractId},</if>
+            <if test="returnedMoney != null ">#{returnedMoney},</if>
+            <if test="returnedDate != null ">#{returnedDate},</if>
+            <if test="cTime != null ">#{cTime},</if>
+            <if test="uTime != null ">#{uTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updateReturned" parameterType="Returned">
+        update returned
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="contractId != null ">contract_id = #{contractId},</if>
+            <if test="returnedMoney != null ">returned_money = #{returnedMoney},</if>
+            <if test="returnedDate != null ">returned_date = #{returnedDate},</if>
+            <if test="cTime != null ">c_time = #{cTime},</if>
+            <if test="uTime != null ">u_time = #{uTime},</if>
+        </trim>
+        where returned_id = #{returnedId}
+    </update>
+
+    <delete id="deleteReturnedById" parameterType="Long">
+        delete from returned where returned_id = #{returnedId}
+    </delete>
+
+    <delete id="deleteReturnedByIds" parameterType="String">
+        delete from returned where returned_id in 
+        <foreach item="returnedId" collection="array" open="(" separator="," close=")">
+            #{returnedId}
+        </foreach>
+    </delete>
+    
+</mapper>

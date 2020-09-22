@@ -32,6 +32,9 @@ public interface MaterialMapper
      */
     public String selectMaterialByMaterialcode(String materialcode);
 
+
+    public String selectMaterialByMaxMaterialcode(String materialcode);
+
     /**
      * 查询物料列表列表
      * 

@@ -10,12 +10,60 @@
         }
 
         .select-table .table td {
-
-
-
+            white-space:nowrap;
             /* 配合宽度来使用 */
-            height:40px;
+            height:20px;
         }
+
+
+        .fixed_headers thead tr {
+            height:10px;
+            display: block;
+            position: relative;
+        }
+        .fixed_headers tbody {
+            display: block;
+            overflow: auto;
+            height: 250px;
+        }
+
+        .fixed_headers td:nth-child(1),
+        .fixed_headers th:nth-child(1) {
+
+            min-width: 250px;
+            text-overflow:ellipsis;
+            white-space:nowrap;
+            overflow:hidden;
+        }
+        .fixed_headers td:nth-child(2),
+        .fixed_headers th:nth-child(2) {
+            min-width: 200px;
+        }
+        .fixed_headers td:nth-child(3),
+        .fixed_headers th:nth-child(3) {
+            min-width: 200px;
+        }
+        .fixed_headers td:nth-child(4),
+        .fixed_headers th:nth-child(4) {
+            min-width: 200px;
+        }
+        .fixed_headers td:nth-child(5),
+        .fixed_headers th:nth-child(5) {
+            min-width: 200px;
+        }
+        .fixed_headers td:nth-child(6),
+        .fixed_headers th:nth-child(6) {
+            min-width: 200px;
+        }
+        .fixed_headers td:nth-child(7),
+        .fixed_headers th:nth-child(7) {
+            min-width: 200px;
+        }
+        .fixed_headers td:nth-child(8),
+        .fixed_headers th:nth-child(8) {
+            min-width: 200px;
+        }
+
     </style>
 </head>
 <body class="gray-bg">
@@ -135,7 +183,7 @@
             </div>
 
             <div class="col-sm-12 select-table table-striped">
-                <table id="bootstrap-table"></table>
+                <table id="bootstrap-table" class="table  table-hover coma-base-table fixed_headers"></table>
             </div>
         </div>
     </div>
@@ -167,14 +215,14 @@
             updateUrl: prefix + "/edit/{id}",
             removeUrl: prefix + "/remove",
             exportUrl: prefix + "/export",
+            fixedColumns: true,
+            fixedNumber: 16	,
             modalName: "库存",
             onDblClickRow:function(row, $element, field)
             {
                 Info(row.id);
             },
-            columns: [{
-                checkbox: true
-            },
+            columns: [
                 {
                     field: 'id',
                     title: 'null',
