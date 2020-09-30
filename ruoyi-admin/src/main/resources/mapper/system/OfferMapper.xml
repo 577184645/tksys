@@ -14,13 +14,14 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="offerProject"    column="offer_project"    />
         <result property="offerTime"    column="offer_time"    />
         <result property="context"    column="context"    />
+        <result property="filename"    column="filename"    />
         <result property="accessory"    column="accessory"    />
         <result property="cTime"    column="c_time"    />
         <result property="uTime"    column="u_time"    />
     </resultMap>
 
     <sql id="selectOfferVo">
-        select offer_id, offer_number, offer_username, offer_salesman, offer_salesmancontactway, offer_money, offer_project, offer_time, context, accessory, c_time, u_time from offer
+        select offer_id,filename, offer_number, offer_username, offer_salesman, offer_salesmancontactway, offer_money, offer_project, offer_time, context, accessory, c_time, u_time from offer
     </sql>
 
     <select id="selectOfferList" parameterType="Offer" resultMap="OfferResult">
@@ -76,6 +77,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="offerTime != null ">offer_time,</if>
             <if test="context != null  and context != ''">context,</if>
             <if test="accessory != null  and accessory != ''">accessory,</if>
+            <if test="filename != null  and filename != ''">filename,</if>
+
             c_time,
             <if test="uTime != null ">u_time,</if>
          </trim>
@@ -89,6 +92,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="offerTime != null ">#{offerTime},</if>
             <if test="context != null  and context != ''">#{context},</if>
             <if test="accessory != null  and accessory != ''">#{accessory},</if>
+            <if test="filename != null  and filename != ''">#{filename},</if>
             now(),
             <if test="uTime != null ">#{uTime},</if>
          </trim>
@@ -106,6 +110,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="offerTime != null ">offer_time = #{offerTime},</if>
             <if test="context != null  and context != ''">context = #{context},</if>
             <if test="accessory != null  and accessory != ''">accessory = #{accessory},</if>
+            <if test="filename != null  and filename != ''">filename=#{filename},</if>
+
             <if test="cTime != null ">c_time = #{cTime},</if>
            u_time= now(),
         </trim>

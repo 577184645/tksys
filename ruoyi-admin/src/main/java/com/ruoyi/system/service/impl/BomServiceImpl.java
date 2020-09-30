@@ -72,24 +72,23 @@ public class BomServiceImpl implements IBomService
             JSONArray productArray = JSONArray.fromObject(bomList);
             for (int i = 0; i < productArray.size(); i++) {
                 JSONObject jsonObject = productArray.getJSONObject(i);
+                JSONArray materialcode = jsonObject.getJSONArray("smaterialcode");
+                String sid="";
+                for (int i1 = 0; i1 < materialcode.size(); i1++) {
+                    sid+=materialcode.get(i1)+",";
+                }
 
                 Bomdetail bomdetail = new Bomdetail();
                 bomdetail.setBomid(bom.getId());
-                bomdetail.setName(jsonObject.getString("name"));
-                bomdetail.setMaterialcode(jsonObject.getString("materialcode"));
-                bomdetail.setPartnumber(jsonObject.getString("partnumber"));
-                bomdetail.setUnit(jsonObject.getString("unit"));
-                bomdetail.setPrice(jsonObject.getDouble("price"));
-                bomdetail.setManufacture(jsonObject.getString("manufacture"));
-                bomdetail.setSupplier(jsonObject.getString("supplier"));
-                bomdetail.setCount(jsonObject.getInt("count"));
-                if(!jsonObject.getString("leadtime").equals("null")&&jsonObject.getString("leadtime")!=null) {
-                    bomdetail.setLeadtime(jsonObject.getInt("leadtime"));
-                }
+                bomdetail.setSsid(sid.substring(0,sid.lastIndexOf(",")));
+                bomdetail.setMsid(jsonObject.getInt("mmaterialcode"));
+                bomdetail.setComment(jsonObject.getString("comment"));
                 bomdetail.setFootprint(jsonObject.getString("footprint"));
-                if(jsonObject.getString("comments")!=null||jsonObject.getString("comments").length()>0) {
-                    bomdetail.setComments(jsonObject.getString("comments"));
-                }
+                bomdetail.setDescription(jsonObject.getString("description"));
+                bomdetail.setDesignator(jsonObject.getString("designator"));
+                bomdetail.setQuantity(jsonObject.getInt("quantity"));
+                bomdetail.setCount(jsonObject.getInt("count"));
+                bomdetail.setSumcount(jsonObject.getInt("sumcount"));
                 bomdetailMapper.insertBomdetail(bomdetail);
             }
         }
@@ -118,7 +117,7 @@ public class BomServiceImpl implements IBomService
 
             Bomdetail bomdetail = new Bomdetail();
             bomdetail.setBomid(bom.getId());
-            bomdetail.setName(jsonObject.getString("name"));
+         /*   bomdetail.setName(jsonObject.getString("name"));
             bomdetail.setMaterialcode(jsonObject.getString("materialcode"));
             bomdetail.setPartnumber(jsonObject.getString("partnumber"));
             bomdetail.setUnit(jsonObject.getString("unit"));
@@ -131,7 +130,7 @@ public class BomServiceImpl implements IBomService
                 bomdetail.setLeadtime(jsonObject.getInt("leadtime"));
             }
             bomdetail.setFootprint(jsonObject.getString("footprint"));
-            bomdetail.setComments(jsonObject.getString("comments"));
+            bomdetail.setComments(jsonObject.getString("comments"));*/
             bomdetailMapper.insertBomdetail(bomdetail);
         }
         return bomMapper.updateBom(bom);

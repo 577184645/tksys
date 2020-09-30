@@ -61,8 +61,12 @@ public class MaterialServiceImpl implements IMaterialService {
         if(materialcode==null){
             materialCode = code + code1 + "0001";
         }else{
-
-            Integer count=Integer.valueOf(materialcode.substring(4));
+            int count;
+           if(materialcode.indexOf("-")==-1){
+                count=Integer.valueOf(materialcode.substring(4));
+           }else {
+               count=Integer.valueOf(materialcode.substring(4,materialcode.indexOf("-")));
+           }
 
             if (count+1 < 10) {
                 materialCode = code + code1 + "000" + String.valueOf(count+1);

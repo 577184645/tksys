@@ -91,6 +91,13 @@ public class StorageController extends BaseController
 
 
 
+    @RequestMapping("/selectByBom")
+    @ResponseBody
+    public List<Storage> selectByBom(String comments,String footprint){
+
+        return     storageService.selectByBom(comments,footprint);
+    }
+
 
     @GetMapping("/findlist/{materialcode}")
     @ResponseBody

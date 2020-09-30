@@ -5,14 +5,13 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.ruoyi.system.util.DateUtil;
 import com.ruoyi.system.util.FileUtil;
+import com.ruoyi.system.util.Office2PDF;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import com.ruoyi.common.config.Global;
 import com.ruoyi.common.config.ServerConfig;
@@ -43,6 +42,8 @@ public class CommonController
     private ServerConfig serverConfig;
 
 
+    @Value("${ruoyi.profile}")
+    private  String BASE_PATH;
 
 
     /**
@@ -151,19 +152,69 @@ public class CommonController
       String fileName=offerProject+ DateUtil.dateToStamp(cTime)+suffix;
       InputStream inputStream=new FileInputStream(localPath+"/zip"+"/"+offerProject+ DateUtil.dateToStamp(cTime)+suffix);
         fileName= URLEncoder.encode(fileName,"utf-8");
+
+
         response.setCharacterEncoding("utf-8");
-        response.setContentType("application/x-msdownload");
+        response.setContentType("multipart/form-data");
         response.setHeader("Content-Disposition",
-                "attachment;fileName="+ fileName);
-        OutputStream outputStream=response.getOutputStream();
-        byte [] b=new byte[1024];
-        int length = inputStream.read(b);
-        while (length!=-1){
-            outputStream.write(b,0,length);
-           outputStream.flush();
-           length=inputStream.read(b);
-        }
+                "attachment;fileName=" + FileUtils.setFileDownloadHeader(request, fileName));
+
+        FileUtils.writeBytes(localPath+"/zip"+"/"+offerProject+ DateUtil.dateToStamp(cTime)+suffix, response.getOutputStream());
 
 
     }
+
+    @GetMapping("/common/read")
+    public void readFile(HttpServletResponse res ,@RequestParam("fileName") String fileName) throws Exception{
+
+        fileName=fileName.substring(fileName.indexOf("upload"));
+        InputStream in = null;
+        OutputStream out = null;
+        String filePath =  fileHandler(fileName);
+        //判断是pdf还是word还是excel
+        //若是pdf直接读 否则转pdf 再读  //
+        try{
+            if(filePath != null){
+                in = new FileInputStream(filePath);
+            }
+            res.setContentType("application/pdf");
+            out = res.getOutputStream();
+            byte[] b = new byte[1024];
+            int len = 0;
+            while((len = in.read(b)) != -1){
+                out.write(b);
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+        }finally {
+            if(in != null){
+                in.close();
+            }
+            if(out != null){
+                out.close();
+            }
+        }
+    }
+
+
+    /**
+     * 文件处理
+     * @param fileName
+     * @return
+     */
+    public String fileHandler(String fileName){
+        String fileSuffix = FileUtil.getFileSuffix(fileName);
+        System.out.println(fileSuffix);
+        if("pdf".equals(fileSuffix))
+        {
+            return BASE_PATH +"/"+ fileName;
+        }
+        else
+        {
+            return Office2PDF.openOfficeToPDF(BASE_PATH+"/" + fileName).getAbsolutePath();
+        }
+
+    }
+
+
 }

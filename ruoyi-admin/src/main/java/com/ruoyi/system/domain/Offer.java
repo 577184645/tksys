@@ -23,6 +23,9 @@ public class Offer extends BaseEntity
     @Excel(name = "报价单号")
     private String offerNumber;
 
+
+    private String   filename;
+
     /** 报价人 */
     @Excel(name = "报价人")
     private String offerUsername;
@@ -63,7 +66,16 @@ public class Offer extends BaseEntity
     @Excel(name = "修改时间", width = 30, dateFormat = "yyyy-MM-dd")
     private Date uTime;
 
-    public void setOfferId(Long offerId) 
+
+    public String getFilename() {
+        return filename;
+    }
+
+    public void setFilename(String filename) {
+        this.filename = filename;
+    }
+
+    public void setOfferId(Long offerId)
     {
         this.offerId = offerId;
     }

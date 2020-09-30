@@ -1,6 +1,5 @@
 package com.ruoyi.system.domain;
 
-import java.util.Date;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import com.ruoyi.common.annotation.Excel;
@@ -10,7 +9,7 @@ import com.ruoyi.common.core.domain.BaseEntity;
  * bom详细清单对象 bomdetail
  * 
  * @author ruoyi
- * @date 2020-07-24
+ * @date 2020-09-28
  */
 public class Bomdetail extends BaseEntity
 {
@@ -20,146 +19,113 @@ public class Bomdetail extends BaseEntity
     private Integer id;
 
     /** 所属bom编号 */
-  /*  @Excel(name = "所属bom编号")*/
+    @Excel(name = "所属bom编号")
     private Long bomid;
 
 
+    private Integer msid;
 
-    /** 编码 */
-    @Excel(name = "编码")
-    private String materialcode;
+    private String  ssid;
 
+    /** Comment */
+    @Excel(name = "Comment")
+    private String comment;
 
-    /** 名称 */
-    @Excel(name = "名称")
-    private String name;
-
-
-
-    /** 型号 */
-    @Excel(name = "型号")
-    private String partnumber;
-
-    /** 单位 */
-    @Excel(name = "单位")
-    private String unit;
-
-    /** 单价 */
-    @Excel(name = "单价")
-    private Double price;
-
-    /** 品牌 */
-    @Excel(name = "品牌")
-    private String manufacture;
-
-    /** 供应商 */
-    @Excel(name = "供应商")
-    private String supplier;
-
-    /** 数量 */
-    @Excel(name = "数量")
-    private Integer count;
-
-    /** 创建时间 */
-   /* @Excel(name = "创建时间", width = 30, dateFormat = "yyyy-MM-dd")*/
-    private Date cTime;
-
-    /** 修改时间 */
-   /* @Excel(name = "修改时间", width = 30, dateFormat = "yyyy-MM-dd")*/
-    private Date uTime;
-
-    /** 交期 */
-    @Excel(name = "交期")
-    private Integer leadtime;
-
-    /** 封装 */
-    @Excel(name = "封装")
+    /** Footprint */
+    @Excel(name = "Footprint")
     private String footprint;
 
-    /** 备注 */
-    @Excel(name = "备注")
-    private String comments;
+    /** Description */
+    @Excel(name = "Description")
+    private String description;
 
-    public void setId(Integer id) 
-    {
+    /** Designator */
+    @Excel(name = "Designator")
+    private String designator;
+
+    /** Quantity */
+    @Excel(name = "Quantity")
+    private Integer quantity;
+
+    /** 生产数量 */
+    @Excel(name = "生产数量")
+    private Integer count;
+
+    /** 生产总用量 */
+    @Excel(name = "生产总用量")
+    private Integer sumcount;
+
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
         this.id = id;
     }
 
-    public Integer getId() 
-    {
-        return id;
+    public Long getBomid() {
+        return bomid;
     }
-    public void setBomid(Long bomid) 
-    {
+
+    public void setBomid(Long bomid) {
         this.bomid = bomid;
     }
 
-    public Long getBomid() 
-    {
-        return bomid;
-    }
-    public void setName(String name) 
-    {
-        this.name = name;
+    public Integer getMsid() {
+        return msid;
     }
 
-    public String getName() 
-    {
-        return name;
-    }
-    public void setMaterialcode(String materialcode) 
-    {
-        this.materialcode = materialcode;
+    public void setMsid(Integer msid) {
+        this.msid = msid;
     }
 
-    public String getMaterialcode() 
-    {
-        return materialcode;
-    }
-    public void setPartnumber(String partnumber) 
-    {
-        this.partnumber = partnumber;
+    public String getSsid() {
+        return ssid;
     }
 
-    public String getPartnumber() 
-    {
-        return partnumber;
-    }
-    public void setUnit(String unit) 
-    {
-        this.unit = unit;
+    public void setSsid(String ssid) {
+        this.ssid = ssid;
     }
 
-    public String getUnit() 
-    {
-        return unit;
-    }
-    public void setPrice(Double price) 
-    {
-        this.price = price;
+    public String getComment() {
+        return comment;
     }
 
-    public Double getPrice() 
-    {
-        return price;
-    }
-    public void setManufacture(String manufacture) 
-    {
-        this.manufacture = manufacture;
+    public void setComment(String comment) {
+        this.comment = comment;
     }
 
-    public String getManufacture() 
-    {
-        return manufacture;
-    }
-    public void setSupplier(String supplier) 
-    {
-        this.supplier = supplier;
+    public String getFootprint() {
+        return footprint;
     }
 
-    public String getSupplier() 
-    {
-        return supplier;
+    public void setFootprint(String footprint) {
+        this.footprint = footprint;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public String getDesignator() {
+        return designator;
+    }
+
+    public void setDesignator(String designator) {
+        this.designator = designator;
+    }
+
+    public Integer getQuantity() {
+        return quantity;
+    }
+
+    public void setQuantity(Integer quantity) {
+        this.quantity = quantity;
     }
 
     public Integer getCount() {
@@ -170,50 +136,12 @@ public class Bomdetail extends BaseEntity
         this.count = count;
     }
 
-    public void setcTime(Date cTime)
-    {
-        this.cTime = cTime;
+    public Integer getSumcount() {
+        return sumcount;
     }
 
-    public Date getcTime() 
-    {
-        return cTime;
-    }
-    public void setuTime(Date uTime) 
-    {
-        this.uTime = uTime;
-    }
-
-    public Date getuTime() 
-    {
-        return uTime;
-    }
-    public void setLeadtime(Integer leadtime) 
-    {
-        this.leadtime = leadtime;
-    }
-
-    public Integer getLeadtime() 
-    {
-        return leadtime;
-    }
-    public void setFootprint(String footprint) 
-    {
-        this.footprint = footprint;
-    }
-
-    public String getFootprint() 
-    {
-        return footprint;
-    }
-    public void setComments(String comments) 
-    {
-        this.comments = comments;
-    }
-
-    public String getComments() 
-    {
-        return comments;
+    public void setSumcount(Integer sumcount) {
+        this.sumcount = sumcount;
     }
 
     @Override
@@ -221,19 +149,14 @@ public class Bomdetail extends BaseEntity
         return new ToStringBuilder(this,ToStringStyle.MULTI_LINE_STYLE)
             .append("id", getId())
             .append("bomid", getBomid())
-            .append("name", getName())
-            .append("materialcode", getMaterialcode())
-            .append("partnumber", getPartnumber())
-            .append("unit", getUnit())
-            .append("price", getPrice())
-            .append("manufacture", getManufacture())
-            .append("supplier", getSupplier())
-            .append("count", getCount())
-            .append("cTime", getcTime())
-            .append("uTime", getuTime())
-            .append("leadtime", getLeadtime())
+            .append("sid", getSsid())
+            .append("comment", getComment())
             .append("footprint", getFootprint())
-            .append("comments", getComments())
+            .append("description", getDescription())
+            .append("designator", getDesignator())
+            .append("quantity", getQuantity())
+            .append("count", getCount())
+            .append("sumcount", getSumcount())
             .toString();
     }
 }

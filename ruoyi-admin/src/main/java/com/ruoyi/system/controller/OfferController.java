@@ -1,28 +1,17 @@
 package com.ruoyi.system.controller;
 
-import java.io.File;
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.alibaba.fastjson.JSON;
 import com.ruoyi.common.config.Global;
-import com.ruoyi.common.constant.Constants;
-import com.ruoyi.common.utils.DateUtils;
 import com.ruoyi.common.utils.file.FileUploadUtils;
 import com.ruoyi.framework.util.ShiroUtils;
 import com.ruoyi.system.common.Const;
-import com.ruoyi.system.domain.SysFileInfo;
 import com.ruoyi.system.domain.SysUser;
-import com.ruoyi.system.util.DateUtil;
-import com.ruoyi.system.util.FileUtil;
-import com.ruoyi.vo.OfferDataVo;
-import net.sf.json.JSONArray;
-import net.sf.json.JSONObject;
-import org.apache.commons.lang.StringUtils;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
@@ -188,12 +177,15 @@ public class OfferController extends BaseController
         // 上传文件路径
         String filePath = Global.getUploadPath();
         // 上传并返回新文件名称
+        String fileNamePath="";
         String fileName="";
-        for (int i=0;i<file.length;i++){
-            fileName += FileUploadUtils.upload(filePath, file[i])+",";
+        for (int i=0;i<file.length;i++) {
+            fileNamePath += FileUploadUtils.upload(filePath, file[i]) + ",";
+            fileName += file[i].getOriginalFilename() + ",";
         }
         SysUser user = ShiroUtils.getSysUser();
-        offer.setAccessory(fileName.substring(0,fileName.lastIndexOf(",")));
+        offer.setFilename(fileName.substring(0,fileName.lastIndexOf(",")));
+        offer.setAccessory(fileNamePath.substring(0,fileNamePath.lastIndexOf(",")));
         Const.OfferData.map.remove(user.getUserName());
         return toAjax(offerService.insertOffer(offer));
     }
@@ -219,8 +211,18 @@ public class OfferController extends BaseController
     @GetMapping("/infodetail/{offerId}")
     public String infodetail(@PathVariable("offerId") Long offerId, ModelMap mmap)
     {
+        Map<String ,String []> map=new HashMap<>();
         Offer offer = offerService.selectOfferById(offerId);
+
+        if(offer.getAccessory()!=null){
+            String[] filenamepaths = offer.getAccessory().split(",");
+            String[] filenames = offer.getFilename().split(",");
+            map.put("filenamepaths",filenamepaths);
+            map.put("filenames",filenames);
+            mmap.put("map",map);
+        }
         mmap.put("offer", offer);
+
         return prefix + "/infodetail";
     }
 
@@ -248,12 +250,15 @@ public class OfferController extends BaseController
         // 上传文件路径
         String filePath = Global.getUploadPath();
         String accessory = offerService.selectOfferById(offer.getOfferId()).getAccessory();
-        // 上传并返回新文件名称
+        String fileNamePath="";
         String fileName="";
-        for (int i=0;i<file.length;i++){
-            fileName += FileUploadUtils.upload(filePath, file[i])+",";
+        for (int i=0;i<file.length;i++) {
+            fileNamePath += FileUploadUtils.upload(filePath, file[i]) + ",";
+            fileName += file[i].getOriginalFilename() + ",";
         }
-        offer.setAccessory(fileName.substring(0,fileName.lastIndexOf(",")));
+        SysUser user = ShiroUtils.getSysUser();
+        offer.setFilename(fileName.substring(0,fileName.lastIndexOf(",")));
+        offer.setAccessory(fileNamePath.substring(0,fileNamePath.lastIndexOf(",")));
         return toAjax(offerService.updateOffer(offer));
     }
 

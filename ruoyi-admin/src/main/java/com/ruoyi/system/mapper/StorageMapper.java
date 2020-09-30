@@ -89,6 +89,10 @@ public interface StorageMapper
      */
     public Storage selectStorageById(Long id);
 
+
+
+    public List<Storage> selectByBom(@Param("comments") String comments,@Param("footprint") String footprint);
+
     /**
      * 查询当前本月的数据
      *

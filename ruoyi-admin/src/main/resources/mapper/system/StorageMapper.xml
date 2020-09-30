@@ -145,6 +145,14 @@ GROUP BY supplier,materialcode
         <include refid="selectStorageVo"/>
         where id = #{id}
     </select>
+
+    <select id="selectByBom"  resultMap="StorageResult">
+        <include refid="selectStorageVo"/>
+        where partnumber like concat('%',#{comments},'%')
+        and   footprint like concat('%',#{footprint},'%')
+
+    </select>
+
         
     <insert id="insertStorage" parameterType="Storage" useGeneratedKeys="true" keyProperty="id">
         insert into storage

@@ -5,11 +5,14 @@
     <th:block th:include="include :: layout-latest-css" />
     <th:block th:include="include :: ztree-css" />
     <th:block th:include="include :: bootstrap-editable-css" />
+    <link th:href="@{/css/jquery.editable-select.css}" rel="stylesheet" type="text/css" />
+
 </head>
 <body class="white-bg">
 <div class="wrapper wrapper-content animated fadeInRight ibox-content">
     <form class="form-horizontal m" id="form-storageinbill-add">
         <h4 class="form-header h4">入库单信息</h4>
+
 
         <div class="row">
             <div class="col-sm-6">
@@ -24,17 +27,17 @@
                 <div class="form-group">
                     <label class="col-sm-3 control-label">供应商：</label>
                     <div class="col-sm-8">
-                        <select   name="supplier" id="supplier" class="form-control m-b">
-                            <option value="">所有</option>
-                            <option  th:each="supplier:${supplierList}"
-                                     th:value="${supplier.name}"
-                                     th:text="${supplier.name}"
-
-                            ></option>
 
 
-                            ></option>
-                        </select>
+                            <select  name="supplier" id="supplier" class="form-control">
+                                <option  th:each="supplier:${supplierList}"
+                                         th:value="${supplier.name}"
+                                         th:text="${supplier.name}"
+
+                                ></option>
+                            </select>
+
+
                     </div>
                 </div>
             </div>
@@ -282,6 +285,8 @@
  <th:block th:include="include :: layout-latest-js" />
  <th:block th:include="include :: ztree-js" />
             <th:block th:include="include :: bootstrap-table-editable-js" />
+            <script type="text/javascript" th:src="@{/js/jquery.editable-select.js}"></script>
+
 <script type="text/javascript">
     var prefix = ctx + "system/material"
     $("#form-storageinbill-add").validate({
@@ -474,6 +479,7 @@
                 editable : {
                     type : 'select',
                     title : '税率',
+                    separator:",",
                     source : [
                         {
                             value : "3%",
@@ -693,7 +699,9 @@
         $("#" + table.options.id).bootstrapTable('removeAll')
     }
 
-
+    $('#supplier').editableSelect({
+        effects: 'slide' //可选参数default、fade
+    });
 
 
 </script>

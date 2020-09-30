@@ -55,7 +55,7 @@
                     </div>
                 </div>
             </div>
-            <div class="form-group">
+            <div class="form-group" id="nl">
                 <label class="col-sm-3 control-label">内容：</label>
 
                     <div class="col-sm-8">
@@ -64,19 +64,40 @@
                     </div>
 
             </div>
-            <div class="form-group">
+
+
+
+
+
+       <!--   <div class="form-group" th:each="map:${map}">
                 <label class="col-sm-3 control-label">附件：</label>
                 <div class="col-sm-8">
-                    <input id="filePath" readonly name="accessory" th:text="*{accessory}" class="form-control" type="file">
+                    <a    th:text="${array}" class="form-control" /><button type="button" href="javascript:void(0)"  th:onclick="look([[${array}]])" >预览</button>  <button type="button"  href="javascript:void(0)" th:onclick="downloadFile([[${array}]])">下载</button>
                 </div>
-            </div>
+            </div>-->
 
         </form>
     </div>
     <th:block th:include="include :: footer" />
     <th:block th:include="include :: datetimepicker-js" />
     <th:block th:include="include :: summernote-js" />
-    <script type="text/javascript">
+    <script th:inline="javascript">
+
+
+        var map = [[${map}]];
+        console.log(map);
+
+        for(var i=0;i<map.filenames.length;i++){
+/*
+            $("#nl").append("<span id='x"+(i+1)+"name'  style='font-size: .2rem; color: #ffeb7b;position: absolute;left:0px;top:-5.2%;display: none' >"+json.info[i].name+"</span>");
+*/
+
+            $("#nl").append("<div class='form-group'>   <label class='col-sm-3 control-label'>附件：</label>       <div class='col-sm-8'>     <a     class='form-control' >"+map.filenames[i]+"</a><button type='button' href='javascript:void(0)'  onclick='look(\""+map.filenamepaths[i]+"\")' >预览</button>  <button type='button'  href='javascript:void(0)' onclick='downloadFile(\""+map.filenamepaths[i]+"\")'>下载</button>  </div>     </div>");
+
+
+        }
+
+
         var prefix = ctx + "system/offer";
         $("#form-offer-edit").validate({
             focusCleanup: true
@@ -193,6 +214,15 @@
             minView: "month",
             autoclose: true
         });
+
+        function look(path) {
+            window.open("http://tksys.com.cn:82/common/read?fileName="+ path);
+        }
+
+
+        function downloadFile(value){
+            window.location.href = ctx + "common/download/resource?resource=" + value;
+        }
     </script>
 </body>
 </html>

@@ -93,6 +93,15 @@
         </dependency>
 
 
+        <!-- https://mvnrepository.com/artifact/org.jodconverter/jodconverter-core -->
+        <!-- https://mvnrepository.com/artifact/org.jodconverter/jodconverter-core -->
+             <dependency>
+               <groupId>org.jodconverter</groupId>
+                <artifactId>jodconverter-core</artifactId>
+              <version>4.0.0-RELEASE</version>
+            </dependency>
+
+
         <dependency>
             <groupId>javax.mail</groupId>
             <artifactId>mail</artifactId>

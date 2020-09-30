@@ -1,7 +1,6 @@
 package com.ruoyi.system.common;
 
 import com.ruoyi.system.domain.Offer;
-import com.ruoyi.vo.OfferDataVo;
 
 import java.util.HashMap;
 import java.util.Map;

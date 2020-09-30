@@ -379,6 +379,7 @@ var table = {
     			$.get(table.options.importTemplateUrl, function(result) {
     				if (result.code == web_status.SUCCESS) {
     			        window.location.href = ctx + "common/download?fileName=" + encodeURI(result.msg) + "&delete=" + true;
+
     				} else if (result.code == web_status.WARNING) {
                         $.modal.alertWarning(result.msg)
                     } else {

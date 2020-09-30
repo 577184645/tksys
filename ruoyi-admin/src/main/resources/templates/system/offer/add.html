@@ -173,7 +173,9 @@
                 contentType: false,
                 dataType: "json",
                 success: function(result) {
-                    $.operate.successCallback(result);
+
+                    $.modal.alertSuccess(result.msg);
+
                 }
             });
         }

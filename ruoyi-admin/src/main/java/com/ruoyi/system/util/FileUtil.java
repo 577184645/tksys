@@ -1,5 +1,6 @@
 package com.ruoyi.system.util;
 
+import com.github.pagehelper.util.StringUtil;
 import org.apache.commons.lang.StringUtils;
 
 import java.io.*;
@@ -302,4 +303,15 @@ public class FileUtil {
         String filename = filePath.substring(filePath.lastIndexOf("/") + 1);
         return filename;
     }
+
+    public static String getFileSuffix(String fileName){
+        if(StringUtil.isEmpty(fileName) || fileName.lastIndexOf(".")<0 ){
+                       return "error";
+                    }
+                return fileName.substring(fileName.lastIndexOf(".")+1);
+    }
+
+
+
+
     }

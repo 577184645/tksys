@@ -51,7 +51,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="invoiceid != null  and contractid != ''"> and contractid like concat('%', #{contractid}, '%')</if>
             <if test="stockrequisition != null  and stockrequisition != ''"> and stockrequisition like concat('%', #{stockrequisition}, '%')</if>
             <if test="storageouttime != null "> and storageouttime = #{storageouttime}</if>
-            <if test="comments != null  and comments != ''"> and comments like concat('%', #{comments}, '%')</if>
+            <if test="comments != null  and comments != ''"> and s.comments like concat('%', #{comments}, '%')</if>
             <if test="params.beginTime != null and params.beginTime != '' and params.endTime != null and params.endTime != '' "><!-- 开始时间检索 -->
                 AND  storageouttime    between  #{params.beginTime} and #{params.endTime}
             </if>

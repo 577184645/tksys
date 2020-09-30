@@ -112,6 +112,10 @@ public  class StorageServiceImpl implements IStorageService {
     }
 
 
+    @Override
+    public List<Storage> selectByBom(String comments, String footprint) {
+        return storageMapper.selectByBom(comments,footprint);
+    }
 
     @Override
     public Storage selectStorageListBymaterialcode(String materialcode) {

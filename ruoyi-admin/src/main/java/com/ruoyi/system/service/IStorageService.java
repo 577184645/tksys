@@ -5,6 +5,7 @@ import com.ruoyi.system.domain.Storage;
 import com.ruoyi.system.domain.Storageinbill;
 import com.ruoyi.system.domain.Storageoutbill;
 import com.ruoyi.system.domain.Storagequitbill;
+import org.apache.ibatis.annotations.Param;
 import org.apache.poi.ss.usermodel.Workbook;
 
 /**
@@ -17,6 +18,8 @@ public interface IStorageService
 {
 
 
+
+    public List<Storage> selectByBom(String comments,String footprint);
 
     public Storage selectStorageListBymaterialcode(String materialcode);
 

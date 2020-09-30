@@ -5,6 +5,7 @@
     <th:block th:include="include :: layout-latest-css" />
     <th:block th:include="include :: ztree-css" />
     <th:block th:include="include :: bootstrap-editable-css" />
+    <link th:href="@{/css/jquery.editable-select.css}" rel="stylesheet" type="text/css" />
 
 
 
@@ -185,11 +186,11 @@
             <div class="form-group">
                 <label class="col-sm-3 control-label">客户：</label>
                 <div class="col-sm-8">
-                    <select  name="customer" id="customer" class="form-control m-b">
-                        <option value="">所有</option>
+                    <select  name="customer" id="customer" class="form-control">
                         <option  th:each="supplier:${supplierList}"
                                  th:value="${supplier.name}"
                                  th:text="${supplier.name}"
+
                         ></option>
                     </select>
                 </div>
@@ -309,8 +310,8 @@
 
                 </div>
                 <div class="col-xs-12 select-table table-striped" style="margin-bottom: 2%">
-                    <table id="bootstrap-table2" ></table>
-                </div>
+                <table id="bootstrap-table2" ></table>
+            </div>
                 <div class="row">
                     <div class="col-sm-offset-5 col-sm-10">
                         <button type="button" class="btn btn-sm btn-primary" onclick="submitHandler()"><i class="fa fa-check"></i>保 存</button>&nbsp;
@@ -321,6 +322,7 @@
                 <th:block th:include="include :: layout-latest-js" />
                 <th:block th:include="include :: ztree-js" />
                 <th:block th:include="include :: bootstrap-table-editable-js" />
+                <script type="text/javascript" th:src="@{/js/jquery.editable-select.js}"></script>
                 <script type="text/javascript">
                     var prefix = ctx + "system/storage"
                     $("#form-storageinbill-add").validate({
@@ -733,7 +735,13 @@
                     }
 
 
-
+                    $('#customer').editableSelect({
+                        effects: 'slide' //可选参数default、fade
+                    });
                 </script>
+
+
+
+
 </body>
 </html>

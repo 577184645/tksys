@@ -1,10 +1,19 @@
 package com.ruoyi.system.controller;
 
+import java.io.ByteArrayInputStream;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.ruoyi.vo.BomdetailVo;
+import org.apache.commons.lang.StringUtils;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.poifs.filesystem.POIFSFileSystem;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -41,7 +50,7 @@ public class BomdetailController extends BaseController
     @Autowired
     private IBomdetailService bomdetailService;
 
-    List<Bomdetail> bomDetailList=new ArrayList<>();
+    List<BomdetailVo> bomDetailList=new ArrayList<>();
 
     @RequiresPermissions("system:bomdetail:view")
     @GetMapping()
@@ -55,8 +64,8 @@ public class BomdetailController extends BaseController
     @ResponseBody
     public Map clearbomDetailList(){
         Map<String,Object> ret=new HashMap<>();
-        ret.put("msg","succee");
         bomDetailList.clear();
+        ret.put("msg","sucess");
         return  ret;
     }
 
@@ -67,15 +76,44 @@ public class BomdetailController extends BaseController
     @ResponseBody
     public AjaxResult importData(MultipartFile file, boolean updateSupport, HttpServletRequest request) throws Exception
     {
-        ExcelUtil<Bomdetail> util = new ExcelUtil<Bomdetail>(Bomdetail.class);
-        bomDetailList = util.importExcel(file.getInputStream());
-        String message = bomdetailService.importBomdetail(bomDetailList);
-        return AjaxResult.success(message);
+        bomDetailList.clear();
+        InputStream in= new ByteArrayInputStream(file.getBytes());
+        POIFSFileSystem fs = new POIFSFileSystem(in);
+        Workbook wb = new HSSFWorkbook(fs);
+        Sheet sheet = wb.getSheetAt(0);
+        int excelRealRow = com.ruoyi.system.util.ExcelUtil.getExcelRealRow(sheet);
+        for (int i=4;i<excelRealRow;i++){
+            Row row = sheet.getRow(i);
+            if(row.getCell(0).equals("Approved")||(int)row.getCell(0).getNumericCellValue()==0){
+                continue;
+            }
+            BomdetailVo bomdetailVo=new BomdetailVo();
+            bomdetailVo.setNo((int)row.getCell(0).getNumericCellValue());
+            bomdetailVo.setComment(row.getCell(1).getStringCellValue());
+            bomdetailVo.setFootprint(row.getCell(2).getStringCellValue());
+            bomdetailVo.setDescription(row.getCell(3).getStringCellValue());
+            bomdetailVo.setDesignator(row.getCell(4).getStringCellValue());
+            bomdetailVo.setQuantity((int)row.getCell(5).getNumericCellValue());
+            if(row.getCell(6)!=null){
+                bomdetailVo.setCount((int)row.getCell(6).getNumericCellValue());
+
+            }
+            if(row.getCell(7)!=null){
+                bomdetailVo.setSumcount((int)row.getCell(7).getNumericCellValue());
+
+            }
+
+            bomDetailList.add(bomdetailVo);
+        }
+
+
+
+        return AjaxResult.success("操作成功!");
     }
 
     @PostMapping("/listimport")
     @ResponseBody
-    public TableDataInfo listimport(Bomdetail bomdetail)
+    public TableDataInfo listimport()
     {
         startPage();
         return getDataTable(bomDetailList);
@@ -141,14 +179,7 @@ public class BomdetailController extends BaseController
     }
 
 
-    @RequiresPermissions("system:bomdetail:view")
-    @GetMapping("/importTemplate")
-    @ResponseBody
-    public AjaxResult importTemplate()
-    {
-        ExcelUtil<Bomdetail> util = new ExcelUtil<Bomdetail>(Bomdetail.class);
-        return util.importTemplateExcel("bom产品数据");
-    }
+
     /**
      * 修改保存bom详细清单
      */
