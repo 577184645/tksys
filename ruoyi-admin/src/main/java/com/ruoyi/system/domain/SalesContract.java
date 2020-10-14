@@ -27,6 +27,9 @@ public class SalesContract extends BaseEntity
     @Excel(name = "单位")
     private String contractCustomer;
 
+
+
+
     /** 金额 */
     @Excel(name = "金额")
     private Double contractMoney;
@@ -48,12 +51,21 @@ public class SalesContract extends BaseEntity
     private Double contractReturnedmoney;
 
     /** 合同未执行完毕应付款 */
-    @Excel(name = "合同未执行完毕应付款")
+
     private Double contractStartmoney;
 
     /** 合同已执行完毕应付款 */
-    @Excel(name = "合同已执行完毕应付款")
+
     private Double contractEndmoney;
+
+    @Excel(name = "集团合同号")
+    private String  groupNumber;
+
+    @Excel(name = "项目名称")
+    private String contractProjectname;
+
+
+    private String year;
 
     /** 创建时间 */
     private Date cTime;
@@ -61,7 +73,32 @@ public class SalesContract extends BaseEntity
     /** 修改时间 */
     private Date uTime;
 
-    public void setContractId(Long contractId) 
+
+    public String getYear() {
+        return year;
+    }
+
+    public void setYear(String year) {
+        this.year = year;
+    }
+
+    public String getContractProjectname() {
+        return contractProjectname;
+    }
+
+    public void setContractProjectname(String contractProjectname) {
+        this.contractProjectname = contractProjectname;
+    }
+
+    public String getGroupNumber() {
+        return groupNumber;
+    }
+
+    public void setGroupNumber(String groupNumber) {
+        this.groupNumber = groupNumber;
+    }
+
+    public void setContractId(Long contractId)
     {
         this.contractId = contractId;
     }

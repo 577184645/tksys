@@ -10,53 +10,18 @@
                 <form id="formId">
                     <div class="select-list">
                         <ul>
-                            <li>
-                                <label>修改时间：</label>
-                                <input type="text" name="contractId"/>
-                            </li>
-                            <li>
-                                <label>回款金额：</label>
-                                <input type="text" name="returnedMoney"/>
-                            </li>
-                            <li class="select-time">
-                                <label>回款日期：</label>
-                                <input type="text" class="time-input" id="startTime" placeholder="开始时间" name="params[beginReturnedDate]"/>
-                                <span>-</span>
-                                <input type="text" class="time-input" id="endTime" placeholder="结束时间" name="params[endReturnedDate]"/>
-                            </li>
-                            <li class="select-time">
-                                <label>创建时间：</label>
-                                <input type="text" class="time-input" id="startTime" placeholder="开始时间" name="params[beginCTime]"/>
-                                <span>-</span>
-                                <input type="text" class="time-input" id="endTime" placeholder="结束时间" name="params[endCTime]"/>
-                            </li>
-                            <li class="select-time">
-                                <label>修改时间：</label>
-                                <input type="text" class="time-input" id="startTime" placeholder="开始时间" name="params[beginUTime]"/>
-                                <span>-</span>
-                                <input type="text" class="time-input" id="endTime" placeholder="结束时间" name="params[endUTime]"/>
-                            </li>
-                            <li>
-                                <a class="btn btn-primary btn-rounded btn-sm" onclick="$.table.search()"><i class="fa fa-search"></i>&nbsp;搜索</a>
-                                <a class="btn btn-warning btn-rounded btn-sm" onclick="$.form.reset()"><i class="fa fa-refresh"></i>&nbsp;重置</a>
-                            </li>
+
+                                <input type="hidden" id="contractId" name="contractId" th:value="${contractNumber}" />
+
+
                         </ul>
                     </div>
                 </form>
             </div>
 
             <div class="btn-group-sm" id="toolbar" role="group">
-                <a class="btn btn-success" onclick="$.operate.add()" shiro:hasPermission="system:returned:add">
+                <a class="btn btn-success" onclick="add()" >
                     <i class="fa fa-plus"></i> 添加
-                </a>
-                <a class="btn btn-primary single disabled" onclick="$.operate.edit()" shiro:hasPermission="system:returned:edit">
-                    <i class="fa fa-edit"></i> 修改
-                </a>
-                <a class="btn btn-danger multiple disabled" onclick="$.operate.removeAll()" shiro:hasPermission="system:returned:remove">
-                    <i class="fa fa-remove"></i> 删除
-                </a>
-                <a class="btn btn-warning" onclick="$.table.exportExcel()" shiro:hasPermission="system:returned:export">
-                    <i class="fa fa-download"></i> 导出
                 </a>
             </div>
             <div class="col-sm-12 select-table table-striped">
@@ -77,48 +42,58 @@
                 updateUrl: prefix + "/edit/{id}",
                 removeUrl: prefix + "/remove",
                 exportUrl: prefix + "/export",
+                showFooter: true,
                 modalName: "回款",
+                queryParams : {
+                    contractId: $("#contractId").val()
+                },
                 columns: [{
                     checkbox: true
                 },
                 {
-                    field: 'returnedId', 
-                    title: '修改时间',
-                    visible: false
-                },
-                {
-                    field: 'contractId', 
-                    title: '修改时间'
-                },
-                {
                     field: 'returnedMoney', 
-                    title: '回款金额'
+                    title: '回款金额',
+                    footerFormatter:function (value) {
+                        var sumBalance = 0;
+                        for (var i in value) {
+                            sumBalance += parseFloat(value[i].returnedMoney);
+                        }
+
+                        return "总金额：" + sumBalance.toFixed(2);
+                    }
                 },
                 {
                     field: 'returnedDate', 
-                    title: '回款日期'
-                },
-                {
-                    field: 'cTime', 
-                    title: '创建时间'
-                },
-                {
-                    field: 'uTime', 
-                    title: '修改时间'
+                    title: '回款日期',
+                    formatter:function (value, row, index) {
+
+                        return setDefaultDate(value) ;
+                    }
                 },
                 {
                     title: '操作',
                     align: 'center',
                     formatter: function(value, row, index) {
                         var actions = [];
-                        actions.push('<a class="btn btn-success btn-xs ' + editFlag + '" href="javascript:void(0)" onclick="$.operate.edit(\'' + row.returnedId + '\')"><i class="fa fa-edit"></i>编辑</a> ');
-                        actions.push('<a class="btn btn-danger btn-xs ' + removeFlag + '" href="javascript:void(0)" onclick="$.operate.remove(\'' + row.returnedId + '\')"><i class="fa fa-remove"></i>删除</a>');
+                        actions.push('<a class="btn btn-success btn-xs  href="javascript:void(0)" onclick="$.operate.edit(\'' + row.returnedId + '\')"><i class="fa fa-edit"></i>编辑</a> ');
+                        actions.push('<a class="btn btn-danger btn-xs  href="javascript:void(0)" onclick="$.operate.remove(\'' + row.returnedId + '\')"><i class="fa fa-remove"></i>删除</a>');
                         return actions.join('');
                     }
                 }]
             };
             $.table.init(options);
         });
+        function setDefaultDate(myDate) {
+            if(myDate!=null) {
+                return myDate.substring(0, 10);
+            }
+            return "";
+        }
+
+        function add() {
+                table.set();
+                $.modal.open("添加回款记录", prefix+"/add/"+$("#contractId").val());
+        }
     </script>
 </body>
 </html>

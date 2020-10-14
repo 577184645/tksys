@@ -19,6 +19,9 @@ public interface ISalesContractService
      */
     public SalesContract selectSalesContractById(Long contractId);
 
+
+    public Double yearsummoney(String yyyy);
+
     /**
      * 查询销售合同列表
      * 

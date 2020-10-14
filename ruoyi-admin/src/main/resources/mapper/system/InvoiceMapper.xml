@@ -29,7 +29,12 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="uTime != null "> and u_time = #{uTime}</if>
         </where>
     </select>
-    
+
+
+    <select id="yearsummoney" resultType="double">
+       SELECT sum(invoice_money) FROM invoice where invoice_date like concat('%',#{yyyy},'%')
+    </select>
+
     <select id="selectInvoiceById" parameterType="Long" resultMap="InvoiceResult">
         <include refid="selectInvoiceVo"/>
         where invoice_id = #{invoiceId}

@@ -32,6 +32,11 @@ public class InvoiceServiceImpl implements IInvoiceService
         return invoiceMapper.selectInvoiceById(invoiceId);
     }
 
+    @Override
+    public Double yearsummoney(String yyyy) {
+        return invoiceMapper.yearsummoney(yyyy);
+    }
+
     /**
      * 查询发票列表
      * 

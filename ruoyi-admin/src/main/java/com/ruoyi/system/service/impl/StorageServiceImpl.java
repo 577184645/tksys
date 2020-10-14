@@ -654,40 +654,53 @@ if(storageoutbill.getOutsourcewarehousecomments().isEmpty()){
         }
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");//注意月份是MM
         List<WarehouseBillVo> warehouseBillInVos= storageMapper.selectStoragebyDate(simpleDateFormat.parse(date));
+
         List<WarehouseBillVo> warehouseBillDInVos = storageMapper.selectStoragebyDatedashed(simpleDateFormat.parse(date));
-       
-        
+
+
         //对比入库红冲的产品
 
-            for (WarehouseBillVo warehouseBillDInVo : warehouseBillDInVos) {
-                for (WarehouseBillVo warehouseBillInVo : warehouseBillInVos) {
-                    if (warehouseBillDInVo.getMaterialcode().equals(warehouseBillInVo.getMaterialcode()) && warehouseBillDInVo.getSupplier().equals(warehouseBillInVo.getSupplier())) {
-                        warehouseBillInVo.setIncount((warehouseBillInVo.getIncount()!=null?warehouseBillInVo.getIncount():0) -(warehouseBillDInVo.getIncount()!=null?warehouseBillDInVo.getIncount():0));
-                        warehouseBillInVo.setInmoney((warehouseBillInVo.getInmoney()!=null?warehouseBillInVo.getInmoney():0.00) - (warehouseBillDInVo.getInmoney()!=null?warehouseBillDInVo.getInmoney():0.00));
-                        warehouseBillInVo.setInprice(BigDecimalUtil.divint(warehouseBillInVo.getInmoney(), warehouseBillInVo.getIncount()));
-                        break;
-                    }
 
-                }
-            }
+                 for (int i = 0; i < warehouseBillDInVos.size(); i++) {
+                     for (int i1 = 0; i1 < warehouseBillInVos.size(); i1++) {
+                         if (warehouseBillDInVos.get(i).getMaterialcode().equals(warehouseBillInVos.get(i1).getMaterialcode()) && warehouseBillDInVos.get(i).getSupplier().equals(warehouseBillInVos.get(i1).getSupplier())) {
+                             warehouseBillInVos.get(i1).setIncount(  warehouseBillInVos.get(i1).getIncount() -warehouseBillDInVos.get(i).getIncount());
+                             warehouseBillInVos.get(i1).setInmoney(  warehouseBillInVos.get(i1).getInmoney()-warehouseBillDInVos.get(i).getInmoney());
+                             warehouseBillInVos.get(i1).setInprice(BigDecimalUtil.divint(warehouseBillInVos.get(i1).getInmoney(), warehouseBillInVos.get(i1).getIncount()));
+                           if( warehouseBillInVos.get(i1).getIncount()==0){
+                               warehouseBillInVos.remove(i1);
+                           }
+
+                             break;
+                         }
+                     }
+                 }
+
+
+
 
         List<WarehouseBillVo> outwarehouseBillVos = storageMapper.selectoutStoragebyDate(simpleDateFormat.parse(date));
 
         List<WarehouseBillVo> outwarehouseBillDVos = storageMapper.selectoutStoragebyDatedashed(simpleDateFormat.parse(date));
         //对比出库红冲的产品
-        for (WarehouseBillVo outwarehouseBillDVo : outwarehouseBillDVos) {
-            for (WarehouseBillVo outwarehouseBillVo : outwarehouseBillVos) {
-
-                    if (outwarehouseBillDVo.getMaterialcode().equals(outwarehouseBillVo.getMaterialcode()) && outwarehouseBillDVo.getSupplier().equals(outwarehouseBillVo.getSupplier())) {
-                        outwarehouseBillVo.setOutcount((outwarehouseBillVo.getOutcount()!=null?outwarehouseBillVo.getOutcount():0) - (outwarehouseBillDVo.getOutcount()!=null?outwarehouseBillDVo.getOutcount():0));
-                        outwarehouseBillVo.setOutmoney((outwarehouseBillVo.getOutmoney()!=null?outwarehouseBillVo.getOutmoney():0.00) - (outwarehouseBillDVo.getOutmoney()!=null?outwarehouseBillDVo.getOutmoney():0.00));
-                        outwarehouseBillVo.setOutprice(BigDecimalUtil.divint(outwarehouseBillVo.getOutmoney(), outwarehouseBillVo.getOutcount()));
-                        break;
-                    }
 
 
-            }
-        }
+                 for (int i = 0; i < outwarehouseBillDVos.size(); i++) {
+                     for (int i1 = 0; i1 < outwarehouseBillVos.size(); i1++) {
+                         if (outwarehouseBillDVos.get(i).getMaterialcode().equals(outwarehouseBillVos.get(i1).getMaterialcode()) && outwarehouseBillDVos.get(i).getSupplier().equals(outwarehouseBillVos.get(i1).getSupplier())) {
+                             outwarehouseBillVos.get(i1).setOutcount(  outwarehouseBillVos.get(i1).getOutcount() -outwarehouseBillDVos.get(i).getOutcount());
+                             outwarehouseBillVos.get(i1).setOutmoney(  outwarehouseBillVos.get(i1).getOutmoney()-outwarehouseBillDVos.get(i).getOutmoney());
+                             outwarehouseBillVos.get(i1).setOutprice(BigDecimalUtil.divint(outwarehouseBillVos.get(i1).getOutmoney(), outwarehouseBillVos.get(i1).getOutcount()));
+                             if( outwarehouseBillVos.get(i1).getOutcount()==0){
+                                 outwarehouseBillVos.remove(i1);
+                             }
+                             break;
+                         }
+                     }
+                 }
+                         
+                
+                 
 
 
         //对比入库出库的产品
@@ -718,7 +731,7 @@ if(storageoutbill.getOutsourcewarehousecomments().isEmpty()){
 
                     warehouseBillInVo.setThiscount(storage.getStocks());
                     warehouseBillInVo.setThisprice(storage.getPrice().floatValue());
-                    warehouseBillInVo.setThismoney(storage.getMoney().floatValue());
+                    warehouseBillInVo.setThismoney(storage.getMoney()!=null?storage.getMoney().floatValue():0);
                     warehouseBillInVo.setPrevcount((warehouseBillInVo.getOutcount()!=null?warehouseBillInVo.getOutcount():0)-(warehouseBillInVo.getIncount()!=null?warehouseBillInVo.getIncount():0)+(warehouseBillInVo.getThiscount()!=null?warehouseBillInVo.getThiscount():0));
                     BigDecimal bg=  new BigDecimal((warehouseBillInVo.getOutmoney()!=null?warehouseBillInVo.getOutmoney():0)).subtract(new BigDecimal((warehouseBillInVo.getInmoney()!=null?warehouseBillInVo.getInmoney():0.00))).add(new BigDecimal((warehouseBillInVo.getThismoney()!=null?warehouseBillInVo.getThismoney():0)));
                     warehouseBillInVo.setPrevmoney(bg.setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue());
@@ -737,19 +750,14 @@ if(storageoutbill.getOutsourcewarehousecomments().isEmpty()){
                     warehouseBillInVos.remove(i);
                 }
             }
-            else if(storageoutbillMapper.selectStorageoutbillByStorageoutId(warehouseBillInVos.get(i).getNumber())!=null){
-                if(storageoutbillMapper.selectStorageoutbillByStorageoutId(warehouseBillInVos.get(i).getNumber()).getOutsourcewarehouse().indexOf("生产库")==-1){
-                    warehouseBillInVos.remove(i);
 
-                }
-            }
         }
 
 
 
 
 
-        for (int i = 0; i < warehouseBillInVos.size(); i++) {
+       for (int i = 0; i < warehouseBillInVos.size(); i++) {
             warehouseBillInVos.get(i).setRownum(i+1);
             Row row = sheet.createRow(rowIndex++);
             row.createCell(0).setCellValue(warehouseBillInVos.get(i).getRownum()!=null?warehouseBillInVos.get(i).getRownum().toString():"");
@@ -792,8 +800,6 @@ if(storageoutbill.getOutsourcewarehousecomments().isEmpty()){
             row.getCell(16).setCellStyle(cellStyle2);
             row.getCell(17).setCellStyle(cellStyle2);
             row.getCell(18).setCellStyle(cellStyle2);
-
-
 
 
 

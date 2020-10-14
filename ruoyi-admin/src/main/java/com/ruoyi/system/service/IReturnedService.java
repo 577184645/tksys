@@ -19,6 +19,9 @@ public interface IReturnedService
      */
     public Returned selectReturnedById(Long returnedId);
 
+
+    public Double yearsummoney(String yyyy);
+
     /**
      * 查询回款列表
      * 

@@ -35,9 +35,10 @@ public class ReturnedController extends BaseController
     private IReturnedService returnedService;
 
 
-    @GetMapping()
-    public String returned()
+    @GetMapping("/{contractNumber}")
+    public String returned(ModelMap map, @PathVariable("contractNumber") Long contractNumber)
     {
+        map.put("contractNumber",contractNumber);
         return prefix + "/returned";
     }
 
@@ -76,6 +77,16 @@ public class ReturnedController extends BaseController
     {
         map.put("contractId",contractId);
         return prefix + "/add";
+    }
+
+
+
+    @PostMapping("/getyearbacksummoney")
+    @ResponseBody
+    public Double getyearbacksummoney(String yyyy)
+    {
+        return  returnedService.yearsummoney(yyyy)!=null?returnedService.yearsummoney(yyyy):0;
+
     }
 
     /**

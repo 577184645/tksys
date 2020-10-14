@@ -29,6 +29,10 @@ public class Storageinbill extends BaseEntity
     @Excel(name = "外协库")
     private String outsourcewarehouse;
 
+
+    @Excel(name = "报检单号")
+    private String  checknumber;
+
     /** 采购单号 */
     @Excel(name = "采购单号")
     private String purchaseid;
@@ -100,6 +104,15 @@ public class Storageinbill extends BaseEntity
     private Date uTime;
 
     private Long outsourcewarehouseid;
+
+
+    public String getChecknumber() {
+        return checknumber;
+    }
+
+    public void setChecknumber(String checknumber) {
+        this.checknumber = checknumber;
+    }
 
     public String getSupplier() {
         return Supplier;

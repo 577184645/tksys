@@ -47,6 +47,14 @@
                                 <input type="text" name="contractid"/>
                             </li>
                             <li>
+                                <label>申请单号：</label>
+                                <input type="text" name="applyid"/>
+                            </li>
+                            <li>
+                                <label>报检单号：</label>
+                                <input type="text" name="checknumber"/>
+                            </li>
+                            <li>
                                 <label>快递单号：</label>
                                 <input type="text" name="expressid"/>
                             </li>
@@ -242,8 +250,13 @@
                         width:160
                     },
                     {
-                        field: 'purchaseid',
-                        title: '采购单号',
+                        field: 'applyid',
+                        title: '申请单号',
+                        width:120
+                    },
+                    {
+                        field: 'checknumber',
+                        title: '报检单号',
                         width:120
                     },
                     {

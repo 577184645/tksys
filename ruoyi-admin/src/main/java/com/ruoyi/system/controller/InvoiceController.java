@@ -54,6 +54,15 @@ public class InvoiceController extends BaseController
         return getDataTable(list);
     }
 
+
+    @PostMapping("/getyearinvoicesummoney")
+    @ResponseBody
+    public Double getyearinvoicesummoney(String yyyy)
+    {
+        return  invoiceService.yearsummoney(yyyy)!=null?invoiceService.yearsummoney(yyyy):0;
+
+    }
+
     /**
      * 导出发票列表
      */

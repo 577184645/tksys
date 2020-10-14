@@ -1,6 +1,9 @@
 package com.ruoyi.system.controller;
 
+import java.util.Date;
 import java.util.List;
+
+import com.ruoyi.system.util.DateUtil;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -53,6 +56,19 @@ public class SalesContractController extends BaseController
         List<SalesContract> list = salesContractService.selectSalesContractList(salesContract);
         return getDataTable(list);
     }
+
+
+
+    @PostMapping("/getyearsummoney")
+    @ResponseBody
+    public Double getyearsummoney(String yyyy)
+    {
+        return  salesContractService.yearsummoney(yyyy)!=null? salesContractService.yearsummoney(yyyy):0;
+
+    }
+
+
+
 
     /**
      * 导出销售合同列表

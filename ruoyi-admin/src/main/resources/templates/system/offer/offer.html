@@ -6,6 +6,12 @@
 <body class="gray-bg">
      <div class="container-div">
         <div class="row">
+
+
+
+
+
+
             <div class="col-sm-12 search-collapse">
                 <form id="formId">
                     <div class="select-list">
@@ -82,11 +88,6 @@
                     checkbox: true
                 },
                 {
-                    field: 'offerId', 
-                    title: 'null',
-                    visible: false
-                },
-                {
                     field: 'offerNumber', 
                     title: '报价单号'
                 },
@@ -112,17 +113,12 @@
                 },
                 {
                     field: 'offerTime', 
-                    title: '报价时间'
+                    title: '报价时间',
+                    formatter:function (value, row, index) {
+                            return setDefaultDate(value);
+                    }
                 },
 
-                {
-                    field: 'cTime', 
-                    title: '创建时间'
-                },
-                {
-                    field: 'uTime', 
-                    title: '修改时间'
-                },
                 {
                     title: '操作',
                     align: 'center',
@@ -164,8 +160,7 @@
 
 
         }
-        
-        
+
 
 
 
@@ -178,6 +173,12 @@
             $.modal.openFull("添加" + table.options.modalName, prefix+"/add/"+offerNumber);
         }
         // 修改访问地址
+        function setDefaultDate(myDate) {
+            if(myDate!=null) {
+                return myDate.substring(0, 10);
+            }
+            return "";
+        }
 
 
     </script>

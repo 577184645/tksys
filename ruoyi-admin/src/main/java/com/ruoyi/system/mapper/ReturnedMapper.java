@@ -19,6 +19,15 @@ public interface ReturnedMapper
      */
     public Returned selectReturnedById(Long returnedId);
 
+
+    /**
+     * 年发票总额
+     *
+     * @param yyyy 年份
+     * @return 年货款回笼总额
+     */
+    public Double yearsummoney(String yyyy);
+
     /**
      * 查询回款列表
      * 

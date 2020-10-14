@@ -11,6 +11,17 @@ import com.ruoyi.system.domain.SalesContract;
  */
 public interface SalesContractMapper 
 {
+
+
+    /**
+     * 年销售总额
+     *
+     * @param yyyy 年份
+     * @return 年销售总额
+     */
+    public Double yearsummoney(String yyyy);
+
+
     /**
      * 查询销售合同
      * 

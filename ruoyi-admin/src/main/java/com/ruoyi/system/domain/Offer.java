@@ -66,6 +66,9 @@ public class Offer extends BaseEntity
     @Excel(name = "修改时间", width = 30, dateFormat = "yyyy-MM-dd")
     private Date uTime;
 
+    private String isGroup;
+
+
 
     public String getFilename() {
         return filename;
@@ -80,7 +83,15 @@ public class Offer extends BaseEntity
         this.offerId = offerId;
     }
 
-    public Long getOfferId() 
+    public String getIsGroup() {
+        return isGroup;
+    }
+
+    public void setIsGroup(String isGroup) {
+        this.isGroup = isGroup;
+    }
+
+    public Long getOfferId()
     {
         return offerId;
     }

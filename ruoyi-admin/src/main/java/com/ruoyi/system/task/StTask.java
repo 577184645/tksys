@@ -6,6 +6,7 @@ import com.ruoyi.system.domain.Bom;
 import com.ruoyi.system.mapper.StorageMapper;
 import com.ruoyi.system.service.IBomService;
 import com.ruoyi.system.service.IStorageService;
+import com.ruoyi.system.util.DateUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -32,11 +33,10 @@ public class StTask {
     }
 
 
-    SimpleDateFormat sd=new SimpleDateFormat("yyyy-MM-dd");
     public void  thisMonthInventoryEmail(){
 
         try {
-            service.fillExcelStorage(sd.format(new Date()));
+            service.fillExcelStorage(DateUtil.dateToString(new Date(),"yyyy-MM-dd"));
         } catch (Exception e1) {
             // TODO Auto-generated catch block
             e1.printStackTrace();

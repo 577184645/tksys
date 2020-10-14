@@ -77,6 +77,14 @@ WHERE DATE_FORMAT(#{date}, '%Y%m' ) = DATE_FORMAT(w.c_time , '%Y%m' ) and w.type
 GROUP BY supplier,materialcode
     </select>
 
+    <select id="selectoutStoragebyDate" resultMap="StorageWarehouseRecord">
+SELECT number,m.materialcode materialcode,m.`name` `name`,m.partnumber partnumber,m.description description,m.unit unit,sum(count) as outcount, round((SUM(w.money)/sum(count)),2) as outprice,SUM(w.money) outmoney, w.supplier supplier FROM warehouse_record w left JOIN material m
+on w.materialcode=m.materialcode
+
+WHERE DATE_FORMAT(#{date}, '%Y%m' ) = DATE_FORMAT(w.c_time , '%Y%m' ) and w.type=2
+GROUP BY supplier,materialcode
+    </select>
+
 
 
     <select id="selectStoragebyDatedashed" resultMap="StorageWarehouseRecord">
@@ -88,13 +96,7 @@ GROUP BY supplier,materialcode
 
 
 
-    <select id="selectoutStoragebyDate" resultMap="StorageWarehouseRecord">
-SELECT number,m.materialcode materialcode,m.`name` `name`,m.partnumber partnumber,m.description description,m.unit unit,sum(count) as outcount, round((SUM(w.money)/sum(count)),2) as outprice,SUM(w.money) outmoney, w.supplier supplier FROM warehouse_record w left JOIN material m
-on w.materialcode=m.materialcode
 
-WHERE DATE_FORMAT(#{date}, '%Y%m' ) = DATE_FORMAT(w.c_time , '%Y%m' ) and w.type=2
-GROUP BY supplier,materialcode
-    </select>
 
 
     <select id="selectoutStoragebyDatedashed" resultMap="StorageWarehouseRecord">

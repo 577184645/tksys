@@ -43,6 +43,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 
         </where>
 
+        <if test="isGroup == null ">group by a.offer_number</if>
+
+
         order by a.offer_number
 
     </select>

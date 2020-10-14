@@ -29,6 +29,7 @@
             updateUrl: prefix + "/edit/{id}",
             removeUrl: prefix + "/remove",
             exportUrl: prefix + "/export",
+            showFooter: true,
             modalName: "发票",
             queryParams : {
                 contractId: $("#contractId").val()
@@ -43,11 +44,24 @@
                 },
                 {
                     field: 'invoiceDate',
-                    title: '开票日期'
+                    title: '开票日期',
+                    formatter:function (value, row, index) {
+
+                        return setDefaultDate(value) ;
+                    }
+
                 },
                 {
                     field: 'invoiceMoney',
-                    title: '发票金额'
+                    title: '发票金额',
+                    footerFormatter:function (value) {
+                        var sumBalance = 0;
+                        for (var i in value) {
+                            sumBalance += parseFloat(value[i].invoiceMoney);
+                        }
+
+                        return "总金额：" + sumBalance.toFixed(2);
+                    }
                 },
                 {
                     title: '操作',
@@ -62,6 +76,15 @@
         };
         $.table.init(options);
     });
+
+
+
+    function setDefaultDate(myDate) {
+        if(myDate!=null) {
+            return myDate.substring(0, 10);
+        }
+        return "";
+    }
 
 </script>
 </body>

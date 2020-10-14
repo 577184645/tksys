@@ -36,6 +36,11 @@ public class SalesContractServiceImpl implements ISalesContractService
         return salesContractMapper.selectSalesContractById(contractId);
     }
 
+    @Override
+    public Double yearsummoney(String yyyy) {
+        return salesContractMapper.yearsummoney(yyyy);
+    }
+
     /**
      * 查询销售合同列表
      * 
@@ -59,20 +64,18 @@ public class SalesContractServiceImpl implements ISalesContractService
     {
 
 
-        String yyyy = DateUtil.dateToString(new Date(), "yyyy");
-
-        if(salesContractMapper.selectSalesContractbyMaxNumber(yyyy)!=null){
-            Integer maxnum = Integer.valueOf(salesContractMapper.selectSalesContractbyMaxNumber(yyyy).substring(salesContractMapper.selectSalesContractbyMaxNumber(yyyy).lastIndexOf("-") + 1));
+        if(salesContractMapper.selectSalesContractbyMaxNumber(salesContract.getYear())!=null){
+            Integer maxnum = Integer.valueOf(salesContractMapper.selectSalesContractbyMaxNumber(salesContract.getYear()).substring(salesContractMapper.selectSalesContractbyMaxNumber(salesContract.getYear()).lastIndexOf("-") + 1));
             maxnum++;
             if(maxnum<10){
-                salesContract.setContractNumber("TKZC-XS-"+yyyy+"-00"+maxnum);
+                salesContract.setContractNumber("XS-"+salesContract.getYear()+"-00"+maxnum);
             }else if(maxnum<100){
-                salesContract.setContractNumber("TKZC-XS-"+yyyy+"-0"+maxnum);
+                salesContract.setContractNumber("XS-"+salesContract.getYear()+"-0"+maxnum);
             }else{
-                salesContract.setContractNumber("TKZC-XS-"+yyyy+"-"+maxnum);
+                salesContract.setContractNumber("XS-"+salesContract.getYear()+"-"+maxnum);
             }
         }else{
-            salesContract.setContractNumber("TKZC-XS-"+yyyy+"-001");
+            salesContract.setContractNumber("XS-"+salesContract.getYear()+"-001");
         }
 
 

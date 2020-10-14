@@ -81,6 +81,10 @@ public class OfferController extends BaseController
 
 
 
+
+
+
+
     @GetMapping("infoview/{offerNumber}")
     public String infoview(@PathVariable("offerNumber") String offerNumber,ModelMap mmap)
     {

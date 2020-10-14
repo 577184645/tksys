@@ -19,6 +19,9 @@ public interface IInvoiceService
      */
     public Invoice selectInvoiceById(Long invoiceId);
 
+
+    public Double yearsummoney(String yyyy);
+
     /**
      * 查询发票列表
      * 

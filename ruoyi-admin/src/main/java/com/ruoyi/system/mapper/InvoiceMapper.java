@@ -19,6 +19,15 @@ public interface InvoiceMapper
      */
     public Invoice selectInvoiceById(Long invoiceId);
 
+
+    /**
+     * 年发票总额
+     *
+     * @param yyyy 年份
+     * @return 年销售总额
+     */
+    public Double yearsummoney(String yyyy);
+
     /**
      * 查询发票列表
      * 

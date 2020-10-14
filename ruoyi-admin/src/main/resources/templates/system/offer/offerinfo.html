@@ -27,7 +27,8 @@
                 exportUrl: prefix + "/export",
                 modalName: "报价单",
                 queryParams : {
-                    offerNumber: $("#offerNumber").val()
+                    offerNumber: $("#offerNumber").val(),
+                    isGroup:"y"
                 },
                 columns: [{
                     checkbox: true
@@ -66,14 +67,7 @@
                     title: '报价时间'
                 },
            
-                {
-                    field: 'cTime', 
-                    title: '创建时间'
-                },
-                {
-                    field: 'uTime', 
-                    title: '修改时间'
-                },
+
                 {
                     title: '操作',
                     align: 'center',

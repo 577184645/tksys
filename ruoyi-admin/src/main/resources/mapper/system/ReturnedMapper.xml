@@ -27,6 +27,10 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="uTime != null "> and u_time = #{uTime}</if>
         </where>
     </select>
+
+    <select id="yearsummoney" resultType="double">
+      SELECT sum(returned_money) FROM returned where returned_date like concat('%',#{yyyy},'%')
+    </select>
     
     <select id="selectReturnedById" parameterType="Long" resultMap="ReturnedResult">
         <include refid="selectReturnedVo"/>

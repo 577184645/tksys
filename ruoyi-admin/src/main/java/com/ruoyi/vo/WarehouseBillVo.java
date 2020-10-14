@@ -212,5 +212,30 @@ public class WarehouseBillVo {
     }
 
 
-
+    @Override
+    public String toString() {
+        return "WarehouseBillVo{" +
+                "id=" + id +
+                ", rownum=" + rownum +
+                ", number='" + number + '\'' +
+                ", name='" + name + '\'' +
+                ", description='" + description + '\'' +
+                ", materialcode='" + materialcode + '\'' +
+                ", partnumber='" + partnumber + '\'' +
+                ", unit='" + unit + '\'' +
+                ", inprice=" + inprice +
+                ", inmoney=" + inmoney +
+                ", incount=" + incount +
+                ", outprice=" + outprice +
+                ", outmoney=" + outmoney +
+                ", outcount=" + outcount +
+                ", thiscount=" + thiscount +
+                ", thismoney=" + thismoney +
+                ", thisprice=" + thisprice +
+                ", prevcount=" + prevcount +
+                ", prevmoney=" + prevmoney +
+                ", prevprice=" + prevprice +
+                ", supplier='" + supplier + '\'' +
+                '}';
+    }
 }

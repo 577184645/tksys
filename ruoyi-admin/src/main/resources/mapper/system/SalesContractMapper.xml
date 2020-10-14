@@ -15,21 +15,32 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="contractReturnedmoney"    column="contract_returnedmoney"    />
         <result property="contractStartmoney"    column="contract_startmoney"    />
         <result property="contractEndmoney"    column="contract_endmoney"    />
+        <result property="contractEndmoney"    column="contract_endmoney"    />
+        <result property="groupNumber"    column="group_number"    />
+        <result property="contractProjectname"    column="contract_projectname"    />
         <result property="cTime"    column="c_time"    />
         <result property="uTime"    column="u_time"    />
     </resultMap>
 
     <sql id="selectSalesContractVo">
-        select contract_id, contract_number, contract_customer, contract_money, contract_invoicemoney, contract_payment, contract_deliverstatus, contract_returnedmoney, contract_startmoney, contract_endmoney, c_time, u_time from sales_contract
+        select contract_projectname,contract_id, contract_number,group_number, contract_customer, contract_money, contract_invoicemoney, contract_payment, contract_deliverstatus, contract_returnedmoney, contract_startmoney, contract_endmoney, c_time, u_time from sales_contract
     </sql>
 
     <select id="selectSalesContractList" parameterType="SalesContract" resultMap="SalesContractResult">
         <include refid="selectSalesContractVo"/>
-        <where>  
+        <where>
+
+            <if test="year != null  and year != ''"> and contract_number like concat('%', #{year},'%')</if>
             <if test="contractNumber != null  and contractNumber != ''"> and contract_number = #{contractNumber}</if>
-            <if test="contractCustomer != null  and contractCustomer != ''"> and contract_customer = #{contractCustomer}</if>
+            <if test="contractCustomer != null  and contractCustomer != ''"> and contract_customer like concat('%', #{contractCustomer},'%')</if>
+            <if test="contractProjectname != null  and contractProjectname != ''"> and contract_projectname like concat('%', #{contractProjectname},'%')</if>
             <if test="contractDeliverstatus != null  and contractDeliverstatus != ''"> and contract_deliverstatus = #{contractDeliverstatus}</if>
         </where>
+        order by contract_number
+    </select>
+
+    <select id="yearsummoney" resultType="double">
+        SELECT sum(contract_money) FROM sales_contract where contract_number like concat('%',#{yyyy},'%')
     </select>
     
     <select id="selectSalesContractById" parameterType="Long" resultMap="SalesContractResult">
@@ -47,6 +58,10 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     <insert id="insertSalesContract" parameterType="SalesContract" useGeneratedKeys="true" keyProperty="contractId">
         insert into sales_contract
         <trim prefix="(" suffix=")" suffixOverrides=",">
+
+
+
+            <if test="groupNumber != null  and groupNumber != ''">group_number,</if>
             <if test="contractNumber != null  and contractNumber != ''">contract_number,</if>
             <if test="contractCustomer != null  and contractCustomer != ''">contract_customer,</if>
             <if test="contractMoney != null ">contract_money,</if>
@@ -56,10 +71,14 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="contractReturnedmoney != null ">contract_returnedmoney,</if>
             <if test="contractStartmoney != null ">contract_startmoney,</if>
             <if test="contractEndmoney != null ">contract_endmoney,</if>
+            <if test="contractProjectname != null and contractProjectname != '' ">contract_projectname,</if>
+
+
            c_time,
             <if test="uTime != null ">u_time,</if>
          </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="groupNumber != null  and groupNumber != ''">#{groupNumber},</if>
             <if test="contractNumber != null  and contractNumber != ''">#{contractNumber},</if>
             <if test="contractCustomer != null  and contractCustomer != ''">#{contractCustomer},</if>
             <if test="contractMoney != null ">#{contractMoney},</if>
@@ -69,6 +88,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="contractReturnedmoney != null ">#{contractReturnedmoney},</if>
             <if test="contractStartmoney != null ">#{contractStartmoney},</if>
             <if test="contractEndmoney != null ">#{contractEndmoney},</if>
+            <if test="contractProjectname != null and contractProjectname != '' ">#{contractProjectname},</if>
           now(),
             <if test="uTime != null ">#{uTime},</if>
          </trim>
@@ -77,16 +97,21 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     <update id="updateSalesContract" parameterType="SalesContract">
         update sales_contract
         <trim prefix="SET" suffixOverrides=",">
+
+            group_number = #{groupNumber},
+
             <if test="contractNumber != null  and contractNumber != ''">contract_number = #{contractNumber},</if>
-            <if test="contractCustomer != null  and contractCustomer != ''">contract_customer = #{contractCustomer},</if>
-            <if test="contractMoney != null ">contract_money = #{contractMoney},</if>
+            contract_customer = #{contractCustomer},
+            contract_money = #{contractMoney},
             <if test="contractInvoicemoney != null ">contract_invoicemoney = #{contractInvoicemoney},</if>
-            <if test="contractPayment != null  and contractPayment != ''">contract_payment = #{contractPayment},</if>
-            <if test="contractDeliverstatus != null  and contractDeliverstatus != ''">contract_deliverstatus = #{contractDeliverstatus},</if>
+            contract_payment = #{contractPayment},
+           contract_deliverstatus = #{contractDeliverstatus},
             <if test="contractReturnedmoney != null ">contract_returnedmoney = #{contractReturnedmoney},</if>
             <if test="contractStartmoney != null ">contract_startmoney = #{contractStartmoney},</if>
             <if test="contractEndmoney != null ">contract_endmoney = #{contractEndmoney},</if>
-            <if test="cTime != null ">c_time = #{cTime},</if>
+
+            contract_projectname=#{contractProjectname},
+
             u_time =now(),
         </trim>
         where contract_id = #{contractId}

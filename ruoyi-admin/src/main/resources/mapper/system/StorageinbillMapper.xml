@@ -8,6 +8,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="id"    column="id"    />
         <result property="delStatus"    column="del_status"    />
         <result property="stockinid"    column="stockinid"    />
+        <result property="checknumber"    column="checknumber"    />
         <result property="money"    column="money"    />
         <result property="supplier"    column="supplier"    />
         <result property="applyid"    column="applyid"    />
@@ -34,7 +35,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </resultMap>
 
     <sql id="selectStorageinbillVo">
-        select s.id,sum(money) as money,del_status,storage_status ,applyid,contractid,invoiceid,expressid,instoragecause,projectname,proposer, stockinid, s.supplier ,outsourcewarehouseid,outsourcewarehouse, s.purchaseid, deliveryman, warehouseadmin, storagentime, s.comments, status, s.c_time, s.u_time from storageinbill s LEFT JOIN storageindetail
+        select s.id,sum(money) as money,checknumber,del_status,storage_status ,applyid,contractid,invoiceid,expressid,instoragecause,projectname,proposer, stockinid, s.supplier ,outsourcewarehouseid,outsourcewarehouse, s.purchaseid, deliveryman, warehouseadmin, storagentime, s.comments, status, s.c_time, s.u_time from storageinbill s LEFT JOIN storageindetail
 				on stockinid=storageinbillid
     </sql>
 
@@ -44,7 +45,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="stockinid != null  and stockinid != ''"> and stockinid like concat('%', #{stockinid}, '%')</if>
 
             <if test="storageStatus != null  and storageStatus != ''"> and storage_status=#{storageStatus}</if>
-
+            <if test="checknumber != null  and checknumber != ''"> and checknumber like concat('%', #{checknumber}, '%')</if>
+            <if test="applyid != null  and applyid != ''"> and applyid like concat('%', #{applyid}, '%')</if>
             <if test="status != null  and status != ''"> and status=#{status}</if>
             <if test="delStatus == 1 "> and del_status in (1,3)</if>
             <if test="delStatus == 2 "> and del_status = 2</if>
@@ -83,6 +85,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 
             <if test="stockinid != null  and stockinid != ''">stockinid,</if>
             <if test="applyid != null  and applyid != ''">applyid,</if>
+            <if test="checknumber != null  and checknumber != ''">checknumber,</if>
             <if test="purchaseid != null  and purchaseid != ''">purchaseid,</if>
             <if test="contractid != null  and contractid != ''">contractid,</if>
             <if test="invoiceid != null  and invoiceid != ''">invoiceid,</if>
@@ -106,6 +109,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 
             <if test="stockinid != null  and stockinid != ''">#{stockinid},</if>
             <if test="applyid != null  and applyid != ''">#{applyid},</if>
+            <if test="checknumber != null  and checknumber != ''">#{checknumber},</if>
+
+
             <if test="purchaseid != null  and purchaseid != ''">#{purchaseid},</if>
             <if test="contractid != null  and contractid != ''">#{contractid},</if>
             <if test="invoiceid != null  and invoiceid != ''">#{invoiceid},</if>
@@ -166,6 +172,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="instoragecause != null  and instoragecause != ''">instoragecause = #{instoragecause},</if>
             <if test="projectname != null  and projectname != ''">projectname = #{projectname},</if>
             <if test="proposer != null  and proposer != ''">proposer = #{proposer},</if>
+            <if test="checknumber != null  and checknumber != ''">checknumber = #{checknumber},</if>
+
             <if test="delStatus != null  and delStatus != ''">del_status = #{delStatus},</if>
             <if test="delStatus != null  and delStatus != ''">del_status = #{delStatus},</if>
             <if test="storageStatus != null and storageStatus != ''">storage_status = #{storageStatus},</if>

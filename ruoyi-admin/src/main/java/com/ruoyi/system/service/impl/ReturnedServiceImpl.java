@@ -32,6 +32,11 @@ public class ReturnedServiceImpl implements IReturnedService
         return returnedMapper.selectReturnedById(returnedId);
     }
 
+    @Override
+    public Double yearsummoney(String yyyy) {
+        return returnedMapper.yearsummoney(yyyy);
+    }
+
     /**
      * 查询回款列表
      * 
