@@ -198,10 +198,10 @@ public class FileUploadUtils
                 throw new InvalidExtensionException.InvalidMediaExtensionException(allowedExtension, extension,
                         fileName);
             }
-            else
+            /*else
             {
                 throw new InvalidExtensionException(allowedExtension, extension, fileName);
-            }
+            }*/
         }
 
     }
