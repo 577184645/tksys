@@ -18,19 +18,22 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="accessory"    column="accessory"    />
         <result property="cTime"    column="c_time"    />
         <result property="uTime"    column="u_time"    />
+        <result property="status"    column="status"    />
+
     </resultMap>
 
     <sql id="selectOfferVo">
-        select offer_id,filename, offer_number, offer_username, offer_salesman, offer_salesmancontactway, offer_money, offer_project, offer_time, context, accessory, c_time, u_time from offer
+        select offer_id,filename, status,offer_number, offer_username, offer_salesman, offer_salesmancontactway, offer_money, offer_project, offer_time, context, accessory, c_time, u_time from offer
     </sql>
 
     <select id="selectOfferList" parameterType="Offer" resultMap="OfferResult">
 
-        select a.offer_id, a.offer_number, a.offer_username, a.offer_salesman, a.offer_salesmancontactway, a.offer_money, a.offer_project, a.offer_time, a.context, a.accessory, a.c_time, a.u_time from offer a LEFT JOIN (SELECT offer_number,max(offer_time) offer_time from offer GROUP BY offer_number) b on   a.offer_number=b.offer_number and a.offer_time=b.offer_time
+        select a.offer_id, a.offer_number,a.status, a.offer_username, a.offer_salesman, a.offer_salesmancontactway, a.offer_money, a.offer_project, a.offer_time, a.context, a.accessory, a.c_time, a.u_time from offer a LEFT JOIN (SELECT offer_number,max(offer_time) offer_time from offer GROUP BY offer_number) b on   a.offer_number=b.offer_number and a.offer_time=b.offer_time
 
 
         <where>  
             <if test="offerNumber != null  and offerNumber != ''"> and a.offer_number = #{offerNumber}</if>
+            <if test="status != null  and status != ''"> and a.status = #{status}</if>
             <if test="offerUsername != null  and offerUsername != ''"> and a.offer_username like concat('%', #{offerUsername}, '%')</if>
             <if test="offerSalesman != null  and offerSalesman != ''"> and a.offer_salesman = #{offerSalesman}</if>
             <if test="offerProject != null  and offerProject != ''"> and a.offer_project = #{offerProject}</if>
@@ -71,6 +74,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     <insert id="insertOffer" parameterType="Offer" useGeneratedKeys="true" keyProperty="offerId">
         insert into offer
         <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="status != null  and status != ''">status,</if>
             <if test="offerNumber != null  and offerNumber != ''">offer_number,</if>
             <if test="offerUsername != null  and offerUsername != ''">offer_username,</if>
             <if test="offerSalesman != null  and offerSalesman != ''">offer_salesman,</if>
@@ -86,6 +90,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="uTime != null ">u_time,</if>
          </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="status != null  and status != ''">#{status},</if>
             <if test="offerNumber != null  and offerNumber != ''">#{offerNumber},</if>
             <if test="offerUsername != null  and offerUsername != ''">#{offerUsername},</if>
             <if test="offerSalesman != null  and offerSalesman != ''">#{offerSalesman},</if>

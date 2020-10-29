@@ -34,7 +34,7 @@
                     <input id="offerMoney" name="offerMoney" class="form-control" type="text">
                 </div>
             </div>
-
+     <input type="hidden" th:value="${status}" name="status" id="status" >
             <div class="form-group">    
                 <label class="col-sm-3 control-label">报价项目：</label>
                 <div class="col-sm-8">
@@ -144,6 +144,7 @@
             formData.append('offerProject', $("#offerProject").val());
             formData.append('offerTime', $("#offerTime").val());
             formData.append('context', $("#noticeContent").val());
+                formData.append('status', $("#status").val());
 
                 for(var i=0;i<$('#filePath')[0].files.length;i++){
 

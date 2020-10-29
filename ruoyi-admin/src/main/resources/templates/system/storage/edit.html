@@ -475,7 +475,10 @@
                                 field: 'partnumber',
                                 title: '物料型号'
                             },
-
+                            {
+                                field: 'description',
+                                title: '描述',
+                            },
                             {
                                 field: 'manufacture',
                                 title: '品牌'
@@ -598,7 +601,8 @@
                                     money:"",
                                     counts:"",
                                     randomId:randomId,
-                                    stocks:data[i].stocks
+                                    stocks:data[i].stocks,
+                                    description:data[i].description
                                 }
                             })
                         }
@@ -618,6 +622,10 @@
                             return;
                         }
                         for (var i = 0; i < data.length; i++) {
+
+
+
+
                             $("#bootstrap-table1").bootstrapTable('insertRow', {
                                 index: data.length+i, // 你想插入到哪，0表示第一行
                                 row: {

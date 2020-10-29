@@ -1,44 +1,32 @@
 package com.ruoyi.system.service.impl;
 
-import java.awt.*;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.math.BigDecimal;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-
-import com.ruoyi.common.core.domain.AjaxResult;
+import com.ruoyi.common.core.text.Convert;
 import com.ruoyi.system.common.Const;
 import com.ruoyi.system.domain.*;
 import com.ruoyi.system.mapper.*;
+import com.ruoyi.system.service.IStorageService;
 import com.ruoyi.system.util.BigDecimalUtil;
 import com.ruoyi.vo.WarehouseBillVo;
-import java.io.File;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 import org.apache.commons.lang.StringUtils;
 import org.apache.poi.ss.usermodel.*;
-import org.apache.poi.ss.usermodel.Font;
 import org.apache.poi.ss.util.CellRangeAddress;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
-import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.core.io.FileSystemResource;
-import org.springframework.mail.MailException;
-import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
-import org.springframework.stereotype.Service;
-import com.ruoyi.system.service.IStorageService;
-import com.ruoyi.common.core.text.Convert;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.mail.javamail.MimeMailMessage;
 import org.springframework.mail.javamail.MimeMessageHelper;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.math.BigDecimal;
+import java.text.SimpleDateFormat;
+import java.util.List;
 
 /**
  * 库存列表Service业务层处理
@@ -743,12 +731,9 @@ if(storageoutbill.getOutsourcewarehousecomments().isEmpty()){
 
         int rowIndex = 3;
 
-        for (int i = 0; i < warehouseBillInVos.size(); i++) {
-            if( storageinbillMapper.selectStorageinbillByStockinid(warehouseBillInVos.get(i).getNumber())!=null){
-                if(storageinbillMapper.selectStorageinbillByStockinid(warehouseBillInVos.get(i).getNumber()).getOutsourcewarehouse().indexOf("生产库")==-1) {
-
-                    warehouseBillInVos.remove(i);
-                }
+        for (int i = 0; i < warehouseBillInVos.size(); i++){
+            if(warehouseBillInVos.get(i).getNumber().lastIndexOf("生产库")==-1){
+                warehouseBillInVos.remove(i);
             }
 
         }

@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.ProjectreportMapper">
+    
+    <resultMap type="Projectreport" id="ProjectreportResult">
+        <result property="projectreportId"    column="projectreport__id"    />
+        <result property="projectreportName"    column="projectreport__name"    />
+        <result property="projectreportDate"    column="projectreport__date"    />
+        <result property="lastuser"    column="lastuser"    />
+        <result property="tenderee"    column="tenderee"    />
+        <result property="projectreportUser"    column="projectreport__user"    />
+        <result property="phone"    column="phone"    />
+        <result property="projectreportInfo"    column="projectreport__info"    />
+        <result property="cTime"    column="c_time"    />
+        <result property="uTime"    column="u_time"    />
+    </resultMap>
+
+    <sql id="selectProjectreportVo">
+        select projectreport__id, projectreport__name, projectreport__date, lastuser, tenderee, projectreport__user, phone, projectreport__info, c_time, u_time from projectreport
+    </sql>
+
+    <select id="selectProjectreportList" parameterType="Projectreport" resultMap="ProjectreportResult">
+        <include refid="selectProjectreportVo"/>
+        <where>  
+            <if test="projectreportName != null  and projectreportName != ''"> and projectreport__name like concat('%', #{projectreportName}, '%')</if>
+
+            <if test="params.beginTime != null and params.beginTime != ''"><!-- 开始时间检索 -->
+                AND date_format(projectreport__date,'%y%m%d') &gt;= date_format(#{params.beginTime},'%y%m%d')
+            </if>
+            <if test="params.endTime != null and params.endTime != ''"><!-- 结束时间检索 -->
+                AND date_format(projectreport__date,'%y%m%d') &lt;= date_format(#{params.endTime},'%y%m%d')
+            </if>
+            <if test="lastuser != null  and lastuser != ''"> and lastuser like concat('%', #{lastuser}, '%')</if>
+            <if test="tenderee != null  and tenderee != ''"> and tenderee like concat('%', #{tenderee}, '%')</if>
+            <if test="projectreportUser != null  and projectreportUser != ''"> and projectreport__user like concat('%', #{projectreportUser}, '%')</if>
+        </where>
+    </select>
+    
+    <select id="selectProjectreportById" parameterType="Long" resultMap="ProjectreportResult">
+        <include refid="selectProjectreportVo"/>
+        where projectreport__id = #{projectreportId}
+    </select>
+        
+    <insert id="insertProjectreport" parameterType="Projectreport" useGeneratedKeys="true" keyProperty="projectreportId">
+        insert into projectreport
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="projectreportName != null  and projectreportName != ''">projectreport__name,</if>
+            <if test="projectreportDate != null ">projectreport__date,</if>
+            <if test="lastuser != null  and lastuser != ''">lastuser,</if>
+            <if test="tenderee != null  and tenderee != ''">tenderee,</if>
+            <if test="projectreportUser != null  and projectreportUser != ''">projectreport__user,</if>
+            <if test="phone != null  and phone != ''">phone,</if>
+            <if test="projectreportInfo != null  and projectreportInfo != ''">projectreport__info,</if>
+            c_time,
+
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="projectreportName != null  and projectreportName != ''">#{projectreportName},</if>
+            <if test="projectreportDate != null ">#{projectreportDate},</if>
+            <if test="lastuser != null  and lastuser != ''">#{lastuser},</if>
+            <if test="tenderee != null  and tenderee != ''">#{tenderee},</if>
+            <if test="projectreportUser != null  and projectreportUser != ''">#{projectreportUser},</if>
+            <if test="phone != null  and phone != ''">#{phone},</if>
+            <if test="projectreportInfo != null  and projectreportInfo != ''">#{projectreportInfo},</if>
+             now(),
+
+         </trim>
+    </insert>
+
+    <update id="updateProjectreport" parameterType="Projectreport">
+        update projectreport
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="projectreportName != null  and projectreportName != ''">projectreport__name = #{projectreportName},</if>
+            <if test="projectreportDate != null ">projectreport__date = #{projectreportDate},</if>
+            <if test="lastuser != null  and lastuser != ''">lastuser = #{lastuser},</if>
+            <if test="tenderee != null  and tenderee != ''">tenderee = #{tenderee},</if>
+            <if test="projectreportUser != null  and projectreportUser != ''">projectreport__user = #{projectreportUser},</if>
+            <if test="phone != null  and phone != ''">phone = #{phone},</if>
+            <if test="projectreportInfo != null  and projectreportInfo != ''">projectreport__info = #{projectreportInfo},</if>
+
+           u_time = now(),
+        </trim>
+        where projectreport__id = #{projectreportId}
+    </update>
+
+    <delete id="deleteProjectreportById" parameterType="Long">
+        delete from projectreport where projectreport__id = #{projectreportId}
+    </delete>
+
+    <delete id="deleteProjectreportByIds" parameterType="String">
+        delete from projectreport where projectreport__id in 
+        <foreach item="projectreportId" collection="array" open="(" separator="," close=")">
+            #{projectreportId}
+        </foreach>
+    </delete>
+    
+</mapper>

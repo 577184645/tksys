@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org" xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
+<head>
+    <th:block th:include="include :: header('销售合同列表')" />
+</head>
+
+<body class="gray-bg">
+
+
+
+
+
+     <div class="container-div">
+        <div class="row">
+
+
+            <div class="col-sm-12 search-collapse">
+
+                <div id="linknav" class="select-list">
+                    <ul>
+                        <li >
+                            <label id="yearsumname"></label>
+                            <label style="color: #00B83F" id="yearsummoney"></label>
+                        </li>
+                        <li>
+                            <label id="yearinvoicesumname"></label>
+                            <label style="color: #00B83F" id="yearinvoicesummoney"></label>
+                        </li>
+                        <li>
+                            <label id="yearbacksumname"></label>
+                            <label style="color: #00B83F" id="yearbacksummoney"></label>
+                        </li>
+                        <li>
+                            <label id="yearprobname"></label>
+                            <label style="color: #00B83F" id="yearprob"></label>
+                        </li>
+
+
+                    </ul>
+                </div>
+
+            </div>
+
+
+            <div class="col-sm-12 search-collapse">
+                <form id="formId">
+                    <div class="select-list">
+                        <ul>
+                            <li>
+                                <label>合同年份：</label>
+                                <input type="number" id="years" name="year"/>
+                            </li>
+
+                            <li>
+                                <label>单位：</label>
+                                <input type="text" name="contractCustomer"/>
+                            </li>
+                            <li>
+                                <label>项目名称：</label>
+                                <input type="text" name="contractProjectname"/>
+                            </li>
+
+                            <li>
+                                <a id="search" class="btn btn-primary btn-rounded btn-sm" onclick="$.table.search()"><i class="fa fa-search"></i>&nbsp;搜索</a>
+                                <a class="btn btn-warning btn-rounded btn-sm" onclick="$.form.reset()"><i class="fa fa-refresh"></i>&nbsp;重置</a>
+                            </li>
+                        </ul>
+                    </div>
+                </form>
+            </div>
+
+            <div class="btn-group-sm" id="toolbar" role="group">
+                <a class="btn btn-success" onclick="$.operate.add()" shiro:hasPermission="system:contract:add">
+                    <i class="fa fa-plus"></i> 添加
+                </a>
+
+                <a class="btn btn-warning" onclick="$.table.exportExcel()" shiro:hasPermission="system:contract:export">
+                    <i class="fa fa-download"></i> 导出
+                </a>
+            </div>
+            <div style="height: 490px;overflow: auto;" class="col-sm-12 select-table table-striped">
+                <table id="bootstrap-table"></table>
+            </div>
+        </div>
+    </div>
+    <th:block th:include="include :: footer" />
+    <script th:inline="javascript">
+        var editFlag = [[${@permission.hasPermi('system:contract:edit')}]];
+        var removeFlag = [[${@permission.hasPermi('system:contract:remove')}]];
+        var prefix = ctx + "system/contract";
+        var prefix1 = ctx + "system/returned";
+        var prefix2 = ctx + "system/invoice";
+
+        var btn4 = document.getElementById("search");
+        btn4.addEventListener("click",show);
+        btn4.addEventListener("click",$.table.search());
+
+
+
+        function  show(){
+
+            var year=$("#years").val();
+
+            $("#yearsumname").html(year+"年销售总额:");
+            $("#yearinvoicesumname").html(year+"年开票总额:");
+            $("#yearbacksumname").html(year+"年货款回笼总额:");
+            $("#yearprobname").html(year+"年货款回笼率:");
+
+
+
+
+            $.ajax({
+                url:prefix+'/getyearsummoney',
+                dataType:'json',
+                data:{"yyyy":year},
+                type:'post',
+                async:false,
+                success:function(result){
+                    $("#yearsummoney").html(result);
+                }
+            });
+
+
+            $.ajax({
+                url:prefix2+'/getyearinvoicesummoney',
+                dataType:'json',
+                data:{"yyyy":year},
+                type:'post',
+                async:false,
+                success:function(result){
+                    $("#yearinvoicesummoney").html(result);
+                }
+            });
+
+
+            $.ajax({
+                url:prefix1+'/getyearbacksummoney',
+                dataType:'json',
+                data:{"yyyy":year},
+                type:'post',
+                async:false,
+                success:function(result){
+                    $("#yearbacksummoney").html(result);
+                }
+            });
+            $("#yearprob").html(($("#yearbacksummoney").html()/$("#yearinvoicesummoney").html()).toFixed(2)*100+"%");
+
+        }
+
+        $(function() {
+            var now = new Date();
+            var year = now.getFullYear();
+
+            $("#yearsumname").html(year+"年销售总额:");
+            $("#yearinvoicesumname").html(year+"年开票总额:");
+            $("#yearbacksumname").html(year+"年货款回笼总额:");
+            $("#yearprobname").html(year+"年货款回笼率:");
+
+
+
+
+            $("#year").val(year);
+            $("#years").val(year);
+
+
+            $.ajax({
+                url:prefix+'/getyearsummoney',
+                dataType:'json',
+                data:{"yyyy":year},
+                type:'post',
+                async:false,
+                success:function(result){
+                    $("#yearsummoney").html(result);
+                }
+            });
+
+
+            $.ajax({
+                url:prefix2+'/getyearinvoicesummoney',
+                dataType:'json',
+                data:{"yyyy":year},
+                type:'post',
+                async:false,
+                success:function(result){
+                    $("#yearinvoicesummoney").html(result);
+                }
+            });
+
+
+            $.ajax({
+                url:prefix1+'/getyearbacksummoney',
+                dataType:'json',
+                data:{"yyyy":year},
+                type:'post',
+                async:false,
+                success:function(result){
+                    $("#yearbacksummoney").html(result);
+                }
+            });
+            $("#yearprob").html(($("#yearbacksummoney").html()/$("#yearinvoicesummoney").html()).toFixed(2)*100+"%");
+
+
+
+            var options = {
+                url: prefix + "/list",
+                createUrl: prefix + "/add",
+                updateUrl: prefix + "/edit/{id}",
+                removeUrl: prefix + "/remove",
+                exportUrl: prefix + "/export",
+                modalName: "销售合同",
+                rowStyle: function (row, index) {
+                    var style = "";
+                    if(row.contractMoney==row.contractInvoicemoney&&row.contractMoney==row.contractReturnedmoney&&row.contractDeliverstatus=="已发货") {
+                        style = 'success';
+                        return {classes: style}
+                    }else{
+                        return {classes: style}
+                    }
+                },
+                columns: [{
+                    checkbox: true
+                },
+                {
+                    field: 'contractNumber',
+                    title: '销售合同号'
+                },
+                {
+                    field: 'contractCustomer',
+                    title: '单位'
+                },
+                {
+                    field: 'contractMoney',
+                    title: '金额'
+                },
+                {
+                    field: 'contractInvoicemoney',
+                    title: '开票金额'
+                },
+                    {
+                        field: 'contractReturnedmoney',
+                        title: '回款'
+                    },
+                {
+                    field: 'contractPayment',
+                    title: '付款方式'
+                },
+                {
+                    field: 'contractDeliverstatus',
+                    title: '发货状态'
+                },
+
+                    {
+                        field: 'groupNumber',
+                        title: '集团合同号'
+                    },
+                    {
+                        field: 'contractProjectname',
+                        title: '项目名称'
+                    },
+                {
+                    title: '操作',
+                    align: 'center',
+                    formatter: function(value, row, index) {
+                        var actions = [];
+                        actions.push('<a class="btn btn-success btn-xs ' + editFlag + '" href="javascript:void(0)" onclick="invoiceInfo(\'' + row.contractId + '\',\''+row.contractNumber+'\')"><i class="fa fa-edit"></i>查看历史发票记录</a> ');
+                        actions.push('<a class="btn btn-success btn-xs ' + editFlag + '" href="javascript:void(0)" onclick="returnedInfo(\'' + row.contractId + '\',\''+row.contractNumber+'\')"><i class="fa fa-edit"></i>查看历史回款记录</a> ');
+                        actions.push('<a class="btn btn-success btn-xs ' + editFlag + '" href="javascript:void(0)" onclick="$.operate.edit(\'' + row.contractId + '\')"><i class="fa fa-edit"></i>编辑</a> ');
+                        actions.push('<a class="btn btn-danger btn-xs ' + removeFlag + '" href="javascript:void(0)" onclick="$.operate.remove(\'' + row.contractId + '\')"><i class="fa fa-remove"></i>删除</a>');
+                        return actions.join('');
+                    }
+                }]
+            };
+            $.table.init(options);
+        });
+
+
+
+
+
+
+
+        function invoiceInfo(id,contractNumber) {
+            table.set();
+            $.modal.openTab(contractNumber+"历史发票记录", prefix2+"/info/"+(id));
+        }
+        function returnedInfo(id,contractNumber) {
+            table.set();
+            $.modal.openTab(contractNumber+"历史回款记录", prefix1+"/"+(id));
+        }
+
+        function editreturned(id) {
+            table.set();
+            $.modal.open("修改回款记录", prefix1+"/edit/"+(id));
+        }
+        function removereturned(id) {
+            table.set();
+            $.modal.confirm("确定删除该条回款记录吗？", function() {
+                var url =prefix1+"/remove";
+                var data = { "ids": id };
+                $.operate.submit(url, "post", "json", data);
+            });
+
+        }
+
+    </script>
+</body>
+</html>

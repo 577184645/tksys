@@ -1,29 +1,29 @@
 package com.ruoyi.system.controller;
 
-import java.io.IOException;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
+import com.ruoyi.common.annotation.Log;
 import com.ruoyi.common.config.Global;
+import com.ruoyi.common.core.controller.BaseController;
+import com.ruoyi.common.core.domain.AjaxResult;
+import com.ruoyi.common.core.page.TableDataInfo;
+import com.ruoyi.common.enums.BusinessType;
 import com.ruoyi.common.utils.file.FileUploadUtils;
+import com.ruoyi.common.utils.poi.ExcelUtil;
 import com.ruoyi.framework.util.ShiroUtils;
 import com.ruoyi.system.common.Const;
+import com.ruoyi.system.domain.Offer;
 import com.ruoyi.system.domain.SysUser;
+import com.ruoyi.system.service.IOfferService;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
-import com.ruoyi.common.annotation.Log;
-import com.ruoyi.common.enums.BusinessType;
-import com.ruoyi.system.domain.Offer;
-import com.ruoyi.system.service.IOfferService;
-import com.ruoyi.common.core.controller.BaseController;
-import com.ruoyi.common.core.domain.AjaxResult;
-import com.ruoyi.common.utils.poi.ExcelUtil;
-import com.ruoyi.common.core.page.TableDataInfo;
 import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * 报价单Controller
@@ -49,6 +49,14 @@ public class OfferController extends BaseController
     public String offer()
     {
         return prefix + "/offer";
+    }
+
+
+    @RequiresPermissions("system:offer:view")
+    @GetMapping("/Honeywell")
+    public String offerHoneywell()
+    {
+        return prefix + "/offerHoneywell";
     }
 
     /**
@@ -142,6 +150,21 @@ public class OfferController extends BaseController
         SysUser user = ShiroUtils.getSysUser();
         Offer offer = Const.OfferData.map.get(user.getUserName());
         mmap.put("offer",offer);
+        mmap.put("status",0);
+        return prefix + "/add";
+    }
+
+
+    /**
+     * 新增报价单
+     */
+    @GetMapping("/addHoneywell")
+    public String addHoneywell(ModelMap mmap)
+    {
+        SysUser user = ShiroUtils.getSysUser();
+        Offer offer = Const.OfferData.map.get(user.getUserName());
+        mmap.put("offer",offer);
+        mmap.put("status",1);
         return prefix + "/add";
     }
 
@@ -149,6 +172,7 @@ public class OfferController extends BaseController
     public String addofferNumber(@PathVariable("offerNumber") String offerNumber,ModelMap map)
     {
         map.put("offerNumber",offerNumber);
+        map.put("status", offerService.selectOfferListByofferNumber(offerNumber).get(0).getStatus());
         return prefix + "/newadd";
     }
 

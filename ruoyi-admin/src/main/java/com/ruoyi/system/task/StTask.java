@@ -1,19 +1,11 @@
 package com.ruoyi.system.task;
 
-import com.ruoyi.common.core.domain.AjaxResult;
-import com.ruoyi.common.utils.poi.ExcelUtil;
-import com.ruoyi.system.domain.Bom;
-import com.ruoyi.system.mapper.StorageMapper;
-import com.ruoyi.system.service.IBomService;
 import com.ruoyi.system.service.IStorageService;
 import com.ruoyi.system.util.DateUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.List;
-import java.util.logging.SimpleFormatter;
 
 @Component("stTask")
 public class StTask {
@@ -34,7 +26,6 @@ public class StTask {
 
 
     public void  thisMonthInventoryEmail(){
-
         try {
             service.fillExcelStorage(DateUtil.dateToString(new Date(),"yyyy-MM-dd"));
         } catch (Exception e1) {

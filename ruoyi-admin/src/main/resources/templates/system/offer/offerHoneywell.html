@@ -24,7 +24,7 @@
                                 <label>报价人：</label>
                                 <input type="text" name="offerUsername"/>
                             </li>
-                            <input type="hidden" name="status" value="0"/>
+                            <input type="hidden" name="status" value="1"/>
                             <li>
                                 <label>业务员：</label>
                                 <input type="text" name="offerSalesman"/>
@@ -80,7 +80,7 @@
 
             var options = {
                 url: prefix + "/list",
-                createUrl: prefix + "/add",
+                createUrl: prefix + "/addHoneywell",
                 updateUrl: prefix + "/edit/{id}",
                 removeUrl: prefix + "/remove",
                 exportUrl: prefix + "/export",

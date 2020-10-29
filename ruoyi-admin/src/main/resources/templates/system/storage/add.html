@@ -435,6 +435,11 @@
                 title: '物料型号'
             },
             {
+                field: 'description',
+                title: '描述',
+
+            },
+            {
                 field: 'comments',
                 title: '备注',
                 editable: {
@@ -647,6 +652,7 @@
                   price:"",
                   money:"",
                   counts:"",
+                  description:data[i].description,
                   randomId:randomId
               }
           })
@@ -684,6 +690,7 @@
                     money: data[i].money,
                     counts: data[i].counts,
                     randomId:randomId
+
                 }
             })
         }
