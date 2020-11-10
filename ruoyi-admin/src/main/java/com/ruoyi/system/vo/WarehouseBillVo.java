@@ -1,4 +1,4 @@
-package com.ruoyi.vo;
+package com.ruoyi.system.vo;
 
 import java.math.BigDecimal;
 

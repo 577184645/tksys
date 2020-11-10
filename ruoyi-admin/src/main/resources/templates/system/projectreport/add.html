@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="zh" xmlns:th="http://www.thymeleaf.org" >
+<html lang="zh" xmlns:th="http://www.thymeleaf.org" xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
 <head>
     <th:block th:include="include :: header('新增项目报备')" />
     <th:block th:include="include :: datetimepicker-css" />
@@ -7,14 +8,14 @@
 <body class="white-bg">
     <div class="wrapper wrapper-content animated fadeInRight ibox-content">
         <form class="form-horizontal m" id="form-projectreport-add">
-            <div class="form-group">    
-                <label class="col-sm-3 control-label">项目名称：</label>
+            <div  class="form-group">
+                <label class="col-sm-3 control-label">销售识别码：</label>
                 <div class="col-sm-8">
-                    <input name="projectreportName" class="form-control" type="text">
+                    <input name="projectreportHeadingcode"  class="form-control" type="text">
                 </div>
             </div>
             <div class="form-group">    
-                <label class="col-sm-3 control-label">报备日期：</label>
+                <label class="col-sm-3 control-label">报备时间：</label>
                 <div class="col-sm-8">
                     <div class="input-group date">
                         <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
@@ -25,33 +26,140 @@
             <div class="form-group">    
                 <label class="col-sm-3 control-label">最终用户：</label>
                 <div class="col-sm-8">
-                    <input name="lastuser" class="form-control" type="text">
+                    <input name="projectreportLastuser" class="form-control" type="text">
                 </div>
             </div>
             <div class="form-group">    
-                <label class="col-sm-3 control-label">招标人：</label>
+                <label class="col-sm-3 control-label">项目名称：</label>
                 <div class="col-sm-8">
-                    <input name="tenderee" class="form-control" type="text">
+                    <input name="projectreportName" class="form-control" type="text">
                 </div>
             </div>
             <div class="form-group">    
-                <label class="col-sm-3 control-label">报备人：</label>
+                <label class="col-sm-3 control-label">设计院：</label>
                 <div class="col-sm-8">
-                    <input name="projectreportUser" class="form-control" type="text">
+                    <input name="projectreportDesigninginstitute" class="form-control" type="text">
                 </div>
             </div>
             <div class="form-group">    
-                <label class="col-sm-3 control-label">电话：</label>
+                <label class="col-sm-3 control-label">资金来源：</label>
                 <div class="col-sm-8">
-                    <input name="phone" class="form-control" type="text">
+                    <input name="projectreportCapitalsource" class="form-control" type="text">
                 </div>
             </div>
             <div class="form-group">    
-                <label class="col-sm-3 control-label">项目情况说明：</label>
+                <label class="col-sm-3 control-label">投资方信息：</label>
                 <div class="col-sm-8">
-                    <input name="projectreportInfo" class="form-control" type="text">
+                    <input name="projectreportInvestorinfo" class="form-control" type="text">
                 </div>
             </div>
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">是否是EPC项目：</label>
+                <div class="col-sm-8">
+                    <input name="projectreportIsepcproject" class="form-control" type="text">
+                </div>
+            </div>
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">项目地点：</label>
+                <div class="col-sm-8">
+                    <input name="projectreportProjectaddress" class="form-control" type="text">
+                </div>
+            </div>
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">采购方：</label>
+                <div class="col-sm-8">
+                    <input name="projectreportProjectpurchaser" class="form-control" type="text">
+                </div>
+            </div>
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">投标：</label>
+                <div class="col-sm-8">
+                    <div class="input-group date">
+                        <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+                        <input name="projectreportBiddate" class="form-control" placeholder="yyyy-MM-dd" type="text">
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">涉及到的产品：</label>
+                <div class="col-sm-8">
+                    <input name="projectreportProduct" class="form-control" type="text">
+                </div>
+            </div>
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">大致金额：</label>
+                <div class="col-sm-8">
+                    <input name="projectreportDapproximatelymoney" class="form-control" type="text">
+                </div>
+            </div>
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">客户联系方式及职位：</label>
+                <div class="col-sm-8">
+                    <input name="projectreportCphoneandposition" class="form-control" type="text">
+                </div>
+            </div>
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">设计院联系方式及职位：</label>
+                <div class="col-sm-8">
+                    <input name="projectreportSphoneandposition" class="form-control" type="text">
+                </div>
+            </div>
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">竞争对手情况：</label>
+                <div class="col-sm-8">
+                    <input name="projectreportCompetitorinfo" class="form-control" type="text">
+                </div>
+            </div>
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">招标方：</label>
+                <div class="col-sm-8">
+                    <input name="projectreportTenderer" class="form-control" type="text">
+                </div>
+            </div>
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">几轮报价：</label>
+                <div class="col-sm-8">
+                    <input name="projectreportOffersize" class="form-control" type="text">
+                </div>
+            </div>
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">中标概率：</label>
+                <div class="col-sm-8">
+                    <input name="projectreportProbability" class="form-control" type="text">
+                </div>
+            </div>
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">客户关心的问题：</label>
+                <div class="col-sm-8">
+                    <input name="projectreportProblem" class="form-control" type="text">
+                </div>
+            </div>
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">能中标的理由：</label>
+                <div class="col-sm-8">
+                    <input name="projectreportReason" class="form-control" type="text">
+                </div>
+            </div>
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">拜访记录：</label>
+                <div class="col-sm-8">
+                    <input name="projectreportVisitingclients" class="form-control" type="text">
+                </div>
+            </div>
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">主要关系：最终用户/EPC：</label>
+                <div class="col-sm-8">
+                    <input name="projectreportRelation" class="form-control" type="text">
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-3 control-label">项目状态：</label>
+                <div class="col-sm-8">
+                    <textarea name="projectreportProjectstatus"  class="form-control"></textarea>
+                </div>
+            </div>
+            <input name="projectreportType" th:value="${projectreportType}" class="form-control" type="hidden">
+
 
         </form>
     </div>
@@ -70,6 +178,12 @@
         }
 
         $("input[name='projectreportDate']").datetimepicker({
+            format: "yyyy-mm-dd",
+            minView: "month",
+            autoclose: true
+        });
+
+        $("input[name='projectreportBiddate']").datetimepicker({
             format: "yyyy-mm-dd",
             minView: "month",
             autoclose: true

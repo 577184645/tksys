@@ -7,7 +7,7 @@ import com.ruoyi.system.domain.Projectreport;
  * 项目报备Mapper接口
  * 
  * @author ruoyi
- * @date 2020-10-29
+ * @date 2020-11-05
  */
 public interface ProjectreportMapper 
 {

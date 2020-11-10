@@ -1,7 +1,8 @@
 package com.ruoyi.system.service;
 
-import java.util.List;
 import com.ruoyi.system.domain.SalesContract;
+
+import java.util.List;
 
 /**
  * 销售合同Service接口
@@ -11,6 +12,11 @@ import com.ruoyi.system.domain.SalesContract;
  */
 public interface ISalesContractService 
 {
+
+    public  int updatecontractStatus( );
+
+    public  int rollbackupdatecontractStatus();
+
     /**
      * 查询销售合同
      * 

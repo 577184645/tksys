@@ -60,7 +60,7 @@ left join  material  m  on m.materialcode=s.materialcode
         where storageinbillid = #{storageinbillid}
     </select>
     <update id="updateMaterial">
-    update  storageindetail set name=#{name},materialcode=#{materialcode},partnumber=#{partnumber},footprint=#{footprint},unit=#{unit},manufacture=#{manufacture} where materialcode=#{oldmaterialcode}
+    update  storageindetail set name=#{name},partnumber=#{partnumber},footprint=#{footprint},unit=#{unit},manufacture=#{manufacture} where materialcode=#{materialcode}
     </update>
     <insert id="insertStorageindetail" parameterType="Storageindetail" useGeneratedKeys="true" keyProperty="id">
         insert into storageindetail

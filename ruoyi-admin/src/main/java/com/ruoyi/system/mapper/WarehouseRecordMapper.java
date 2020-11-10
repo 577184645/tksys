@@ -1,8 +1,8 @@
 package com.ruoyi.system.mapper;
 
-import java.util.List;
 import com.ruoyi.system.domain.WarehouseRecord;
-import org.apache.ibatis.annotations.Param;
+
+import java.util.List;
 
 /**
  * 库存记录Mapper接口
@@ -23,7 +23,6 @@ public interface WarehouseRecordMapper
 
 
 
-   public  int  updateMaterial(@Param("materialcode") String materialcode,@Param("name") String name,@Param("oldmaterialcode") String oldmaterialcode);
 
 
     /**

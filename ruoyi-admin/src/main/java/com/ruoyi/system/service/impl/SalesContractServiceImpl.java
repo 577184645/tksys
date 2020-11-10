@@ -24,6 +24,16 @@ public class SalesContractServiceImpl implements ISalesContractService
     @Autowired
     private SalesContractMapper salesContractMapper;
 
+    @Override
+    public int updatecontractStatus( ) {
+        return salesContractMapper.updatecontractStatus();
+    }
+
+    @Override
+    public int rollbackupdatecontractStatus() {
+        return salesContractMapper.rollbackupdatecontractStatus();
+    }
+
     /**
      * 查询销售合同
      * 

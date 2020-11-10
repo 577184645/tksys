@@ -98,8 +98,6 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         </foreach>
     </delete>
 
-  <update id="updateMaterial">
-          update  warehouse_record set materialcode=#{materialcode} ,name=#{name} where materialcode=#{oldmaterialcode}
-  </update>
+
     
 </mapper>

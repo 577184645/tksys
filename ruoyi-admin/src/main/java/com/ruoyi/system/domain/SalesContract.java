@@ -1,10 +1,11 @@
 package com.ruoyi.system.domain;
 
-import java.util.Date;
-import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
 import com.ruoyi.common.annotation.Excel;
 import com.ruoyi.common.core.domain.BaseEntity;
+import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
+
+import java.util.Date;
 
 /**
  * 销售合同对象 sales_contract
@@ -58,6 +59,9 @@ public class SalesContract extends BaseEntity
 
     private Double contractEndmoney;
 
+    @Excel(name = "状态",readConverterExp = "0=未完成,,1=已完成")
+    private String contractStatus;
+
     @Excel(name = "集团合同号")
     private String  groupNumber;
 
@@ -73,6 +77,14 @@ public class SalesContract extends BaseEntity
     /** 修改时间 */
     private Date uTime;
 
+
+    public String getContractStatus() {
+        return contractStatus;
+    }
+
+    public void setContractStatus(String contractStatus) {
+        this.contractStatus = contractStatus;
+    }
 
     public String getYear() {
         return year;

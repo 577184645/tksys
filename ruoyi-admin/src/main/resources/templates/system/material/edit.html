@@ -17,7 +17,7 @@
             <div class="form-group">
                 <label class="col-sm-3 control-label">类型：</label>
                 <div class="col-sm-8">
-                    <select required name="typeId" id="typeId"  class="form-control m-b">
+                    <select required name="typeId" id="typeId" disabled="disabled" class="form-control m-b">
                         <option value="">所有</option>
                         <option  th:each="materialtype:${materialtypeList}"
                                  th:value="${materialtype.deptId}"
@@ -31,7 +31,7 @@
             <div class="form-group">
                 <label class="col-sm-3 control-label">部门：</label>
                 <div class="col-sm-8">
-                    <select required name="deptId" id="deptId"  class="form-control m-b">
+                    <select required name="deptId" id="deptId"   disabled="disabled" class="form-control m-b">
                         <option value="">所有</option>
                         <option  th:each="materialdept:${materialdeptList}"
                                  th:value="${materialdept.id}"

@@ -73,10 +73,13 @@ spring:
       enabled: true
   mail:
     host: smtp.ym.163.com
+
     username: web@tksys.com.cn #自己的邮箱账号
     password: tksysweb  #这个不是登录密码而是163授权登录的密码
     default-encoding: UTF-8
     properties.mail.smtp.auth: true
+    properties.mail.smtp.port: 465 #465或者994
+    properties.mail.smtp.ssl.enable: true
     recipient: zjz@tksys.com.cn
 # MyBatis
 mybatis:

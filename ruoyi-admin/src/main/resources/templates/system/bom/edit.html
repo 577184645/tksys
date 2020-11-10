@@ -112,7 +112,7 @@
                 <div class="form-group">
                     <label class="col-sm-3 control-label">价格：</label>
                     <div class="col-sm-8">
-                        <input name="price" th:field="*{price}"   id="price" class="form-control" type="text">
+                        <input name="price" th:field="*{price}"  readonly  id="price" class="form-control" type="text">
                     </div>
                 </div>
             </div>
@@ -230,17 +230,19 @@
 </div>
 <div class="container-div">
     <div class="btn-group-sm" id="toolbar" role="group">
-        <a class="btn btn-success" onclick="insertRow()">
+        <!--<a class="btn btn-success" onclick="insertRow()">
             <i class="fa fa-plus"></i> 新增行
-        </a>
+        </a>-->
         <a class="btn btn-danger " onclick="removeRow()">
             <i class="fa fa-remove"></i> 删除选择行
         </a>
         <a class="btn btn-danger" onclick="removeRowAll()">
             <i class="fa fa-remove"></i> 删除所有行
         </a>
-
-
+        <input id="counts" placeholder="生产数量"  class="form-control" type="text">
+        <a class="btn btn-primary" onclick="updatecount()">
+            <i class="fa"></i> 提交
+        </a>
 
 
     </div>
@@ -271,8 +273,6 @@
 
         $(function() {
 
-
-
             var options = {
                 url: prefix1 + "/list",
                 importUrl: prefix1 + "/importData",
@@ -289,78 +289,52 @@
                 columns: [{
                     checkbox: true
                 },
-                    {
-                        field: 'id',
-                        title: 'id',
-                        visible: false
-                    },
 
                     {
-                        field: 'materialcode',
-                        title: '编码',
+                        field: 'msid',
+                        title: '主料编码',
                         editable : {
                             type : 'text',
-                            title : '物料编码'
-
+                            title : '主物料编码'
                         }
 
                     },
 
                     {
-                        field: 'name',
-                        title: '名称'
-                    },
-
-                    {
-                        field: 'partnumber',
-                        title: '型号'
-                    },
-                    {
-                        field: 'unit',
-                        title: '单位'
-                    },
-                    {
-                        field: 'price',
-                        title: '单价'
-                    },
-                    {
-                        field: 'count',
-                        title: '数量',
+                        field: 'ssid',
+                        title: '备料编码',
                         editable : {
-                            type : 'number',
-                            title : '数量'
-
+                            type : 'text',
+                            title : '主物料编码'
                         }
                     },
+
                     {
-                        field: 'manufacture',
-                        title: '品牌'
-                    },
-                    {
-                        field: 'supplier',
-                        title: '供应商'
-                    },
-                    {
-                        field: 'leadtime',
-                        title: '交货期'
+                        field: 'comment',
+                        title: 'Comment'
                     },
                     {
                         field: 'footprint',
-                        title: '封装'
+                        title: 'Footprint'
+                    },
+                    {
+                        field: 'description',
+                        title: 'Description'
+                    },
+                    {
+                        field: 'designator',
+                        title: 'Designator'
                     },
 
                     {
-                        field: 'comments',
-                        title: '备注',
-                        editable : {
-                            type : 'text',
-                            title : '备注'
+                        field: 'quantity',
+                        title: 'Quantity'
 
-                        }
                     }
 
 
-                ] ,onEditableSave: function (field, row, oldValue,$el) {
+
+                ]/* ,onEditableSave: function (field, row, oldValue,$el) {
                     $.ajax({
                         url: '../../storage/findlist/'+row.materialcode,
                         async: false,
@@ -379,10 +353,10 @@
                         }
                     });
 
-                    getsum();
+
                     $('#bootstrap-table').bootstrapTable('updateRow', {index: row.materialcode, row: row});
 
-                }
+                }*/
 
             };
             $.table.init(options);
@@ -410,12 +384,7 @@
                     return;
                 }
 
-                for(var i=0;i<data.length;i++){
-                    if(data[i].count<=0){
-                        alert("产品数量必须大于0!")
-                        return;
-                    }
-                }
+
 
                 $.ajax({
                     url:  ctx + "system/bom/edit",
@@ -460,27 +429,27 @@
         function removeRow(){
 
 
-            var ids = $.table.selectColumns("materialcode");
+            var ids = $.table.selectColumns("msid");
+
+            //
             if (ids.length == 0) {
                 $.modal.alertWarning("请至少选择一条记录");
                 return;
             }
             $("#" + table.options.id).bootstrapTable('remove', {
-                field: 'materialcode',
+                field: 'msid',
                 values: ids
             })
 
 
 
-
-            getsum();
         }
 
         /* 删除所有表格行 */
         function removeRowAll(){
 
             $("#" + table.options.id).bootstrapTable('removeAll')
-            getsum();
+
         }
 
         function insertRow(){
@@ -519,6 +488,27 @@
 
             $("#price").val(sum.toFixed(2));
         }
+
+
+
+        function updatecount() {
+            var data = $("#bootstrap-table").bootstrapTable('getData');
+
+            if(data.length==0){
+                alert("请导入bom清单");
+            }
+            for (var i=0;i<data.length;i++){
+                $("#bootstrap-table").bootstrapTable('updateRow', {
+                    index: i, // 你想插入到哪，0表示第一行
+                    row: {
+                        count:$("#counts").val(),
+                        sumcount:$("#counts").val()*data[i].quantity
+                    }
+                })
+            }
+
+        }
+
 
         $("#form-bom-add").validate({
             focusCleanup: true

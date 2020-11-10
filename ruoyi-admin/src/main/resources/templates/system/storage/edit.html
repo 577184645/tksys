@@ -407,13 +407,17 @@
                     $.tree.init(options);
 
                     function zOnClick(event, treeId, treeNode) {
-
-                        if(treeNode.name=="上海库"||treeNode.name=="天长库"){
+                        $("#deptId").val(treeNode.id);
+                        $("#deptId1").val(treeNode.id);
+                        $("#parentId").val(treeNode.pId);
+                        query();
+                        $.table.search('form2', 'bootstrap-table2')
+                      /*  if(treeNode.name=="上海库"||treeNode.name=="天长库"){
                             alert("不能选择上海库或天长库,如没有子库 请刷新!");
                             return;
-                        }
+                        }*/
 
-                        if(treeNode.children==null) {
+                       /* if(treeNode.children==null) {
                             $("#deptId").val(treeNode.id);
                             $("#deptId1").val(treeNode.id);
                             $("#parentId").val(treeNode.pId);
@@ -422,7 +426,7 @@
                         }else{
                             alert("请选择子仓库");
                             $("#deptId").val("");
-                        }
+                        }*/
 
                     }
 

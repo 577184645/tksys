@@ -1,26 +1,19 @@
 package com.ruoyi.system.controller;
 
-import java.util.Date;
-import java.util.List;
-
-import com.ruoyi.system.util.DateUtil;
-import org.apache.shiro.authz.annotation.RequiresPermissions;
+import com.ruoyi.common.annotation.Log;
+import com.ruoyi.common.core.controller.BaseController;
+import com.ruoyi.common.core.domain.AjaxResult;
+import com.ruoyi.common.core.page.TableDataInfo;
+import com.ruoyi.common.enums.BusinessType;
+import com.ruoyi.common.utils.poi.ExcelUtil;
+import com.ruoyi.system.domain.SalesContract;
+import com.ruoyi.system.service.ISalesContractService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
-import com.ruoyi.common.annotation.Log;
-import com.ruoyi.common.enums.BusinessType;
-import com.ruoyi.system.domain.SalesContract;
-import com.ruoyi.system.service.ISalesContractService;
-import com.ruoyi.common.core.controller.BaseController;
-import com.ruoyi.common.core.domain.AjaxResult;
-import com.ruoyi.common.utils.poi.ExcelUtil;
-import com.ruoyi.common.core.page.TableDataInfo;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 /**
  * 销售合同Controller
@@ -52,6 +45,8 @@ public class SalesContractController extends BaseController
     @ResponseBody
     public TableDataInfo list(SalesContract salesContract)
     {
+        salesContractService.updatecontractStatus();
+        salesContractService.rollbackupdatecontractStatus();
         startPage();
         List<SalesContract> list = salesContractService.selectSalesContractList(salesContract);
         return getDataTable(list);
@@ -66,6 +61,8 @@ public class SalesContractController extends BaseController
         return  salesContractService.yearsummoney(yyyy)!=null? salesContractService.yearsummoney(yyyy):0;
 
     }
+
+
 
 
 
@@ -116,6 +113,8 @@ public class SalesContractController extends BaseController
         return prefix + "/edit";
     }
 
+
+
     /**
      * 修改保存销售合同
      */
@@ -127,6 +126,8 @@ public class SalesContractController extends BaseController
     {
         return toAjax(salesContractService.updateSalesContract(salesContract));
     }
+
+
 
     /**
      * 删除销售合同

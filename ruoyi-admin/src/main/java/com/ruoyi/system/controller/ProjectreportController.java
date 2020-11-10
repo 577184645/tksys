@@ -20,7 +20,7 @@ import java.util.List;
  * 项目报备Controller
  * 
  * @author ruoyi
- * @date 2020-10-29
+ * @date 2020-11-05
  */
 @Controller
 @RequestMapping("/system/projectreport")
@@ -33,10 +33,20 @@ public class ProjectreportController extends BaseController
 
     @RequiresPermissions("system:projectreport:view")
     @GetMapping()
-    public String projectreport()
+    public String projectreport( ModelMap map)
     {
+       map.put("projectreportType",0);
         return prefix + "/projectreport";
     }
+
+    @RequiresPermissions("system:projectreport:view")
+    @GetMapping("/honeywell")
+    public String honeywell( ModelMap map)
+    {
+        map.put("projectreportType",1);
+        return prefix + "/projectreporthoneywell";
+    }
+
 
     /**
      * 查询项目报备列表
@@ -69,8 +79,19 @@ public class ProjectreportController extends BaseController
      * 新增项目报备
      */
     @GetMapping("/add")
-    public String add()
+    public String add(ModelMap map )
     {
+        map.put("projectreportType",0);
+        return prefix + "/add";
+    }
+
+    /**
+     * 新增项目报备
+     */
+    @GetMapping("/honeywelladd")
+    public String honeywelladd(ModelMap map )
+    {
+        map.put("projectreportType",1);
         return prefix + "/add";
     }
 
@@ -95,6 +116,25 @@ public class ProjectreportController extends BaseController
         Projectreport projectreport = projectreportService.selectProjectreportById(projectreportId);
         mmap.put("projectreport", projectreport);
         return prefix + "/edit";
+    }
+    @GetMapping("/confirm/{projectreportId}")
+    public String confirm(@PathVariable("projectreportId") Long projectreportId, ModelMap mmap)
+    {
+        Projectreport projectreport = projectreportService.selectProjectreportById(projectreportId);
+        mmap.put("projectreport", projectreport);
+        return prefix + "/confirm";
+    }
+
+    /**
+     * 修改保存项目报备
+     */
+    @RequiresPermissions("system:projectreport:confirm")
+    @Log(title = "项目报备", businessType = BusinessType.UPDATE)
+    @PostMapping("/confirm")
+    @ResponseBody
+    public AjaxResult confirm(Projectreport projectreport)
+    {
+        return toAjax(projectreportService.updateProjectreport(projectreport));
     }
 
     /**

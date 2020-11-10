@@ -1,24 +1,26 @@
 package com.ruoyi.system.controller;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
+import com.ruoyi.common.annotation.Log;
+import com.ruoyi.common.core.controller.BaseController;
+import com.ruoyi.common.core.domain.AjaxResult;
+import com.ruoyi.common.core.page.TableDataInfo;
+import com.ruoyi.common.enums.BusinessType;
+import com.ruoyi.common.utils.poi.ExcelUtil;
 import com.ruoyi.framework.util.ShiroUtils;
-import com.ruoyi.system.domain.*;
+import com.ruoyi.system.domain.Material;
+import com.ruoyi.system.domain.Materialtype;
+import com.ruoyi.system.domain.SysUser;
 import com.ruoyi.system.service.*;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
-import com.ruoyi.common.annotation.Log;
-import com.ruoyi.common.enums.BusinessType;
-import com.ruoyi.common.core.controller.BaseController;
-import com.ruoyi.common.core.domain.AjaxResult;
-import com.ruoyi.common.utils.poi.ExcelUtil;
-import com.ruoyi.common.core.page.TableDataInfo;
 import org.springframework.web.multipart.MultipartFile;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * 物料列表Controller
@@ -163,7 +165,11 @@ public class MaterialController extends BaseController
     @ResponseBody
     public AjaxResult addSave(Material material)
     {
-        return toAjax(materialService.insertMaterial(material));
+        int i = materialService.insertMaterial(material);
+        if(i==0){
+            return AjaxResult.error("操作失败,有重复物料!");
+        }
+        return toAjax(i);
     }
 
     /**

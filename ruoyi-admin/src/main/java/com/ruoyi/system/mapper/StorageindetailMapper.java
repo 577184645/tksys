@@ -1,10 +1,9 @@
 package com.ruoyi.system.mapper;
 
-import java.util.List;
-
-import com.ruoyi.system.domain.Storage;
 import com.ruoyi.system.domain.Storageindetail;
 import org.apache.ibatis.annotations.Param;
+
+import java.util.List;
 
 /**
  * 入库产品列表Mapper接口
@@ -24,7 +23,7 @@ public interface StorageindetailMapper
 
 
 
-    public int updateMaterial(@Param("name") String name, @Param("materialcode") String materialcode, @Param("partnumber") String partnumber, @Param("footprint") String footprint, @Param("unit") String unit, @Param("manufacture") String manufacture, @Param("oldmaterialcode") String oldmaterialcode);
+    public int updateMaterial(@Param("name") String name, @Param("partnumber") String partnumber, @Param("footprint") String footprint, @Param("unit") String unit, @Param("manufacture") String manufacture, @Param("materialcode") String materialcode);
     /**
      * 查询入库产品列表
      */

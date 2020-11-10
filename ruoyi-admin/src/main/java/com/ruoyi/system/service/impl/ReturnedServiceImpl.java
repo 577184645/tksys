@@ -1,6 +1,9 @@
 package com.ruoyi.system.service.impl;
 
 import java.util.List;
+
+import com.ruoyi.system.domain.SalesContract;
+import com.ruoyi.system.mapper.SalesContractMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.ruoyi.system.mapper.ReturnedMapper;
@@ -19,6 +22,8 @@ public class ReturnedServiceImpl implements IReturnedService
 {
     @Autowired
     private ReturnedMapper returnedMapper;
+    @Autowired
+    private SalesContractMapper salesContractMapper;
 
     /**
      * 查询回款

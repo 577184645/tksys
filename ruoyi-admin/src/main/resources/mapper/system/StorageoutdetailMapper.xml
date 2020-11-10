@@ -136,7 +136,7 @@ left join  material m on m.materialcode=s.materialcode
         where id = #{id}
     </update>
     <update id="updateMaterial">
-    update  storageoutdetail set name=#{name},materialcode=#{materialcode},partnumber=#{partnumber},footprint=#{footprint},unit=#{unit},manufacture=#{manufacture} where materialcode=#{oldmaterialcode}
+    update  storageoutdetail set name=#{name},partnumber=#{partnumber},footprint=#{footprint},unit=#{unit},manufacture=#{manufacture} where materialcode=#{materialcode}
     </update>
     <delete id="deleteStorageoutdetailById" parameterType="Long">
         delete from storageoutdetail where id = #{id}

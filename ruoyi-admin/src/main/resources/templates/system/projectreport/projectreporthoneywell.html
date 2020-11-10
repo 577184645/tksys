@@ -43,10 +43,9 @@
             </div>
 
             <div class="btn-group-sm" id="toolbar" role="group">
-                <a class="btn btn-success" onclick="$.operate.add()" shiro:hasPermission="system:projectreport:add">
+                <a class="btn btn-success" onclick=add()  shiro:hasPermission="system:projectreport:honeywelladd">
                     <i class="fa fa-plus"></i> 添加
                 </a>
-
                 <a class="btn btn-primary single disabled" onclick="$.operate.edit()" shiro:hasPermission="system:projectreport:edit">
                     <i class="fa fa-edit"></i> 修改
                 </a>
@@ -203,7 +202,10 @@
                     field: 'projectreportProjectstatus', 
                     title: '项目状态'
                 },
-
+                {
+                    field: 'projectreportHoneywellconfirmation', 
+                    title: 'Honeywell Confirmation'
+                },
                 {
                     title: '操作',
                     align: 'center',

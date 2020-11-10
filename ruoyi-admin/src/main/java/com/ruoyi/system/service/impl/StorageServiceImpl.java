@@ -6,7 +6,7 @@ import com.ruoyi.system.domain.*;
 import com.ruoyi.system.mapper.*;
 import com.ruoyi.system.service.IStorageService;
 import com.ruoyi.system.util.BigDecimalUtil;
-import com.ruoyi.vo.WarehouseBillVo;
+import com.ruoyi.system.vo.WarehouseBillVo;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 import org.apache.commons.lang.StringUtils;
@@ -222,9 +222,10 @@ public  class StorageServiceImpl implements IStorageService {
             storage.setStocks(storageindetail.getCounts());
             if (storageMapper.selectStorageByMaterialcodeAndTypeid(storage) > 0) {
                 storageindetail.setSid(storageMapper.selectStorageInfoByMaterialcodeAndTypeid(storage).getId());
-                Double oldprice = storageMapper.selectStorageInfoByMaterialcodeAndTypeid(storage).getPrice();
-                Double newprice=storageindetail.getPrice();
-                storage.setPrice(BigDecimalUtil.avg(oldprice,newprice).doubleValue());
+                Long oldstocks = storageMapper.selectStorageInfoByMaterialcodeAndTypeid(storage).getStocks();
+                double oldmoney = storageMapper.selectStorageInfoByMaterialcodeAndTypeid(storage).getMoney();
+                double summoney=BigDecimalUtil.add(oldmoney,storage.getMoney()).doubleValue();
+                storage.setPrice(BigDecimalUtil.div(summoney,oldstocks+storage.getStocks(),4).doubleValue());
                 storageMapper.updatestocks(storage);
             } else {
                 storage.setName(storageindetail.getName());
@@ -730,13 +731,20 @@ if(storageoutbill.getOutsourcewarehousecomments().isEmpty()){
         }
 
         int rowIndex = 3;
+                 System.out.println(warehouseBillInVos.size());
+                 for (int i = 0; i < warehouseBillInVos.size(); i++) {
+                     if( storageinbillMapper.selectStorageinbillByStockinid(warehouseBillInVos.get(i).getNumber())!=null){
+                         if(storageinbillMapper.selectStorageinbillByStockinid(warehouseBillInVos.get(i).getNumber()).getOutsourcewarehouse().indexOf("生产库")==-1) {
 
-        for (int i = 0; i < warehouseBillInVos.size(); i++){
-            if(warehouseBillInVos.get(i).getNumber().lastIndexOf("生产库")==-1){
-                warehouseBillInVos.remove(i);
-            }
-
-        }
+                              warehouseBillInVos.remove(i);
+                         }
+                     }
+                     else if(storageoutbillMapper.selectStorageoutbillByStorageoutId(warehouseBillInVos.get(i).getNumber())!=null){
+                        if( storageoutbillMapper.selectStorageoutbillByStorageoutId(warehouseBillInVos.get(i).getNumber()).getOutsourcewarehouse().indexOf("生产库")==-1){
+                            warehouseBillInVos.remove(i);
+                        }
+                     }
+                 }
 
 
 

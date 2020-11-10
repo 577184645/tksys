@@ -1,21 +1,20 @@
 package com.ruoyi.system.service.impl;
 
-import java.util.Date;
-import java.util.List;
-
 import com.ruoyi.common.core.domain.AjaxResult;
+import com.ruoyi.common.core.text.Convert;
 import com.ruoyi.common.exception.BusinessException;
 import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.framework.util.ShiroUtils;
-import com.ruoyi.system.domain.*;
+import com.ruoyi.system.domain.Material;
+import com.ruoyi.system.domain.SysUser;
 import com.ruoyi.system.mapper.*;
+import com.ruoyi.system.service.IMaterialService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import com.ruoyi.system.service.IMaterialService;
-import com.ruoyi.common.core.text.Convert;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.servlet.http.HttpServletRequest;
+import java.util.Date;
+import java.util.List;
 
 /**
  * 物料列表Service业务层处理
@@ -82,6 +81,8 @@ public class MaterialServiceImpl implements IMaterialService {
 
 
 
+
+
         return materialCode;
 
     }
@@ -105,7 +106,10 @@ public class MaterialServiceImpl implements IMaterialService {
      */
     @Override
     public int insertMaterial(Material material) {
-
+        int i = materialMapper.selectMaterialRepetition(material.getName(), material.getPartnumber(), material.getFootprint(), material.getManufacture(), material.getDeptId());
+      if (i>0){
+          return 0;
+      }
         return materialMapper.insertMaterial(material);
     }
 
@@ -131,15 +135,18 @@ public class MaterialServiceImpl implements IMaterialService {
      */
     @Override
     public AjaxResult updateMaterial(Material material) {
+        if(storageMapper.selectStorageByMaterialcode(material.getMaterialcode())!=null){
 
-        String oldmaterialcode = materialMapper.selectMaterialById(material.getId()).getMaterialcode();
-        if(storageMapper.selectStorageByMaterialcode(oldmaterialcode)!=null){
-              return AjaxResult.error("该物料库存中已存在,修改失败!,请联系管理员");
+            storagequitdetailMapper.updateMaterial(material.getName(),material.getPartnumber(),material.getFootprint(),material.getUnit(),material.getManufacture(),material.getMaterialcode());
+            storageMapper.updateMaterial(material.getName(),material.getPartnumber(),material.getFootprint(),material.getUnit(),material.getManufacture(),material.getMaterialcode());
+            storageindetailMapper.updateMaterial(material.getName(),material.getPartnumber(),material.getFootprint(),material.getUnit(),material.getManufacture(),material.getMaterialcode());
+            storageoutdetailMapper.updateMaterial(material.getName(),material.getPartnumber(),material.getFootprint(),material.getUnit(),material.getManufacture(),material.getMaterialcode());
+            materialMapper.updateMaterial(material);
         }else{
              materialMapper.updateMaterial(material);
-             return AjaxResult.success("修改成功!");
-        }
 
+        }
+        return AjaxResult.success("修改成功!");
     }
 
     /**
@@ -154,7 +161,7 @@ public class MaterialServiceImpl implements IMaterialService {
         int sueecessscount=0;
         int errorcount=0;
         for (int i = 0; i < strings.length; i++) {
-            if(storageMapper.selectStorageByMaterialcode(materialMapper.selectMaterialById(Long.valueOf(strings[i])).getMaterialcode()) !=null){
+            if(storageMapper.selectStorageByMaterialcode(materialMapper.selectMaterialById(Long.valueOf(strings[i])).getMaterialcode()).size()>0){
                 errorcount++;
             }else{
                 materialMapper.deleteMaterialById(Long.valueOf(strings[i]));

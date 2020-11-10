@@ -1,418 +1,320 @@
 <!DOCTYPE html>
-<html lang="zh">
+<html lang="zh" xmlns:th="http://www.thymeleaf.org" >
 <head>
-    <th:block th:include="include :: header('表单构建器')" />
-    <th:block th:include="include :: datetimepicker-css" />
+    <th:block th:include="include :: header('新增bom列表')" />
     <th:block th:include="include :: layout-latest-css" />
     <th:block th:include="include :: ztree-css" />
     <th:block th:include="include :: bootstrap-editable-css" />
     <link th:href="@{/css/jquery.editable-select.css}" rel="stylesheet" type="text/css" />
 
+
 </head>
-<style>
-    .droppable-active{background-color:#ffe!important}.tools a{cursor:pointer;font-size:80%}.form-body .col-md-6,.form-body .col-md-12{min-height:400px}.draggable{cursor:move}
-     .select-table table {
-         table-layout:fixed;
-     }
-
-    .select-table .table td {
-
-        /* 配合宽度来使用 */
-        height:20px;
-    }
+<body class="white-bg">
+    <div class="wrapper wrapper-content animated fadeInRight ibox-content">
+        <h4 class="form-header h4">基本信息</h4>
+        <form class="form-horizontal m" id="form-bom-add">
 
 
-    .fixed_headers thead tr {
-        height:10px;
-        display: block;
-        position: relative;
-    }
-    .fixed_headers tbody {
-        display: block;
-        overflow: auto;
-        height: 250px;
-    }
 
-    .fixed_headers td:nth-child(1),
-    .fixed_headers th:nth-child(1) {
+            <div class="row">
 
-        min-width: 100px;
-        text-overflow:ellipsis;
-        white-space:nowrap;
-        overflow:hidden;
-    }
-    .fixed_headers td:nth-child(2),
-    .fixed_headers th:nth-child(2) {
-        min-width: 70px;
-    }
-    .fixed_headers td:nth-child(3),
-    .fixed_headers th:nth-child(3) {
-        min-width: 140px;
-    }
-    .fixed_headers td:nth-child(4),
-    .fixed_headers th:nth-child(4) {
-        min-width: 140px;
-    }
-    .fixed_headers td:nth-child(5),
-    .fixed_headers th:nth-child(5) {
-        min-width: 140px;
-    }
-    .fixed_headers td:nth-child(6),
-    .fixed_headers th:nth-child(6) {
-        min-width: 140px;
-    }
-    .fixed_headers td:nth-child(7),
-    .fixed_headers th:nth-child(7) {
-        min-width: 140px;
-    }
-    .fixed_headers td:nth-child(8),
-    .fixed_headers th:nth-child(8) {
-        min-width: 140px;
-    }
-    .fixed_headers td:nth-child(9),
-    .fixed_headers th:nth-child(9) {
-        min-width: 140px;
-    }
-    .fixed_headers td:nth-child(10),
-    .fixed_headers th:nth-child(10) {
-        min-width: 140px;
-    }
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label">编号
+                            ：</label>
+                        <div class="col-sm-8">
+                            <input name="number" required id="number" class="form-control" type="text">
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label">版本
+                            ：</label>
+                        <div class="col-sm-8">
+                            <input name="version" required id="version" class="form-control" type="text">                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                <div class="form-group">
+                    <label class="col-sm-3 control-label">名称：</label>
+                    <div class="col-sm-8">
+                        <input name="name" required id="name" class="form-control" type="text">
+                    </div>
+                </div>
+                </div>
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label">描述：</label>
+                        <div class="col-sm-8">
+                            <input name="description" id="description" class="form-control" type="text">
+                        </div>
+                    </div>
+                </div>
 
-</style>
-<body class="gray-bg">
-<div class="wrapper wrapper-content">
+                <div class="col-sm-6">
+                <div class="form-group">
+                    <label class="col-sm-3 control-label">型号：</label>
+                    <div class="col-sm-8">
+                        <input name="partnumber" required id="partnumber" class="form-control" type="text">
+                    </div>
+                </div>
+                </div>
+
+                <div class="col-sm-6">
+                <div class="form-group">
+                    <label class="col-sm-3 control-label">发布状态：</label>
+                    <div class="col-sm-8">
+                        <select name="publishstatus" id="publishstatus" class="form-control m-b" th:with="type=${@dict.getType('publishstatus')}">
+                            <option value=""></option>
+
+                            <option th:each="dict : ${type}" th:text="${dict.dictLabel}" th:value="${dict.dictLabel}"></option>
+                        </select>
+                    </div>
+                </div>
+                </div>
+
+                <div class="col-sm-6">
+                <div class="form-group">
+                    <label class="col-sm-3 control-label">所属项目：</label>
+                    <div class="col-sm-8">
+                        <select name="project" id="project" class="form-control m-b" >
+                            <option value=""></option>
+
+                            <option th:each="project : ${projectList}" th:text="${project.name}" th:value="${project.name}"></option>
+                        </select>
+                    </div>
+                </div>
+                </div>
+
+                <div class="col-sm-6">
+                <div class="form-group">
+                    <label class="col-sm-3 control-label">产品大类：</label>
+                    <div class="col-sm-8">
+                        <select name="producttype" id="producttype" class="form-control m-b" th:with="type=${@dict.getType('producttype')}">
+                            <option value=""></option>
+
+                            <option th:each="dict : ${type}" th:text="${dict.dictLabel}" th:value="${dict.dictLabel}"></option>
+                        </select>
+                    </div>
+                </div>
+                </div>
+
+                <div class="col-sm-6">
+
+                <div class="form-group">
+                    <label class="col-sm-3 control-label">价格：</label>
+                    <div class="col-sm-8">
+                        <input name="price" readonly id="price" class="form-control" type="text">
+                    </div>
+                </div>
+                </div>
+
+                <div class="col-sm-6">
+
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label">设计者：</label>
+                        <div class="col-sm-8">
+
+                            <select name="designer" id="designer" class="form-control m-b" th:with="type=${@dict.getType('bomuser')}">
+                                <option value=""></option>
+
+                                <option th:each="dict : ${type}" th:text="${dict.dictLabel}" th:value="${dict.dictLabel}"></option>
+                            </select>
+                        </div>
+                    </div>
+
+                </div>
+
+
+                <div class="col-sm-6">
+
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label">检查者：</label>
+                        <div class="col-sm-8">
+
+                            <select name="scrutineer" id="scrutineer" class="form-control m-b" th:with="type=${@dict.getType('bomuser')}">
+                                <option value=""></option>
+
+                                <option th:each="dict : ${type}" th:text="${dict.dictLabel}" th:value="${dict.dictLabel}"></option>
+                            </select>
+                        </div>
+                    </div>
+
+                </div>
+
+
+
+                <div class="col-sm-6">
+
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label">批准者：</label>
+                        <div class="col-sm-8">
+
+                            <select name="approver" id="approver" class="form-control m-b" th:with="type=${@dict.getType('bomuser')}">
+                                <option value=""></option>
+
+                                <option th:each="dict : ${type}" th:text="${dict.dictLabel}" th:value="${dict.dictLabel}"></option>
+                            </select>
+                        </div>
+                    </div>
+
+                </div>
+
+
+                <div class="col-sm-6">
+
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label">制作时间：</label>
+                        <div class="col-sm-8">
+                            <div class="input-group date">
+                                <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+                                <input name="timeofmaking" id="timeofmaking" class="form-control" placeholder="yyyy-MM-dd" type="text">
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+
+                <div class="col-sm-6">
+
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label">检查时间：</label>
+                        <div class="col-sm-8">
+                            <div class="input-group date">
+                                <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+                                <input name="inspectiontime" id="inspectiontime" class="form-control" placeholder="yyyy-MM-dd" type="text">
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label">批准时间：</label>
+                        <div class="col-sm-8">
+                            <div class="input-group date">
+                                <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+                                <input name="approvaltime" id="approvaltime" class="form-control" placeholder="yyyy-MM-dd" type="text">
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label">备注：</label>
+                        <div class="col-sm-8">
+                            <input name="remark" id="remark" class="form-control" type="text">
+                        </div>
+                    </div>
+                </div>
+
+
+            </div>
+
+        </form>
+    </div>
     <div class="row">
-        <div class="col-sm-5" >
-            <div class="ibox float-e-margins">
-                <div class="ibox-title">
-                    <h5>基本信息</h5>
+        <div class="col-sm-12 search-collapse">
+            <form id="form2">
+                <div class="select-list">
+                    <ul>
+                        <li>
+                            <label>物料编码：</label>
+                            <input type="text" id="materialcode" name="materialcode"/>
+                        </li>
+
+                        <li>
+                            <label>型号：</label>
+                            <input type="text" id="spartnumber" name="partnumber"/>
+                        </li>
+                        <li>
+                            <label>封装：</label>
+                            <input type="text" id="footprint" name="footprint"/>
+                        </li>
+                        <li>
+                            <label>描述：</label>
+                            <input type="text" id="descriptions" name="description"/>
+                        </li>
+                        <li>
+                            <a class="btn btn-primary btn-rounded btn-sm" onclick="query()"><i class="fa fa-search"></i>&nbsp;搜索</a>
+                            <a class="btn btn-warning btn-rounded btn-sm" onclick="$.form.reset('form2', 'bootstrap-table2')"><i class="fa fa-refresh"></i>&nbsp;重置</a>
+                        </li>
+                    </ul>
                 </div>
-                <div class="ibox-content">
-
-
-                    <div class="btn-group-sm" id="toolbar" role="group">
-                        <a class="btn btn-warning" onclick="downloadFile()">
-                            <i class="fa fa-download"></i> 模板下载
-                        </a>
-                        <a class="btn btn-danger " onclick="removeRow()">
-                            <i class="fa fa-remove"></i> 删除选择行
-                        </a>
-
-                        <a class="btn btn-danger" onclick="removeRowAll()">
-                            <i class="fa fa-remove"></i> 删除所有行
-                        </a>
-                        <a class="btn btn-info" data-toggle="modal" data-target="#myModal">
-                            <i class="fa fa-upload"></i> 导入
-                        </a>
-
-                        <input id="counts" placeholder="生产数量"  class="form-control" type="text">
-                        <a class="btn btn-primary" onclick="updatecount()">
-                            <i class="fa"></i> 提交
-                        </a>
-
-
-                    </div>
-                    <div class="col-sm-12 select-table table-striped" style="margin-bottom: 1%">
-                        <table id="bootstrap-table" class="table  table-hover coma-base-table fixed_headers"></table>
-                    </div>
-
-
-                    <form class="form-horizontal m" id="form-bom-add">
-
-
-
-                        <div class="row">
-
-                            <div class="col-sm-6">
-                                <div class="form-group">
-                                    <label class="col-sm-3 control-label">编号
-                                        ：</label>
-                                    <div class="col-sm-8">
-                                        <input name="number" required id="number" class="form-control" type="text">
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-sm-6">
-                                <div class="form-group">
-                                    <label class="col-sm-3 control-label">版本
-                                        ：</label>
-                                    <div class="col-sm-8">
-                                        <input name="version" required id="version" class="form-control" type="text">                        </div>
-                                </div>
-                            </div>
-                            <div class="col-sm-6">
-                                <div class="form-group">
-                                    <label class="col-sm-3 control-label">名称：</label>
-                                    <div class="col-sm-8">
-                                        <input name="name" required id="name" class="form-control" type="text">
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-sm-6">
-                                <div class="form-group">
-                                    <label class="col-sm-3 control-label">描述：</label>
-                                    <div class="col-sm-8">
-                                        <input name="description" id="description" class="form-control" type="text">
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="col-sm-6">
-                                <div class="form-group">
-                                    <label class="col-sm-3 control-label">型号：</label>
-                                    <div class="col-sm-8">
-                                        <input name="partnumber" required id="partnumber" class="form-control" type="text">
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="col-sm-6">
-                                <div class="form-group">
-                                    <label class="col-sm-3 control-label">发布状态：</label>
-                                    <div class="col-sm-8">
-                                        <select name="publishstatus" id="publishstatus" class="form-control m-b" th:with="type=${@dict.getType('publishstatus')}">
-                                            <option value=""></option>
-
-                                            <option th:each="dict : ${type}" th:text="${dict.dictLabel}" th:value="${dict.dictLabel}"></option>
-                                        </select>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="col-sm-6">
-                                <div class="form-group">
-                                    <label class="col-sm-3 control-label">所属项目：</label>
-                                    <div class="col-sm-8">
-                                        <select name="project" id="project" class="form-control m-b" >
-                                            <option value=""></option>
-
-                                            <option th:each="project : ${projectList}" th:text="${project.name}" th:value="${project.name}"></option>
-                                        </select>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="col-sm-6">
-                                <div class="form-group">
-                                    <label class="col-sm-3 control-label">产品大类：</label>
-                                    <div class="col-sm-8">
-                                        <select name="producttype" id="producttype" class="form-control m-b" th:with="type=${@dict.getType('producttype')}">
-                                            <option value=""></option>
-
-                                            <option th:each="dict : ${type}" th:text="${dict.dictLabel}" th:value="${dict.dictLabel}"></option>
-                                        </select>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="col-sm-6">
-
-                                <div class="form-group">
-                                    <label class="col-sm-3 control-label">价格：</label>
-                                    <div class="col-sm-8">
-                                        <input name="price" readonly id="price" class="form-control" type="text">
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="col-sm-6">
-
-                                <div class="form-group">
-                                    <label class="col-sm-3 control-label">设计者：</label>
-                                    <div class="col-sm-8">
-
-                                        <select name="designer" id="designer" class="form-control m-b" th:with="type=${@dict.getType('bomuser')}">
-                                            <option value=""></option>
-
-                                            <option th:each="dict : ${type}" th:text="${dict.dictLabel}" th:value="${dict.dictLabel}"></option>
-                                        </select>
-                                    </div>
-                                </div>
-
-                            </div>
-
-
-                            <div class="col-sm-6">
-
-                                <div class="form-group">
-                                    <label class="col-sm-3 control-label">检查者：</label>
-                                    <div class="col-sm-8">
-
-                                        <select name="scrutineer" id="scrutineer" class="form-control m-b" th:with="type=${@dict.getType('bomuser')}">
-                                            <option value=""></option>
-
-                                            <option th:each="dict : ${type}" th:text="${dict.dictLabel}" th:value="${dict.dictLabel}"></option>
-                                        </select>
-                                    </div>
-                                </div>
-
-                            </div>
-
-
-
-                            <div class="col-sm-6">
-
-                                <div class="form-group">
-                                    <label class="col-sm-3 control-label">批准者：</label>
-                                    <div class="col-sm-8">
-
-                                        <select name="approver" id="approver" class="form-control m-b" th:with="type=${@dict.getType('bomuser')}">
-                                            <option value=""></option>
-
-                                            <option th:each="dict : ${type}" th:text="${dict.dictLabel}" th:value="${dict.dictLabel}"></option>
-                                        </select>
-                                    </div>
-                                </div>
-
-                            </div>
-
-
-                            <div class="col-sm-6">
-
-                                <div class="form-group">
-                                    <label class="col-sm-3 control-label">制作时间：</label>
-                                    <div class="col-sm-8">
-                                        <div class="input-group date">
-                                            <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
-                                            <input name="timeofmaking" id="timeofmaking" class="form-control" placeholder="yyyy-MM-dd" type="text">
-                                        </div>
-                                    </div>
-                                </div>
-
-                            </div>
-
-
-                            <div class="col-sm-6">
-
-                                <div class="form-group">
-                                    <label class="col-sm-3 control-label">检查时间：</label>
-                                    <div class="col-sm-8">
-                                        <div class="input-group date">
-                                            <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
-                                            <input name="inspectiontime" id="inspectiontime" class="form-control" placeholder="yyyy-MM-dd" type="text">
-                                        </div>
-                                    </div>
-                                </div>
-
-                            </div>
-
-
-                            <div class="col-sm-6">
-                                <div class="form-group">
-                                    <label class="col-sm-3 control-label">批准时间：</label>
-                                    <div class="col-sm-8">
-                                        <div class="input-group date">
-                                            <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
-                                            <input name="approvaltime" id="approvaltime" class="form-control" placeholder="yyyy-MM-dd" type="text">
-                                        </div>
-                                    </div>
-                                </div>
-
-                            </div>
-
-                            <div class="col-sm-6">
-                                <div class="form-group">
-                                    <label class="col-sm-3 control-label">备注：</label>
-                                    <div class="col-sm-8">
-                                        <input name="remark" id="remark" class="form-control" type="text">
-                                    </div>
-                                </div>
-                            </div>
-
-
-                        </div>
-
-                    </form>
-                    <div class="clearfix"></div>
-
-
-                    <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-                        <div class="modal-dialog">
-                            <div class="modal-content">
-                                <div class="modal-header">
-                                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                                    <h4 class="modal-title" id="myModalLabel">导入</h4>
-                                </div>
-
-                                <input id="filePath" name="accessory"   class="form-control" type="file">
-
-                                <div class="modal-footer">
-                                    <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
-                                    <button type="button" onclick="sendFile()" class="btn btn-primary">提交</button>
-                                </div>
-                            </div><!-- /.modal-content -->
-                        </div><!-- /.modal -->
-                    </div>
-                </div>
-            </div>
+            </form>
         </div>
-        <div class="col-sm-7">
-            <div class="ibox float-e-margins">
-                <div class="ibox-content">
-                    <div class="container-div">
+    <div class="container-div">
+        <div class="btn-group-sm" id="toolbar" role="group">
+            <a class="btn btn-warning" onclick="downloadFile()">
+                <i class="fa fa-download"></i> 模板下载
+            </a>
+            <a class="btn btn-danger " onclick="removeRow()">
+                <i class="fa fa-remove"></i> 删除选择行
+            </a>
+
+            <a class="btn btn-danger" onclick="removeRowAll()">
+                <i class="fa fa-remove"></i> 删除所有行
+            </a>
+            <a class="btn btn-info" data-toggle="modal" data-target="#myModal">
+                <i class="fa fa-upload"></i> 导入
+            </a>
 
 
 
-                        <div class="ui-layout-center">
-                            <div class="container-div">
-                                <div class="row">
-                                    <div class="col-sm-12 search-collapse">
-                                        <form id="form2">
-                                            <div class="select-list">
-                                                <ul>
-                                                    <li>
-                                                        <label>物料编码：</label>
-                                                        <input type="text" id="materialcode" name="materialcode"/>
-                                                    </li>
 
-                                                    <li>
-                                                        <label>型号：</label>
-                                                        <input type="text" id="spartnumber" name="partnumber"/>
-                                                    </li>
-                                                    <li>
-                                                        <label>封装：</label>
-                                                        <input type="text" id="footprint" name="footprint"/>
-                                                    </li>
+        </div>
+    </div>
 
-                                                    <li>
-                                                        <a class="btn btn-primary btn-rounded btn-sm" onclick="$.table.search('form2', 'bootstrap-table2')"><i class="fa fa-search"></i>&nbsp;搜索</a>
-                                                        <a class="btn btn-warning btn-rounded btn-sm" onclick="$.form.reset('form2', 'bootstrap-table2')"><i class="fa fa-refresh"></i>&nbsp;重置</a>
-                                                    </li>
-                                                </ul>
-                                            </div>
-                                        </form>
-                                    </div>
 
-                                    <div class="col-xs-12 select-table table-striped" style="margin-bottom: 2%">
-                                        <table id="bootstrap-table2"  class="table  table-hover coma-base-table fixed_headers"></table>
-                                    </div>
+        <div  class="col-xs-12 select-table table-bordered" >
+            <table id="bootstrap-table2" ></table>
+        </div>
+
+    <div class="col-sm-12 select-table table-bordered" style="margin-bottom: 1%">
+        <table id="bootstrap-table" ></table>
+    </div>
+
+        <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                        <h4 class="modal-title" id="myModalLabel">导入</h4>
+                    </div>
+
+                    <input id="filePath" name="accessory"   class="form-control" type="file">
+
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                        <button type="button" onclick="sendFile()" class="btn btn-primary">提交</button>
+                    </div>
+                </div><!-- /.modal-content -->
+            </div><!-- /.modal -->
+        </div>
 
 
 
-                        <div class="row">
-                            <div class="col-sm-offset-5 col-sm-10">
-                                <button type="button" class="btn btn-sm btn-primary" onclick="submitHandler()"><i class="fa fa-check"></i>保 存</button>&nbsp;
-                                <button type="button" class="btn btn-sm btn-danger" onclick="closeItem()"><i class="fa fa-reply-all"></i>关 闭 </button>
-                            </div>
-                        </div>
 
-                </div>
+        <div class="row">
+            <div class="col-sm-offset-5 col-sm-10">
+                <button type="button" class="btn btn-sm btn-primary" onclick="submitHandler()"><i class="fa fa-check"></i>保 存</button>&nbsp;
+                <button type="button" class="btn btn-sm btn-danger" onclick="closeItem()"><i class="fa fa-reply-all"></i>关 闭 </button>
             </div>
         </div>
     </div>
-</div>
-            </div>
-        </div>
-    </div>
-</div>
-</body>
-
-    <th:block th:include="include :: footer" />
-    <th:block th:include="include :: layout-latest-js" />
-    <th:block th:include="include :: ztree-js" />
-    <th:block th:include="include :: bootstrap-table-editable-js" />
-<th:block th:include="include :: datetimepicker-js" />
-    <script type="text/javascript">
+        <th:block th:include="include :: footer" />
+        <th:block th:include="include :: layout-latest-js" />
+        <th:block th:include="include :: ztree-js" />
+        <th:block th:include="include :: bootstrap-table-editable-js" />
+        <script type="text/javascript" th:src="@{/js/jquery.editable-select.js}"></script>
+        <th:block th:include="include :: datetimepicker-js" />
+        <script type="text/javascript">
         var prefix = ctx + "system/bom"
 
 
@@ -420,28 +322,93 @@
         var prefix2=ctx + "system/storage";
 
 
-        $("input[name='timeofmaking']").datetimepicker({
-            format: "yyyy-mm-dd",
-            minView: "month",
-            autoclose: true
-        });
-
-        $("input[name='inspectiontime']").datetimepicker({
-            format: "yyyy-mm-dd",
-            minView: "month",
-            autoclose: true
-        });
-
-        $("input[name='approvaltime']").datetimepicker({
-            format: "yyyy-mm-dd",
-            minView: "month",
-            autoclose: true
-        });
 
 
+        function  query() {
+            $('#bootstrap-table2').bootstrapTable('destroy');
+            var options1 = {
+                id: "bootstrap-table2",
+                toolbar: "toolbar2",
+                url: prefix2 + "/list",
+                modalName: "物料列表",
+                pagination: false,
+                showSearch: false,
+                showRefresh: false,
+                showColumns: false,
+                showToggle: false,
+                queryParams : {
+                    materialcode: $("#materialcode").val(),
+                    footprint: $("#footprint").val(),
+                    partnumber: $("#spartnumber").val(),
+                    description:$("#descriptions").val()
+                },
+                columns: [{
+                    checkbox: true
+                },
+                    {
+                        field: 'id',
+                        title: 'null',
+                        visible: false
+                    },
+                    {
+                        field: 'materialcode',
+                        title: '编码'
+                    },
+                    {
+                        field: 'name',
+                        title: '名称'
+                    },
 
+                    {
+                        field: 'partnumber',
+                        title: '型号'
+                    },
+                    {
+                        field: 'unit',
+                        title: '单位'
+                    },
+                    {
+                        field: 'stocks',
+                        title: '库存量'
+                    },
+
+                    {
+                        field: 'footprint',
+                        title: '封装'
+                    },
+                    {
+                        field: 'manufacture',
+                        title: '品牌'
+                    },
+
+
+                    {
+                        field: 'supplier',
+                        title: '供应商'
+                    },
+                    {
+                        field: 'serialNumber',
+                        title: '序列号'
+                    },
+
+                    {
+                        field: 'description',
+                        title: '描述'
+
+
+                    },
+                ]
+            };
+            $.table.init(options1);
+        }
 
         $(function() {
+
+
+
+
+
+
 
 
             $.ajax({
@@ -453,10 +420,16 @@
                 }
             });
 
+
+
+
+
             var options = {
+                toolbar: "toolbar",
                 url: prefix1 + "/listimport",
                 importUrl: prefix1 + "/importData",
                 importTemplateUrl: prefix1 + "/importTemplate",
+
                 pagination:false,
                 showSearch: false,
                 showRefresh:false,
@@ -470,6 +443,22 @@
                     {
                         field: 'no',
                         title: '序号'
+                    },
+                    {
+                        field: 'mmaterialcodes',
+                        title: '物料编码(手写)',
+                        editable : {
+                            type : 'text',
+                            title : '主物料编码'
+                        }
+                    },
+                    {
+                        field: 'smaterialcodes',
+                        title: '备用物料编码(手写)',
+                        editable : {
+                            type : 'text',
+                            title : '备用物料编码(逗号分割多个)'
+                        }
                     },
 
                     {
@@ -489,9 +478,11 @@
                                     type: "get",
                                     data: {"comments":data[index].comment,"footprint":data[index].footprint},
                                     success: function (data, status) {
+                                        result.push({ value: "", text: "" });
+
                                         $.each(data, function (key, value) {
 
-                                            result.push({ value: value.id, text: value.materialcode });
+                                            result.push({ value: value.materialcode, text: value.materialcode });
                                         });
                                     }
                                 });
@@ -516,9 +507,10 @@
                                     type: "get",
                                     data: {"comments":data[index].comment,"footprint":data[index].footprint},
                                     success: function (data, status) {
+
                                         $.each(data, function (key, value) {
 
-                                            result.push({ value: value.id, text: value.materialcode });
+                                            result.push({ value: value.materialcode, text: value.materialcode });
                                         });
                                     }
                                 });
@@ -555,15 +547,8 @@
 
                             return "总量：" + sumBalance;
                         }
-                    },
-                    {
-                        field: 'count',
-                        title: '生产数量'
-                    },
-                    {
-                        field: 'sumcount',
-                        title: '生产总用量'
-                    },
+                    }
+
 
 
 
@@ -573,9 +558,9 @@
 
 
 
-                    /*   getsum();
-                       $('#bootstrap-table').bootstrapTable('updateRow', {index: row.materialcode, row: row});
-   */
+                 /*   getsum();
+                    $('#bootstrap-table').bootstrapTable('updateRow', {index: row.materialcode, row: row});
+*/
                 }
 
             };
@@ -585,61 +570,11 @@
 
 
 
-
         });
 
 
-        var options1 = {
-
-            id: "bootstrap-table2",
-            toolbar: "toolbar2",
-            url: prefix2 + "/list",
-            modalName: "物料列表",
-            showRefresh:false,
-            showColumns:false,
-            showToggle:false,
-            columns: [{
-                checkbox: true
-            },
-                {
-                    field: 'id',
-                    title: 'null',
-                    visible: false
-                },
-                {
-                    field: 'materialcode',
-                    title: '编码'
-                },
-                {
-                    field: 'name',
-                    title: '名称'
-                },
-
-                {
-                    field: 'partnumber',
-                    title: '型号'
-                },
-                {
-                    field: 'footprint',
-                    title: '封装'
-                },
-
-                {
-                    field: 'manufacture',
-                    title: '品牌'
-                },
 
 
-                {
-                    field: 'supplier',
-                    title: '供应商'
-                },
-
-
-
-            ]
-        };
-        $.table.init(options1);
 
 
 
@@ -660,12 +595,6 @@
                     return;
                 }
 
-                for(var i=0;i<data.length;i++){
-                    if(data[i].count<=0){
-                        alert("产品数量必须大于0!")
-                        return;
-                    }
-                }
 
                 $.ajax({
                     url:  ctx + "system/bom/add",
@@ -726,20 +655,42 @@
 
         }
 
-
-
-
-
-
-
-        function downloadFile(){
-            window.location.href = ctx + "common/download/resource?resource=/profile/upload/2020/09/23/BOM_USE.xlt" ;
+        function insertRow(){
+            var data = $("#bootstrap-table").bootstrapTable('getData');
+            $("#bootstrap-table").bootstrapTable('insertRow', {
+                index: data.length, // 你想插入到哪，0表示第一行
+                row: {
+                    materialcode:"",
+                    count:"0",
+                    comments:""
+                }
+            })
         }
 
 
 
 
+        function initinsertRow(){
 
+            $("#bootstrap-table").bootstrapTable('insertRow', {
+                index: 0, // 你想插入到哪，0表示第一行
+                row: {
+                    materialcode:"",
+                    count:"0",
+                    comments:""
+                }
+            })
+        }
+
+
+        function downloadFile(){
+            window.location.href = ctx + "common/download/resource?resource=/profile/upload/2020/09/23/BOM_USE.xlt" ;
+        }
+        
+        
+
+        
+        
         function updatecount() {
             var data = $("#bootstrap-table").bootstrapTable('getData');
 
@@ -758,6 +709,39 @@
 
         }
 
+        function getsum() {
+            var data = $("#bootstrap-table").bootstrapTable('getData');
+            var sum=parseFloat(0);
+            for(var i=0;i<data.length;i++) {
+                sum+=parseFloat(data[i].price)*parseInt(data[i].count);
+
+            }
+
+            $("#price").val(sum.toFixed(2));
+        }
+
+        $("#form-bom-add").validate({
+            focusCleanup: true
+        });
+
+
+        $("input[name='timeofmaking']").datetimepicker({
+            format: "yyyy-mm-dd",
+            minView: "month",
+            autoclose: true
+        });
+
+        $("input[name='inspectiontime']").datetimepicker({
+            format: "yyyy-mm-dd",
+            minView: "month",
+            autoclose: true
+        });
+
+        $("input[name='approvaltime']").datetimepicker({
+            format: "yyyy-mm-dd",
+            minView: "month",
+            autoclose: true
+        });
 
 
         function sendFile() {
@@ -773,7 +757,11 @@
                 dataType: 'json',
                 success: function(result) {
                     $('#myModal').modal('hide');
+
                     $("#bootstrap-table").bootstrapTable('refresh');
+
+
+
                     $.modal.alertSuccess(result.msg);
 
                 },
@@ -784,14 +772,10 @@
         }
 
 
-
-
-
-    </script>
-
+        </script>
 
 
 
 
-
+</body>
 </html>

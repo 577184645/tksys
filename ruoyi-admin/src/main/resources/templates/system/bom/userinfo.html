@@ -107,15 +107,7 @@
                 </div>
             </div>
 
-            <div class="col-sm-6">
 
-                <div class="form-group">
-                    <label class="col-sm-3 control-label">价格：</label>
-                    <div class="col-sm-8">
-                        <input name="price" readonly th:field="*{price}"   id="price" class="form-control" type="text">
-                    </div>
-                </div>
-            </div>
 
             <div class="col-sm-6">
 
@@ -299,6 +291,16 @@
                     {
                         field: 'quantity',
                         title: 'Quantity'
+
+                    },
+                    {
+                        field: 'count',
+                        title: '生产数量'
+
+                    },
+                    {
+                        field: 'sumcount',
+                        title: '生产总用量'
 
                     }
 

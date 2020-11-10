@@ -46,7 +46,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </resultMap>
 
 
-    <resultMap id="StorageWarehouseRecord" type="com.ruoyi.vo.WarehouseBillVo">
+    <resultMap id="StorageWarehouseRecord" type="com.ruoyi.system.vo.WarehouseBillVo">
         <result property="id"    column="id"    />
         <result property="name"    column="name"    />
         <result property="description"    column="description"    />
@@ -280,7 +280,7 @@ GROUP BY supplier,materialcode
 
 
     <update id="updateMaterial">
-    update  storage set name=#{name},materialcode=#{materialcode},partnumber=#{partnumber},footprint=#{footprint},unit=#{unit},manufacture=#{manufacture} where materialcode=#{oldmaterialcode}
+    update  storage set name=#{name},partnumber=#{partnumber},footprint=#{footprint},unit=#{unit},manufacture=#{manufacture} where materialcode=#{materialcode}
     </update>
 
     <!--出库-->

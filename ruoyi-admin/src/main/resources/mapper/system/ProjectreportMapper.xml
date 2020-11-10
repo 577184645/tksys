@@ -6,35 +6,73 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     
     <resultMap type="Projectreport" id="ProjectreportResult">
         <result property="projectreportId"    column="projectreport__id"    />
-        <result property="projectreportName"    column="projectreport__name"    />
+        <result property="projectreportHeadingcode"    column="projectreport__headingcode"    />
         <result property="projectreportDate"    column="projectreport__date"    />
-        <result property="lastuser"    column="lastuser"    />
-        <result property="tenderee"    column="tenderee"    />
-        <result property="projectreportUser"    column="projectreport__user"    />
-        <result property="phone"    column="phone"    />
-        <result property="projectreportInfo"    column="projectreport__info"    />
+        <result property="projectreportLastuser"    column="projectreport__lastuser"    />
+        <result property="projectreportName"    column="projectreport__name"    />
+        <result property="projectreportDesigninginstitute"    column="projectreport__designinginstitute"    />
+        <result property="projectreportCapitalsource"    column="projectreport__capitalsource"    />
+        <result property="projectreportInvestorinfo"    column="projectreport__investorinfo"    />
+        <result property="projectreportIsepcproject"    column="projectreport__isepcproject"    />
+        <result property="projectreportProjectaddress"    column="projectreport_projectaddress"    />
+        <result property="projectreportProjectpurchaser"    column="projectreport_projectpurchaser"    />
+        <result property="projectreportBiddate"    column="projectreport_biddate"    />
+        <result property="projectreportProduct"    column="projectreport_product"    />
+        <result property="projectreportDapproximatelymoney"    column="projectreport_dapproximatelymoney"    />
+        <result property="projectreportCphoneandposition"    column="projectreport_cphoneandposition"    />
+        <result property="projectreportSphoneandposition"    column="projectreport_sphoneandposition"    />
+        <result property="projectreportCompetitorinfo"    column="projectreport_competitorinfo"    />
+        <result property="projectreportTenderer"    column="projectreport_tenderer"    />
+        <result property="projectreportOffersize"    column="projectreport_offersize"    />
+        <result property="projectreportProbability"    column="projectreport_probability"    />
+        <result property="projectreportProblem"    column="projectreport_problem"    />
+        <result property="projectreportReason"    column="projectreport_reason"    />
+        <result property="projectreportVisitingclients"    column="projectreport_visitingclients"    />
+        <result property="projectreportRelation"    column="projectreport_relation"    />
+        <result property="projectreportProjectstatus"    column="projectreport_projectstatus"    />
+        <result property="projectreportHoneywellconfirmation"    column="projectreport_honeywellconfirmation"    />
+        <result property="projectreportHoneywellconfirmation"    column="projectreport_honeywellconfirmation"    />
+        <result property="projectreportType"    column="projectreport_type"    />
+
+
         <result property="cTime"    column="c_time"    />
         <result property="uTime"    column="u_time"    />
     </resultMap>
 
     <sql id="selectProjectreportVo">
-        select projectreport__id, projectreport__name, projectreport__date, lastuser, tenderee, projectreport__user, phone, projectreport__info, c_time, u_time from projectreport
+        select projectreport__id, projectreport_type,projectreport__headingcode, projectreport__date, projectreport__lastuser, projectreport__name, projectreport__designinginstitute, projectreport__capitalsource, projectreport__investorinfo, projectreport__isepcproject, projectreport_projectaddress, projectreport_projectpurchaser, projectreport_biddate, projectreport_product, projectreport_dapproximatelymoney, projectreport_cphoneandposition, projectreport_sphoneandposition, projectreport_competitorinfo, projectreport_tenderer, projectreport_offersize, projectreport_probability, projectreport_problem, projectreport_reason, projectreport_visitingclients, projectreport_relation, projectreport_projectstatus, projectreport_honeywellconfirmation, c_time, u_time from projectreport
     </sql>
 
     <select id="selectProjectreportList" parameterType="Projectreport" resultMap="ProjectreportResult">
         <include refid="selectProjectreportVo"/>
         <where>  
+            <if test="projectreportHeadingcode != null  and projectreportHeadingcode != ''"> and projectreport__headingcode like concat('%', #{projectreportHeadingcode}, '%')</if>
+            <if test="projectreportDate != null "> and projectreport__date = #{projectreportDate}</if>
+            <if test="projectreportLastuser != null  and projectreportLastuser != ''"> and projectreport__lastuser like concat('%', #{projectreportLastuser}, '%')</if>
             <if test="projectreportName != null  and projectreportName != ''"> and projectreport__name like concat('%', #{projectreportName}, '%')</if>
+            <if test="projectreportDesigninginstitute != null  and projectreportDesigninginstitute != ''"> and projectreport__designinginstitute like concat('%', #{projectreportDesigninginstitute}, '%')</if>
+            <if test="projectreportCapitalsource != null  and projectreportCapitalsource != ''"> and projectreport__capitalsource = #{projectreportCapitalsource}</if>
+            <if test="projectreportInvestorinfo != null  and projectreportInvestorinfo != ''"> and projectreport__investorinfo = #{projectreportInvestorinfo}</if>
+            <if test="projectreportIsepcproject != null  and projectreportIsepcproject != ''"> and projectreport__isepcproject = #{projectreportIsepcproject}</if>
+            <if test="projectreportProjectaddress != null  and projectreportProjectaddress != ''"> and projectreport_projectaddress = #{projectreportProjectaddress}</if>
+            <if test="projectreportProjectpurchaser != null  and projectreportProjectpurchaser != ''"> and projectreport_projectpurchaser = #{projectreportProjectpurchaser}</if>
+            <if test="projectreportBiddate != null "> and projectreport_biddate = #{projectreportBiddate}</if>
+            <if test="projectreportProduct != null  and projectreportProduct != ''"> and projectreport_product = #{projectreportProduct}</if>
+            <if test="projectreportDapproximatelymoney != null  and projectreportDapproximatelymoney != ''"> and projectreport_dapproximatelymoney = #{projectreportDapproximatelymoney}</if>
+            <if test="projectreportCphoneandposition != null  and projectreportCphoneandposition != ''"> and projectreport_cphoneandposition = #{projectreportCphoneandposition}</if>
+            <if test="projectreportSphoneandposition != null  and projectreportSphoneandposition != ''"> and projectreport_sphoneandposition = #{projectreportSphoneandposition}</if>
+            <if test="projectreportCompetitorinfo != null  and projectreportCompetitorinfo != ''"> and projectreport_competitorinfo = #{projectreportCompetitorinfo}</if>
+            <if test="projectreportTenderer != null  and projectreportTenderer != ''"> and projectreport_tenderer = #{projectreportTenderer}</if>
+            <if test="projectreportOffersize != null  and projectreportOffersize != ''"> and projectreport_offersize = #{projectreportOffersize}</if>
+            <if test="projectreportProbability != null  and projectreportProbability != ''"> and projectreport_probability = #{projectreportProbability}</if>
+            <if test="projectreportProblem != null  and projectreportProblem != ''"> and projectreport_problem = #{projectreportProblem}</if>
+            <if test="projectreportReason != null  and projectreportReason != ''"> and projectreport_reason = #{projectreportReason}</if>
+            <if test="projectreportVisitingclients != null  and projectreportVisitingclients != ''"> and projectreport_visitingclients = #{projectreportVisitingclients}</if>
+            <if test="projectreportRelation != null  and projectreportRelation != ''"> and projectreport_relation = #{projectreportRelation}</if>
+            <if test="projectreportProjectstatus != null  and projectreportProjectstatus != ''"> and projectreport_projectstatus = #{projectreportProjectstatus}</if>
+            <if test="projectreportHoneywellconfirmation != null  and projectreportHoneywellconfirmation != ''"> and projectreport_honeywellconfirmation = #{projectreportHoneywellconfirmation}</if>
+            <if test="projectreportType != null  and projectreportType != ''"> and projectreport_type = #{projectreportType}</if>
 
-            <if test="params.beginTime != null and params.beginTime != ''"><!-- 开始时间检索 -->
-                AND date_format(projectreport__date,'%y%m%d') &gt;= date_format(#{params.beginTime},'%y%m%d')
-            </if>
-            <if test="params.endTime != null and params.endTime != ''"><!-- 结束时间检索 -->
-                AND date_format(projectreport__date,'%y%m%d') &lt;= date_format(#{params.endTime},'%y%m%d')
-            </if>
-            <if test="lastuser != null  and lastuser != ''"> and lastuser like concat('%', #{lastuser}, '%')</if>
-            <if test="tenderee != null  and tenderee != ''"> and tenderee like concat('%', #{tenderee}, '%')</if>
-            <if test="projectreportUser != null  and projectreportUser != ''"> and projectreport__user like concat('%', #{projectreportUser}, '%')</if>
         </where>
     </select>
     
@@ -46,40 +84,98 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     <insert id="insertProjectreport" parameterType="Projectreport" useGeneratedKeys="true" keyProperty="projectreportId">
         insert into projectreport
         <trim prefix="(" suffix=")" suffixOverrides=",">
-            <if test="projectreportName != null  and projectreportName != ''">projectreport__name,</if>
-            <if test="projectreportDate != null ">projectreport__date,</if>
-            <if test="lastuser != null  and lastuser != ''">lastuser,</if>
-            <if test="tenderee != null  and tenderee != ''">tenderee,</if>
-            <if test="projectreportUser != null  and projectreportUser != ''">projectreport__user,</if>
-            <if test="phone != null  and phone != ''">phone,</if>
-            <if test="projectreportInfo != null  and projectreportInfo != ''">projectreport__info,</if>
-            c_time,
+            <if test="projectreportType != null  and projectreportType != ''"> projectreport_type,</if>
 
+            <if test="projectreportHeadingcode != null  and projectreportHeadingcode != ''">projectreport__headingcode,</if>
+            <if test="projectreportDate != null ">projectreport__date,</if>
+            <if test="projectreportLastuser != null  and projectreportLastuser != ''">projectreport__lastuser,</if>
+            <if test="projectreportName != null  and projectreportName != ''">projectreport__name,</if>
+            <if test="projectreportDesigninginstitute != null  and projectreportDesigninginstitute != ''">projectreport__designinginstitute,</if>
+            <if test="projectreportCapitalsource != null  and projectreportCapitalsource != ''">projectreport__capitalsource,</if>
+            <if test="projectreportInvestorinfo != null  and projectreportInvestorinfo != ''">projectreport__investorinfo,</if>
+            <if test="projectreportIsepcproject != null  and projectreportIsepcproject != ''">projectreport__isepcproject,</if>
+            <if test="projectreportProjectaddress != null  and projectreportProjectaddress != ''">projectreport_projectaddress,</if>
+            <if test="projectreportProjectpurchaser != null  and projectreportProjectpurchaser != ''">projectreport_projectpurchaser,</if>
+            <if test="projectreportBiddate != null ">projectreport_biddate,</if>
+            <if test="projectreportProduct != null  and projectreportProduct != ''">projectreport_product,</if>
+            <if test="projectreportDapproximatelymoney != null  and projectreportDapproximatelymoney != ''">projectreport_dapproximatelymoney,</if>
+            <if test="projectreportCphoneandposition != null  and projectreportCphoneandposition != ''">projectreport_cphoneandposition,</if>
+            <if test="projectreportSphoneandposition != null  and projectreportSphoneandposition != ''">projectreport_sphoneandposition,</if>
+            <if test="projectreportCompetitorinfo != null  and projectreportCompetitorinfo != ''">projectreport_competitorinfo,</if>
+            <if test="projectreportTenderer != null  and projectreportTenderer != ''">projectreport_tenderer,</if>
+            <if test="projectreportOffersize != null  and projectreportOffersize != ''">projectreport_offersize,</if>
+            <if test="projectreportProbability != null  and projectreportProbability != ''">projectreport_probability,</if>
+            <if test="projectreportProblem != null  and projectreportProblem != ''">projectreport_problem,</if>
+            <if test="projectreportReason != null  and projectreportReason != ''">projectreport_reason,</if>
+            <if test="projectreportVisitingclients != null  and projectreportVisitingclients != ''">projectreport_visitingclients,</if>
+            <if test="projectreportRelation != null  and projectreportRelation != ''">projectreport_relation,</if>
+            <if test="projectreportProjectstatus != null  and projectreportProjectstatus != ''">projectreport_projectstatus,</if>
+            <if test="projectreportHoneywellconfirmation != null  and projectreportHoneywellconfirmation != ''">projectreport_honeywellconfirmation,</if>
+          c_time,
+            <if test="uTime != null ">u_time,</if>
          </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
-            <if test="projectreportName != null  and projectreportName != ''">#{projectreportName},</if>
-            <if test="projectreportDate != null ">#{projectreportDate},</if>
-            <if test="lastuser != null  and lastuser != ''">#{lastuser},</if>
-            <if test="tenderee != null  and tenderee != ''">#{tenderee},</if>
-            <if test="projectreportUser != null  and projectreportUser != ''">#{projectreportUser},</if>
-            <if test="phone != null  and phone != ''">#{phone},</if>
-            <if test="projectreportInfo != null  and projectreportInfo != ''">#{projectreportInfo},</if>
-             now(),
+            <if test="projectreportType != null  and projectreportType != ''">#{projectreportType} ,</if>
 
+            <if test="projectreportHeadingcode != null  and projectreportHeadingcode != ''">#{projectreportHeadingcode},</if>
+            <if test="projectreportDate != null ">#{projectreportDate},</if>
+            <if test="projectreportLastuser != null  and projectreportLastuser != ''">#{projectreportLastuser},</if>
+            <if test="projectreportName != null  and projectreportName != ''">#{projectreportName},</if>
+            <if test="projectreportDesigninginstitute != null  and projectreportDesigninginstitute != ''">#{projectreportDesigninginstitute},</if>
+            <if test="projectreportCapitalsource != null  and projectreportCapitalsource != ''">#{projectreportCapitalsource},</if>
+            <if test="projectreportInvestorinfo != null  and projectreportInvestorinfo != ''">#{projectreportInvestorinfo},</if>
+            <if test="projectreportIsepcproject != null  and projectreportIsepcproject != ''">#{projectreportIsepcproject},</if>
+            <if test="projectreportProjectaddress != null  and projectreportProjectaddress != ''">#{projectreportProjectaddress},</if>
+            <if test="projectreportProjectpurchaser != null  and projectreportProjectpurchaser != ''">#{projectreportProjectpurchaser},</if>
+            <if test="projectreportBiddate != null ">#{projectreportBiddate},</if>
+            <if test="projectreportProduct != null  and projectreportProduct != ''">#{projectreportProduct},</if>
+            <if test="projectreportDapproximatelymoney != null  and projectreportDapproximatelymoney != ''">#{projectreportDapproximatelymoney},</if>
+            <if test="projectreportCphoneandposition != null  and projectreportCphoneandposition != ''">#{projectreportCphoneandposition},</if>
+            <if test="projectreportSphoneandposition != null  and projectreportSphoneandposition != ''">#{projectreportSphoneandposition},</if>
+            <if test="projectreportCompetitorinfo != null  and projectreportCompetitorinfo != ''">#{projectreportCompetitorinfo},</if>
+            <if test="projectreportTenderer != null  and projectreportTenderer != ''">#{projectreportTenderer},</if>
+            <if test="projectreportOffersize != null  and projectreportOffersize != ''">#{projectreportOffersize},</if>
+            <if test="projectreportProbability != null  and projectreportProbability != ''">#{projectreportProbability},</if>
+            <if test="projectreportProblem != null  and projectreportProblem != ''">#{projectreportProblem},</if>
+            <if test="projectreportReason != null  and projectreportReason != ''">#{projectreportReason},</if>
+            <if test="projectreportVisitingclients != null  and projectreportVisitingclients != ''">#{projectreportVisitingclients},</if>
+            <if test="projectreportRelation != null  and projectreportRelation != ''">#{projectreportRelation},</if>
+            <if test="projectreportProjectstatus != null  and projectreportProjectstatus != ''">#{projectreportProjectstatus},</if>
+            <if test="projectreportHoneywellconfirmation != null  and projectreportHoneywellconfirmation != ''">#{projectreportHoneywellconfirmation},</if>
+            now(),
+            <if test="uTime != null ">#{uTime},</if>
          </trim>
     </insert>
 
     <update id="updateProjectreport" parameterType="Projectreport">
         update projectreport
         <trim prefix="SET" suffixOverrides=",">
-            <if test="projectreportName != null  and projectreportName != ''">projectreport__name = #{projectreportName},</if>
+            <if test="projectreportHeadingcode != null  and projectreportHeadingcode != ''">projectreport__headingcode = #{projectreportHeadingcode},</if>
             <if test="projectreportDate != null ">projectreport__date = #{projectreportDate},</if>
-            <if test="lastuser != null  and lastuser != ''">lastuser = #{lastuser},</if>
-            <if test="tenderee != null  and tenderee != ''">tenderee = #{tenderee},</if>
-            <if test="projectreportUser != null  and projectreportUser != ''">projectreport__user = #{projectreportUser},</if>
-            <if test="phone != null  and phone != ''">phone = #{phone},</if>
-            <if test="projectreportInfo != null  and projectreportInfo != ''">projectreport__info = #{projectreportInfo},</if>
-
+            <if test="projectreportLastuser != null  and projectreportLastuser != ''">projectreport__lastuser = #{projectreportLastuser},</if>
+            <if test="projectreportName != null  and projectreportName != ''">projectreport__name = #{projectreportName},</if>
+            <if test="projectreportDesigninginstitute != null  and projectreportDesigninginstitute != ''">projectreport__designinginstitute = #{projectreportDesigninginstitute},</if>
+            <if test="projectreportCapitalsource != null  and projectreportCapitalsource != ''">projectreport__capitalsource = #{projectreportCapitalsource},</if>
+            <if test="projectreportInvestorinfo != null  and projectreportInvestorinfo != ''">projectreport__investorinfo = #{projectreportInvestorinfo},</if>
+            <if test="projectreportIsepcproject != null  and projectreportIsepcproject != ''">projectreport__isepcproject = #{projectreportIsepcproject},</if>
+            <if test="projectreportProjectaddress != null  and projectreportProjectaddress != ''">projectreport_projectaddress = #{projectreportProjectaddress},</if>
+            <if test="projectreportProjectpurchaser != null  and projectreportProjectpurchaser != ''">projectreport_projectpurchaser = #{projectreportProjectpurchaser},</if>
+            <if test="projectreportBiddate != null ">projectreport_biddate = #{projectreportBiddate},</if>
+            <if test="projectreportProduct != null  and projectreportProduct != ''">projectreport_product = #{projectreportProduct},</if>
+            <if test="projectreportDapproximatelymoney != null  and projectreportDapproximatelymoney != ''">projectreport_dapproximatelymoney = #{projectreportDapproximatelymoney},</if>
+            <if test="projectreportCphoneandposition != null  and projectreportCphoneandposition != ''">projectreport_cphoneandposition = #{projectreportCphoneandposition},</if>
+            <if test="projectreportSphoneandposition != null  and projectreportSphoneandposition != ''">projectreport_sphoneandposition = #{projectreportSphoneandposition},</if>
+            <if test="projectreportCompetitorinfo != null  and projectreportCompetitorinfo != ''">projectreport_competitorinfo = #{projectreportCompetitorinfo},</if>
+            <if test="projectreportTenderer != null  and projectreportTenderer != ''">projectreport_tenderer = #{projectreportTenderer},</if>
+            <if test="projectreportOffersize != null  and projectreportOffersize != ''">projectreport_offersize = #{projectreportOffersize},</if>
+            <if test="projectreportProbability != null  and projectreportProbability != ''">projectreport_probability = #{projectreportProbability},</if>
+            <if test="projectreportProblem != null  and projectreportProblem != ''">projectreport_problem = #{projectreportProblem},</if>
+            <if test="projectreportReason != null  and projectreportReason != ''">projectreport_reason = #{projectreportReason},</if>
+            <if test="projectreportVisitingclients != null  and projectreportVisitingclients != ''">projectreport_visitingclients = #{projectreportVisitingclients},</if>
+            <if test="projectreportRelation != null  and projectreportRelation != ''">projectreport_relation = #{projectreportRelation},</if>
+            <if test="projectreportProjectstatus != null  and projectreportProjectstatus != ''">projectreport_projectstatus = #{projectreportProjectstatus},</if>
+            <if test="projectreportHoneywellconfirmation != null  and projectreportHoneywellconfirmation != ''">projectreport_honeywellconfirmation = #{projectreportHoneywellconfirmation},</if>
+            <if test="cTime != null ">c_time = #{cTime},</if>
            u_time = now(),
         </trim>
         where projectreport__id = #{projectreportId}

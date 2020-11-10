@@ -37,7 +37,7 @@ public interface StoragequitdetailMapper
     public List<Storagequitdetail> selectStorageindetailByStoragequitbillId(String storagequitbillid);
 
 
-    public int updateMaterial(@Param("name") String name, @Param("materialcode") String materialcode, @Param("partnumber") String partnumber, @Param("footprint") String footprint, @Param("unit") String unit, @Param("manufacture") String manufacture, @Param("oldmaterialcode") String oldmaterialcode);
+    public int updateMaterial(@Param("name") String name, @Param("partnumber") String partnumber, @Param("footprint") String footprint, @Param("unit") String unit, @Param("manufacture") String manufacture, @Param("materialcode") String materialcode);
 
     /**
      * 查询退料列表

@@ -1,4 +1,4 @@
-package com.ruoyi.vo;
+package com.ruoyi.system.vo;
 
 /**
  * @author QC
@@ -13,7 +13,27 @@ public class BomdetailVo {
     private  Integer quantity;
     private  Integer count;
     private  Integer sumcount;
+    private  String mmaterialcodes;
+    private  String smaterialcodes;
 
+
+
+
+    public String getMmaterialcodes() {
+        return mmaterialcodes;
+    }
+
+    public void setMmaterialcodes(String mmaterialcodes) {
+        this.mmaterialcodes = mmaterialcodes;
+    }
+
+    public String getSmaterialcodes() {
+        return smaterialcodes;
+    }
+
+    public void setSmaterialcodes(String smaterialcodes) {
+        this.smaterialcodes = smaterialcodes;
+    }
 
     public Integer getNo() {
         return no;

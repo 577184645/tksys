@@ -5,64 +5,13 @@
 	<th:block th:include="include :: layout-latest-css" />
 	<th:block th:include="include :: ztree-css" />
 	<style>
-		.select-table table {
+		.table {
 			table-layout:fixed;
 		}
 
-		.select-table .table td {
-			white-space:nowrap;
-			/* 配合宽度来使用 */
-			height:20px;
-		}
 
 
-		.fixed_headers thead tr {
-			height:10px;
-			display: block;
-			position: relative;
-		}
-		.fixed_headers tbody {
-			display: block;
-			overflow: auto;
-			height: 250px;
-		}
 
-		  .fixed_headers td:nth-child(1),
-		  .fixed_headers th:nth-child(1) {
-
-			  min-width: 250px;
-			  text-overflow:ellipsis;
-			  white-space:nowrap;
-			  overflow:hidden;
-		  }
-		.fixed_headers td:nth-child(2),
-		.fixed_headers th:nth-child(2) {
-			min-width: 200px;
-		}
-		.fixed_headers td:nth-child(3),
-		.fixed_headers th:nth-child(3) {
-			min-width: 200px;
-		}
-		.fixed_headers td:nth-child(4),
-		.fixed_headers th:nth-child(4) {
-			min-width: 200px;
-		}
-		.fixed_headers td:nth-child(5),
-		.fixed_headers th:nth-child(5) {
-			min-width: 200px;
-		}
-		.fixed_headers td:nth-child(6),
-		.fixed_headers th:nth-child(6) {
-			min-width: 200px;
-		}
-		.fixed_headers td:nth-child(7),
-		.fixed_headers th:nth-child(7) {
-			min-width: 200px;
-		}
-		.fixed_headers td:nth-child(8),
-		.fixed_headers th:nth-child(8) {
-			min-width: 200px;
-		}
 	</style>
 </head>
 <body class="gray-bg">
@@ -161,8 +110,8 @@
 			        </a>
 		        </div>
 
-		        <div class="col-sm-12 select-table table-striped ">
-				    <table id="bootstrap-table"  class="table  table-hover coma-base-table fixed_headers"	></table>
+		        <div class="col-sm-12 select-table table-bordered">
+				    <table id="bootstrap-table"  	></table>
 				</div>
 			</div>
 		</div>
@@ -190,19 +139,18 @@
 		function queryUserList() {
             var options = {
                 url: prefix + "/list",
-                fixedColumns: true,
                 importUrl: prefix + "/importData",
                 importTemplateUrl: prefix + "/importTemplate",
                 createUrl: prefix + "/add",
                 updateUrl: prefix + "/edit/{id}",
                 removeUrl: prefix + "/remove",
                 exportUrl: prefix + "/export",
+				height: 500,
                 modalName: "物料",
 				sortName:"materialcode",
                 pagination : true,
                 pageSize : 10,
                 pageNumber : 1,
-                fixedNumber: 7	,
                 columns: [{
                     checkbox: true
                 },

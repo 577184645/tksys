@@ -59,7 +59,13 @@
                             <label>项目名称：</label>
                             <input type="text" name="contractProjectname"/>
                         </li>
-
+                        <li>
+                            <label>完结状态：</label>
+                            <select name="contractStatus" th:with="type=${@dict.getType('sale_contractStatus')}">
+                                <option value="">所有</option>
+                                <option th:each="dict : ${type}" th:text="${dict.dictLabel}" th:value="${dict.dictValue}"></option>
+                            </select>
+                        </li>
                         <li>
                             <a id="search" class="btn btn-primary btn-rounded btn-sm" onclick="$.table.search()"><i class="fa fa-search"></i>&nbsp;搜索</a>
                             <a class="btn btn-warning btn-rounded btn-sm" onclick="$.form.reset()"><i class="fa fa-refresh"></i>&nbsp;重置</a>
@@ -206,11 +212,14 @@
             createUrl: prefix + "/add",
             updateUrl: prefix + "/edit/{id}",
             removeUrl: prefix + "/remove",
+            height: 500,
             exportUrl: prefix + "/export",
             modalName: "销售合同",
             rowStyle: function (row, index) {
                 var style = "";
                 if(row.contractMoney==row.contractInvoicemoney&&row.contractMoney==row.contractReturnedmoney&&row.contractDeliverstatus=="已发货") {
+
+
                     style = 'success';
                     return {classes: style}
                 }else{
@@ -223,7 +232,10 @@
 
                 {
                     field: 'contractNumber',
-                    title: '销售合同号'
+                    title: '销售合同号',
+                    formatter: function(value, row, index) {
+                        return   value.substring(value.lastIndexOf("-")+1);
+                    }
                 },
                 {
                     field: 'contractCustomer',
@@ -250,6 +262,7 @@
                     title: '发货状态'
                 },
 
+
                 {
                     field: 'groupNumber',
                     title: '集团合同号'
@@ -263,10 +276,15 @@
                     align: 'center',
                     formatter: function(value, row, index) {
                         var actions = [];
-                        actions.push('<a class="btn btn-success btn-xs ' + editFlag + '" href="javascript:void(0)" onclick="invoiceInfo(\'' + row.contractId + '\',\''+row.contractNumber+'\')"><i class="fa fa-edit"></i>查看历史发票记录</a> ');
+
+
+                            actions.push('<a class="btn btn-success btn-xs ' + editFlag + '" href="javascript:void(0)" onclick="$.operate.edit(\'' + row.contractId + '\')"><i class="fa fa-edit"></i>编辑</a> ');
+                            actions.push('<a class="btn btn-danger btn-xs ' + removeFlag + '" href="javascript:void(0)" onclick="$.operate.remove(\'' + row.contractId + '\')"><i class="fa fa-remove"></i>删除</a>');
+
+
+                            actions.push('<a class="btn btn-success btn-xs ' + editFlag + '" href="javascript:void(0)" onclick="invoiceInfo(\'' + row.contractId + '\',\''+row.contractNumber+'\')"><i class="fa fa-edit"></i>查看历史发票记录</a> ');
                         actions.push('<a class="btn btn-success btn-xs ' + editFlag + '" href="javascript:void(0)" onclick="returnedInfo(\'' + row.contractId + '\',\''+row.contractNumber+'\')"><i class="fa fa-edit"></i>查看历史回款记录</a> ');
-                        actions.push('<a class="btn btn-success btn-xs ' + editFlag + '" href="javascript:void(0)" onclick="$.operate.edit(\'' + row.contractId + '\')"><i class="fa fa-edit"></i>编辑</a> ');
-                        actions.push('<a class="btn btn-danger btn-xs ' + removeFlag + '" href="javascript:void(0)" onclick="$.operate.remove(\'' + row.contractId + '\')"><i class="fa fa-remove"></i>删除</a>');
+
                         return actions.join('');
                     }
                 }]
@@ -284,6 +302,16 @@
         table.set();
         $.modal.openTab(contractNumber+"历史发票记录", prefix2+"/info/"+(id));
     }
+
+    function end(id) {
+        table.set();
+        $.modal.confirm("是否结算此合同？", function() {
+            var url =prefix+"/end";
+            var data = { "id": id };
+            $.operate.submit(url, "post", "json", data);
+        });
+    }
+
     function returnedInfo(id,contractNumber) {
         table.set();
         $.modal.openTab(contractNumber+"历史回款记录", prefix1+"/"+(id));
