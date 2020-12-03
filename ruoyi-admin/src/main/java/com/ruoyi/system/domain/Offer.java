@@ -69,6 +69,8 @@ public class Offer extends BaseEntity
 
     private String isGroup;
 
+    private String  approvestatus;
+
     private String status;
 
     public String getStatus() {
@@ -136,7 +138,15 @@ public class Offer extends BaseEntity
         this.offerSalesmancontactway = offerSalesmancontactway;
     }
 
-    public String getOfferSalesmancontactway() 
+    public String getApprovestatus() {
+        return approvestatus;
+    }
+
+    public void setApprovestatus(String approvestatus) {
+        this.approvestatus = approvestatus;
+    }
+
+    public String getOfferSalesmancontactway()
     {
         return offerSalesmancontactway;
     }

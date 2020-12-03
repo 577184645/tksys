@@ -13,9 +13,6 @@ import java.util.List;
 public interface SalesContractMapper 
 {
 
-    public  int updatecontractStatus();
-
-    public  int rollbackupdatecontractStatus();
 
 
     /**

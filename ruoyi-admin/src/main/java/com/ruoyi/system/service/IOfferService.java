@@ -1,7 +1,8 @@
 package com.ruoyi.system.service;
 
-import java.util.List;
 import com.ruoyi.system.domain.Offer;
+
+import java.util.List;
 
 /**
  * 报价单Service接口
@@ -62,4 +63,6 @@ public interface IOfferService
      * @return 结果
      */
     public int deleteOfferById(Long offerId);
+
+    int approveOffer(Long id);
 }

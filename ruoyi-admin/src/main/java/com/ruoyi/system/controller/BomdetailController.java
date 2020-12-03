@@ -8,6 +8,7 @@ import com.ruoyi.common.enums.BusinessType;
 import com.ruoyi.common.utils.poi.ExcelUtil;
 import com.ruoyi.system.domain.Bomdetail;
 import com.ruoyi.system.service.IBomdetailService;
+import com.ruoyi.system.service.IStorageService;
 import com.ruoyi.system.vo.BomdetailVo;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.poifs.filesystem.POIFSFileSystem;
@@ -43,6 +44,8 @@ public class BomdetailController extends BaseController
 
     @Autowired
     private IBomdetailService bomdetailService;
+    @Autowired
+    private IStorageService storageService;
 
     List<BomdetailVo> bomDetailList=new ArrayList<>();
 
@@ -63,6 +66,12 @@ public class BomdetailController extends BaseController
         return  ret;
     }
 
+
+    @PostMapping("/selectBomBySupplierAndPrice")
+    @ResponseBody
+    public Object  selectBomBySupplierAndPrice(@RequestParam("id") Long id){
+        return storageService.selectStorageById(id);
+    }
 
     @PostMapping("/importData")
     @Log(title = "bom产品列表", businessType = BusinessType.IMPORT)
@@ -88,14 +97,7 @@ public class BomdetailController extends BaseController
             bomdetailVo.setDescription(row.getCell(3).getStringCellValue());
             bomdetailVo.setDesignator(row.getCell(4).getStringCellValue());
             bomdetailVo.setQuantity((int)row.getCell(5).getNumericCellValue());
-            bomdetailVo.setQuantity((int)row.getCell(5).getNumericCellValue());
-            bomdetailVo.setQuantity((int)row.getCell(5).getNumericCellValue());
-            if(row.getCell(6)!=null){
-                bomdetailVo.setCount((int)row.getCell(6).getNumericCellValue());
-            }
-            if(row.getCell(7)!=null){
-                bomdetailVo.setSumcount((int)row.getCell(7).getNumericCellValue());
-            }
+            bomdetailVo.setPrice(0);
             bomdetailVo.setMmaterialcodes(null);
             bomdetailVo.setSmaterialcodes(null);
             bomDetailList.add(bomdetailVo);

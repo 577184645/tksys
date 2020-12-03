@@ -13,9 +13,7 @@ import java.util.List;
 public interface ISalesContractService 
 {
 
-    public  int updatecontractStatus( );
 
-    public  int rollbackupdatecontractStatus();
 
     /**
      * 查询销售合同

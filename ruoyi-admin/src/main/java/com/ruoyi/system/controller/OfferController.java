@@ -301,4 +301,16 @@ public class OfferController extends BaseController
     {
         return toAjax(offerService.deleteOfferByIds(ids));
     }
+
+
+    @RequiresPermissions("system:offer:approve")
+    @Log(title = "报价单", businessType = BusinessType.UPDATE)
+    @PostMapping( "/approve")
+    @ResponseBody
+    public AjaxResult approve(@RequestParam("id") Long id)
+    {
+        return toAjax(offerService.approveOffer(id));
+    }
+
+
 }

@@ -6,6 +6,7 @@ import com.ruoyi.system.domain.Bom;
 import com.ruoyi.system.domain.Bomdetail;
 import com.ruoyi.system.mapper.BomMapper;
 import com.ruoyi.system.mapper.BomdetailMapper;
+import com.ruoyi.system.mapper.StorageMapper;
 import com.ruoyi.system.service.IBomService;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
@@ -28,6 +29,8 @@ public class BomServiceImpl implements IBomService
     private BomMapper bomMapper;
     @Autowired
     private BomdetailMapper bomdetailMapper;
+    @Autowired
+    private StorageMapper storageMapper;
 
     /**
      * 查询bom列表
@@ -76,7 +79,7 @@ public class BomServiceImpl implements IBomService
                 Bomdetail bomdetail = new Bomdetail();
                 JSONObject jsonObject = productArray.getJSONObject(i);
                 if(jsonObject.has("mmaterialcodes")&&StringUtils.isNotBlank(jsonObject.getString("mmaterialcodes"))&&!jsonObject.getString("mmaterialcodes").equals("null")){
-                    bomdetail.setMsid( jsonObject.getInt("mmaterialcodes"));
+                    bomdetail.setMsid( jsonObject.getString("mmaterialcodes"));
                 }
                 if(jsonObject.has("smaterialcodes")&&StringUtils.isNotBlank(jsonObject.getString("smaterialcodes"))&&!jsonObject.getString("smaterialcodes").equals("null")){
 
@@ -85,7 +88,7 @@ public class BomServiceImpl implements IBomService
                 if(jsonObject.has("mmaterialcode")&&StringUtils.isNotBlank(jsonObject.getString("mmaterialcode"))&&!jsonObject.getString("mmaterialcode").equals("null")){
 
 
-                    bomdetail.setMsid( jsonObject.getInt("mmaterialcode"));                }
+                    bomdetail.setMsid(storageMapper.selectStorageById(jsonObject.getLong("mmaterialcode")).getMaterialcode());                }
 
                 if(jsonObject.has("smaterialcode")&&StringUtils.isNotBlank(jsonObject.getString("smaterialcode"))&&!jsonObject.getString("smaterialcode").equals("null")) {
                     JSONArray materialcode = jsonObject.getJSONArray("smaterialcode");
@@ -99,14 +102,13 @@ public class BomServiceImpl implements IBomService
 
                 }
                 bomdetail.setBomid(bom.getId());
-
+                bomdetail.setSupplier(jsonObject.getString("supplier"));
+                bomdetail.setPrice(jsonObject.getDouble("price"));
                 bomdetail.setComment(jsonObject.getString("comment"));
                 bomdetail.setFootprint(jsonObject.getString("footprint"));
                 bomdetail.setDescription(jsonObject.getString("description"));
                 bomdetail.setDesignator(jsonObject.getString("designator"));
                 bomdetail.setQuantity(jsonObject.getInt("quantity"));
-                bomdetail.setCount(jsonObject.getInt("count"));
-                bomdetail.setSumcount(jsonObject.getInt("sumcount"));
                 bomdetailMapper.insertBomdetail(bomdetail);
             }
         }
@@ -138,7 +140,7 @@ public class BomServiceImpl implements IBomService
 
             if(jsonObject.has("msid")&&StringUtils.isNotBlank(jsonObject.getString("msid"))&&!jsonObject.getString("msid").equals("null")){
 
-                bomdetail.setMsid(jsonObject.getInt("msid"));
+                bomdetail.setMsid(jsonObject.getString("msid"));
             }
             if(jsonObject.has("ssid")&&StringUtils.isNotBlank(jsonObject.getString("ssid"))&&!jsonObject.getString("ssid").equals("null")){
 

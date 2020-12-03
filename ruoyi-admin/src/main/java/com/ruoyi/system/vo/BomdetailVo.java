@@ -15,9 +15,15 @@ public class BomdetailVo {
     private  Integer sumcount;
     private  String mmaterialcodes;
     private  String smaterialcodes;
+    private  Integer price;
 
+    public Integer getPrice() {
+        return price;
+    }
 
-
+    public void setPrice(Integer price) {
+        this.price = price;
+    }
 
     public String getMmaterialcodes() {
         return mmaterialcodes;

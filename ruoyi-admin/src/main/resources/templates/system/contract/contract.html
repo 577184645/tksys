@@ -60,9 +60,27 @@
                             <input type="text" name="contractProjectname"/>
                         </li>
                         <li>
+                            <label>发货状态：</label>
+                            <input type="text" name="contractDeliverstatus"/>
+                        </li>
+                        <li>
                             <label>完结状态：</label>
                             <select name="contractStatus" th:with="type=${@dict.getType('sale_contractStatus')}">
-                                <option value="">所有</option>
+                                <option value="2">所有</option>
+                                <option th:each="dict : ${type}" th:text="${dict.dictLabel}" th:value="${dict.dictValue}"></option>
+                            </select>
+                        </li>
+                        <li>
+                            <label>开票状态：</label>
+                            <select name="isInvoice" th:with="type=${@dict.getType('sale_contractStatus')}">
+                                <option value="2">所有</option>
+                                <option th:each="dict : ${type}" th:text="${dict.dictLabel}" th:value="${dict.dictValue}"></option>
+                            </select>
+                        </li>
+                        <li>
+                            <label>回款状态：</label>
+                            <select name="isReturned" th:with="type=${@dict.getType('sale_contractStatus')}">
+                                <option value="2">所有</option>
                                 <option th:each="dict : ${type}" th:text="${dict.dictLabel}" th:value="${dict.dictValue}"></option>
                             </select>
                         </li>

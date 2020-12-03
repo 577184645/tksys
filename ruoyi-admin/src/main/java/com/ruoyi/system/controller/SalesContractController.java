@@ -45,8 +45,7 @@ public class SalesContractController extends BaseController
     @ResponseBody
     public TableDataInfo list(SalesContract salesContract)
     {
-        salesContractService.updatecontractStatus();
-        salesContractService.rollbackupdatecontractStatus();
+
         startPage();
         List<SalesContract> list = salesContractService.selectSalesContractList(salesContract);
         return getDataTable(list);

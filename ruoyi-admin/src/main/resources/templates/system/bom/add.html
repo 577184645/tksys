@@ -482,7 +482,7 @@
 
                                         $.each(data, function (key, value) {
 
-                                            result.push({ value: value.materialcode, text: value.materialcode });
+                                            result.push({ value: value.id, text: value.materialcode });
                                         });
                                     }
                                 });
@@ -518,6 +518,14 @@
                             }
                         }
                     },
+                    {
+                        field: 'price',
+                        title: 'Price'
+                    },
+                    {
+                        field: 'supplier',
+                        title: 'Supplier'
+                    },
 
                     {
                         field: 'comment',
@@ -538,15 +546,8 @@
                     },
                     {
                         field: 'quantity',
-                        title: 'Quantity',
-                        footerFormatter:function (value) {
-                            var sumBalance = 0;
-                            for (var i in value) {
-                                sumBalance += parseFloat(value[i].quantity);
-                            }
+                        title: 'Quantity'
 
-                            return "总量：" + sumBalance;
-                        }
                     }
 
 
@@ -555,9 +556,25 @@
                 ] ,onEditableSave: function (field, row, oldValue,$el) {
 
 
+                    if(row.mmaterialcode!=""){
+
+                      $.ajax({
+                            url: prefix1+'/selectBomBySupplierAndPrice',
+                            type: "post",
+                            async: false,
+                            data: {"id":row.mmaterialcode},
+                            success: function (data) {
+
+                                row.price =data.price;
+                                row.supplier=data.supplier;
+                                $('#bootstrap-table').bootstrapTable('updateRow', {index: row.randomId, row: row});
+                            }
+                        });
+                    }
 
 
 
+                    getsum();
                  /*   getsum();
                     $('#bootstrap-table').bootstrapTable('updateRow', {index: row.materialcode, row: row});
 */
@@ -713,8 +730,7 @@
             var data = $("#bootstrap-table").bootstrapTable('getData');
             var sum=parseFloat(0);
             for(var i=0;i<data.length;i++) {
-                sum+=parseFloat(data[i].price)*parseInt(data[i].count);
-
+                sum+=parseFloat(data[i].price)*parseInt(data[i].quantity);
             }
 
             $("#price").val(sum.toFixed(2));

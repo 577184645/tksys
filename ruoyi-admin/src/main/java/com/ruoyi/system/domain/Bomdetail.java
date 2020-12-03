@@ -23,7 +23,7 @@ public class Bomdetail extends BaseEntity
     private Long bomid;
 
 
-    private Integer msid;
+    private String msid;
 
     private String  ssid;
 
@@ -55,6 +55,26 @@ public class Bomdetail extends BaseEntity
     @Excel(name = "生产总用量")
     private Integer sumcount;
 
+    @Excel(name = "价格")
+    private Double price;
+    @Excel(name = "供应商")
+    private String supplier;
+
+    public Double getPrice() {
+        return price;
+    }
+
+    public void setPrice(Double price) {
+        this.price = price;
+    }
+
+    public String getSupplier() {
+        return supplier;
+    }
+
+    public void setSupplier(String supplier) {
+        this.supplier = supplier;
+    }
 
     public Integer getId() {
         return id;
@@ -72,11 +92,11 @@ public class Bomdetail extends BaseEntity
         this.bomid = bomid;
     }
 
-    public Integer getMsid() {
+    public String getMsid() {
         return msid;
     }
 
-    public void setMsid(Integer msid) {
+    public void setMsid(String msid) {
         this.msid = msid;
     }
 

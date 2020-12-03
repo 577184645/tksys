@@ -19,16 +19,17 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="cTime"    column="c_time"    />
         <result property="uTime"    column="u_time"    />
         <result property="status"    column="status"    />
+        <result property="approvestatus"    column="approvestatus"    />
 
     </resultMap>
 
     <sql id="selectOfferVo">
-        select offer_id,filename, status,offer_number, offer_username, offer_salesman, offer_salesmancontactway, offer_money, offer_project, offer_time, context, accessory, c_time, u_time from offer
+        select offer_id,filename,approvestatus, status,offer_number, offer_username, offer_salesman, offer_salesmancontactway, offer_money, offer_project, offer_time, context, accessory, c_time, u_time from offer
     </sql>
 
     <select id="selectOfferList" parameterType="Offer" resultMap="OfferResult">
 
-        select a.offer_id, a.offer_number,a.status, a.offer_username, a.offer_salesman, a.offer_salesmancontactway, a.offer_money, a.offer_project, a.offer_time, a.context, a.accessory, a.c_time, a.u_time from offer a LEFT JOIN (SELECT offer_number,max(offer_time) offer_time from offer GROUP BY offer_number) b on   a.offer_number=b.offer_number and a.offer_time=b.offer_time
+        select a.approvestatus,a.offer_id, a.offer_number,a.status, a.offer_username, a.offer_salesman, a.offer_salesmancontactway, a.offer_money, a.offer_project, a.offer_time, a.context, a.accessory, a.c_time, a.u_time from offer a LEFT JOIN (SELECT offer_number,max(offer_time) offer_time from offer GROUP BY offer_number) b on   a.offer_number=b.offer_number and a.offer_time=b.offer_time
 
 
         <where>  
@@ -124,6 +125,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
            u_time= now(),
         </trim>
         where offer_id = #{offerId}
+    </update>
+    <update id="updateOfferbyApproveStatus">
+        update  offer set approvestatus=1 where offer_id=#{id}
     </update>
 
     <delete id="deleteOfferById" parameterType="Long">

@@ -29,8 +29,6 @@ public class SalesContract extends BaseEntity
     private String contractCustomer;
 
 
-
-
     /** 金额 */
     @Excel(name = "金额")
     private Double contractMoney;
@@ -51,17 +49,6 @@ public class SalesContract extends BaseEntity
     @Excel(name = "回款")
     private Double contractReturnedmoney;
 
-    /** 合同未执行完毕应付款 */
-
-    private Double contractStartmoney;
-
-    /** 合同已执行完毕应付款 */
-
-    private Double contractEndmoney;
-
-    @Excel(name = "状态",readConverterExp = "0=未完成,,1=已完成")
-    private String contractStatus;
-
     @Excel(name = "集团合同号")
     private String  groupNumber;
 
@@ -69,14 +56,42 @@ public class SalesContract extends BaseEntity
     private String contractProjectname;
 
 
-    private String year;
-
     /** 创建时间 */
     private Date cTime;
 
     /** 修改时间 */
     private Date uTime;
 
+
+    /**
+     *   数据库扩展字段
+     * @return
+     */
+    /** 年份 */
+     private String year;
+    /** 是否完成合同 */
+     private String contractStatus;
+    /** 是否开票 */
+    private String isInvoice;
+    /** 是否回款 */
+    private String isReturned;
+
+
+    public String getIsInvoice() {
+        return isInvoice;
+    }
+
+    public void setIsInvoice(String isInvoice) {
+        this.isInvoice = isInvoice;
+    }
+
+    public String getIsReturned() {
+        return isReturned;
+    }
+
+    public void setIsReturned(String isReturned) {
+        this.isReturned = isReturned;
+    }
 
     public String getContractStatus() {
         return contractStatus;
@@ -182,24 +197,7 @@ public class SalesContract extends BaseEntity
     {
         return contractReturnedmoney;
     }
-    public void setContractStartmoney(Double contractStartmoney) 
-    {
-        this.contractStartmoney = contractStartmoney;
-    }
 
-    public Double getContractStartmoney() 
-    {
-        return contractStartmoney;
-    }
-    public void setContractEndmoney(Double contractEndmoney) 
-    {
-        this.contractEndmoney = contractEndmoney;
-    }
-
-    public Double getContractEndmoney() 
-    {
-        return contractEndmoney;
-    }
     public void setcTime(Date cTime) 
     {
         this.cTime = cTime;
@@ -230,8 +228,6 @@ public class SalesContract extends BaseEntity
             .append("contractPayment", getContractPayment())
             .append("contractDeliverstatus", getContractDeliverstatus())
             .append("contractReturnedmoney", getContractReturnedmoney())
-            .append("contractStartmoney", getContractStartmoney())
-            .append("contractEndmoney", getContractEndmoney())
             .append("cTime", getcTime())
             .append("uTime", getuTime())
             .toString();

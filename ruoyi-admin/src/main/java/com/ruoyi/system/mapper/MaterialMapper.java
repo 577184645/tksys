@@ -1,8 +1,9 @@
 package com.ruoyi.system.mapper;
 
-import java.util.List;
 import com.ruoyi.system.domain.Material;
 import org.apache.ibatis.annotations.Param;
+
+import java.util.List;
 
 /**
  * 物料列表Mapper接口
@@ -32,8 +33,8 @@ public interface MaterialMapper
      */
     public String selectMaterialByMaterialcode(String materialcode);
 
+    public String selectMaterialByMaxMaterialcodeSuffix(String materialcode);
 
-    public String selectMaterialByMaxMaterialcode(String materialcode);
 
     /**
      * 查询物料列表列表

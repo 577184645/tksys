@@ -114,4 +114,9 @@ public class OfferServiceImpl implements IOfferService
     {
         return offerMapper.deleteOfferById(offerId);
     }
+
+    @Override
+    public int approveOffer(Long id) {
+        return offerMapper.updateOfferbyApproveStatus(id);
+    }
 }

@@ -16,10 +16,12 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="quantity"    column="quantity"    />
         <result property="count"    column="count"    />
         <result property="sumcount"    column="sumcount"    />
+        <result property="price"    column="price"    />
+        <result property="supplier"    column="supplier"    />
     </resultMap>
 
     <sql id="selectBomdetailVo">
-        select id, bomid, msid,ssid, comment, footprint, description, designator, quantity, count, sumcount from bomdetail
+        select supplier,price,id, bomid, msid,ssid, comment, footprint, description, designator, quantity, count, sumcount from bomdetail
     </sql>
 
     <select id="selectBomdetailList" parameterType="Bomdetail" resultMap="BomdetailResult">
@@ -45,6 +47,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     <insert id="insertBomdetail" parameterType="Bomdetail" useGeneratedKeys="true" keyProperty="id">
         insert into bomdetail
         <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="supplier != null and supplier != '' ">supplier,</if>
+            <if test="price != null and price != ''  ">price,</if>
             <if test="bomid != null ">bomid,</if>
             <if test="msid != null ">msid,</if>
             <if test="ssid != null ">ssid,</if>
@@ -57,6 +61,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="sumcount != null ">sumcount,</if>
          </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="supplier != null and supplier != '' ">#{supplier},</if>
+            <if test="price != null and price != ''  ">#{price},</if>
             <if test="bomid != null ">#{bomid},</if>
             <if test="msid != null ">#{msid},</if>
             <if test="ssid != null ">#{ssid},</if>
@@ -73,6 +79,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     <update id="updateBomdetail" parameterType="Bomdetail">
         update bomdetail
         <trim prefix="SET" suffixOverrides=",">
+            <if test="supplier != null and supplier != '' ">supplier=#{supplier}</if>
+            <if test="price != null and price != ''  ">#{price}</if>
             <if test="bomid != null ">bomid = #{bomid},</if>
             <if test="msid != null ">msid = #{msid},</if>
             <if test="ssid != null ">ssid = #{ssid},</if>

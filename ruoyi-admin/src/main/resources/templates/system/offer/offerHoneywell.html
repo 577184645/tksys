@@ -70,6 +70,9 @@
     <script th:inline="javascript">
         var editFlag = [[${@permission.hasPermi('system:offer:edit')}]];
         var removeFlag = [[${@permission.hasPermi('system:offer:remove')}]];
+        var approveFlag=[[${@permission.hasPermi('system:offer:approve')}]];
+        var storageStutus = [[${@dict.getType('salecontract_offer_approvestatus')}]];
+
         var prefix = ctx + "system/offer";
 
         $(function() {
@@ -119,13 +122,21 @@
                             return setDefaultDate(value);
                     }
                 },
-
+                    {
+                        field: 'approvestatus',
+                        title: '批准状态',
+                        formatter: function(value, row, index) {
+                            return $.table.selectDictLabel(storageStutus, value);
+                        }
+                    },
                 {
                     title: '操作',
                     align: 'center',
                     formatter: function(value, row, index) {
                         var actions = [];
-
+                        if(row.approvestatus==null) {
+                            actions.push('<a class="btn btn-info btn-xs ' + approveFlag + '" href="javascript:void(0)" onclick="approve(\'' + row.offerId + '\',\'' + row.offerNumber + '\')"><i class="fa fa-edit"></i>批准</a> ');
+                        }
                         actions.push('<a class="btn btn-info btn-xs ' + editFlag + '" href="javascript:void(0)" onclick="Infodetail(\'' + row.offerId + '\')"><i class="fa fa-edit"></i>查看详细信息</a> ');
 
                         actions.push('<a class="btn btn-info btn-xs ' + editFlag + '" href="javascript:void(0)" onclick="Info(\'' + row.offerNumber + '\')"><i class="fa fa-edit"></i>查看历史报价</a> ');
@@ -151,6 +162,14 @@
         function Infodetail(id) {
             table.set();
             $.modal.openTab("报价单详细信息",prefix+"/infodetail/"+id);
+        }
+        
+        function approve(id,offerNumber) {
+            table.set();
+            $.modal.confirm("确定批准"+offerNumber + table.options.modalName + "信息吗？", function() {
+                var data = { "id": id };
+                $.operate.submit(prefix+"/approve", "post", "json", data);
+            });
         }
 
 

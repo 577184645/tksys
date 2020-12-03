@@ -21,9 +21,11 @@
                                 <input type="text" class="time-input" id="endTime" placeholder="结束时间" name="params[endProjectreportDate]"/>
                             </li>
                             <li>
-                                <label>最终用户：</label>
-                                <input type="text" name="projectreportLastuser"/>
-                            </li>
+                            <label>最终用户：</label>
+                            <input type="text" name="projectreportLastuser"/>
+                        </li>
+
+
                             <li>
                                 <label>项目名称：</label>
                                 <input type="text" name="projectreportName"/>
@@ -92,6 +94,7 @@
                 updateUrl: prefix + "/edit/{id}",
                 removeUrl: prefix + "/remove",
                 exportUrl: prefix + "/export",
+                height: 500,
                 modalName: "项目报备",
                 columns: [{
                     checkbox: true

@@ -1,7 +1,8 @@
 package com.ruoyi.system.mapper;
 
-import java.util.List;
 import com.ruoyi.system.domain.Offer;
+
+import java.util.List;
 
 /**
  * 报价单Mapper接口
@@ -70,4 +71,6 @@ public interface OfferMapper
      * @return 结果
      */
     public int deleteOfferByIds(String[] offerIds);
+
+    int updateOfferbyApproveStatus(Long id);
 }

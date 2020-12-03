@@ -13,18 +13,14 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="contractPayment"    column="contract_payment"    />
         <result property="contractDeliverstatus"    column="contract_deliverstatus"    />
         <result property="contractReturnedmoney"    column="contract_returnedmoney"    />
-        <result property="contractStartmoney"    column="contract_startmoney"    />
-        <result property="contractEndmoney"    column="contract_endmoney"    />
-        <result property="contractEndmoney"    column="contract_endmoney"    />
         <result property="groupNumber"    column="group_number"    />
         <result property="contractProjectname"    column="contract_projectname"    />
-        <result property="contractStatus"    column="contract_status"    />
         <result property="cTime"    column="c_time"    />
         <result property="uTime"    column="u_time"    />
     </resultMap>
 
     <sql id="selectSalesContractVo">
-        select contract_projectname,contract_status,contract_id, contract_number,group_number, contract_customer, contract_money, contract_invoicemoney, contract_payment, contract_deliverstatus, contract_returnedmoney, contract_startmoney, contract_endmoney, c_time, u_time from sales_contract
+        select contract_projectname,contract_id, contract_number,group_number, contract_customer, contract_money, contract_invoicemoney, contract_payment, contract_deliverstatus, contract_returnedmoney,  c_time, u_time from sales_contract
     </sql>
 
     <select id="selectSalesContractList" parameterType="SalesContract" resultMap="SalesContractResult">
@@ -32,7 +28,26 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <where>
 
             <if test="year != null  and year != ''"> and contract_number like concat('%', #{year},'%')</if>
-            <if test="contractStatus != null  and contractStatus != ''"> and contract_status = #{contractStatus}</if>
+            <if test="isInvoice == 1 and  isInvoice !='' ">
+                and contract_money=	contract_invoicemoney
+            </if>
+            <if test="isInvoice == 0 and  isInvoice !='' ">
+                and contract_money !=	contract_invoicemoney
+            </if>
+
+            <if test="isReturned == 0 and  isReturned !='' ">
+                and  contract_money !=	contract_returnedmoney
+            </if>
+            <if test="isReturned == 1 and  isReturned !='' ">
+            and  contract_money=	contract_returnedmoney
+            </if>
+
+            <if test="contractStatus == 1 and  contractStatus !='' ">
+                and contract_money=	contract_invoicemoney  and 		 contract_money=	contract_returnedmoney and contract_deliverstatus='已发货'
+            </if>
+            <if test="contractStatus == 0 and  contractStatus !='' ">
+                and contract_money != contract_invoicemoney  or 		 contract_money!= contract_returnedmoney
+            </if>
             <if test="contractNumber != null  and contractNumber != ''"> and contract_number = #{contractNumber}</if>
             <if test="contractCustomer != null  and contractCustomer != ''"> and contract_customer like concat('%', #{contractCustomer},'%')</if>
             <if test="contractProjectname != null  and contractProjectname != ''"> and contract_projectname like concat('%', #{contractProjectname},'%')</if>
@@ -71,8 +86,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="contractPayment != null  and contractPayment != ''">contract_payment,</if>
             <if test="contractDeliverstatus != null  and contractDeliverstatus != ''">contract_deliverstatus,</if>
             <if test="contractReturnedmoney != null ">contract_returnedmoney,</if>
-            <if test="contractStartmoney != null ">contract_startmoney,</if>
-            <if test="contractEndmoney != null ">contract_endmoney,</if>
+
             <if test="contractProjectname != null and contractProjectname != '' ">contract_projectname,</if>
 
 
@@ -88,8 +102,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="contractPayment != null  and contractPayment != ''">#{contractPayment},</if>
             <if test="contractDeliverstatus != null  and contractDeliverstatus != ''">#{contractDeliverstatus},</if>
             <if test="contractReturnedmoney != null ">#{contractReturnedmoney},</if>
-            <if test="contractStartmoney != null ">#{contractStartmoney},</if>
-            <if test="contractEndmoney != null ">#{contractEndmoney},</if>
+
             <if test="contractProjectname != null and contractProjectname != '' ">#{contractProjectname},</if>
           now(),
             <if test="uTime != null ">#{uTime},</if>
@@ -109,10 +122,6 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             contract_payment = #{contractPayment},
            contract_deliverstatus = #{contractDeliverstatus},
             <if test="contractReturnedmoney != null ">contract_returnedmoney = #{contractReturnedmoney},</if>
-            <if test="contractStartmoney != null ">contract_startmoney = #{contractStartmoney},</if>
-            <if test="contractEndmoney != null ">contract_endmoney = #{contractEndmoney},</if>
-
-            <if test="contractStatus != null ">contract_status = #{contractStatus},</if>
 
             contract_projectname=#{contractProjectname},
 
@@ -120,13 +129,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         </trim>
         where contract_id = #{contractId}
     </update>
-    <update id="updatecontractStatus">
- update sales_contract set contract_status=1 where contract_money=contract_invoicemoney and contract_money=contract_returnedmoney
-    </update>
 
-    <update id="rollbackupdatecontractStatus">
-  update sales_contract set contract_status=0 where contract_money!=contract_invoicemoney or contract_money!=contract_returnedmoney
-    </update>
+
 
     <delete id="deleteSalesContractById" parameterType="Long">
         delete from sales_contract where contract_id = #{contractId}

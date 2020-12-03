@@ -54,13 +54,16 @@ public class MaterialServiceImpl implements IMaterialService {
     @Override
     public String getMaterialcode(Long typeId, Long deptId) {
         String materialCode = "";
+        //获得类型 部门 相对应code
         String code = materialtypeMapper.selectMaterialtypeById(typeId).getCode();
         String code1 = materialdeptMapper.selectMaterialdeptById(deptId).getCode();
+        //根据类型 部门 查找最大物料编码
         String materialcode = materialMapper.selectMaterialByMaterialcode(code + code1);
         if(materialcode==null){
             materialCode = code + code1 + "0001";
         }else{
             int count;
+            //判断是否有后缀名
            if(materialcode.indexOf("-")==-1){
                 count=Integer.valueOf(materialcode.substring(4));
            }else {
@@ -74,7 +77,7 @@ public class MaterialServiceImpl implements IMaterialService {
             } else if (count+1 < 1000) {
                 materialCode = code + code1 + "0" + String.valueOf(count+1);
             }else {
-                materialCode=String.valueOf(count+1);
+                materialCode=code+code1+String.valueOf(count+1);
             }
         }
 
@@ -115,9 +118,9 @@ public class MaterialServiceImpl implements IMaterialService {
 
     @Override
     public int addSuffix(Material material) {
-        int index = materialMapper.selectMaterialByMaxMaterialcode(material.getMaterialcode()).indexOf("-");
+        int index = materialMapper.selectMaterialByMaxMaterialcodeSuffix(material.getMaterialcode()).indexOf("-");
         if(index!=-1){
-            String maxMaterialcode = materialMapper.selectMaterialByMaxMaterialcode(material.getMaterialcode());
+            String maxMaterialcode = materialMapper.selectMaterialByMaxMaterialcodeSuffix(material.getMaterialcode());
             char c = maxMaterialcode.substring(index + 1).charAt(0);
             c= (char) (c+1);
             material.setMaterialcode(material.getMaterialcode()+"-"+c);
