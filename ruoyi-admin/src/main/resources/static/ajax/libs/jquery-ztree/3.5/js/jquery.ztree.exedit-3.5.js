@@ -1033,7 +1033,7 @@
 
 			//repair node's old parentNode dom
 			if (!setting.data.keep.parent && oldParentNode[childKey].length < 1) {
-				//old parentNode has no child nodes
+				//old parentNode has no materialChild nodes
 				oldParentNode.isParent = false;
 				oldParentNode.open = false;
 				var tmp_ulObj = $("#" + oldParentNode.tId + consts.id.UL),

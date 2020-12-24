@@ -7,55 +7,11 @@
             table-layout:fixed;
         }
 
-        .select-table .table td {
-
-
-
-            /* 配合宽度来使用 */
-            height:40px;
-        }
     </style>
 </head>
-<body class="gray-bg">
-     <div class="container-div">
-        <div class="row">
-            <div class="col-sm-12 search-collapse">
-                <form id="formId">
-                    <div class="select-list">
-                        <ul>
-                            <li>
-                                <label>物料名称：</label>
-                                <input type="text" name="name"/>
-                            </li>
-                            <li>
-                                <label>物料型号：</label>
-                                <input type="text" name="partnumber"/>
-                            </li>
-                            <li>
-                                <label>品牌：</label>
-                                <input type="text" name="manufacture"/>
-                            </li>
-                            <input name="storageoutbillid" id="storageoutbillid" th:value="${storageoutid}" hidden="hidden"/>
+   <input name="storageoutbillid" id="storageoutbillid" th:value="${storageoutid}" hidden="hidden"/>
 
-                            <li>
-                                <label>供应商：</label>
-                                <input type="text" name="supplier"/>
-                            </li>
-                            <li class="select-time">
-                                <label>出库时间：</label>
-                                <input type="text" class="time-input" id="startTime" placeholder="开始时间" name="params[beginTime]"/>
-                                <span>-</span>
-                                <input type="text" class="time-input" id="endTime" placeholder="结束时间" name="params[endTime]"/>
-                            </li>
 
-                            <li>
-                                <a class="btn btn-primary btn-rounded btn-sm" onclick="$.table.search()"><i class="fa fa-search"></i>&nbsp;搜索</a>
-                                <a class="btn btn-warning btn-rounded btn-sm" onclick="$.form.reset()"><i class="fa fa-refresh"></i>&nbsp;重置</a>
-                            </li>
-                        </ul>
-                    </div>
-                </form>
-            </div>
 
             <div class="btn-group-sm" id="toolbar" role="group">
                 <a class="btn btn-warning" onclick="$.table.exportExcel()" >
@@ -79,7 +35,6 @@
                 createUrl: prefix + "/add",
                 updateUrl: prefix + "/edit/{id}",
                 removeUrl: prefix + "/remove",
-                showFooter: true,
                 exportUrl: prefix + "/export",
                 modalName: "出库产品列表",
                 queryParams : {
@@ -95,83 +50,28 @@
                 },
                 {
                     field: 'storageoutbillid', 
-                    title: '所属出库单',
-                    width:155,
-                    footerFormatter:function (value) {
-                        var sumBalance = 0;
-                        for (var i in value) {
-                            sumBalance += parseFloat(value[i].money);
-                        }
+                    title: '所属出库单'
 
-                        return "总金额：" + sumBalance.toFixed(4);
-                    }
+
                 },
                     {
                         field: 'materialcode',
-                        title: '物料代码',
-                        width:125
-                    },
-                    {
-                        field: 'name',
-                        title: '物料名称',
-                        width:140
+                        title: '物料代码'
                     },
 
                     {
-                        field: 'partnumber',
-                        title: '物料型号',
-                        width:230
-                    },
-                    {
-                        field: 'description',
-                        title: '描述',
-                        width:230
-                    },
-                    {
-                        field: 'manufacture',
-                        title: '品牌',
-                        width:130
-                    },
-                    {
-                        field: 'price',
-                        title: '单价',
-                        width:130
-                    },
-                    {
                         field: 'counts',
-                        title: '数量',
-                        width:130
+                        title: '数量'
                     },
-                    {
-                        field: 'money',
-                        title: '总金额',
-                        width:130
-                    },
-                    {
-                        field: 'unit',
-                        title: '单位',
-                        width:100
-                    },
-                    {
-                        field: 'supplier',
-                        title: '供应商',
-                        width:230
-                    },
+
 
                     {
                         field: 'serialNumber',
-                        title: '序列号',
-                        width:120
-                    },
-                    {
-                        field: 'cTime',
-                        title: '创建时间',
-                        width:160
+                        title: '序列号'
                     },
                     {
                         field: 'comments',
-                        title: '备注',
-                        width:170
+                        title: '备注'
                     },
 
                 ]

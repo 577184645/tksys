@@ -26,7 +26,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </resultMap>
 
     <sql id="selectStoragequitdetailVo">
-        select id,sid, storagequitbillid, materialcode, name, partnumber, footprint, serial_number, manufacture, price, counts, money, unit, supplier, comments, c_time, u_time from storagequitdetail
+        select id,sid, storagequitbillid, materialcode, serial_number, counts,  comments from storagequitdetail
     </sql>
 
     <select id="selectStoragequitdetailList" parameterType="Storagequitdetail" resultMap="StoragequitdetailResult">
@@ -34,17 +34,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <where>
             <if test="storagequitbillid != null  and storagequitbillid != ''"> and storagequitbillid = #{storagequitbillid}</if>
             <if test="materialcode != null  and materialcode != ''"> and materialcode = #{materialcode}</if>
-            <if test="name != null  and name != ''"> and name like concat('%', #{name}, '%')</if>
-            <if test="partnumber != null  and partnumber != ''"> and partnumber = #{partnumber}</if>
-            <if test="manufacture != null  and manufacture != ''"> and manufacture = #{manufacture}</if>
-            <if test="supplier != null  and supplier != ''"> and supplier = #{supplier}</if>
-            <if test="comments != null  and comments != ''"> and comments = #{comments}</if>
-            <if test="params.beginTime != null and params.beginTime != ''"><!-- 开始时间检索 -->
-                and date_format(c_time,'%y%m%d') &gt;= date_format(#{params.beginTime},'%y%m%d')
-            </if>
-            <if test="params.endTime != null and params.endTime != ''"><!-- 结束时间检索 -->
-                and date_format(c_time,'%y%m%d') &lt;= date_format(#{params.endTime},'%y%m%d')
-            </if>
+
         </where>
     </select>
     

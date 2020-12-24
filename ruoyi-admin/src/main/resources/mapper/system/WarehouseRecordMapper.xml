@@ -9,26 +9,25 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="type"    column="type"    />
         <result property="number"    column="number"    />
         <result property="materialcode"    column="materialcode"    />
-        <result property="name"    column="name"    />
         <result property="count"    column="count"    />
         <result property="price"    column="price"    />
         <result property="money"    column="money"    />
         <result property="supplier"    column="supplier"    />
         <result property="serialNumber"    column="serial_number"    />
         <result property="delStatus"    column="del_status"    />
+        <result property="remark"    column="remark"    />
         <result property="cTime"    column="c_time"    />
+
     </resultMap>
 
     <sql id="selectWarehouseRecordVo">
-        select id, type, number, materialcode, name, count, price, money, supplier, serial_number, del_status, c_time from warehouse_record
+        select id, type, number,remark, materialcode,  count, price, money, supplier, serial_number, del_status, c_time from warehouse_record
     </sql>
 
     <select id="selectWarehouseRecordList" parameterType="WarehouseRecord" resultMap="WarehouseRecordResult">
         <include refid="selectWarehouseRecordVo"/>
         <where>
-            and supplier = #{supplier}
-            and serial_number = #{serialNumber}
-            and materialcode = #{materialcode}
+            <if test="materialcode != null  and materialcode != ''"> and materialcode = #{materialcode}</if>
             <if test="type != null  and type != ''"> and type = #{type}</if>
             <if test="number != null  and number != ''"> and number = #{number}</if>
         </where>
@@ -45,7 +44,6 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="type != null  and type != ''">type,</if>
             <if test="number != null  and number != ''">number,</if>
             <if test="materialcode != null  and materialcode != ''">materialcode,</if>
-            <if test="name != null  and name != ''">name,</if>
             <if test="count != null ">count,</if>
             <if test="price != null ">price,</if>
             <if test="money != null ">money,</if>
@@ -53,12 +51,14 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="serialNumber != null  and serialNumber != ''">serial_number,</if>
             <if test="delStatus != null  and delStatus != ''">del_status,</if>
             <if test="cTime != null ">c_time,</if>
+            <if test="remark != null ">remark,</if>
+
+
          </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="type != null  and type != ''">#{type},</if>
             <if test="number != null  and number != ''">#{number},</if>
             <if test="materialcode != null  and materialcode != ''">#{materialcode},</if>
-            <if test="name != null  and name != ''">#{name},</if>
             <if test="count != null ">#{count},</if>
             <if test="price != null ">#{price},</if>
             <if test="money != null ">#{money},</if>
@@ -66,6 +66,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="serialNumber != null  and serialNumber != ''">#{serialNumber},</if>
             <if test="delStatus != null  and delStatus != ''">#{delStatus},</if>
             <if test="cTime != null ">#{cTime},</if>
+            <if test="remark != null ">#{remark},</if>
          </trim>
     </insert>
 
@@ -75,7 +76,6 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="type != null  and type != ''">type = #{type},</if>
             <if test="number != null  and number != ''">number = #{number},</if>
             <if test="materialcode != null  and materialcode != ''">materialcode = #{materialcode},</if>
-            <if test="name != null  and name != ''">name = #{name},</if>
             <if test="count != null ">count = #{count},</if>
             <if test="price != null ">price = #{price},</if>
             <if test="money != null ">money = #{money},</if>

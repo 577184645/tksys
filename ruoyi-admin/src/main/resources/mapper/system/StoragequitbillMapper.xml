@@ -6,7 +6,6 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     
     <resultMap type="Storagequitbill" id="StoragequitbillResult">
         <result property="id"    column="id"    />
-
         <result property="storagequitbillid"    column="storagequitbillid"    />
         <result property="outsourcewarehouse"    column="outsourcewarehouse"    />
         <result property="outsourcewarehouseid"    column="outsourcewarehouseid"    />

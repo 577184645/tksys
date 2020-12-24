@@ -3,6 +3,7 @@ package com.ruoyi.system.service.impl;
 import com.ruoyi.common.core.text.Convert;
 import com.ruoyi.system.common.Const;
 import com.ruoyi.system.domain.*;
+import com.ruoyi.system.exception.OtherException;
 import com.ruoyi.system.mapper.*;
 import com.ruoyi.system.service.IStorageService;
 import com.ruoyi.system.util.BigDecimalUtil;
@@ -26,6 +27,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -100,6 +102,8 @@ public  class StorageServiceImpl implements IStorageService {
     }
 
 
+
+
     @Override
     public List<Storage> selectByBom(String comments, String footprint) {
         return storageMapper.selectByBom(comments,footprint);
@@ -132,7 +136,9 @@ public  class StorageServiceImpl implements IStorageService {
     public List<Storage> selectStorageList(Storage storage) {
 
         List<Storage> storages = storageMapper.selectStorageList(storage);
-
+        /**
+         * 查看该产品具体位置
+         */
         for (Storage storage1 : storages) {
 
             if (storage1.getAncestors().contains(",")) {
@@ -152,11 +158,13 @@ public  class StorageServiceImpl implements IStorageService {
         return storages;
     }
 
+
+
     @Override
     @Transactional
     public int insertStorage(Storageinbill storageinbill, String productList) {
         //如果入库出现重复
-        if (storageinbillMapper.selectStorageinbillByStockinid(storageinbill.getStockinid()) != null) {
+    /*    if (storageinbillMapper.selectStorageinbillByStockinid(storageinbill.getStockinid()) != null) {
             Storageinbill st = new Storageinbill();
             int i = storageinbill.getStockinid().lastIndexOf("-") + 1;
             int size = storageinbillMapper.selectStorageinbillList(st).size() + 1;
@@ -171,87 +179,76 @@ public  class StorageServiceImpl implements IStorageService {
             }
 
             storageinbill.setStockinid(storageinbill.getStockinid().substring(0, i) + sizes);
-        }
+        }*/
         JSONArray productArray = JSONArray.fromObject(productList);
         for (int i = 0; i < productArray.size(); i++) {
             JSONObject jsonObject = productArray.getJSONObject(i);
             Storage storage = new Storage();
             WarehouseRecord warehouseRecord = new WarehouseRecord();
             Storageindetail storageindetail = new Storageindetail();
-            storageindetail.setName(jsonObject.getString("name"));
             storageindetail.setMaterialcode(jsonObject.getString("materialcode"));
             storageindetail.setCounts(jsonObject.getLong("counts"));
             storageindetail.setPrice(jsonObject.getDouble("price"));
             storageindetail.setMoney(jsonObject.getDouble("money"));
-            if(StringUtils.isNotBlank(jsonObject.getString("footprint"))&&!jsonObject.getString("footprint").equals("null")) {
-                storageindetail.setFootprint(jsonObject.getString("footprint"));
-            }
-            if(StringUtils.isNotBlank(jsonObject.getString("partnumber"))&&!jsonObject.getString("partnumber").equals("null")) {
-                storageindetail.setPartnumber(jsonObject.getString("partnumber"));
-            }
-            if(StringUtils.isNotBlank(jsonObject.getString("rate"))&&!jsonObject.getString("rate").equals("null")) {
+            if(jsonObject.has("rate")&&StringUtils.isNotBlank(jsonObject.getString("rate"))&&!jsonObject.getString("rate").equals("null")) {
                 storageindetail.setRate(jsonObject.getString("rate"));
             }
-            if(StringUtils.isNotBlank(jsonObject.getString("taxamount"))&&!jsonObject.getString("taxamount").equals("null")) {
+            if(jsonObject.has("taxamount")&&StringUtils.isNotBlank(jsonObject.getString("taxamount"))&&!jsonObject.getString("taxamount").equals("null")) {
                 storageindetail.setTaxamount(Double.valueOf(jsonObject.getString("taxamount")));
             }
-            if(StringUtils.isNotBlank(jsonObject.getString("unit"))&&!jsonObject.getString("unit").equals("null")) {
-                storageindetail.setUnit(jsonObject.getString("unit"));
-            }
-            if(StringUtils.isNotBlank(jsonObject.getString("manufacture"))&&!jsonObject.getString("manufacture").equals("null")) {
-                storageindetail.setManufacture(jsonObject.getString("manufacture"));
-            }
-            if(StringUtils.isNotBlank(jsonObject.getString("comments"))&&!jsonObject.getString("comments").equals("null")) {
+            if(jsonObject.has("comments")&&StringUtils.isNotBlank(jsonObject.getString("comments"))&&!jsonObject.getString("comments").equals("null")) {
                 storageindetail.setComments(jsonObject.getString("comments"));
 
             }
-            if(StringUtils.isNotBlank(jsonObject.getString("serialNumber"))&&!jsonObject.getString("serialNumber").equals("null")) {
+            if(jsonObject.has("serialNumber")&&StringUtils.isNotBlank(jsonObject.getString("serialNumber"))&&!jsonObject.getString("serialNumber").equals("null")) {
                 storageindetail.setSerialNumber(jsonObject.getString("serialNumber"));
-            }else{
-                storageindetail.setSerialNumber("");
             }
-
             storageindetail.setSupplier(storageinbill.getSupplier());
-
             storageindetail.setStorageinbillid(storageinbill.getStockinid());
             storage.setTypeId(storageinbill.getOutsourcewarehouseid());
             storage.setMaterialcode(storageindetail.getMaterialcode());
-            storage.setSupplier(storageindetail.getSupplier());
-            storage.setSerialNumber(storageindetail.getSerialNumber());
-            storage.setMoney(new BigDecimal(storageindetail.getMoney()).setScale(2,BigDecimal.ROUND_HALF_UP).doubleValue());
-            storage.setStocks(storageindetail.getCounts());
-            if (storageMapper.selectStorageByMaterialcodeAndTypeid(storage) > 0) {
-                storageindetail.setSid(storageMapper.selectStorageInfoByMaterialcodeAndTypeid(storage).getId());
-                Long oldstocks = storageMapper.selectStorageInfoByMaterialcodeAndTypeid(storage).getStocks();
-                double oldmoney = storageMapper.selectStorageInfoByMaterialcodeAndTypeid(storage).getMoney();
-                double summoney=BigDecimalUtil.add(oldmoney,storage.getMoney()).doubleValue();
-                storage.setPrice(BigDecimalUtil.div(summoney,oldstocks+storage.getStocks(),4).doubleValue());
-                storageMapper.updatestocks(storage);
+            storage.setMaterialId(jsonObject.getLong("id"));
+            //如果库存存在
+            Storage storageInfo = storageMapper.selectStorageInfoByMaterialcodeAndTypeid(storage);
+
+            if (storageInfo!=null) {
+                storageindetail.setSid(storageInfo.getId());
+                Long oldstocks = storageInfo.getStocks();
+                double oldmoney = storageInfo.getMoney();
+                storage.setStocks(oldstocks+storageindetail.getCounts());
+                List<Storageindetail> storageindetails = storageindetailMapper.selectStorageindetailByStorageinbillSid(storageindetail.getSid());
+                double  sum=storageindetail.getPrice();
+                for (Storageindetail storageindetail1 : storageindetails) {
+                    sum+=storageindetail1.getPrice();
+                }
+                storage.setPrice(BigDecimalUtil.div(sum,storageindetails.size()+1,4).doubleValue());
+                storage.setMoney(BigDecimalUtil.mul(storage.getPrice(),storage.getStocks()).doubleValue());
+                storageMapper.updateStorageByMaterialcodeAndTypeId(storage);
+
+                //如果该产品没有库存
             } else {
-                storage.setName(storageindetail.getName());
-                storage.setPartnumber(storageindetail.getPartnumber());
-                storage.setManufacture(storageindetail.getManufacture());
-                storage.setPrice(new BigDecimal(storageindetail.getPrice()).setScale(4,BigDecimal.ROUND_HALF_UP).doubleValue());
-                storage.setUnit(storageindetail.getUnit());
-                storage.setFootprint(storageindetail.getFootprint());
+                storage.setStocks(storageindetail.getCounts());
+                storage.setPrice(storageindetail.getPrice());
+                storage.setMoney(storageindetail.getMoney());
                 storageMapper.insertStorage(storage);
                 storageindetail.setSid(storage.getId());
 
             }
+            //添加库存记录
             storageindetailMapper.insertStorageindetail(storageindetail);
             warehouseRecord.setType(Const.WarehouseRecordStatus.STORAGE_IN);
             warehouseRecord.setNumber(storageinbill.getStockinid());
             warehouseRecord.setMaterialcode(storageindetail.getMaterialcode());
-            warehouseRecord.setName(storageindetail.getName());
             warehouseRecord.setCount(storageindetail.getCounts());
             warehouseRecord.setPrice(storageindetail.getPrice());
             warehouseRecord.setMoney(storageindetail.getMoney());
             warehouseRecord.setSerialNumber(storageindetail.getSerialNumber());
             warehouseRecord.setSupplier(storageindetail.getSupplier());
+            warehouseRecord.setRemark(storageindetail.getComments());
             warehouseRecordMapper.insertWarehouseRecord(warehouseRecord);
 
-
         }
+        //得到入库的具体位置
         String ancestors = storagetypeMapper.selectStoragetypeById(storageinbill.getOutsourcewarehouseid()).getAncestors();
         String deptName = storagetypeMapper.selectStoragetypeById(storageinbill.getOutsourcewarehouseid()).getDeptName();
         if (ancestors.contains(",")) {
@@ -265,10 +262,12 @@ public  class StorageServiceImpl implements IStorageService {
             storageinbill.setOutsourcewarehouse(Outsourcewarehouse + deptName);
         }
 
-        storageinbill.setStorageStatus(Const.Storagestatus.OFFICIAL.getCode());
-
+       //判断是否为预入库
         if(storageinbill.getOutsourcewarehouse().indexOf("生产库")!=-1&&StringUtils.isEmpty(storageinbill.getInvoiceid())){
             storageinbill.setStorageStatus(Const.Storagestatus.BEFOREHAND.getCode());
+        }else{
+            storageinbill.setStorageStatus(Const.Storagestatus.OFFICIAL.getCode());
+
         }
         return storageinbillMapper.insertStorageinbill(storageinbill);
     }
@@ -291,7 +290,7 @@ public  class StorageServiceImpl implements IStorageService {
     @Transactional
     public int updateStorage(Storageoutbill storageoutbill, String productList) {
         //如果出库单出现重复
-        if (storageoutbillMapper.selectStorageoutbillByStorageoutId(storageoutbill.getStorageoutid()) != null) {
+       /* if (storageoutbillMapper.selectStorageoutbillByStorageoutId(storageoutbill.getStorageoutid()) != null) {
             Storageoutbill st = new Storageoutbill();
             int i = storageoutbill.getStorageoutid().lastIndexOf("-") + 1;
             int size = storageoutbillMapper.selectStorageoutbillList(st).size() + 1;
@@ -307,77 +306,46 @@ public  class StorageServiceImpl implements IStorageService {
             }
 
             storageoutbill.setStorageoutid(storageoutbill.getStorageoutid().substring(0, i) + sizes);
-        }
+        }*/
         JSONArray productArray = JSONArray.fromObject(productList);
-
-
         for (int i = 0; i < productArray.size(); i++) {
             JSONObject jsonObject = productArray.getJSONObject(i);
             Storage storage = new Storage();
             WarehouseRecord warehouseRecord = new WarehouseRecord();
             Storageoutdetail storageoutdetail = new Storageoutdetail();
-
-
             Long stocks = storageMapper.selectStorageById(jsonObject.getLong("id")).getStocks();
-
             if (stocks < Long.valueOf(jsonObject.getString("counts"))) {
-                //如果出现库存不足的异常会进行回滚
-                int error = 1 / 0;
+               throw new OtherException("库存不足!");
             }
             storageoutdetail.setSid(Long.valueOf(jsonObject.getString("id")));
             storageoutdetail.setCounts(Long.valueOf(jsonObject.getInt("counts")));
-            storageoutdetail.setPrice(jsonObject.getDouble("price"));
-            storageoutdetail.setMoney(jsonObject.getDouble("money"));
             storageoutdetail.setMaterialcode(jsonObject.getString("materialcode"));
             storageoutdetail.setStorageoutbillid(storageoutbill.getStorageoutid());
-            if (StringUtils.isNotBlank(jsonObject.getString("footprint"))&&!jsonObject.getString("footprint").equals("null")) {
-                storageoutdetail.setFootprint(jsonObject.getString("footprint"));
-            }
-            if (StringUtils.isNotBlank(jsonObject.getString("name"))&&!jsonObject.getString("name").equals("null")) {
-                storageoutdetail.setName(jsonObject.getString("name"));
-            }
-            if (StringUtils.isNotBlank(jsonObject.getString("partnumber"))&&!jsonObject.getString("partnumber").equals("null")) {
-                storageoutdetail.setPartnumber(jsonObject.getString("partnumber"));
-            }
-
-            if (StringUtils.isNotBlank(jsonObject.getString("unit"))&&!jsonObject.getString("unit").equals("null")) {
-                storageoutdetail.setUnit(jsonObject.getString("unit"));
-            }
-            if (StringUtils.isNotBlank(jsonObject.getString("manufacture"))&&!jsonObject.getString("manufacture").equals("null")) {
-                storageoutdetail.setManufacture(jsonObject.getString("manufacture"));
-            }
-            if (StringUtils.isNotBlank(jsonObject.getString("supplier"))&&!jsonObject.getString("supplier").equals("null")) {
-                storageoutdetail.setSupplier(jsonObject.getString("supplier"));
-            }
-            if (StringUtils.isNotBlank(jsonObject.getString("serialNumber"))&&!jsonObject.getString("serialNumber").equals("null")) {
+            if (StringUtils.isNotBlank(jsonObject.getString("serialNumber"))&&jsonObject.getString("serialNumber").length()>0) {
                 storageoutdetail.setSerialNumber(jsonObject.getString("serialNumber"));
             }
-            if (StringUtils.isNotBlank(jsonObject.getString("comments"))&&!jsonObject.getString("comments").equals("null")) {
+            if (StringUtils.isNotBlank(jsonObject.getString("comments"))&&jsonObject.getString("comments").length()>0) {
                 storageoutdetail.setComments(jsonObject.getString("comments"));
             }
+            //添加入库单详细信息
             storageoutdetailMapper.insertStorageoutdetail(storageoutdetail);
             storage.setId(jsonObject.getLong("id"));
-            storage.setMoney(new BigDecimal(storageoutdetail.getMoney()).setScale(2,BigDecimal.ROUND_HALF_UP).doubleValue());
-            storage.setStocks(storageoutdetail.getCounts());
-            storageMapper.removestocks(storage);
-            if(storageMapper.selectStorageById(jsonObject.getLong("id")).getStocks()==0){
-               Storage storage1=new Storage();
-                storage1.setId(jsonObject.getLong("id"));
-                storage1.setMoney(new BigDecimal(0).doubleValue());
-                storageMapper.updateStorage(storage1);
-            }
+            //得到原有库存相减得到更新库存价格
+            Storage oldstorage = storageMapper.selectStorageById(storage.getId());
+            storage.setMoney( BigDecimalUtil.mul(oldstorage.getPrice(), oldstorage.getStocks() - storageoutdetail.getCounts()).doubleValue());
+            storage.setStocks(oldstorage.getStocks() - storageoutdetail.getCounts());
+            storage.setoTime(new Date());
+            storageMapper.updateStorageById(storage);
+            //添加库存记录
             warehouseRecord.setType(Const.WarehouseRecordStatus.STORAGE_OUT);
             warehouseRecord.setNumber(storageoutbill.getStorageoutid());
             warehouseRecord.setMaterialcode(jsonObject.getString("materialcode"));
-            warehouseRecord.setName(jsonObject.getString("name"));
             warehouseRecord.setCount(storageoutdetail.getCounts());
-            warehouseRecord.setPrice(storageoutdetail.getPrice());
-            warehouseRecord.setMoney(storageoutdetail.getMoney());
             warehouseRecord.setSerialNumber(jsonObject.getString("serialNumber"));
-            warehouseRecord.setSupplier(storageoutdetail.getSupplier());
+            warehouseRecord.setRemark(storageoutdetail.getComments());
             warehouseRecordMapper.insertWarehouseRecord(warehouseRecord);
         }
-if(storageoutbill.getOutsourcewarehousecomments().isEmpty()){
+        //得到出库的具体位置
     String ancestors = storagetypeMapper.selectStoragetypeById(storageoutbill.getOutsourcewarehouseid()).getAncestors();
     String deptName = storagetypeMapper.selectStoragetypeById(storageoutbill.getOutsourcewarehouseid()).getDeptName();
     if (ancestors.contains(",")) {
@@ -392,11 +360,9 @@ if(storageoutbill.getOutsourcewarehousecomments().isEmpty()){
     } else {
         storageoutbill.setOutsourcewarehouse(deptName);
     }
-}else{
-    storageoutbill.setOutsourcewarehouse(storageoutbill.getOutsourcewarehousecomments());
-}
 
 
+    //新增出库单
         return storageoutbillMapper.insertStorageoutbill(storageoutbill);
 
     }
@@ -404,7 +370,7 @@ if(storageoutbill.getOutsourcewarehousecomments().isEmpty()){
     @Override
     public int quitStorage(Storagequitbill storagequitbill, String productList) {
         //如果退库单出现重复
-        if (storagequitbillMapper.selectStoragequitbillByStoragequitbillId(storagequitbill.getStoragequitbillid()) != null) {
+       /* if (storagequitbillMapper.selectStoragequitbillByStoragequitbillId(storagequitbill.getStoragequitbillid()) != null) {
             Storagequitbill st = new Storagequitbill();
             int i = storagequitbill.getStoragequitbillid().lastIndexOf("-") + 1;
             int size = storagequitbillMapper.selectStoragequitbillList(st).size() + 1;
@@ -420,10 +386,8 @@ if(storageoutbill.getOutsourcewarehousecomments().isEmpty()){
             }
 
             storagequitbill.setStoragequitbillid(storagequitbill.getStoragequitbillid().substring(0, i) + sizes);
-        }
+        }*/
         JSONArray productArray = JSONArray.fromObject(productList);
-
-
         for (int i = 0; i < productArray.size(); i++) {
             JSONObject jsonObject = productArray.getJSONObject(i);
             Storage storage = new Storage();
@@ -431,50 +395,31 @@ if(storageoutbill.getOutsourcewarehousecomments().isEmpty()){
             Storagequitdetail storagequitdetail = new Storagequitdetail();
             storagequitdetail.setCounts(Long.valueOf(jsonObject.getInt("counts")));
             storagequitdetail.setSid(jsonObject.getLong("id"));
-            storagequitdetail.setPrice(jsonObject.getDouble("price"));
-            storagequitdetail.setMoney(jsonObject.getDouble("money"));
-            if (!jsonObject.getString("footprint").equals("null")) {
-                storagequitdetail.setFootprint(jsonObject.getString("footprint"));
-            }
             storagequitdetail.setMaterialcode(jsonObject.getString("materialcode"));
-            if (!jsonObject.getString("name").equals("null")) {
-                storagequitdetail.setName(jsonObject.getString("name"));
-            }
-            if (!jsonObject.getString("partnumber").equals("null")) {
-                storagequitdetail.setPartnumber(jsonObject.getString("partnumber"));
-            }
-
-            if (!jsonObject.getString("unit").equals("null")) {
-                storagequitdetail.setUnit(jsonObject.getString("unit"));
-            }
-            if (!jsonObject.getString("manufacture").equals("null")) {
-                storagequitdetail.setManufacture(jsonObject.getString("manufacture"));
-            }
-            if (!jsonObject.getString("supplier").equals("null")) {
-                storagequitdetail.setSupplier(jsonObject.getString("supplier"));
-            }
-            if (!jsonObject.getString("serialNumber").equals("null")) {
+            if (StringUtils.isNotBlank(jsonObject.getString("serialNumber"))&&jsonObject.getString("serialNumber").length()>0) {
                 storagequitdetail.setSerialNumber(jsonObject.getString("serialNumber"));
             }
-            storagequitdetail.setComments(jsonObject.getString("comments"));
+            if (StringUtils.isNotBlank(jsonObject.getString("comments"))&&jsonObject.getString("comments").length()>0) {
+                storagequitdetail.setComments(jsonObject.getString("comments"));
+            }
             storagequitdetail.setStoragequitbillid(storagequitbill.getStoragequitbillid());
             storagequitdetailMapper.insertStoragequitdetail(storagequitdetail);
             storage.setId(jsonObject.getLong("id"));
-            storage.setMoney(new BigDecimal(storagequitdetail.getMoney()).setScale(2,BigDecimal.ROUND_HALF_UP).doubleValue());
-            storage.setStocks(storagequitdetail.getCounts());
-            storageMapper.quitstocks(storage);
+            //得到原有库存相减得到更新库存价格
+            Storage oldstorage = storageMapper.selectStorageById(storage.getId());
+            storage.setMoney( BigDecimalUtil.mul(oldstorage.getPrice(), oldstorage.getStocks() + storagequitdetail.getCounts()).doubleValue());
+            storage.setStocks(oldstorage.getStocks() + storagequitdetail.getCounts());
+            storage.setqTime(new Date());
+            storageMapper.updateStorageById(storage);
             warehouseRecord.setType(Const.WarehouseRecordStatus.STORAGE_QUIT);
             warehouseRecord.setNumber(storagequitdetail.getStoragequitbillid());
             warehouseRecord.setMaterialcode(jsonObject.getString("materialcode"));
-            warehouseRecord.setName(jsonObject.getString("name"));
             warehouseRecord.setCount(storagequitdetail.getCounts());
-            warehouseRecord.setPrice(storagequitdetail.getPrice());
-            warehouseRecord.setMoney(storagequitdetail.getMoney());
             warehouseRecord.setSerialNumber(jsonObject.getString("serialNumber"));
-            warehouseRecord.setSupplier(storagequitdetail.getSupplier());
+            warehouseRecord.setRemark(storagequitdetail.getRemark());
             warehouseRecordMapper.insertWarehouseRecord(warehouseRecord);
         }
-        if(storagequitbill.getOutsourcewarehousecomments().isEmpty()) {
+
             String ancestors = storagetypeMapper.selectStoragetypeById(storagequitbill.getOutsourcewarehouseid()).getAncestors();
             String deptName = storagetypeMapper.selectStoragetypeById(storagequitbill.getOutsourcewarehouseid()).getDeptName();
             if (ancestors.contains(",")) {
@@ -489,9 +434,7 @@ if(storageoutbill.getOutsourcewarehousecomments().isEmpty()){
             } else {
                 storagequitbill.setOutsourcewarehouse(deptName);
             }
-        }else{
-            storagequitbill.setOutsourcewarehouse(storagequitbill.getOutsourcewarehousecomments());
-        }
+
         return storagequitbillMapper.insertStoragequitbill(storagequitbill);
     }
 
@@ -519,19 +462,13 @@ if(storageoutbill.getOutsourcewarehousecomments().isEmpty()){
 
     public  void fillExcelStorage(String date) throws  Exception
              {
-
-
-
         Workbook workbook=new XSSFWorkbook();
         Sheet sheet=workbook.createSheet("仓库出入库台账");
         Row row1=sheet.createRow(0);
         Cell cell=row1.createCell(0);
         Row row2=sheet.createRow(1);
-
         Row row3=sheet.createRow(2);
         String [] titleName={"序号","编码","品名","规格","描述","计量单位","厂家","上月结存","单价","金额","本月进货","单价","金额","本月消耗","单价","金额","期末库存","单价","金额"};
-
-
         Cell cell2=row2.createCell(0);
         Cell cell21=row2.createCell(13);
         Cell cell22=row2.createCell(14);
@@ -540,7 +477,6 @@ if(storageoutbill.getOutsourcewarehousecomments().isEmpty()){
         cell2.setCellValue("单位");
         cell3.setCellValue("安徽天康智诚科技有限公司");
         cell21.setCellValue("月份");
-
         String month="";
         switch (date.substring(date.indexOf("-")+1,date.indexOf("-")+3)){
             case "01":
@@ -716,7 +652,7 @@ if(storageoutbill.getOutsourcewarehousecomments().isEmpty()){
         for (WarehouseBillVo warehouseBillInVo : warehouseBillInVos) {
             for (Storage storage : storages) {
 
-                if(warehouseBillInVo.getMaterialcode().equals(storage.getMaterialcode())&&warehouseBillInVo.getSupplier().equals(storage.getSupplier())){
+                if(warehouseBillInVo.getMaterialcode().equals(storage.getMaterialcode())){
 
                     warehouseBillInVo.setThiscount(storage.getStocks());
                     warehouseBillInVo.setThisprice(storage.getPrice().floatValue());

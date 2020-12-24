@@ -1,10 +1,11 @@
 package com.ruoyi.system.domain;
 
-import java.util.Date;
-import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
 import com.ruoyi.common.annotation.Excel;
 import com.ruoyi.common.core.domain.BaseEntity;
+import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
+
+import java.util.Date;
 
 /**
  * 出库单列表对象 storageoutbill
@@ -114,7 +115,6 @@ public class Storageoutbill extends BaseEntity
 
 
 
-    private String outsourcewarehousecomments;
 
     public double getMoney() {
         return money;
@@ -175,13 +175,7 @@ public class Storageoutbill extends BaseEntity
     }
 
 
-    public String getOutsourcewarehousecomments() {
-        return outsourcewarehousecomments;
-    }
 
-    public void setOutsourcewarehousecomments(String outsourcewarehousecomments) {
-        this.outsourcewarehousecomments = outsourcewarehousecomments;
-    }
 
     public String getWarehouseadmin()
     {

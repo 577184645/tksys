@@ -822,7 +822,7 @@
 
 				var childHtml = [];
 				if (node[childKey] && node[childKey].length > 0) {
-					//make child html first, because checkType
+					//make materialChild html first, because checkType
 					childHtml = view.appendNodes(setting, level + 1, node[childKey], node, initFlag, openFlag && node.open);
 				}
 				if (openFlag) {
@@ -1257,7 +1257,7 @@
 
 			//repair nodes old parent
 			if (!setting.data.keep.parent && childLength == 0) {
-				//old parentNode has no child nodes
+				//old parentNode has no materialChild nodes
 				parentNode.isParent = false;
 				parentNode.open = false;
 				tmp_ulObj = $("#" + parentNode.tId + consts.id.UL);
@@ -1268,7 +1268,7 @@
 				tmp_ulObj.css("display", "none");
 
 			} else if (setting.view.showLine && childLength > 0) {
-				//old parentNode has child nodes
+				//old parentNode has materialChild nodes
 				var newLast = parentNode[childKey][childLength - 1];
 				tmp_ulObj = $("#" + newLast.tId + consts.id.UL);
 				tmp_switchObj = $("#" + newLast.tId + consts.id.SWITCH);

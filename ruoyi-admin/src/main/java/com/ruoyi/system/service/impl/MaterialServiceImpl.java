@@ -58,26 +58,19 @@ public class MaterialServiceImpl implements IMaterialService {
         String code = materialtypeMapper.selectMaterialtypeById(typeId).getCode();
         String code1 = materialdeptMapper.selectMaterialdeptById(deptId).getCode();
         //根据类型 部门 查找最大物料编码
-        String materialcode = materialMapper.selectMaterialByMaterialcode(code + code1);
+        String materialcode = materialMapper.selectMaterialMaxMaterialcode(code + code1);
         if(materialcode==null){
             materialCode = code + code1 + "0001";
         }else{
-            int count;
-            //判断是否有后缀名
-           if(materialcode.indexOf("-")==-1){
-                count=Integer.valueOf(materialcode.substring(4));
-           }else {
-               count=Integer.valueOf(materialcode.substring(4,materialcode.indexOf("-")));
-           }
-
-            if (count+1 < 10) {
-                materialCode = code + code1 + "000" + String.valueOf(count+1);
-            } else if (count+1 < 100) {
-                materialCode = code + code1 + "00" + String.valueOf(count+1);
-            } else if (count+1 < 1000) {
-                materialCode = code + code1 + "0" + String.valueOf(count+1);
+            int  count=Integer.valueOf(materialcode.substring(4))+1;
+            if (count < 10) {
+                materialCode = code + code1 + "000" + String.valueOf(count);
+            } else if (count < 100) {
+                materialCode = code + code1 + "00" + String.valueOf(count);
+            } else if (count < 1000) {
+                materialCode = code + code1 + "0" + String.valueOf(count);
             }else {
-                materialCode=code+code1+String.valueOf(count+1);
+                materialCode=code+code1+String.valueOf(count);
             }
         }
 
@@ -109,48 +102,12 @@ public class MaterialServiceImpl implements IMaterialService {
      */
     @Override
     public int insertMaterial(Material material) {
-        int i = materialMapper.selectMaterialRepetition(material.getName(), material.getPartnumber(), material.getFootprint(), material.getManufacture(), material.getDeptId());
-      if (i>0){
-          return 0;
-      }
         return materialMapper.insertMaterial(material);
     }
 
-    @Override
-    public int addSuffix(Material material) {
-        int index = materialMapper.selectMaterialByMaxMaterialcodeSuffix(material.getMaterialcode()).indexOf("-");
-        if(index!=-1){
-            String maxMaterialcode = materialMapper.selectMaterialByMaxMaterialcodeSuffix(material.getMaterialcode());
-            char c = maxMaterialcode.substring(index + 1).charAt(0);
-            c= (char) (c+1);
-            material.setMaterialcode(material.getMaterialcode()+"-"+c);
-        }else{
-            material.setMaterialcode(material.getMaterialcode()+"-A");
-        }
-        return materialMapper.insertMaterial(material);
-    }
 
-    /**
-     * 修改物料列表
-     *
-     * @param material 物料列表
-     * @return 结果
-     */
-    @Override
-    public AjaxResult updateMaterial(Material material) {
-        if(storageMapper.selectStorageByMaterialcode(material.getMaterialcode())!=null){
 
-            storagequitdetailMapper.updateMaterial(material.getName(),material.getPartnumber(),material.getFootprint(),material.getUnit(),material.getManufacture(),material.getMaterialcode());
-            storageMapper.updateMaterial(material.getName(),material.getPartnumber(),material.getFootprint(),material.getUnit(),material.getManufacture(),material.getMaterialcode());
-            storageindetailMapper.updateMaterial(material.getName(),material.getPartnumber(),material.getFootprint(),material.getUnit(),material.getManufacture(),material.getMaterialcode());
-            storageoutdetailMapper.updateMaterial(material.getName(),material.getPartnumber(),material.getFootprint(),material.getUnit(),material.getManufacture(),material.getMaterialcode());
-            materialMapper.updateMaterial(material);
-        }else{
-             materialMapper.updateMaterial(material);
 
-        }
-        return AjaxResult.success("修改成功!");
-    }
 
     /**
      * 删除物料列表对象
@@ -193,11 +150,11 @@ public class MaterialServiceImpl implements IMaterialService {
         StringBuilder successMsg = new StringBuilder();
         StringBuilder failureMsg = new StringBuilder();
         for (Material material : materialList) {
-                material.setInputdate(new Date());
-                material.setInputoperator(user.getUserName());
+            /*    material.setInputdate(new Date());
+                material.setInputoperator(user.getUserName());*/
             String code = material.getTypeIdExcel();
             String code1 =material.getDeptIdExcel();
-            String materialcode = materialMapper.selectMaterialByMaterialcode(code + code1);
+            String materialcode = materialMapper.selectMaterialMaxMaterialcode(code + code1);
             if(materialcode==null){
                 material.setMaterialcode(code + code1 + "0001");
             }else{
@@ -215,11 +172,11 @@ public class MaterialServiceImpl implements IMaterialService {
             }
             material.setDeptId(materialdeptMapper.selectMaterialdeptByCode(material.getDeptIdExcel()).getId());
             material.setTypeId(materialtypeMapper.selectMaterialtypeByCode(material.getTypeIdExcel()).getDeptId());
-            if(materialMapper.selectMaterialRepetition(material.getName(),material.getPartnumber(),material.getFootprint(),material.getManufacture(),material.getDeptId())>0){
+          /*  if(materialMapper.selectMaterialRepetition(material.getName(),material.getPartnumber(),material.getFootprint(),material.getManufacture(),material.getDeptId())>0){
                        repetitionNum++;
                           continue;
             }
-
+*/
 
 
                 insertMaterial(material);

@@ -1067,7 +1067,7 @@
       return null;
   }
   /**
-   * find nearest ancestor only single child blood line and predicate hit
+   * find nearest ancestor only single materialChild blood line and predicate hit
    *
    * @param {Node} node
    * @param {Function} pred - predicate function
@@ -1596,8 +1596,8 @@
    */
   function splitPoint(point, isInline) {
       // find splitRoot, container
-      //  - inline: splitRoot is a child of paragraph
-      //  - block: splitRoot is a child of bodyContainer
+      //  - inline: splitRoot is a materialChild of paragraph
+      //  - block: splitRoot is a materialChild of bodyContainer
       var pred = isInline ? isPara : isBodyContainer;
       var ancestors = listAncestor(point.node, pred);
       var topAncestor = lists.last(ancestors) || point.node;
@@ -1633,7 +1633,7 @@
   /**
    * @method remove
    *
-   * remove node, (isRemoveChild: remove child or not)
+   * remove node, (isRemoveChild: remove materialChild or not)
    *
    * @param {Node} node
    * @param {Boolean} isRemoveChild

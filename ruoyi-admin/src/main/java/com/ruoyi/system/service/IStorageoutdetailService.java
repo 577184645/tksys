@@ -1,7 +1,8 @@
 package com.ruoyi.system.service;
 
-import java.util.List;
 import com.ruoyi.system.domain.Storageoutdetail;
+
+import java.util.List;
 
 /**
  * 出库产品列表Service接口
@@ -43,13 +44,7 @@ public interface IStorageoutdetailService
      */
     public int insertStorageoutdetail(Storageoutdetail storageoutdetail);
 
-    /**
-     * 修改出库产品列表
-     * 
-     * @param storageoutdetail 出库产品列表
-     * @return 结果
-     */
-    public int updateStorageoutdetail(Storageoutdetail storageoutdetail);
+
 
     /**
      * 批量删除出库产品列表

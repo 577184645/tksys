@@ -1,7 +1,6 @@
 package com.ruoyi.system.mapper;
 
 import com.ruoyi.system.domain.Material;
-import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
@@ -23,7 +22,6 @@ public interface MaterialMapper
 
 
 
-    public int selectMaterialRepetition(@Param("name") String name,@Param("partnumber") String partnumber,@Param("footprint") String footprint,@Param("manufacture") String manufacture,@Param("deptId") Long deptId);
 
     /**
      * 查询物料列表
@@ -31,9 +29,8 @@ public interface MaterialMapper
      * @param materialcode 物料列表ID
      * @return 物料列表
      */
-    public String selectMaterialByMaterialcode(String materialcode);
+    public String selectMaterialMaxMaterialcode(String materialcode);
 
-    public String selectMaterialByMaxMaterialcodeSuffix(String materialcode);
 
 
     /**
@@ -62,7 +59,6 @@ public interface MaterialMapper
      * @param material 物料列表
      * @return 结果
      */
-    public int updateMaterial(Material material);
 
     /**
      * 删除物料列表

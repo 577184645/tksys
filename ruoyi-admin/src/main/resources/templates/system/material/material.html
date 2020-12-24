@@ -5,8 +5,16 @@
 	<th:block th:include="include :: layout-latest-css" />
 	<th:block th:include="include :: ztree-css" />
 	<style>
-		.table {
+		.select-table table {
 			table-layout:fixed;
+		}
+
+		.select-table .table td {
+
+			word-break : break-all;
+
+			/* 配合宽度来使用 */
+			height:40px;
 		}
 
 
@@ -89,13 +97,13 @@
 				</div>
 
 		        <div class="btn-group-sm" id="toolbar" role="group">
-					<a class="btn btn-info" onclick="$.table.importExcel()" shiro:hasPermission="system:material:import">
+				<!--	<a class="btn btn-info" onclick="$.table.importExcel()" shiro:hasPermission="system:material:import">
 						<i class="fa fa-upload"></i> 导入
-					</a>
+					</a>-->
 					<a class="btn btn-success" onclick="$.operate.add()" shiro:hasPermission="system:material:add">
 		                <i class="fa fa-plus"></i> 新增
 		            </a>
-					<a class="btn btn-success single disabled" onclick="add()" shiro:hasPermission="system:material:add">
+					<!--<a class="btn btn-success single disabled" onclick="add()" shiro:hasPermission="system:material:add">
 						<i class="fa fa-plus"></i> 添加后缀编码
 					</a>
 		             <a class="btn btn-primary single disabled" onclick="$.operate.edit()" shiro:hasPermission="system:material:edit">
@@ -107,7 +115,7 @@
 
 		            <a class="btn btn-warning" onclick="$.table.exportExcel()" shiro:hasPermission="system:material:export">
 			            <i class="fa fa-download"></i> 导出
-			        </a>
+			        </a>-->
 		        </div>
 
 		        <div class="col-sm-12 select-table table-bordered">
@@ -121,11 +129,10 @@
 	<th:block th:include="include :: layout-latest-js" />
 	<th:block th:include="include :: ztree-js" />
 	<script th:inline="javascript">
-		var editFlag = [[${@permission.hasPermi('system:user:edit')}]];
-		var removeFlag = [[${@permission.hasPermi('system:user:remove')}]];
-		var resetPwdFlag = [[${@permission.hasPermi('system:user:resetPwd')}]];
+		var editFlag= [[${@permission.hasPermi('system:material:edit')}]];
+		var removeFlag = [[${@permission.hasPermi('system:material:remove')}]];
 		var prefix = ctx + "system/material";
-
+        var prefix1 = ctx + "system/materialChild";
 		$(function() {
 		    var panehHidden = false;
 		    if ($(this).width() < 769) {
@@ -146,8 +153,12 @@
                 removeUrl: prefix + "/remove",
                 exportUrl: prefix + "/export",
 				height: 500,
+                sortName:"materialcode",
                 modalName: "物料",
-				sortName:"materialcode",
+                detailView: true,
+                onExpandRow : function(index, row, $detail) {
+                    initChildTable(index, row, $detail);
+                },
                 pagination : true,
                 pageSize : 10,
                 pageNumber : 1,
@@ -162,65 +173,11 @@
                     {
                         field: 'materialcode',
                         title: '编码',
-                        width:120
-
-                    },
-                    {
-                        field: 'name',
-                        title: '名称',
-						width:140
                     },
 
-                    {
-                        field: 'partnumber',
-                        title: '型号',
-                        width:220
-                    },
-                    {
-                        field: 'footprint',
-                        title: '封装'
-                        ,
-                        width:140
-                    },
-                    {
-                        field: 'description',
-                        title: '描述',
-                        width:220
-                    },
-
-                    {
-                        field: 'manufacture',
-                        title: '品牌',
-                        align : "center",
-                        width:140
-
-
-                    },
-                    {
-                        field: 'unit',
-                        title: '单位',
-                        width:120
-
-                    },
-                    {
-                        field: 'deptId',
-                        title: '部门',
-                        width:120,
-                        formatter: function(value, row, index) {
-                            var str = $("#materialdept option").map(function(){
-                             if($(this).val()==value){
-                                 return $(this).text();
-							 }
-                            }).get().join(", ")
-
-                            return str;
-                        }
-
-                    },
                     {
                         field: 'typeId',
-                        title: '部门',
-                        width:120,
+                        title: '类型',
                         formatter: function(value, row, index) {
                             var str = $("#materialtype option").map(function(){
                                 if (value==$(this).val()){
@@ -232,69 +189,22 @@
                         }
 
                     }
-					,  {
-                        field: 'buyer',
-                        title: '采购员',
-                        width:100
-                    },
+					,
                     {
-                        field: 'inputoperator',
-                        title: '物料信息注册者',
-                        width:100
-                    },
-                    {
-                        field: 'inputdate',
-                        title: '物料信息注册时间',
-                        width:200
-                    },
+                        field: 'deptId',
+                        title: '部门',
+                        formatter: function(value, row, index) {
+                            var str = $("#materialdept option").map(function(){
+                                if (value==$(this).val()){
+                                    return $(this).text();
+                                }
 
-                    {
-                        field: 'approveddate',
-                        title: '批准时间',
-                        width:200
-                    },
-                    {
-                        field: 'approvedstatus',
-                        title: '批准状态',
-                        width:100
-                    },
-                    {
-                        field: 'productmpq',
-                        title: '最少包装量'
-                        ,
-                        width:100
-                    },
-                    {
-                        field: 'productmoq',
-                        title: '最少起订量',
-                        width:100
-                    },
-                    {
-                        field: 'leadtime',
-                        title: '交期(周)',
-                        width:100
-                    },
-                    {
-                        field: 'comments',
-                        title: '备注',
-                        width:140
-                    },
-                    {
-                        field: 'safestock',
-                        title: '安全库存'
-                        ,
-                        width:100
-                    },
-                    {
-                        field: 'ordernumber',
-                        title: '供方料号',
-                        width:120
-                    },
-                    {
-                        field: 'approvedby',
-                        title: '批准者',
-                        width:100
-                    },
+                            }).get().join(", ")
+                            return str;
+                        }
+
+                    }
+                    ,
 
                     {
                         title: '操作',
@@ -302,7 +212,8 @@
                         width:120,
                         formatter: function(value, row, index) {
                             var actions = [];
-                            actions.push('<a class="btn btn-success btn-xs ' + editFlag + '" href="javascript:void(0)" onclick="$.operate.edit(\'' + row.id + '\')"><i class="fa fa-edit"></i>编辑</a> ');
+                            actions.push('<a class="btn btn-success btn-xs ' + removeFlag + '" href="javascript:void(0)" onclick="add(\'' + row.id + '\')"><i class="fa fa-plus"></i>添加</a>');
+
                             actions.push('<a class="btn btn-danger btn-xs ' + removeFlag + '" href="javascript:void(0)" onclick="$.operate.remove(\'' + row.id + '\')"><i class="fa fa-remove"></i>删除</a>');
                             return actions.join('');
                         }
@@ -310,6 +221,67 @@
             };
             $.table.init(options);
 		}
+
+        initChildTable = function(index, row, $detail) {
+            var childTable = $detail.html('<table style="table-layout:fixed"></table>').find('table');
+            $(childTable).bootstrapTable({
+                url: prefix1 + "/list",
+                method: 'post',
+                sidePagination: "server",
+                contentType: "application/x-www-form-urlencoded",
+                queryParams: {
+                    materialId:row.id
+				},
+                columns: [
+
+                    {
+                        field: 'id',
+                        title: 'id',
+                        visible: false
+                    },
+                    {
+                        field: 'name',
+                        title: '名称'
+                    },
+                    {
+                        field: 'partnumber',
+                        title: '型号'
+                    },
+                    {
+                        field: 'description',
+                        title: '描述'
+                    },
+                    {
+                        field: 'footprint',
+                        title: '封装'
+                    },
+                    {
+                        field: 'manufacture',
+                        title: '品牌'
+                    },
+                    {
+                        field: 'unit',
+                        title: '单位'
+                    },
+                    {
+                        field: 'comments',
+                        title: '备注'
+                    },
+                    {
+                        title: '操作',
+                        align: 'center',
+                        formatter: function(value, row, index) {
+                            var actions = [];
+                                actions.push('<a class="btn btn-success btn-xs ' + editFlag + '" href="javascript:void(0)" onclick="edit(\'' + row.id + '\')"><i class="fa fa-edit"></i>编辑</a> ');
+                                actions.push('<a class="btn btn-danger btn-xs ' + removeFlag + '" href="javascript:void(0)" onclick="remove(\'' + row.id + '\')"><i class="fa fa-remove"></i>删除</a>');
+                            return actions.join('');
+                        }
+                    }]
+            });
+
+        };
+
+
 
         function add() {
             var row=$("#bootstrap-table").bootstrapTable('getSelections')[0];
@@ -356,6 +328,26 @@
         function dept() {
             var url = ctx + "system/materialtype";
             $.modal.openTab("部门管理", url);
+        }
+
+        function remove(id) {
+            table.set();
+            $.modal.confirm("确定删除该条物料信息吗？", function() {
+                var url =prefix1+"/remove";
+                var data = { "ids": id };
+                $.operate.submit(url, "post", "json", data);
+            });
+
+        }
+
+        function add(id) {
+            table.set();
+            $.modal.open("添加物料信息", prefix1+"/add/"+(id));
+        }
+
+        function edit(id) {
+            table.set();
+            $.modal.open("修改物料信息", prefix1+"/edit/"+(id));
         }
 
 	</script>

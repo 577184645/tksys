@@ -1,10 +1,11 @@
 package com.ruoyi.system.domain;
 
-import java.util.Date;
-import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
 import com.ruoyi.common.annotation.Excel;
 import com.ruoyi.common.core.domain.BaseEntity;
+import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
+
+import java.util.Date;
 
 /**
  * 退料单列表对象 storagequitbill
@@ -19,9 +20,6 @@ public class Storagequitbill extends BaseEntity
     /** id */
     private Long id;
 
-
-
-    private  String outsourcewarehousecomments;
 
     /** 退料单号 */
     @Excel(name = "退料单号")
@@ -142,13 +140,7 @@ public class Storagequitbill extends BaseEntity
         this.uTime = uTime;
     }
 
-    public String getOutsourcewarehousecomments() {
-        return outsourcewarehousecomments;
-    }
 
-    public void setOutsourcewarehousecomments(String outsourcewarehousecomments) {
-        this.outsourcewarehousecomments = outsourcewarehousecomments;
-    }
 
     public Date getuTime()
     {

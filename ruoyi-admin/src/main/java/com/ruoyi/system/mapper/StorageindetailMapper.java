@@ -22,6 +22,11 @@ public interface StorageindetailMapper
     public Storageindetail selectStorageindetailById(Long id);
 
 
+    /**
+     * 查询入库产品列表
+     */
+    public List<Storageindetail> selectStorageindetailByStorageinbillSid(Long storageinbillid);
+
 
     public int updateMaterial(@Param("name") String name, @Param("partnumber") String partnumber, @Param("footprint") String footprint, @Param("unit") String unit, @Param("manufacture") String manufacture, @Param("materialcode") String materialcode);
     /**
@@ -44,13 +49,7 @@ public interface StorageindetailMapper
      */
     public int insertStorageindetail(Storageindetail storageindetail);
 
-    /**
-     * 修改入库产品列表
-     * 
-     * @param storageindetail 入库产品列表
-     * @return 结果
-     */
-    public int updateStorageindetail(Storageindetail storageindetail);
+
 
     /**
      * 删除入库产品列表

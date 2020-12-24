@@ -1,11 +1,9 @@
 package com.ruoyi.system.service;
 
-import java.util.List;
-
 import com.ruoyi.common.core.domain.AjaxResult;
 import com.ruoyi.system.domain.Material;
 
-import javax.servlet.http.HttpServletRequest;
+import java.util.List;
 
 /**
  * 物料列表Service接口
@@ -50,21 +48,7 @@ public interface IMaterialService
 
 
 
-    /**
-     * 新增物料列表
-     *
-     * @param material 物料列表
-     * @return 结果
-     */
-    public int addSuffix(Material material);
 
-    /**
-     * 修改物料列表
-     * 
-     * @param material 物料列表
-     * @return 结果
-     */
-    public AjaxResult updateMaterial(Material material);
 
     /**
      * 批量删除物料列表

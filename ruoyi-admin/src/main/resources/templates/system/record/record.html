@@ -12,8 +12,6 @@
                         <ul>
                             <li>
                                 <input type="hidden" id="materialcode" th:value="${materialcode}">
-                                <input type="hidden" id="supplier" th:value="${supplier}">
-                                <input type="hidden" id="serialNumber" th:value="${serialNumber}">
                                 <label>类型：</label>
                                 <select name="type" th:with="type=${@dict.getType('warehouse_record')}">
                                     <option value="">所有</option>
@@ -63,8 +61,6 @@
                 showColumns:false,
                 queryParams : {
                     materialcode: $("#materialcode").val(),
-                    supplier:  $("#supplier").val(),
-                    serialNumber:  $("#serialNumber").val()
                 },
                 columns: [{
                     checkbox: true
@@ -91,10 +87,6 @@
                     title: '物料编号'
                 },
                 {
-                    field: 'name', 
-                    title: '商品名称'
-                },
-                {
                     field: 'count', 
                     title: '数量'
                 },
@@ -114,6 +106,10 @@
                     field: 'serialNumber', 
                     title: '序列号'
                 },
+                    {
+                        field: 'remark',
+                        title: '备注'
+                    },
                 {
                     field: 'delStatus', 
                     title: '状态',

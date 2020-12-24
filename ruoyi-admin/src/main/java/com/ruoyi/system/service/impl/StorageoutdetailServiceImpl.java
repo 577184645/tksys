@@ -61,17 +61,7 @@ public class StorageoutdetailServiceImpl implements IStorageoutdetailService
         return storageoutdetailMapper.insertStorageoutdetail(storageoutdetail);
     }
 
-    /**
-     * 修改出库产品列表
-     * 
-     * @param storageoutdetail 出库产品列表
-     * @return 结果
-     */
-    @Override
-    public int updateStorageoutdetail(Storageoutdetail storageoutdetail)
-    {
-        return storageoutdetailMapper.updateStorageoutdetail(storageoutdetail);
-    }
+
 
     /**
      * 删除出库产品列表对象

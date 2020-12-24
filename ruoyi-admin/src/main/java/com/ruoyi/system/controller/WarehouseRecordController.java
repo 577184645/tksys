@@ -42,10 +42,7 @@ public class WarehouseRecordController extends BaseController
     @GetMapping("/{id}")
     public String record(@PathVariable("id") Long id,ModelMap mmap)
     {
-        Storage storage = storageMapper.selectStorageById(id);
-        mmap.put("materialcode",storage.getMaterialcode());
-        mmap.put("supplier",storage.getSupplier());
-        mmap.put("serialNumber",storage.getSerialNumber());
+        mmap.put("materialcode",storageMapper.selectStorageById(id).getMaterialcode());
         return prefix + "/record";
     }
 

@@ -1,10 +1,9 @@
 package com.ruoyi.system.domain;
 
-import java.util.Date;
-import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
 import com.ruoyi.common.annotation.Excel;
 import com.ruoyi.common.core.domain.BaseEntity;
+import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
 
 /**
  * 入库产品列表对象 storageindetail
@@ -25,22 +24,8 @@ public class Storageindetail extends BaseEntity
     @Excel(name = "所属出库单")
     private String storageinbillid;
 
-    /** 物料代码 */
-    @Excel(name = "物料代码")
-    private String materialcode;
-
-    /** 物料名称 */
-    @Excel(name = "物料名称")
-    private String name;
-
-    /** 物料型号 */
-    @Excel(name = "物料型号")
-    private String partnumber;
-
-    /** 品牌 */
-    @Excel(name = "品牌")
-    private String manufacture;
-
+    @Excel(name = "物料编码")
+    private  String materialcode;
     /** 单价 */
     @Excel(name = "单价")
     private Double price;
@@ -53,9 +38,7 @@ public class Storageindetail extends BaseEntity
     @Excel(name = "总金额")
     private Double money;
 
-    /** 单位 */
-    @Excel(name = "单位")
-    private String unit;
+
 
     /** 供应商 */
     @Excel(name = "供应商")
@@ -70,11 +53,6 @@ public class Storageindetail extends BaseEntity
     @Excel(name = "备注")
     private String comments;
 
-    @Excel(name = "封装")
-   private String footprint;
-
-    @Excel(name = "描述")
-    private String description;
 
 
     @Excel(name = "序列号")
@@ -86,31 +64,7 @@ public class Storageindetail extends BaseEntity
 
 
 
-    /** 创建时间 */
-    @Excel(name = "创建时间", width = 30, dateFormat = "yyyy-MM-dd")
-    private Date cTime;
 
-    /** 修改时间 */
-    @Excel(name = "修改时间", width = 30, dateFormat = "yyyy-MM-dd")
-    private Date uTime;
-
-    private Integer rownum;
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public Integer getRownum() {
-        return rownum;
-    }
-
-    public void setRownum(Integer rownum) {
-        this.rownum = rownum;
-    }
 
     public String getRate() {
         return rate;
@@ -133,9 +87,6 @@ public class Storageindetail extends BaseEntity
         this.comments = comments;
     }
 
-    public void setFootprint(String footprint) {
-        this.footprint = footprint;
-    }
 
     public String getSerialNumber() {
         return serialNumber;
@@ -150,9 +101,6 @@ public class Storageindetail extends BaseEntity
         this.id = id;
     }
 
-    public String getFootprint() {
-        return footprint;
-    }
 
     public Long getId()
     {
@@ -167,42 +115,7 @@ public class Storageindetail extends BaseEntity
     {
         return storageinbillid;
     }
-    public void setMaterialcode(String materialcode) 
-    {
-        this.materialcode = materialcode;
-    }
 
-    public String getMaterialcode() 
-    {
-        return materialcode;
-    }
-    public void setName(String name) 
-    {
-        this.name = name;
-    }
-
-    public String getName() 
-    {
-        return name;
-    }
-    public void setPartnumber(String partnumber) 
-    {
-        this.partnumber = partnumber;
-    }
-
-    public String getPartnumber() 
-    {
-        return partnumber;
-    }
-    public void setManufacture(String manufacture) 
-    {
-        this.manufacture = manufacture;
-    }
-
-    public String getManufacture() 
-    {
-        return manufacture;
-    }
 
     public Double getPrice() {
         return price;
@@ -230,15 +143,7 @@ public class Storageindetail extends BaseEntity
         this.money = money;
     }
 
-    public void setUnit(String unit)
-    {
-        this.unit = unit;
-    }
 
-    public String getUnit() 
-    {
-        return unit;
-    }
     public void setSupplier(String supplier) 
     {
         this.supplier = supplier;
@@ -263,23 +168,13 @@ public class Storageindetail extends BaseEntity
     {
         return taxamount;
     }
-    public void setcTime(Date cTime) 
-    {
-        this.cTime = cTime;
+
+    public String getMaterialcode() {
+        return materialcode;
     }
 
-    public Date getcTime() 
-    {
-        return cTime;
-    }
-    public void setuTime(Date uTime) 
-    {
-        this.uTime = uTime;
-    }
-
-    public Date getuTime() 
-    {
-        return uTime;
+    public void setMaterialcode(String materialcode) {
+        this.materialcode = materialcode;
     }
 
     @Override
@@ -288,17 +183,11 @@ public class Storageindetail extends BaseEntity
             .append("id", getId())
             .append("storageinbillid", getStorageinbillid())
             .append("materialcode", getMaterialcode())
-            .append("name", getName())
-            .append("partnumber", getPartnumber())
-            .append("manufacture", getManufacture())
             .append("price", getPrice())
             .append("counts", getCounts())
             .append("money", getMoney())
-            .append("unit", getUnit())
             .append("supplier", getSupplier())
             .append("taxamount", getTaxamount())
-            .append("cTime", getcTime())
-            .append("uTime", getuTime())
             .toString();
     }
 }

@@ -443,7 +443,7 @@
                 return true;
             }
 
-            //at this point we have an  tag; is its first child something we want to remain
+            //at this point we have an  tag; is its first materialChild something we want to remain
             //unformatted?
             var next_tag = this.get_tag(true /* peek. */);
 
@@ -537,7 +537,7 @@
             multi_parser.current_mode = 'CONTENT';
             break;
           case 'TK_TAG_END':
-            //Print new line only if the tag has no content and has child
+            //Print new line only if the tag has no content and has materialChild
             if (multi_parser.last_token === 'TK_CONTENT' && multi_parser.last_text === '') {
                 var tag_name = multi_parser.token_text.match(/\w+/)[0];
                 var tag_extracted_from_last_output = multi_parser.output[multi_parser.output.length -1].match(/<\s*(\w+)/);

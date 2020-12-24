@@ -75,7 +75,7 @@ jQuery.tableDnD = {
                 scrollAmount: 5,
                 /** Sensitivity setting will throttle the trigger rate for movement detection */
                 sensitivity: 10,
-                /** Hierarchy level to support parent child. 0 switches this functionality off */
+                /** Hierarchy level to support parent materialChild. 0 switches this functionality off */
                 hierarchyLevel: 0,
                 /** The html artifact to prepend the first cell with as indentation */
                 indentArtifact: '<div class="indent">&nbsp;</div>',
@@ -248,7 +248,7 @@ jQuery.tableDnD = {
         // this is detailed here:
         // http://jacob.peargrove.com/blog/2006/technical/table-row-offsettop-bug-in-safari/
         // the solution is likewise noted there, grab the offset of a table cell in the row - the firstChild.
-        // note that firefox will return a text node as a first child, so designing a more thorough
+        // note that firefox will return a text node as a first materialChild, so designing a more thorough
         // solution may need to take that into account, for now this seems to work in firefox, safari, ie
         if (element.offsetHeight === 0)
             element = element.firstChild; // a table cell

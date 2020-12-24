@@ -165,7 +165,7 @@
             visibleFields = this.getVisibleFields(),
             headerWidth = 0;
         if (that.options.fixedColumns) {
-            this.$body.find('tr:first-child:not(.no-records-found) > *').each(function (i) {
+            this.$body.find('tr:first-materialChild:not(.no-records-found) > *').each(function (i) {
                 var $this = $(this),
                     index = i;
 
@@ -183,7 +183,7 @@
             this.$fixedHeader.width(headerWidth + 2).show();
         }
         if (that.options.rightFixedColumns) {
-            this.$body.find('tr:first-child:not(.no-records-found) > *').each(function (i) {
+            this.$body.find('tr:first-materialChild:not(.no-records-found) > *').each(function (i) {
                 var $this = $(this),
                     index = i;
 

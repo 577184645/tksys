@@ -1,23 +1,23 @@
 package com.ruoyi.system.service.impl;
 
-import java.math.BigDecimal;
-import java.util.List;
-
+import com.ruoyi.common.core.text.Convert;
 import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.system.common.Const;
 import com.ruoyi.system.domain.Storage;
+import com.ruoyi.system.domain.Storageinbill;
 import com.ruoyi.system.domain.Storageindetail;
 import com.ruoyi.system.domain.WarehouseRecord;
 import com.ruoyi.system.mapper.StorageMapper;
+import com.ruoyi.system.mapper.StorageinbillMapper;
 import com.ruoyi.system.mapper.StorageindetailMapper;
 import com.ruoyi.system.mapper.WarehouseRecordMapper;
+import com.ruoyi.system.service.IStorageinbillService;
+import com.ruoyi.system.util.BigDecimalUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import com.ruoyi.system.mapper.StorageinbillMapper;
-import com.ruoyi.system.domain.Storageinbill;
-import com.ruoyi.system.service.IStorageinbillService;
-import com.ruoyi.common.core.text.Convert;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 /**
  * 入库单列表Service业务层处理
@@ -130,37 +130,47 @@ public class StorageinbillServiceImpl implements IStorageinbillService
     @Transactional
     public int reddashed(Long id) {
         Storageinbill storageinbill = storageinbillMapper.selectStorageinbillById(id);
+        //根据入单号号获得入库单所有的信息
         List<Storageindetail> storageindetails = storageindetailMapper.selectStorageindetailByStorageinbillId(storageinbill.getStockinid());
+        //循环入库单的产品
         for (Storageindetail storageindetail:
         storageindetails) {
             Storage storage=new Storage();
             WarehouseRecord warehouseRecord=new WarehouseRecord();
+            //根据入库单的产品sid得到该产品当前库存信息
+            Storage oldstorage = storageMapper.selectStorageById(storageindetail.getSid());
+            //设置库存的id  和最终库存
             storage.setId(storageindetail.getSid());
-            storage.setStocks(storageindetail.getCounts());
-            storage.setMoney( new BigDecimal(storageindetail.getMoney()).setScale(2,BigDecimal.ROUND_HALF_UP).doubleValue());
-            storage.setMaterialcode(storageindetail.getMaterialcode());
-            storage.setTypeId(storageinbill.getOutsourcewarehouseid());
-            storage.setSerialNumber(storageindetail.getSerialNumber());
-            storage.setSupplier(storageindetail.getSupplier());
-            storageMapper.updatereducestocks(storage);
-            if(storageMapper.selectStorageById(storage.getId()).getStocks()==0){
-                Storage storage1=new Storage();
-                storage1.setId(storage.getId());
-                storage1.setMoney(new BigDecimal(0).doubleValue());
-                storage1.setPrice(new BigDecimal(0).doubleValue());
-                storageMapper.updateStorage(storage1);
+            storage.setStocks(oldstorage.getStocks()-storageindetail.getCounts());
+            //根据入库单的产品sid得到历史该产品的入库信息
+            List<Storageindetail> oldstorageindetails = storageindetailMapper.selectStorageindetailByStorageinbillSid(storageindetail.getSid());
+            double  sum=0;
+            //取所有入库金额的总额用于计算平均价格
+            for (Storageindetail oldstorageindetail1 : oldstorageindetails) {
+                sum+=oldstorageindetail1.getPrice();
             }
+            //减去当前红冲价格
+            sum-=storageindetail.getPrice();
+
+            //计算平均价格
+            storage.setPrice(sum!=0?BigDecimalUtil.div(sum,oldstorageindetails.size()-1,4).doubleValue():0);
+            //得到总价
+            storage.setMoney(BigDecimalUtil.mul(storage.getPrice(),storage.getStocks()).doubleValue());
+            storageMapper.updateStorageById(storage);
+            //添加至查询记录
             warehouseRecord.setType(Const.WarehouseRecordStatus.STORAGE_IN_HC);
             warehouseRecord.setNumber(storageinbill.getStockinid());
             warehouseRecord.setMaterialcode(storageindetail.getMaterialcode());
-            warehouseRecord.setName(storageindetail.getName());
             warehouseRecord.setCount(storageindetail.getCounts());
             warehouseRecord.setPrice(storageindetail.getPrice());
             warehouseRecord.setMoney(storageindetail.getMoney());
             warehouseRecord.setSerialNumber(storageindetail.getSerialNumber());
             warehouseRecord.setSupplier(storageindetail.getSupplier());
+            warehouseRecord.setRemark(storageindetail.getRemark());
+
             warehouseRecordMapper.insertWarehouseRecord(warehouseRecord);
         }
+        //修改入库单的状态
         return storageinbillMapper.updatedelStatus(id);
     }
 }

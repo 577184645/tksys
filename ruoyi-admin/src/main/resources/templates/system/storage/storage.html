@@ -4,6 +4,7 @@
     <th:block th:include="include :: header('用户列表')" />
     <th:block th:include="include :: layout-latest-css" />
     <th:block th:include="include :: ztree-css" />
+    <link th:href="@{/css/bootstrap-table.min.css}" rel="stylesheet" type="text/css" />
     <style>
         .select-table table {
             table-layout:fixed;
@@ -93,10 +94,7 @@
                                 <a class="btn btn-primary btn-rounded btn-sm" onclick="$.table.search()"><i class="fa fa-search"></i>&nbsp;搜索</a>
                                 <a class="btn btn-warning btn-rounded btn-sm" onclick="$.form.reset()"><i class="fa fa-refresh"></i>&nbsp;重置</a>
                             </li>
-                            <li class="select-time">
-                                <label>时间：</label>
-                                <input type="text" class="time-input" id="startTime" placeholder="开始时间" name="params[beginCTime]"/>
-                            </li>
+
                         </ul>
 
                     </div>
@@ -105,6 +103,11 @@
 
 
             <div class="btn-group-sm" id="toolbar" role="group">
+
+
+                <a class="btn btn-success" id="button"  >
+                     展开(收缩)
+                </a>
              <a class="btn btn-success" onclick="addTab()" shiro:hasPermission="system:storage:add">
                     <i class="fa fa-plus"></i> 入库
                 </a>
@@ -113,7 +116,6 @@
                     <i class="fa fa-minus"></i> 出库
 
                 </a>
-
 
                     <a class="btn btn-danger" onclick="quitTab()" shiro:hasPermission="system:storage:quit">
                     <i class="fa fa-exclamation"></i> 退料
@@ -146,13 +148,19 @@
 <th:block th:include="include :: footer" />
 <th:block th:include="include :: layout-latest-js" />
 <th:block th:include="include :: ztree-js" />
+<script type="text/javascript" th:src="@{/js/bootstrap-table.min.js}"></script>
 <script th:inline="javascript">
     var editFlag = [[${@permission.hasPermi('system:user:edit')}]];
     var removeFlag = [[${@permission.hasPermi('system:user:remove')}]];
     var resetPwdFlag = [[${@permission.hasPermi('system:user:resetPwd')}]];
     var prefix = ctx + "system/storage";
+    var prefix1 = ctx + "system/materialChild";
+
+    var $table = $('#bootstrap-table');
+        $button = $('#button');
 
     $(function() {
+
         var panehHidden = false;
         if ($(this).width() < 769) {
             panehHidden = true;
@@ -160,7 +168,23 @@
         $('body').layout({ initClosed: panehHidden, west__size: 185 });
         queryUserList();
         queryDeptTree();
+
+
     });
+
+
+    $button.click(function () {
+      var data=  $("#bootstrap-table" ).bootstrapTable('getData');
+
+      for (var i=0;i<data.length;i++){
+          $table.bootstrapTable('toggleDetailView', i)
+      }
+
+    })
+
+
+
+
 
     function queryUserList() {
         var options = {
@@ -175,6 +199,11 @@
             {
                 Info(row.id);
             },
+            onExpandRow : function(index, row, $detail) {
+                initChildTable(index, row, $detail);
+            },
+
+            detailView: true,
             columns: [
                 {
                     field: 'id',
@@ -184,97 +213,44 @@
 
                 {
                     field: 'materialcode',
-                    title: '编码',
-                    width:120
+                    title: '编码'
                 },
-                {
-                    field: 'name',
-                    title: '名称',
-                    width:140
 
-                },
                 {
                     field: 'ancestors',
-                    title: '位置',
-                    width:180
+                    title: '位置'
 
                 },
                 {
                     field: 'stocks',
                     title: '库存量',
-                    width:100,
                     cellStyle:{
                         css:{"color":"#ed5565"}
                     }
                 },
 
-                {
-                    field: 'partnumber',
-                    title: '型号',
-                    width:220
-                },
-                {
-                    field: 'description',
-                    title: '描述',
-                    width:180
 
-                },
-                {
-                    field: 'footprint',
-                    title: '封装',
-                    width:160
-                },
-
-
-                {
-                    field: 'unit',
-                    title: '单位',
-                    width:100
-                },
                  {
                     field: 'price',
-                    title: '单价',
-                    width:120
+                    title: '单价'
                 },
 
                 {
                     field: 'money',
-                    title: '总价',
-                    width:120
-                },
-
-
-
-                {
-                    field: 'manufacture',
-                    title: '品牌',
-                    width:180
-                },
-                {
-                    field: 'supplier',
-                    title: '供应商',
-                    width:220
-                },
-                {
-                    field: 'serialNumber',
-                    title: '序列号',
-                    width:120
+                    title: '总价'
                 },
 
                 {
                     field: 'uTime',
-                    title: '最后入库时间',
-                    width:160
+                    title: '最后入库时间'
                 }
                 ,
                 {
                     field: 'oTime',
-                    title: '最后出库时间',
-                    width:160
+                    title: '最后出库时间'
                 }, {
                     field: 'qTime',
-                    title: '最后退料时间',
-                    width:160
+                    title: '最后退料时间'
                 }
 
               /*  {
@@ -289,7 +265,62 @@
                 }*/]
         };
         $.table.init(options);
+
+
+
     }
+
+    initChildTable = function(index, row, $detail) {
+        var childTable = $detail.html('<table style="table-layout:fixed"></table>').find('table');
+        $(childTable).bootstrapTable({
+            url: prefix1 + "/list",
+            method: 'post',
+            sidePagination: "server",
+            contentType: "application/x-www-form-urlencoded",
+            queryParams: {
+                materialId:row.materialId
+            },
+            columns: [
+
+                {
+                    field: 'id',
+                    title: 'id',
+                    visible: false
+                },
+                {
+                    field: 'name',
+                    title: '名称'
+                },
+                {
+                    field: 'partnumber',
+                    title: '型号'
+                },
+                {
+                    field: 'description',
+                    title: '描述'
+                },
+                {
+                    field: 'footprint',
+                    title: '封装'
+                },
+                {
+                    field: 'manufacture',
+                    title: '品牌'
+                },
+                {
+                    field: 'unit',
+                    title: '单位'
+                },
+                {
+                    field: 'comments',
+                    title: '备注'
+                }
+            ]
+        });
+
+    };
+
+
 
     function queryDeptTree()
     {
@@ -356,13 +387,7 @@
         $.modal.openTab("仓库记录", "system/record/"+id);
     }
 
-    function downloadFile(){
-        if($("#startTime").val()==""){
-            alert("请填写时间!");
-            return;
-        }
-        window.location.href ="storage/download?date="+$("#startTime").val();
-    }
+
 
 </script>
 </body>

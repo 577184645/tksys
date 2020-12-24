@@ -7,44 +7,22 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     <resultMap type="Storageoutdetail" id="StorageoutdetailResult">
         <result property="id"    column="id"    />
         <result property="sid"    column="sid"    />
-        <result property="rownum"    column="rownum"    />
         <result property="storageoutbillid"    column="storageoutbillid"    />
         <result property="materialcode"    column="materialcode"    />
-        <result property="name"    column="name"    />
-        <result property="partnumber"    column="partnumber"    />
-        <result property="footprint"    column="footprint"    />
         <result property="serialNumber"    column="serial_number"    />
-        <result property="manufacture"    column="manufacture"    />
-        <result property="price"    column="price"    />
         <result property="counts"    column="counts"    />
-        <result property="money"    column="money"    />
-        <result property="unit"    column="unit"    />
-        <result property="supplier"    column="supplier"    />
         <result property="comments"    column="comments"    />
-        <result property="cTime"    column="c_time"    />
-        <result property="uTime"    column="u_time"    />
-        <result property="description"    column="description"    />
     </resultMap>
 
     <sql id="selectStorageoutdetailVo">
-        select id, sid,storageoutbillid, materialcode, name, partnumber, footprint, serial_number, manufacture, price, counts, money, unit, supplier, comments,  c_time, u_time from storageoutdetail
+        select id, sid,storageoutbillid, materialcode, serial_number, counts,  comments from storageoutdetail
     </sql>
 
+
     <select id="selectStorageoutdetailList" parameterType="Storageoutdetail" resultMap="StorageoutdetailResult">
-        select description,s.id, sid,storageoutbillid, s.materialcode, s.name, s.partnumber, s.footprint, serial_number, s.manufacture, price, counts, money, s.unit, supplier, s.comments,  s.c_time, s.u_time from storageoutdetail s
-left join  material m on m.materialcode=s.materialcode
+            <include refid="selectStorageoutdetailVo" />
         <where>
             <if test="storageoutbillid != null  and storageoutbillid != ''"> and storageoutbillid=#{storageoutbillid}</if>
-            <if test="name != null  and name != ''"> and s.name like concat('%', #{name}, '%')</if>
-            <if test="partnumber != null  and partnumber != ''"> and s.partnumber like concat('%', #{partnumber}, '%')</if>
-            <if test="manufacture != null  and manufacture != ''"> and s.manufacture like concat('%', #{manufacture}, '%')</if>
-            <if test="supplier != null  and supplier != ''"> and supplier like concat('%', #{supplier}, '%')</if>
-            <if test="params.beginTime != null and params.beginTime != ''"><!-- 开始时间检索 -->
-                and date_format(c_time,'%y%m%d') &gt;= date_format(#{params.beginTime},'%y%m%d')
-            </if>
-            <if test="params.endTime != null and params.endTime != ''"><!-- 结束时间检索 -->
-                and date_format(c_time,'%y%m%d') &lt;= date_format(#{params.endTime},'%y%m%d')
-            </if>
         </where>
     </select>
     
@@ -52,92 +30,37 @@ left join  material m on m.materialcode=s.materialcode
         <include refid="selectStorageoutdetailVo"/>
         where id = #{id}
     </select>
-    <select id="selectStorageindetailByStoragequitbillId" parameterType="Long" resultMap="StorageoutdetailResult">
-        <include refid="selectStorageoutdetailVo"/>
-        where storagequitbillid = #{storagequitbillid}
-    </select>
+
 
     <select id="selectStorageindetailByStorageoutdetailId"  resultMap="StorageoutdetailResult">
-   select   @rowNum:=@rowNum + 1 as rownum, sid,id, storageoutbillid,serial_number, footprint,materialcode, name, partnumber, manufacture, price, counts, money, unit, supplier, comments,  c_time, u_time from storageoutdetail,(SELECT @rowNum:=0) b
+   select    sid,id, storageoutbillid,serial_number,materialcode, counts, comments from storageoutdetail
 
         where storageoutbillid = #{storageoutbillid}
     </select>
-        
+
+
     <insert id="insertStorageoutdetail" parameterType="Storageoutdetail" useGeneratedKeys="true" keyProperty="id">
         insert into storageoutdetail
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="storageoutbillid != null  and storageoutbillid != ''">storageoutbillid,</if>
             <if test="sid != null  and sid != ''">sid,</if>
-
             <if test="materialcode != null  and materialcode != ''">materialcode,</if>
-            <if test="name != null  and name != ''">name,</if>
-            <if test="partnumber != null  and partnumber != ''">partnumber,</if>
-            <if test="footprint != null  and footprint != ''">footprint,</if>
             <if test="serialNumber != null  and serialNumber != ''">serial_number,</if>
-            <if test="manufacture != null  and manufacture != ''">manufacture,</if>
-            <if test="price != null ">price,</if>
             <if test="counts != null ">counts,</if>
-            <if test="money != null ">money,</if>
-            <if test="unit != null  and unit != ''">unit,</if>
-            <if test="supplier != null  and supplier != ''">supplier,</if>
-
             <if test="comments != null  and comments != ''">comments,</if>
-
-            <if test="cTime != null ">c_time,</if>
-            <if test="uTime != null ">u_time,</if>
          </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="storageoutbillid != null  and storageoutbillid != ''">#{storageoutbillid},</if>
             <if test="sid != null  and sid != ''">#{sid},</if>
             <if test="materialcode != null  and materialcode != ''">#{materialcode},</if>
-            <if test="name != null  and name != ''">#{name},</if>
-            <if test="partnumber != null  and partnumber != ''">#{partnumber},</if>
-            <if test="footprint != null  and footprint != ''">#{footprint},</if>
             <if test="serialNumber != null  and serialNumber != ''">#{serialNumber},</if>
-            <if test="manufacture != null  and manufacture != ''">#{manufacture},</if>
-            <if test="price != null ">#{price},</if>
             <if test="counts != null ">#{counts},</if>
-            <if test="money != null ">#{money},</if>
-            <if test="unit != null  and unit != ''">#{unit},</if>
-            <if test="supplier != null  and supplier != ''">#{supplier},</if>
             <if test="comments != null  and comments != ''">#{comments},</if>
-            <if test="cTime != null ">#{cTime},</if>
-            <if test="uTime != null ">#{uTime},</if>
          </trim>
     </insert>
 
-    <update id="updateStorageoutdetail" parameterType="Storageoutdetail">
-        update storageoutdetail
-        <trim prefix="SET" suffixOverrides=",">
-            <if test="storageoutbillid != null  and storageoutbillid != ''">storageoutbillid = #{storageoutbillid},</if>
-            <if test="materialcode != null  and materialcode != ''">materialcode = #{materialcode},</if>
-            <if test="name != null  and name != ''">name = #{name},</if>
-            <if test="partnumber != null  and partnumber != ''">partnumber = #{partnumber},</if>
-            <if test="footprint != null  and footprint != ''">footprint = #{footprint},</if>
-            <if test="serialNumber != null  and serialNumber != ''">serial_number = #{serialNumber},</if>
-            <if test="manufacture != null  and manufacture != ''">manufacture = #{manufacture},</if>
-            <if test="price != null ">price = #{price},</if>
-            <if test="counts != null ">counts = #{counts},</if>
-            <if test="money != null ">money = #{money},</if>
-            <if test="unit != null  and unit != ''">unit = #{unit},</if>
-            <if test="supplier != null  and supplier != ''">supplier = #{supplier},</if>
-            <if test="purchaseid != null  and purchaseid != ''">purchaseid = #{purchaseid},</if>
-            <if test="applyid != null  and applyid != ''">applyid = #{applyid},</if>
-            <if test="contractid != null  and contractid != ''">contractid = #{contractid},</if>
-            <if test="invoiceid != null  and invoiceid != ''">invoiceid = #{invoiceid},</if>
-            <if test="expressid != null  and expressid != ''">expressid = #{expressid},</if>
-            <if test="instoragecause != null  and instoragecause != ''">instoragecause = #{instoragecause},</if>
-            <if test="projectname != null  and projectname != ''">projectname = #{projectname},</if>
-            <if test="proposer != null  and proposer != ''">proposer = #{proposer},</if>
-            <if test="comments != null  and comments != ''">comments = #{comments},</if>
-            <if test="cTime != null ">c_time = #{cTime},</if>
-            <if test="uTime != null ">u_time = #{uTime},</if>
-        </trim>
-        where id = #{id}
-    </update>
-    <update id="updateMaterial">
-    update  storageoutdetail set name=#{name},partnumber=#{partnumber},footprint=#{footprint},unit=#{unit},manufacture=#{manufacture} where materialcode=#{materialcode}
-    </update>
+
+
     <delete id="deleteStorageoutdetailById" parameterType="Long">
         delete from storageoutdetail where id = #{id}
     </delete>
@@ -148,5 +71,9 @@ left join  material m on m.materialcode=s.materialcode
             #{id}
         </foreach>
     </delete>
-    
+
+
+
+
+
 </mapper>

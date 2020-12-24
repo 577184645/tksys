@@ -1,10 +1,11 @@
 package com.ruoyi.system.domain;
 
-import java.util.Date;
-import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
 import com.ruoyi.common.annotation.Excel;
 import com.ruoyi.common.core.domain.BaseEntity;
+import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
+
+import java.util.Date;
 
 /**
  * 库存记录对象 warehouse_record
@@ -31,9 +32,7 @@ public class WarehouseRecord extends BaseEntity
     @Excel(name = "物料编号")
     private String materialcode;
 
-    /** 商品名称 */
-    @Excel(name = "商品名称")
-    private String name;
+
 
     /** 数量 */
     @Excel(name = "数量")
@@ -59,11 +58,26 @@ public class WarehouseRecord extends BaseEntity
     @Excel(name = "状态")
     private String delStatus;
 
+    @Excel(name = "备注")
+    private String remark;
+
+
     /** 时间 */
     @Excel(name = "时间", width = 30, dateFormat = "yyyy-MM-dd")
     private Date cTime;
 
-    public void setId(Long id) 
+
+    @Override
+    public String getRemark() {
+        return remark;
+    }
+
+    @Override
+    public void setRemark(String remark) {
+        this.remark = remark;
+    }
+
+    public void setId(Long id)
     {
         this.id = id;
     }
@@ -99,15 +113,7 @@ public class WarehouseRecord extends BaseEntity
     {
         return materialcode;
     }
-    public void setName(String name) 
-    {
-        this.name = name;
-    }
 
-    public String getName() 
-    {
-        return name;
-    }
     public void setCount(Long count) 
     {
         this.count = count;
@@ -178,7 +184,6 @@ public class WarehouseRecord extends BaseEntity
             .append("type", getType())
             .append("number", getNumber())
             .append("materialcode", getMaterialcode())
-            .append("name", getName())
             .append("count", getCount())
             .append("price", getPrice())
             .append("money", getMoney())

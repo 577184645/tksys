@@ -102,7 +102,9 @@ public class BomServiceImpl implements IBomService
 
                 }
                 bomdetail.setBomid(bom.getId());
-                bomdetail.setSupplier(jsonObject.getString("supplier"));
+                if(jsonObject.has("supplier")){
+                    bomdetail.setSupplier(jsonObject.getString("supplier"));
+                }
                 bomdetail.setPrice(jsonObject.getDouble("price"));
                 bomdetail.setComment(jsonObject.getString("comment"));
                 bomdetail.setFootprint(jsonObject.getString("footprint"));
@@ -146,15 +148,36 @@ public class BomServiceImpl implements IBomService
 
                 bomdetail.setSsid(jsonObject.getString("ssid"));
             }
+           if(StringUtils.isNotBlank(jsonObject.getString("price"))){
+               bomdetail.setPrice(jsonObject.getDouble("price"));
+           }
+            if(StringUtils.isNotBlank(jsonObject.getString("supplier"))){
+                bomdetail.setSupplier(jsonObject.getString("supplier"));
+            }
+            if(StringUtils.isNotBlank(jsonObject.getString("comment"))){
+                bomdetail.setComment(jsonObject.getString("comment"));
+            }
+            if(StringUtils.isNotBlank(jsonObject.getString("footprint"))){
+                bomdetail.setFootprint(jsonObject.getString("footprint"));
+            }
+            if(StringUtils.isNotBlank(jsonObject.getString("description"))){
+                bomdetail.setDescription(jsonObject.getString("description"));
+            }
+            if(StringUtils.isNotBlank(jsonObject.getString("designator"))){
+                bomdetail.setDesignator(jsonObject.getString("designator"));
+            }
+            if(StringUtils.isNotBlank(jsonObject.getString("quantity"))){
+                bomdetail.setQuantity(jsonObject.getInt("quantity"));
+            }
 
 
-            bomdetail.setComment(jsonObject.getString("comment"));
-            bomdetail.setFootprint(jsonObject.getString("footprint"));
-            bomdetail.setDescription(jsonObject.getString("description"));
-            bomdetail.setDesignator(jsonObject.getString("designator"));
-            bomdetail.setQuantity(jsonObject.getInt("quantity"));
-            bomdetail.setCount(jsonObject.getInt("count"));
-            bomdetail.setSumcount(jsonObject.getInt("sumcount"));
+
+
+
+
+
+      //            bomdetail.setCount(jsonObject.getInt("count"));
+       //     bomdetail.setSumcount(jsonObject.getInt("sumcount"));
             bomdetailMapper.insertBomdetail(bomdetail);
         }
         return bomMapper.updateBom(bom);

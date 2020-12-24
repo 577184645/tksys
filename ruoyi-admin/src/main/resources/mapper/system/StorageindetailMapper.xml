@@ -7,46 +7,37 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     <resultMap type="Storageindetail" id="StorageindetailResult">
         <result property="id"    column="id"    />
         <result property="sid"    column="sid"    />
-        <result property="rownum"    column="rownum"    />
-        <result property="footprint"    column="footprint"    />
         <result property="serialNumber"    column="serial_number"    />
         <result property="storageinbillid"    column="storageinbillid"    />
         <result property="materialcode"    column="materialcode"    />
-        <result property="name"    column="name"    />
-        <result property="partnumber"    column="partnumber"    />
-        <result property="manufacture"    column="manufacture"    />
         <result property="price"    column="price"    />
         <result property="counts"    column="counts"    />
         <result property="money"    column="money"    />
-        <result property="unit"    column="unit"    />
         <result property="supplier"    column="supplier"    />
         <result property="rate"    column="rate"    />
         <result property="comments"    column="comments"    />
         <result property="taxamount"    column="taxamount"    />
-        <result property="cTime"    column="c_time"    />
-        <result property="uTime"    column="u_time"    />
-        <result property="description"    column="description"    />
-
     </resultMap>
 
-    <sql id="selectStorageindetailVo">
-        select id, storageinbillid,serial_number, footprint,materialcode, name, partnumber, manufacture, price, counts, money, unit, supplier, rate,  comments, taxamount, c_time, u_time from storageindetail
+    <sql id="selectStorageindetailVo" >
+        select  sid, id, storageinbillid,serial_number,materialcode,price, counts, money, supplier, rate,  comments, taxamount from storageindetail
     </sql>
 
     <select id="selectStorageindetailList" parameterType="Storageindetail" resultMap="StorageindetailResult">
-        select description,s.id, storageinbillid,serial_number, s.footprint,s.materialcode, s.name, s.partnumber, s.manufacture, price, counts, money, s.unit, supplier, rate,  s.comments, taxamount, s.c_time, s.u_time from storageindetail s
-left join  material  m  on m.materialcode=s.materialcode
-        <where>  
-            <if test="name != null  and name != ''"> and name like concat('%', #{name}, '%')</if>
+
+        <include refid="selectStorageindetailVo"/>
+        <where>
+            <if test="storageinbillid != null  and storageinbillid != ''"> and storageinbillid = #{storageinbillid}</if>
+
+         <!--   <if test="name != null  and name != ''"> and name like concat('%', #{name}, '%')</if>
             <if test="partnumber != null  and partnumber != ''"> and s.partnumber like concat('%', #{partnumber}, '%')</if>
             <if test="manufacture != null  and manufacture != ''"> and s.manufacture like concat('%', #{manufacture}, '%')</if>
-            <if test="storageinbillid != null  and storageinbillid != ''"> and storageinbillid = #{storageinbillid}</if>
-            <if test="params.beginTime != null and params.beginTime != ''"><!-- 开始时间检索 -->
+            <if test="params.beginTime != null and params.beginTime != ''">&lt;!&ndash; 开始时间检索 &ndash;&gt;
                 and date_format(s.c_time,'%y%m%d') &gt;= date_format(#{params.beginTime},'%y%m%d')
             </if>
-            <if test="params.endTime != null and params.endTime != ''"><!-- 结束时间检索 -->
+            <if test="params.endTime != null and params.endTime != ''">&lt;!&ndash; 结束时间检索 &ndash;&gt;
                 and date_format(s.c_time,'%y%m%d') &lt;= date_format(#{params.endTime},'%y%m%d')
-            </if>
+            </if>-->
         </where>
     </select>
     
@@ -55,8 +46,15 @@ left join  material  m  on m.materialcode=s.materialcode
         where id = #{id}
     </select>
 
+
+    <select id="selectStorageindetailByStorageinbillSid" resultMap="StorageindetailResult">
+        select price  from storageindetail s
+      left join storageinbill s1 on s1.stockinid=s.storageinbillid
+      where sid=#{sid}   and   s1.del_status=1
+    </select>
+
     <select id="selectStorageindetailByStorageinbillId"  resultMap="StorageindetailResult">
-        select   @rowNum:=@rowNum + 1 as rownum, sid,id, storageinbillid,serial_number, footprint,materialcode, name, partnumber, manufacture, price, counts, money, unit, supplier, rate, comments, taxamount, c_time, u_time from storageindetail,(SELECT @rowNum:=0) b
+     <include refid="selectStorageindetailVo"/>
         where storageinbillid = #{storageinbillid}
     </select>
     <update id="updateMaterial">
@@ -66,17 +64,12 @@ left join  material  m  on m.materialcode=s.materialcode
         insert into storageindetail
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="sid != null  and sid != ''">sid,</if>
-            <if test="footprint != null  and footprint != ''">footprint,</if>
             <if test="storageinbillid != null  and storageinbillid != ''">storageinbillid,</if>
             <if test="materialcode != null  and materialcode != ''">materialcode,</if>
-            <if test="name != null  and name != ''">name,</if>
-            <if test="partnumber != null  and partnumber != ''">partnumber,</if>
-            <if test="manufacture != null  and manufacture != ''">manufacture,</if>
             <if test="serialNumber != null and serialNumber!=''  ">serial_number,</if>
             price,
            counts,
            money,
-            <if test="unit != null  and unit != ''">unit,</if>
             <if test="supplier != null  and supplier != ''">supplier,</if>
             <if test="rate != null  and rate != ''">rate,</if>
             <if test="comments != null  and comments != ''">comments,</if>
@@ -85,17 +78,12 @@ left join  material  m  on m.materialcode=s.materialcode
          </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="sid != null  and sid != ''">#{sid},</if>
-            <if test="footprint != null  and footprint != ''">#{footprint},</if>
             <if test="storageinbillid != null  and storageinbillid != ''">#{storageinbillid},</if>
             <if test="materialcode != null  and materialcode != ''">#{materialcode},</if>
-            <if test="name != null  and name != ''">#{name},</if>
-            <if test="partnumber != null  and partnumber != ''">#{partnumber},</if>
-            <if test="manufacture != null  and manufacture != ''">#{manufacture},</if>
             <if test="serialNumber != null  and serialNumber != ''">#{serialNumber},</if>
             #{price},
             #{counts},
              #{money},
-            <if test="unit != null  and unit != ''">#{unit},</if>
             <if test="supplier != null  and supplier != ''">#{supplier},</if>
             <if test="rate != null  and rate != ''">#{rate},</if>
             <if test="comments != null  and comments != ''">#{comments},</if>
@@ -103,33 +91,7 @@ left join  material  m  on m.materialcode=s.materialcode
          </trim>
     </insert>
 
-    <update id="updateStorageindetail" parameterType="Storageindetail">
-        update storageindetail
-        <trim prefix="SET" suffixOverrides=",">
-            <if test="storageinbillid != null  and storageinbillid != ''">storageinbillid = #{storageinbillid},</if>
-            <if test="materialcode != null  and materialcode != ''">materialcode = #{materialcode},</if>
-            <if test="name != null  and name != ''">name = #{name},</if>
-            <if test="partnumber != null  and partnumber != ''">partnumber = #{partnumber},</if>
-            <if test="manufacture != null  and manufacture != ''">manufacture = #{manufacture},</if>
-            <if test="price != null ">price = #{price},</if>
-            <if test="counts != null ">counts = #{counts},</if>
-            <if test="money != null ">money = #{money},</if>
-            <if test="unit != null  and unit != ''">unit = #{unit},</if>
-            <if test="supplier != null  and supplier != ''">supplier = #{supplier},</if>
-            <if test="rate != null  and rate != ''">rate = #{rate},</if>
 
-            <if test="invoiceid != null  and invoiceid != ''">invoiceid = #{invoiceid},</if>
-            <if test="expressid != null  and expressid != ''">expressid = #{expressid},</if>
-            <if test="instoragecause != null  and instoragecause != ''">instoragecause = #{instoragecause},</if>
-            <if test="projectname != null  and projectname != ''">projectname = #{projectname},</if>
-            <if test="comments != null  and comments != ''">comments = #{comments},</if>
-            <if test="proposer != null  and proposer != ''">proposer = #{proposer},</if>
-            <if test="taxamount != null ">taxamount = #{taxamount},</if>
-            <if test="cTime != null ">c_time = #{cTime},</if>
-            <if test="uTime != null ">u_time = #{uTime},</if>
-        </trim>
-        where id = #{id}
-    </update>
 
     <delete id="deleteStorageindetailById" parameterType="Long">
         delete from storageindetail where id = #{id}

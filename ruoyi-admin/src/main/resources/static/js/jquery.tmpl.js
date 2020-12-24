@@ -285,7 +285,7 @@
 			return (typeof item === "string") ?
 				// Insert template item annotations, to be converted to jQuery.data( "tmplItem" ) when elems are inserted into DOM.
 				(tmplItem.key ? item.replace( /(<\w+)(?=[\s>])(?![^>]*_tmplitem)([^>]*)/g, "$1 " + tmplItmAtt + "=\"" + tmplItem.key + "\" $2" ) : item) :
-				// This is a child template item. Build nested template.
+				// This is a materialChild template item. Build nested template.
 				build( item, tmplItem, item._ctnt );
 		}) :
 		// If content is not defined, insert tmplItem directly. Not a template item. May be a string, or a string array, e.g. from {{html $item.html()}}.

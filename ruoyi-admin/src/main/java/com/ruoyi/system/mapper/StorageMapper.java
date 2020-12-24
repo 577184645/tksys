@@ -15,69 +15,26 @@ import java.util.List;
  */
 public interface StorageMapper 
 {
+
+
+
+    public List<Storage>   selectStorageByMaterialcode(String materialcode);
+
     /**
      * 查询库存下是否有产品
      *
      * @param storage
      * @return 库存列表
      */
-    public int selectStorageByMaterialcodeAndTypeid(Storage storage);
-
-
-    public List<Storage>   selectStorageByMaterialcode(String materialcode);
-
-
     public Storage   selectStorageInfoByMaterialcodeAndTypeid(Storage storage);
 
-    public int updateMaterial(@Param("name") String name,@Param("partnumber") String partnumber,@Param("footprint") String footprint,@Param("unit") String unit,@Param("manufacture") String manufacture,@Param("materialcode") String materialcode);
-
-    /**
-     * 入库
-     * 添加库存数量
-     *
-     * @param  storage
-     * @return 库存列表
-     */
-    public int updatestocks(Storage storage);
-
-
-    /**
-     *
-     * 减少库存数量
-     *
-     * @param  storage
-     * @return 库存列表
-     */
-    public int updatereducestocks(Storage storage);
-
-
-    /**
-     *
-     * 增加库存数量
-     *
-     * @param  storage
-     * @return 库存列表
-     */
-    public int updateaddstocks(Storage storage);
-
-    /**
-     * 退库
-     *
-     * @param  storage
-     * @return 库存列表
-     */
-    public int quitstocks(Storage storage);
 
 
 
-    /**
-     * 出库
-     * 减少库存数量
-     *
-     * @param  storage
-     * @return 库存列表
-     */
-    public int removestocks(Storage storage);
+    public int updateStorageByMaterialcodeAndTypeId(Storage storage);
+
+
+    public int updateStorageById(Storage storage);
 
 
 
@@ -93,6 +50,8 @@ public interface StorageMapper
 
 
     public List<Storage> selectByBom(@Param("comments") String comments,@Param("footprint") String footprint);
+
+
 
     /**
      * 查询当前本月的数据
@@ -136,13 +95,7 @@ public interface StorageMapper
      */
     public int insertStorage(Storage storage);
 
-    /**
-     * 修改库存列表
-     * 
-     * @param storage 库存列表
-     * @return 结果
-     */
-    public int updateStorage(Storage storage);
+
 
     /**
      * 删除库存列表
@@ -152,11 +105,7 @@ public interface StorageMapper
      */
     public int deleteStorageById(Integer id);
 
-    /**
-     * 删除库存为0的产品
-     * @return
-     */
-    public int deleteStorageByStocksZero( );
+
 
 
     /**

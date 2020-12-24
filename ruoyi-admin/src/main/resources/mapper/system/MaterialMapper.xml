@@ -12,79 +12,47 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="description"    column="description"    />
         <result property="footprint"    column="footprint"    />
         <result property="manufacture"    column="manufacture"    />
-        <result property="unit"    column="unit"    />
-        <result property="inputoperator"    column="inputoperator"    />
-        <result property="inputdate"    column="inputdate"    />
-        <result property="approvedby"    column="approvedby"    />
-        <result property="approveddate"    column="approveddate"    />
-        <result property="approvedstatus"    column="approvedstatus"    />
-        <result property="productmpq"    column="productmpq"    />
-        <result property="productmoq"    column="productmoq"    />
-        <result property="leadtime"    column="leadtime"    />
-        <result property="comments"    column="comments"    />
         <result property="typeId"    column="type_id"    />
         <result property="deptId"    column="dept_id"    />
-        <result property="safestock"    column="safestock"    />
-        <result property="ordernumber"    column="ordernumber"    />
-        <result property="delFlag"    column="del_flag"    />
-        <result property="buyer"    column="buyer"    />
-        <result property="cTime"    column="c_time"    />
-        <result property="uTime"    column="u_time"    />
-        <association property="materialtype" column="dept_id" javaType="Materialtype" resultMap="materialtypeResult">
-
-        </association>
     </resultMap>
 
-    <resultMap id="materialtypeResult" type="Materialtype">
-        <id     property="deptId"   column="dept_id"     />
-        <result property="parentId" column="parent_id"   />
-        <result property="deptName" column="dept_name"   />
-        <result property="orderNum" column="order_num"   />
-        <result property="leader"   column="leader"      />
-        <result property="status"   column="dept_status" />
-    </resultMap>
+
 
 
 
     <sql id="selectMaterialVo">
-        select id, name,materialcode, partnumber, description, footprint, manufacture, unit, inputoperator, inputdate, approvedby, approveddate, approvedstatus, productmpq, productmoq, leadtime, comments, type_id, dept_id, safestock, ordernumber, buyer, c_time, u_time from material
-    </sql>
+        select m.id,m.materialcode,m.type_id,m.dept_id from material  m LEFT JOIN material_child m1
+                                                                 on m.id=m1.material_id left JOIN materialtype m2 on  m2.dept_id=m.dept_id
+ </sql>
 
     <select id="selectMaterialList"  resultMap="MaterialResult">
-        select id, `name`, materialcode, partnumber, description, footprint, manufacture, unit, inputoperator, inputdate, approvedby, approveddate, approvedstatus, productmpq, productmoq, leadtime, comments, type_id, u.dept_id, safestock, ordernumber, buyer, c_time, u_time from material u  LEFT JOIN materialtype d
-        on u.type_id=d.dept_id
-       where  1=1
-            <if test="name != null  and name != ''"> and name like concat('%', #{name}, '%')</if>
-        <if test="footprint != null  and footprint != ''"> and footprint like concat('%', #{footprint}, '%')</if>
-
-            <if test="partnumber != null  and partnumber != ''">and partnumber  like concat('%', #{partnumber}, '%')</if>
-          <if test="materialcode != null  and materialcode != ''">and materialcode  like concat('%', #{materialcode}, '%')</if>
-        <if test="manufacture != null  and manufacture != ''">and manufacture  like concat('%', #{manufacture}, '%')</if>
-        <if test="description != null  and description != ''">and description  like concat('%', #{description}, '%')</if>
-          <if test="deptId != null and deptId != 0">
-                AND (u.type_id = #{deptId} OR u.type_id IN ( SELECT t.dept_id FROM materialtype t WHERE FIND_IN_SET (#{deptId},ancestors) ))
+        <include refid="selectMaterialVo" />
+        <where>
+            <if test="name != null  and name != ''"> and m1.name like concat('%', #{name}, '%')</if>
+            <if test="footprint != null  and footprint != ''"> and m1.footprint like concat('%', #{footprint}, '%')</if>
+            <if test="partnumber != null  and partnumber != ''">and m1.partnumber  like concat('%', #{partnumber}, '%')</if>
+            <if test="materialcode != null  and materialcode != ''">and m.materialcode  like concat('%', #{materialcode}, '%')</if>
+            <if test="manufacture != null  and manufacture != ''">and m1.manufacture  like concat('%', #{manufacture}, '%')</if>
+            <if test="description != null  and description != ''">and m1.description  like concat('%', #{description}, '%')</if>
+            <if test="deptId != null and deptId != 0">
+                AND (m.type_id = #{deptId} OR m.type_id IN ( SELECT m2.dept_id FROM materialtype t WHERE FIND_IN_SET (#{deptId},ancestors) ))
             </if>
+
+        </where>
+        group by  m.materialcode
 
     </select>
 
-    <select id="selectMaterialRepetition" resultType="int">
-        select count(0) from material where name=#{name} and partnumber=#{partnumber} and footprint=#{footprint} and manufacture=#{manufacture} and dept_id=#{deptId}
-
-   </select>
 
 
 
 
-    <select id="selectMaterialByMaterialcode" resultType="String" >
+    <select id="selectMaterialMaxMaterialcode" resultType="String" >
         select max(materialcode) from material
-
         where left(materialcode, 4)=#{materialcode};
     </select>
 
-    <select id="selectMaterialByMaxMaterialcodeSuffix" resultType="String" >
-        select max(materialcode) from material where materialcode like #{materialcode}
 
-    </select>
 
 
     <select id="selectMaterialById"  resultMap="MaterialResult">
@@ -95,88 +63,10 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 
 
     <insert id="insertMaterial"  useGeneratedKeys="true" keyProperty="id">
-        insert into material
-        <trim prefix="(" suffix=")" suffixOverrides=",">
-            <if test="name != null  and name != ''">name,</if>
-            <if test="materialcode != null  and materialcode != ''">materialcode,</if>
-            <if test="partnumber != null  and partnumber != ''">partnumber,</if>
-            <if test="description != null  and description != ''">description,</if>
-            <if test="footprint != null  and footprint != ''">footprint,</if>
-            <if test="manufacture != null  and manufacture != ''">manufacture,</if>
-            <if test="unit != null  and unit != ''">unit,</if>
-            <if test="inputoperator != null  and inputoperator != ''">inputoperator,</if>
-            <if test="inputdate != null ">inputdate,</if>
-            <if test="approvedby != null  and approvedby != ''">approvedby,</if>
-            <if test="approveddate != null ">approveddate,</if>
-            <if test="approvedstatus != null  and approvedstatus != ''">approvedstatus,</if>
-            <if test="productmpq != null ">productmpq,</if>
-            <if test="productmoq != null ">productmoq,</if>
-            <if test="leadtime != null ">leadtime,</if>
-            <if test="comments != null  and comments != ''">comments,</if>
-            <if test="typeId != null ">type_id,</if>
-            <if test="deptId != null ">dept_id,</if>
-            <if test="safestock != null ">safestock,</if>
-            <if test="ordernumber != null  and ordernumber != ''">ordernumber,</if>
-            <if test="buyer != null  and buyer != ''">buyer,</if>
-            <if test="cTime != null ">c_time,</if>
-            <if test="uTime != null ">u_time,</if>
-         </trim>
-        <trim prefix="values (" suffix=")" suffixOverrides=",">
-            <if test="name != null  and name != ''">#{name},</if>
-            <if test="materialcode != null  and materialcode != ''">#{materialcode},</if>
-            <if test="partnumber != null  and partnumber != ''">#{partnumber},</if>
-            <if test="description != null  and description != ''">#{description},</if>
-            <if test="footprint != null  and footprint != ''">#{footprint},</if>
-            <if test="manufacture != null  and manufacture != ''">#{manufacture},</if>
-            <if test="unit != null  and unit != ''">#{unit},</if>
-            <if test="inputoperator != null  and inputoperator != ''">#{inputoperator},</if>
-            <if test="inputdate != null ">#{inputdate},</if>
-            <if test="approvedby != null  and approvedby != ''">#{approvedby},</if>
-            <if test="approveddate != null ">#{approveddate},</if>
-            <if test="approvedstatus != null  and approvedstatus != ''">#{approvedstatus},</if>
-            <if test="productmpq != null ">#{productmpq},</if>
-            <if test="productmoq != null ">#{productmoq},</if>
-            <if test="leadtime != null ">#{leadtime},</if>
-            <if test="comments != null  and comments != ''">#{comments},</if>
-            <if test="typeId != null ">#{typeId},</if>
-            <if test="deptId != null ">#{deptId},</if>
-            <if test="safestock != null ">#{safestock},</if>
-            <if test="ordernumber != null  and ordernumber != ''">#{ordernumber},</if>
-            <if test="buyer != null  and buyer != ''">#{buyer},</if>
-            <if test="cTime != null ">#{cTime},</if>
-            <if test="uTime != null ">#{uTime},</if>
-         </trim>
+        insert into material(type_id,dept_id,materialcode) values (#{typeId},#{deptId},#{materialcode})
     </insert>
 
-    <update id="updateMaterial" parameterType="Material">
-        update material
-        <trim prefix="SET" suffixOverrides=",">
-            <if test="name != null  and name != ''">name = #{name},</if>
-            <if test="materialcode != null  and materialcode != ''">materialcode = #{materialcode},</if>
-            <if test="partnumber != null  and partnumber != ''">partnumber = #{partnumber},</if>
-            <if test="description != null  and description != ''">description = #{description},</if>
-            <if test="footprint != null  and footprint != ''">footprint = #{footprint},</if>
-            manufacture = #{manufacture},
-            <if test="unit != null  and unit != ''">unit = #{unit},</if>
-            <if test="inputoperator != null  and inputoperator != ''">inputoperator = #{inputoperator},</if>
-            <if test="inputdate != null ">inputdate = #{inputdate},</if>
-            approvedby = #{approvedby},
-            <if test="approveddate != null ">approveddate = #{approveddate},</if>
-            <if test="approvedstatus != null  and approvedstatus != ''">approvedstatus = #{approvedstatus},</if>
-            <if test="productmpq != null ">productmpq = #{productmpq},</if>
-            <if test="productmoq != null ">productmoq = #{productmoq},</if>
-            <if test="leadtime != null ">leadtime = #{leadtime},</if>
-            <if test="comments != null  and comments != ''">comments = #{comments},</if>
-            <if test="typeId != null and  typeId!=''">type_id = #{typeId},</if>
-            <if test="deptId != null and deptId!='' ">dept_id = #{deptId},</if>
-            <if test="safestock != null ">safestock = #{safestock},</if>
-            <if test="ordernumber != null  and ordernumber != ''">ordernumber = #{ordernumber},</if>
-            <if test="buyer != null  and buyer != ''">buyer = #{buyer},</if>
-            <if test="cTime != null ">c_time = #{cTime},</if>
-            <if test="uTime != null ">u_time = #{uTime},</if>
-        </trim>
-        where id = #{id}
-    </update>
+
 
     <delete id="deleteMaterialById" >
         delete from material where id = #{id}

@@ -520,7 +520,11 @@
                     },
                     {
                         field: 'price',
-                        title: 'Price'
+                        title: 'Price',
+                        editable : {
+                            type : 'text',
+                            title : '价格'
+                        }
                     },
                     {
                         field: 'supplier',
@@ -556,9 +560,8 @@
                 ] ,onEditableSave: function (field, row, oldValue,$el) {
 
 
-                    if(row.mmaterialcode!=""){
-
-                      $.ajax({
+                    if(row.mmaterialcode!=null&&row.mmaterialcode!=''){
+                          $.ajax({
                             url: prefix1+'/selectBomBySupplierAndPrice',
                             type: "post",
                             async: false,
@@ -567,11 +570,11 @@
 
                                 row.price =data.price;
                                 row.supplier=data.supplier;
-                                $('#bootstrap-table').bootstrapTable('updateRow', {index: row.randomId, row: row});
                             }
                         });
                     }
 
+                    $('#bootstrap-table').bootstrapTable('updateRow', {index: row.randomId, row: row});
 
 
                     getsum();

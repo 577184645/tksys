@@ -1,18 +1,23 @@
 package com.ruoyi.system.service.impl;
 
-import java.math.BigDecimal;
-import java.util.List;
-
+import com.ruoyi.common.core.text.Convert;
 import com.ruoyi.system.common.Const;
-import com.ruoyi.system.domain.*;
+import com.ruoyi.system.domain.Storage;
+import com.ruoyi.system.domain.Storageoutbill;
+import com.ruoyi.system.domain.Storageoutdetail;
+import com.ruoyi.system.domain.WarehouseRecord;
 import com.ruoyi.system.mapper.StorageMapper;
+import com.ruoyi.system.mapper.StorageoutbillMapper;
 import com.ruoyi.system.mapper.StorageoutdetailMapper;
 import com.ruoyi.system.mapper.WarehouseRecordMapper;
+import com.ruoyi.system.service.IStorageoutbillService;
+import com.ruoyi.system.util.BigDecimalUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import com.ruoyi.system.mapper.StorageoutbillMapper;
-import com.ruoyi.system.service.IStorageoutbillService;
-import com.ruoyi.common.core.text.Convert;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.math.BigDecimal;
+import java.util.List;
 
 /**
  * 出库单列表Service业务层处理
@@ -109,27 +114,31 @@ public class StorageoutbillServiceImpl implements IStorageoutbillService
     }
 
     @Override
+    @Transactional
     public int reddashed(Long id) {
         Storageoutbill storageoutbill = storageoutbillMapper.selectStorageoutbillById(id);
         List<Storageoutdetail> storageoutdetails = storageoutdetailMapper.selectStorageindetailByStorageoutdetailId(storageoutbill.getStorageoutid());
         for (Storageoutdetail storageoutdetail: storageoutdetails) {
             Storage storage=new Storage();
             WarehouseRecord warehouseRecord=new WarehouseRecord();
-            storage.setStocks(storageoutdetail.getCounts());
-            storage.setMoney(new BigDecimal(storageoutdetail.getMoney()).setScale(2,BigDecimal.ROUND_HALF_UP).doubleValue());
             storage.setId(storageoutdetail.getSid());
-            storageMapper.updateaddstocks(storage);
+            //得到原有库存相减得到更新库存价格
+            Storage oldstorage = storageMapper.selectStorageById(storage.getId());
+            storage.setMoney( BigDecimalUtil.mul(oldstorage.getPrice(), oldstorage.getStocks() + storageoutdetail.getCounts()).doubleValue());
+            storage.setStocks(oldstorage.getStocks() + storageoutdetail.getCounts());
+            Long oldstocks = storageMapper.selectStorageById(storageoutdetail.getSid()).getStocks();
+            storage.setStocks(oldstocks+storageoutdetail.getCounts());
+            storageMapper.updateStorageById(storage);
+            //添加至查询记录
             warehouseRecord.setType(Const.WarehouseRecordStatus.STORAGE_OUT_HC);
             warehouseRecord.setNumber(storageoutbill.getStorageoutid());
             warehouseRecord.setMaterialcode(storageoutdetail.getMaterialcode());
-            warehouseRecord.setName(storageoutdetail.getName());
             warehouseRecord.setCount(storageoutdetail.getCounts());
-            warehouseRecord.setPrice(storageoutdetail.getPrice());
-            warehouseRecord.setMoney(storageoutdetail.getMoney());
             warehouseRecord.setSerialNumber(storageoutdetail.getSerialNumber());
-            warehouseRecord.setSupplier(storageoutdetail.getSupplier());
+            warehouseRecord.setRemark(storageoutdetail.getRemark());
             warehouseRecordMapper.insertWarehouseRecord(warehouseRecord);
         }
+        //修改出库单的状态
         return storageoutbillMapper.updatedelStatus(id);
     }
 

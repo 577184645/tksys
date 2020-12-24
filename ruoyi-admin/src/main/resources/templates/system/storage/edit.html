@@ -232,13 +232,7 @@
                 </div>
             </div>
 
-            <div class="col-sm-6">
-                <label class="col-sm-3 control-label">外协库备注：</label>
-                <div class="col-sm-8">
-                    <input name="outsourcewarehousecomments" id="outsourcewarehousecomments" class="form-control" type="text">
-                </div>
 
-            </div>
         </div>
 
 
@@ -248,9 +242,9 @@
 <h4 class="form-header h4">出库产品</h4>
 <div class="container-div">
     <div class="btn-group-sm" id="toolbar1" role="group">
-        <a class="btn btn-success" onclick="insertRow()">
+    <!--    <a class="btn btn-success" onclick="insertRow()">
             <i class="fa fa-plus"></i> 新增行
-        </a>
+        </a>-->
         <a class="btn btn-danger multiple disabled" onclick="removeRow()">
             <i class="fa fa-remove"></i> 删除选择行
         </a>
@@ -276,7 +270,10 @@
                             <ul>
                                 <input type="hidden" id="deptId1" name="deptId">
                                 <input type="hidden" id="parentId" name="parentId">
-
+                                <li>
+                                    <label>物料编码：</label>
+                                    <input type="text" name="materialcode"/>
+                                </li>
                                 <li>
                                     <label>名称：</label>
                                     <input type="text" name="name"/>
@@ -336,6 +333,8 @@
                 <script type="text/javascript" th:src="@{/js/jquery.editable-select.js}"></script>
                 <script type="text/javascript">
                     var prefix = ctx + "system/storage"
+                    var prefix1 = ctx + "system/materialChild"
+
                     $("#form-storageinbill-add").validate({
                         focusCleanup: true
                     });
@@ -383,8 +382,7 @@
                                      "instoragecause": $("#instoragecause").val(),
                                      "projectname": $("#projectname").val(),
                                      "proposer": $("#proposer").val(),
-                                     "comments": $("#comments").val(),
-                                    "outsourcewarehousecomments":$("#outsourcewarehousecomments").val()
+                                     "comments": $("#comments").val()
                                 },
 
                                 success: function(result) {
@@ -438,6 +436,10 @@
                         uniqueId: "randomId",
                         id: "bootstrap-table1",
                         toolbar: "toolbar1",
+                        detailView: true,
+                        onExpandRow : function(index, row, $detail) {
+                            initChildTable(index, row, $detail);
+                        },
                         showFooter: true,
                         showSearch: false,
                         showRefresh: false,
@@ -471,37 +473,8 @@
                                 field: 'materialcode',
                                 title: '物料代码'
                             },
-                            {
-                                field: 'name',
-                                title: '物料名称'
-                            },
-                            {
-                                field: 'partnumber',
-                                title: '物料型号'
-                            },
-                            {
-                                field: 'description',
-                                title: '描述',
-                            },
-                            {
-                                field: 'manufacture',
-                                title: '品牌'
-                            },
-                            {
-                                field: 'comments',
-                                title: '备注',
-                                editable: {
-                                    title : '备注'
-                                }
-                            },
-                            {
-                                field: 'unit',
-                                title: '单位'
-                            },
-                            {
-                                field: 'price',
-                                title: '单价'
-                            },
+
+
                             {
                                 field: 'counts',
                                 title: '数量',
@@ -513,30 +486,22 @@
                                 field: 'stocks',
                                 title: '库存量'
                             },
+
+
                             {
-                                field: 'money',
-                                title: '总价',
-                               footerFormatter:function (value) {
-                                    var sumBalance = 0;
-                                    for (var i in value) {
-                                        sumBalance += parseFloat(value[i].money);
-                                    }
-                                    return "总金额：" + sumBalance;
+                                field: 'serialNumber',
+                                title: '序列号',
+                                editable: {
+                                    title : '序列号'
                                 }
                             },
 
                             {
-                                field: 'serialNumber',
-                                title: '序列号'
-                            },
-
-                            {
-                                field: 'supplier',
-                                title: '供应商'
-
-                            },   {
-                                field: 'footprint',
-                                title: '封装'
+                                field: 'comments',
+                                title: '备注',
+                                editable: {
+                                    title : '备注'
+                                }
                             },
                             {
                                 field: 'randomId',
@@ -545,9 +510,9 @@
                             }
                         ] ,onEditableSave: function (field, row, oldValue,$el) {
 
-                            row.money = (row.price * row.counts).toFixed(2);;
+                         /*   row.money = (row.price * row.counts).toFixed(2);;
                             $('#bootstrap-table1').bootstrapTable('updateRow', {index: row.randomId, row: row});
-
+*/
                         }
                     };
 
@@ -592,32 +557,77 @@
                                 index: datas.length+i, // 你想插入到哪，0表示第一行
                                 row: {
                                     id: data[i].id,
-                                    name: data[i].name,
                                     materialcode: data[i].materialcode,
-                                    partnumber: data[i].partnumber,
-                                    footprint: data[i].footprint,
-                                    manufacture: data[i].manufacture,
-                                    unit: data[i].unit,
                                     comments:"",
-                                    serialNumber:data[i].serialNumber,
-                                    supplier:data[i].supplier,
-                                    price:data[i].price,
                                     money:"",
                                     counts:"",
                                     randomId:randomId,
                                     stocks:data[i].stocks,
-                                    description:data[i].description
+                                    serialNumber:"",
+                                    materialId:data[i].materialId
                                 }
                             })
                         }
 
+                        $("#bootstrap-table2").bootstrapTable('uncheckAll');
 
 
                     }
 
 
+                    initChildTable = function(index, row, $detail) {
+                        var childTable = $detail.html('<table style="table-layout:fixed"></table>').find('table');
+                        $(childTable).bootstrapTable({
+                            url: prefix1 + "/list",
+                            method: 'post',
+                            sidePagination: "server",
+                            contentType: "application/x-www-form-urlencoded",
+                            queryParams: {
+                                materialId:row.materialId
+                            },
+                            columns: [
 
-                    function insertRow() {
+                                {
+                                    field: 'id',
+                                    title: 'id',
+                                    visible: false
+                                },
+                                {
+                                    field: 'name',
+                                    title: '名称'
+                                },
+                                {
+                                    field: 'partnumber',
+                                    title: '型号'
+                                },
+                                {
+                                    field: 'description',
+                                    title: '描述'
+                                },
+                                {
+                                    field: 'footprint',
+                                    title: '封装'
+                                },
+                                {
+                                    field: 'manufacture',
+                                    title: '品牌'
+                                },
+                                {
+                                    field: 'unit',
+                                    title: '单位'
+                                },
+                                {
+                                    field: 'comments',
+                                    title: '备注'
+                                }
+                            ]
+                        });
+
+                    };
+
+
+
+                /*    function insertRow() {
 
                         var randomId = 100 + ~~(Math.random() * 100)
                         var data = $("#" + table.options.id).bootstrapTable('getSelections');
@@ -651,7 +661,7 @@
                                 }
                             })
                         }
-                    }
+                    }*/
                     /* 删除指定表格行 */
                     function removeRow(){
                         var ids = $.table.selectColumns("randomId");
@@ -680,9 +690,15 @@
                             toolbar: "toolbar2",
                             url: prefix + "/list",
                             modalName: "物料列表",
+                            detailView: true,
+                            onExpandRow : function(index, row, $detail) {
+                                initChildTable(index, row, $detail);
+                            },
                             columns: [{
                                 checkbox: true
                             },
+
+
                                 {
                                     field: 'id',
                                     title: 'null',
@@ -691,7 +707,6 @@
                                     field: 'no',
                                     title: '序号',
                                     align: "center",
-                                    width: 40,
                                     formatter: function (value, row, index) {
                                         //获取每页显示的数量
                                         var pageSize=$('#bootstrap-table2').bootstrapTable('getOptions').pageSize;
@@ -705,53 +720,16 @@
                                     field: 'materialcode',
                                     title: '编码'
                                 },
-                                {
-                                    field: 'name',
-                                    title: '名称'
-                                },
 
-                                {
-                                    field: 'partnumber',
-                                    title: '型号'
-                                },
-                                {
-                                    field: 'unit',
-                                    title: '单位'
-                                },
+
                                 {
                                     field: 'stocks',
                                     title: '库存量'
                                 },
 
-                                {
-                                    field: 'footprint',
-                                    title: '封装'
-                                },
-                                {
-                                    field: 'manufacture',
-                                    title: '品牌'
-                                },
 
 
-                                {
-                                    field: 'supplier',
-                                    title: '供应商'
-                                },
-                               {
-                                    field: 'serialNumber',
-                                    title: '序列号'
-                                },
-                                {
-                                    field: 'footprint',
-                                    title: '封装',
-                                    width:160
-                                },
-                                {
-                                    field: 'description',
-                                    title: '描述',
-                                    width:180
 
-                                },
                             ]
                         };
                         $.table.init(options);

@@ -6,10 +6,8 @@ import com.ruoyi.common.core.domain.AjaxResult;
 import com.ruoyi.common.core.page.TableDataInfo;
 import com.ruoyi.common.enums.BusinessType;
 import com.ruoyi.common.utils.poi.ExcelUtil;
-import com.ruoyi.framework.util.ShiroUtils;
 import com.ruoyi.system.domain.Material;
 import com.ruoyi.system.domain.Materialtype;
-import com.ruoyi.system.domain.SysUser;
 import com.ruoyi.system.service.*;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,14 +36,11 @@ public class MaterialController extends BaseController
     private IMaterialService materialService;
 
     @Autowired
-    private ISysUserService iSysUserService;
-    @Autowired
     private IMaterialtypeService iMaterialtypeService;
     @Autowired
     private IMaterialdeptService imaterialdeptService;
-    @Autowired
-    private ISupplierService iSupplierService;
-    
+
+
 
 
 
@@ -76,13 +71,7 @@ public class MaterialController extends BaseController
     }
 
 
-    @GetMapping("/importTemplate")
-    @ResponseBody
-    public AjaxResult importTemplate()
-    {
-        ExcelUtil<Material> util = new ExcelUtil<Material>(Material.class);
-        return util.importTemplateExcel("物料数据");
-    }
+
 
     @RequiresPermissions("system:material:view")
     @GetMapping()
@@ -125,19 +114,7 @@ public class MaterialController extends BaseController
 
 
 
-    /**
-     * 导出物料列表列表
-     */
-    @RequiresPermissions("system:material:export")
-    @Log(title = "物料列表", businessType = BusinessType.EXPORT)
-    @PostMapping("/export")
-    @ResponseBody
-    public AjaxResult export(Material material)
-    {
-        List<Material> list = materialService.selectMaterialList(material);
-        ExcelUtil<Material> util = new ExcelUtil<Material>(Material.class);
-        return util.exportExcel(list, "material");
-    }
+
 
     /**
      * 新增物料列表
@@ -146,13 +123,10 @@ public class MaterialController extends BaseController
     public String add(ModelMap mmap)
     {
         List<Materialtype> materialtypes = iMaterialtypeService.selectMaterialtypeList(null);
+        //删除父节点
         materialtypes.remove(0);
-        SysUser user = ShiroUtils.getSysUser();
-        mmap.put("userName", user.getUserName());
         mmap.put("materialtypeList",materialtypes);
         mmap.put("materialdeptList",imaterialdeptService.selectMaterialdeptList(null));
-        mmap.put("supplierList",iSupplierService.findListSupplier());
-        mmap.put("userList",iSysUserService.findList());
         return prefix + "/add";
     }
 
@@ -165,68 +139,18 @@ public class MaterialController extends BaseController
     @ResponseBody
     public AjaxResult addSave(Material material)
     {
-        int i = materialService.insertMaterial(material);
-        if(i==0){
-            return AjaxResult.error("操作失败,有重复物料!");
-        }
-        return toAjax(i);
-    }
-
-    /**
-     * 修改物料列表
-     */
-    @GetMapping("/edit/{id}")
-    public String edit(@PathVariable("id") Long id, ModelMap mmap)
-    {
-        List<Materialtype> materialtypes = iMaterialtypeService.selectMaterialtypeList(null);
-        materialtypes.remove(0);
-        Material material = materialService.selectMaterialById(id);
-        mmap.put("materialtypeList",materialtypes);
-        mmap.put("materialdeptList",imaterialdeptService.selectMaterialdeptList(null));
-        mmap.put("material", material);
-        mmap.put("userList",iSysUserService.findList());
-        mmap.put("supplierList",iSupplierService.findListSupplier());
-        return prefix + "/edit";
-    }
-
-
-    @GetMapping("/addsuffix/{id}")
-    public String addsuffix(@PathVariable("id") Long id, ModelMap mmap)
-    {
-        List<Materialtype> materialtypes = iMaterialtypeService.selectMaterialtypeList(null);
-        materialtypes.remove(0);
-        Material material = materialService.selectMaterialById(id);
-        mmap.put("materialtypeList",materialtypes);
-        mmap.put("materialdeptList",imaterialdeptService.selectMaterialdeptList(null));
-        mmap.put("material", material);
-        mmap.put("userList",iSysUserService.findList());
-        mmap.put("supplierList",iSupplierService.findListSupplier());
-        return prefix + "/addsuffix";
-    }
-
-    @RequiresPermissions("system:material:add")
-    @Log(title = "物料列表", businessType = BusinessType.INSERT)
-    @PostMapping("/addsuffix")
-    @ResponseBody
-    public AjaxResult addsuffix(Material material)
-    {
-
-        return toAjax(materialService.addSuffix(material));
+        return toAjax(materialService.insertMaterial(material));
     }
 
 
 
-    /**
-     * 修改保存物料列表
-     */
-    @RequiresPermissions("system:material:edit")
-    @Log(title = "物料列表", businessType = BusinessType.UPDATE)
-    @PostMapping("/edit")
-    @ResponseBody
-    public AjaxResult editSave(Material material)
-    {
-        return materialService.updateMaterial(material);
-    }
+
+
+
+
+
+
+
 
 
 

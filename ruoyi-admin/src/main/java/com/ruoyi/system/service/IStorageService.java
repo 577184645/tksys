@@ -1,12 +1,11 @@
 package com.ruoyi.system.service;
 
-import java.util.List;
 import com.ruoyi.system.domain.Storage;
 import com.ruoyi.system.domain.Storageinbill;
 import com.ruoyi.system.domain.Storageoutbill;
 import com.ruoyi.system.domain.Storagequitbill;
-import org.apache.ibatis.annotations.Param;
-import org.apache.poi.ss.usermodel.Workbook;
+
+import java.util.List;
 
 /**
  * 库存列表Service接口
@@ -16,6 +15,7 @@ import org.apache.poi.ss.usermodel.Workbook;
  */
 public interface IStorageService 
 {
+
 
 
 

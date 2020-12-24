@@ -7,65 +7,16 @@
             table-layout:fixed;
         }
 
-        .select-table .table td {
 
-
-
-            /* 配合宽度来使用 */
-            height:40px;
-        }
     </style>
 </head>
 <body class="gray-bg">
      <div class="container-div">
         <div class="row">
-            <div class="col-sm-12 search-collapse">
-                <form id="formId">
-                    <div class="select-list">
-                        <ul>
-                            <input name="storagequitbillid" id="storagequitbillid" th:value="${storagequitid}" hidden="hidden"/>
-
-                            <li>
-                                <label>物料代码：</label>
-                                <input type="text" name="materialcode"/>
-                            </li>
-                            <li>
-                                <label>物料名称：</label>
-                                <input type="text" name="name"/>
-                            </li>
-                            <li>
-                                <label>物料型号：</label>
-                                <input type="text" name="partnumber"/>
-                            </li>
-                            <li>
-                                <label>品牌：</label>
-                                <input type="text" name="manufacture"/>
-                            </li>
-                            <li>
-                                <label>供应商：</label>
-                                <input type="text" name="supplier"/>
-                            </li>
-                            <li>
-                                <label>备注：</label>
-                                <input type="text" name="comments"/>
-                            </li>
-                            <li class="select-time">
-                                <label>退料时间：</label>
-                                <input type="text" class="time-input" id="startTime" placeholder="开始时间" name="params[beginTime]"/>
-                                <span>-</span>
-                                <input type="text" class="time-input" id="endTime" placeholder="结束时间" name="params[endTime]"/>
-                            </li>
-                            <li>
-                                <a class="btn btn-primary btn-rounded btn-sm" onclick="$.table.search()"><i class="fa fa-search"></i>&nbsp;搜索</a>
-                                <a class="btn btn-warning btn-rounded btn-sm" onclick="$.form.reset()"><i class="fa fa-refresh"></i>&nbsp;重置</a>
-                            </li>
-                        </ul>
-                    </div>
-                </form>
-            </div>
+            <input name="storagequitbillid" id="storagequitbillid" th:value="${storagequitid}" hidden="hidden"/>
 
             <div class="btn-group-sm" id="toolbar" role="group">
-                <a class="btn btn-success" onclick="$.operate.add()" shiro:hasPermission="system:storagequitdetail:add">
+             <!--   <a class="btn btn-success" onclick="$.operate.add()" shiro:hasPermission="system:storagequitdetail:add">
                     <i class="fa fa-plus"></i> 添加
                 </a>
                 <a class="btn btn-primary single disabled" onclick="$.operate.edit()" shiro:hasPermission="system:storagequitdetail:edit">
@@ -73,7 +24,7 @@
                 </a>
                 <a class="btn btn-danger multiple disabled" onclick="$.operate.removeAll()" shiro:hasPermission="system:storagequitdetail:remove">
                     <i class="fa fa-remove"></i> 删除
-                </a>
+                </a>-->
                 <a class="btn btn-warning" onclick="$.table.exportExcel()" shiro:hasPermission="system:storagequitdetail:export">
                     <i class="fa fa-download"></i> 导出
                 </a>
@@ -96,7 +47,6 @@
                 updateUrl: prefix + "/edit/{id}",
                 removeUrl: prefix + "/remove",
                 exportUrl: prefix + "/export",
-                showFooter: true,
                 modalName: "退料",
                 queryParams : {
                     storagequitbillid: $("#storagequitbillid").val()
@@ -112,78 +62,29 @@
                     {
                         field: 'storagequitbillid',
                         title: '所属退料单',
-                        width:155,
-                        footerFormatter:function (value) {
-                            var sumBalance = 0;
-                            for (var i in value) {
-                                sumBalance += parseFloat(value[i].money);
-                            }
 
-                            return "总金额：" + sumBalance.toFixed(4);
-                        }
                     },
                     {
                         field: 'materialcode',
-                        title: '物料代码',
-                        width:125
-                    },
-                    {
-                        field: 'name',
-                        title: '物料名称',
-                        width:140
+                        title: '物料代码'
                     },
 
                     {
-                        field: 'partnumber',
-                        title: '物料型号',
-                        width:230
-                    },
-                    {
-                        field: 'manufacture',
-                        title: '品牌',
-                        width:130
-                    },
-                    {
-                        field: 'price',
-                        title: '单价',
-                        width:130
-                    },
-                    {
                         field: 'counts',
-                        title: '数量',
-                        width:130
+                        title: '数量'
                     },
-                    {
-                        field: 'money',
-                        title: '总金额',
-                        width:130
-                    },
-                    {
-                        field: 'unit',
-                        title: '单位',
-                        width:100
-                    },
+
+
                     {
                         field: 'supplier',
-                        title: '供应商',
-                        width:230
+                        title: '供应商'
                     },
 
                     {
                         field: 'serialNumber',
-                        title: '序列号',
-                        width:120
+                        title: '序列号'
                     },
-                    {
-                        field: 'cTime',
-                        title: '创建时间',
-                        width:160
-                    },
-                    {
-                        field: 'comments',
-                        title: '备注',
-                        width:170
-                    },
+
                 {
                     title: '操作',
                     align: 'center',

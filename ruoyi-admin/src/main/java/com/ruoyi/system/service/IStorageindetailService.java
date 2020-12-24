@@ -39,13 +39,7 @@ public interface IStorageindetailService
      */
     public int insertStorageindetail(Storageindetail storageindetail);
 
-    /**
-     * 修改入库产品列表
-     * 
-     * @param storageindetail 入库产品列表
-     * @return 结果
-     */
-    public int updateStorageindetail(Storageindetail storageindetail);
+
 
     /**
      * 批量删除入库产品列表

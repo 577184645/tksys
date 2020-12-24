@@ -6,44 +6,29 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     
     <resultMap type="Storage" id="StorageResult">
         <result property="id"    column="id"    />
-        <result property="name"    column="name"    />
-        <result property="description"    column="description"    />
         <result property="materialcode"    column="materialcode"    />
-        <result property="partnumber"    column="partnumber"    />
-        <result property="footprint"    column="footprint"    />
-        <result property="manufacture"    column="manufacture"    />
-        <result property="unit"    column="unit"    />
-        <result property="supplier"    column="supplier"    />
-        <result property="leadtime"    column="leadtime"    />
         <result property="price"    column="price"    />
         <result property="stocks"    column="stocks"    />
         <result property="money"    column="money"    />
         <result property="typeId"    column="type_id"    />
-        <result property="serialNumber"    column="serial_number"    />
+        <result property="deptId"    column="dept_id"    />
+        <result property="materialId"    column="material_id"    />
         <result property="cTime"    column="c_time"    />
         <result property="uTime"    column="u_time"    />
         <result property="oTime"    column="o_time"    />
         <result property="qTime"    column="q_time"    />
         <result property="ancestors"    column="ancestors"    />
         <result property="deptName"    column="dept_name"    />
-        <result property="leadtime"    column="leadtime"    />
-
-
-
-
-        <association property="storagetype" column="dept_id" javaType="Storagetype" resultMap="StoragetypeResult">
-
+        <result property="name"    column="name"    />
+        <result property="materialcode"    column="materialcode"    />
+        <result property="partnumber"    column="partnumber"    />
+        <result property="description"    column="description"    />
+        <result property="footprint"    column="footprint"    />
+        <result property="manufacture"    column="manufacture"    />
+        <association property="storagetype" column="dept_id" javaType="Storagetype" >
         </association>
     </resultMap>
 
-    <resultMap id="StoragetypeResult" type="Storagetype">
-        <id     property="deptId"   column="dept_id"     />
-        <result property="parentId" column="parent_id"   />
-        <result property="deptName" column="dept_name"   />
-        <result property="orderNum" column="order_num"   />
-        <result property="leader"   column="leader"      />
-        <result property="status"   column="dept_status" />
-    </resultMap>
 
 
     <resultMap id="StorageWarehouseRecord" type="com.ruoyi.system.vo.WarehouseBillVo">
@@ -55,7 +40,6 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="unit"    column="unit"    />
         <result property="inprice"    column="inprice"    />
         <result property="inmoney"    column="inmoney"    />
-        <result property="supplier"    column="supplier"    />
         <result property="incount"    column="incount"    />
         <result property="outmoney"    column="outmoney"    />
         <result property="outprice"    column="outprice"    />
@@ -70,28 +54,28 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </resultMap>
 
     <select id="selectStoragebyDate" resultMap="StorageWarehouseRecord">
-SELECT number,m.materialcode materialcode,m.`name` `name`,m.partnumber partnumber,m.description description,m.unit unit,sum(count) as incount, round((SUM(w.money)/sum(count)),2) as inprice,SUM(w.money) inmoney, w.supplier supplier FROM warehouse_record w left JOIN material m
+SELECT number,m.materialcode materialcode,m.`name` `name`,m.partnumber partnumber,m.description description,m.unit unit,sum(count) as incount, round((SUM(w.money)/sum(count)),2) as inprice,SUM(w.money) inmoney FROM warehouse_record w left JOIN material m
 on w.materialcode=m.materialcode
 
 WHERE DATE_FORMAT(#{date}, '%Y%m' ) = DATE_FORMAT(w.c_time , '%Y%m' ) and w.type=1
-GROUP BY supplier,materialcode
+GROUP BY materialcode
     </select>
 
     <select id="selectoutStoragebyDate" resultMap="StorageWarehouseRecord">
-SELECT number,m.materialcode materialcode,m.`name` `name`,m.partnumber partnumber,m.description description,m.unit unit,sum(count) as outcount, round((SUM(w.money)/sum(count)),2) as outprice,SUM(w.money) outmoney, w.supplier supplier FROM warehouse_record w left JOIN material m
+SELECT number,m.materialcode materialcode,m.`name` `name`,m.partnumber partnumber,m.description description,m.unit unit,sum(count) as outcount, round((SUM(w.money)/sum(count)),2) as outprice,SUM(w.money) outmoney FROM warehouse_record w left JOIN material m
 on w.materialcode=m.materialcode
 
 WHERE DATE_FORMAT(#{date}, '%Y%m' ) = DATE_FORMAT(w.c_time , '%Y%m' ) and w.type=2
-GROUP BY supplier,materialcode
+GROUP BY materialcode
     </select>
 
 
 
     <select id="selectStoragebyDatedashed" resultMap="StorageWarehouseRecord">
-SELECT number,m.materialcode materialcode,m.`name` `name`,m.partnumber partnumber,m.description description,m.unit unit,sum(count) as incount, round((SUM(w.money)/sum(count)),2) as inprice,SUM(w.money) inmoney, w.supplier supplier FROM warehouse_record w left JOIN material m
+SELECT number,m.materialcode materialcode,m.`name` `name`,m.partnumber partnumber,m.description description,m.unit unit,sum(count) as incount, round((SUM(w.money)/sum(count)),2) as inprice,SUM(w.money) inmoney FROM warehouse_record w left JOIN material m
 on w.materialcode=m.materialcode
 WHERE DATE_FORMAT(#{date}, '%Y%m' ) = DATE_FORMAT( w.c_time , '%Y%m' ) and w.type=4
-GROUP BY supplier,materialcode
+GROUP BY materialcode
     </select>
 
 
@@ -100,47 +84,51 @@ GROUP BY supplier,materialcode
 
 
     <select id="selectoutStoragebyDatedashed" resultMap="StorageWarehouseRecord">
-SELECT number,m.materialcode materialcode,m.`name` `name`,m.partnumber partnumber,m.description description,m.unit unit,sum(count) as outcount, round((SUM(w.money)/sum(count)),2) as outprice,SUM(w.money) outmoney, w.supplier supplier FROM warehouse_record w left JOIN material m
+SELECT number,m.materialcode materialcode,m.`name` `name`,m.partnumber partnumber,m.description description,m.unit unit,sum(count) as outcount, round((SUM(w.money)/sum(count)),2) as outprice,SUM(w.money) outmoney
+FROM warehouse_record w left JOIN material m
 on w.materialcode=m.materialcode
 WHERE DATE_FORMAT(#{date}, '%Y%m' ) = DATE_FORMAT( w.c_time , '%Y%m' ) and w.type=5
-GROUP BY supplier,materialcode
+GROUP BY materialcode
     </select>
 
 
     <sql id="selectStorageVo">
-        select id, name, supplier,materialcode, partnumber, footprint, manufacture, unit, price, stocks, money, type_id, serial_number,  c_time, u_time from storage
+        select id, materialcode, price, stocks, money, type_id from storage
     </sql>
 
     <select id="StoragefindList" resultMap="StorageResult">
-    select id, name, supplier,materialcode, partnumber, footprint, manufacture, unit, avg(price) price, sum(stocks) stocks, sum(money) money, type_id, serial_number,  c_time, u_time from storage
-     group by  supplier,materialcode
+    select id, name, materialcode, partnumber, footprint, manufacture, unit, avg(price) price, sum(stocks) stocks, sum(money) money, type_id, serial_number,  c_time, u_time from storage
+     group by  materialcode
     </select>
 
 
     <select id="selectStorageListBymaterialcode" resultMap="StorageResult">
-         select m.description, u.id,m.leadtime,u.`name`, o_time,u.materialcode, q_time,supplier,u.partnumber, m.footprint, u.manufacture, u.unit, u.serial_number, u.type_id,   avg(price) price,sum(stocks) stocks,sum(money) money,u.c_time,u.u_time from storage u  LEFT JOIN storagetype d
+         select m.description, u.id,m.leadtime,u.`name`, o_time,u.materialcode, q_time,u.partnumber, m.footprint, u.manufacture, u.unit, u.serial_number, u.type_id,   avg(price) price,sum(stocks) stocks,sum(money) money,u.c_time,u.u_time from storage u  LEFT JOIN storagetype d
         on u.type_id=d.dept_id LEFT JOIN material m on m.materialcode=u.materialcode
         where   u.materialcode = #{materialcode}
    and stocks>0
     </select>
 
     <select id="selectStorageList" parameterType="Storage" resultMap="StorageResult">
-        select m.leadtime,d.dept_name,d.ancestors ancestors,m.description, u.id, u.`name`, o_time,u.materialcode, q_time,supplier,u.partnumber, u.footprint, u.manufacture, u.unit, u.serial_number, u.type_id, price price,stocks,money,u.c_time,u.u_time from storage u LEFT JOIN storagetype d on u.type_id=d.dept_id LEFT JOIN material m on m.materialcode=u.materialcode where 1=1
-            <if test="name != null  and name != ''"> and u.name like concat('%', #{name}, '%')</if>
-        <if test="description != null  and description != ''"> and m.description like concat('%', #{description}, '%')</if>
-        <if test="footprint != null  and footprint != ''"> and m.footprint like concat('%', #{footprint}, '%')</if>
-
-        <if test="partnumber != null  and partnumber != ''"> and u.partnumber like concat('%', #{partnumber}, '%')</if>
-        <if test="manufacture != null  and manufacture != ''"> and u.manufacture = #{manufacture}</if>
-        <if test="materialcode != null  and materialcode != ''"> and u.materialcode = #{materialcode}</if>
-        <if test="status==2 "> and stocks > 0</if>
-        <if test="status==1 "> and stocks = 0</if>
-
-        <if test="deptId != null and deptId != 0">
-                AND (u.type_id = #{deptId} OR u.type_id IN ( SELECT t.dept_id FROM storagetype t WHERE FIND_IN_SET (#{deptId},ancestors) ))
+        select s.material_id,s.id,m.materialcode,price,stocks,money,ancestors,dept_name, s.u_time,o_time,q_time from `storage`  s
+        LEFT JOIN storagetype s1  on type_id=dept_id
+        left JOIN material   m   on m.materialcode=s.materialcode
+        left join material_child m1 on m.id=m1.material_id
+        <where>
+         <if test="name != null  and name != ''"> and m1.name like concat('%', #{name}, '%')</if>
+            <if test="description != null  and description != ''"> and m1.description like concat('%', #{description}, '%')</if>
+            <if test="footprint != null  and footprint != ''"> and m1.footprint like concat('%', #{footprint}, '%')</if>
+            <if test="partnumber != null  and partnumber != ''"> and m1.partnumber like concat('%', #{partnumber}, '%')</if>
+            <if test="manufacture != null  and manufacture != ''"> and m1.manufacture = #{manufacture}</if>
+            <if test="materialcode != null  and materialcode != ''"> and s.materialcode = #{materialcode}</if>
+            <if test="status==2 "> and stocks > 0</if>
+            <if test="status==1 "> and stocks = 0</if>
+            <if test="deptId != null and deptId != 0">
+                AND (s.type_id = #{deptId} OR s.type_id IN ( SELECT t.dept_id FROM storagetype t WHERE FIND_IN_SET (#{deptId},ancestors) ))
             </if>
-            <if test="uTime != null "> and u_time = #{uTime}</if>
-        GROUP BY u.materialcode,serial_number,supplier,u.type_id
+        </where>
+
+
     </select>
 
     <select id="selectStorageById"  resultMap="StorageResult">
@@ -157,69 +145,16 @@ GROUP BY supplier,materialcode
 
         
     <insert id="insertStorage" parameterType="Storage" useGeneratedKeys="true" keyProperty="id">
-        insert into storage
-        <trim prefix="(" suffix=")" suffixOverrides=",">
-            <if test="name != null  and name != ''">name,</if>
-            <if test="supplier != null  and supplier != ''">supplier,</if>
-            <if test="materialcode != null  and materialcode != ''">materialcode,</if>
-            <if test="partnumber != null  and partnumber != ''">partnumber,</if>
-            <if test="footprint != null  and footprint != ''">footprint,</if>
-            <if test="manufacture != null  and manufacture != ''">manufacture,</if>
-            <if test="unit != null  and unit != ''">unit,</if>
-            <if test="price != null ">price,</if>
-            <if test="stocks != null ">stocks,</if>
-            <if test="money != null ">money,</if>
-            <if test="typeId != null ">type_id,</if>
-            <if test="serialNumber != null ">serial_number,</if>
-            <if test="cTime != null ">c_time,</if>
-               u_time,
-         </trim>
-        <trim prefix="values (" suffix=")" suffixOverrides=",">
-            <if test="name != null  and name != ''">#{name},</if>
-            <if test="supplier != null  and supplier != ''">#{supplier},</if>
-            <if test="materialcode != null  and materialcode != ''">#{materialcode},</if>
-            <if test="partnumber != null  and partnumber != ''">#{partnumber},</if>
-            <if test="footprint != null  and footprint != ''">#{footprint},</if>
-            <if test="manufacture != null  and manufacture != ''">#{manufacture},</if>
-            <if test="unit != null  and unit != ''">#{unit},</if>
-            <if test="price != null ">#{price},</if>
-            <if test="stocks != null ">#{stocks},</if>
-            <if test="money != null ">#{money},</if>
-            <if test="typeId != null ">#{typeId},</if>
-            <if test="serialNumber != null ">#{serialNumber},</if>
-            <if test="cTime != null ">#{cTime},</if>
-               now(),
-         </trim>
+        insert into storage (materialcode,price,stocks,money,type_id,material_id,u_time)
+        values  (#{materialcode},#{price},#{stocks},#{money},#{typeId},#{materialId},now())
     </insert>
 
-    <update id="updateStorage" parameterType="Storage">
-        update storage
-        <trim prefix="SET" suffixOverrides=",">
-            <if test="name != null  and name != ''">name = #{name},</if>
-            <if test="supplier != null  and supplier != ''">supplier = #{supplier},</if>
-            <if test="materialcode != null  and materialcode != ''">materialcode = #{materialcode},</if>
-            <if test="partnumber != null  and partnumber != ''">partnumber = #{partnumber},</if>
-            <if test="footprint != null  and footprint != ''">footprint = #{footprint},</if>
-            <if test="manufacture != null  and manufacture != ''">manufacture = #{manufacture},</if>
-            <if test="unit != null  and unit != ''">unit = #{unit},</if>
-            <if test="price != null ">price = #{price},</if>
-            <if test="stocks != null ">stocks = #{stocks},</if>
-            <if test="money != null ">money = #{money},</if>
-            <if test="typeId != null ">type_id = #{typeId},</if>
-            <if test="serialNumber != null ">serial_number = #{serialNumber},</if>
-            <if test="cTime != null ">c_time = #{cTime},</if>
-            <if test="uTime != null ">u_time = #{uTime},</if>
-        </trim>
-        where id = #{id}
-    </update>
+
 
     <delete id="deleteStorageById" parameterType="Integer">
         delete from storage where id = #{id}
     </delete>
 
-    <delete id="deleteStorageByStocksZero" >
-        delete from storage where stocks = 0
-    </delete>
 
 
     <delete id="deleteStorageByIds" parameterType="String">
@@ -229,21 +164,13 @@ GROUP BY supplier,materialcode
         </foreach>
     </delete>
 
-    <select id="selectStorageByMaterialcodeAndTypeid" resultType="int">
-        select count(1) from storage where
-        materialcode=#{materialcode}
-        and type_id=#{typeId}
-         and   serial_number=#{serialNumber}
-         and   supplier=#{supplier}
-    </select>
-    <select id="selectStorageInfoByMaterialcodeAndTypeid" resultMap="StorageResult">
 
-         <include refid="selectStorageVo"/>
-       where
+
+    <select id="selectStorageInfoByMaterialcodeAndTypeid" resultMap="StorageResult">
+        <include refid="selectStorageVo"/>
+        where
         materialcode=#{materialcode}
         and type_id=#{typeId}
-         and   serial_number=#{serialNumber}
-         and   supplier=#{supplier}
     </select>
 
 
@@ -257,40 +184,30 @@ GROUP BY supplier,materialcode
 
 
 
-
-
-
-    <update id="updatestocks">
-        update  storage set stocks=stocks+#{stocks},money=money+#{money},price=#{price},u_time=now()  where materialcode=#{materialcode} and type_id=#{typeId}
-           and   serial_number=#{serialNumber}
-         and   supplier=#{supplier}
-    </update>
-
-  <!--入库红冲-->
-    <update id="updatereducestocks">
-        update  storage set stocks=stocks-#{stocks},money=money-#{money} where
-        id=#{id}
-    </update>
-
-    <!--出库红冲-->
-    <update id="updateaddstocks">
-        update  storage set stocks=stocks+#{stocks},money=money+#{money}   where
-        id=#{id}
+    <update id="updateStorageByMaterialcodeAndTypeId">
+         update  storage set stocks=#{stocks},money=#{money},price=#{price},
+         u_time=now()  where materialcode=#{materialcode} and type_id=#{typeId}
     </update>
 
 
-    <update id="updateMaterial">
-    update  storage set name=#{name},partnumber=#{partnumber},footprint=#{footprint},unit=#{unit},manufacture=#{manufacture} where materialcode=#{materialcode}
-    </update>
+
 
     <!--出库-->
-    <update id="removestocks">
-        update  storage set  stocks=stocks-#{stocks},money=money-#{money},o_time=now()  where id=#{id}
+    <update id="updateStorageById">
+        update  storage set
+        <if test="price != null">
+            price=#{price},
+        </if>
+        <if test="oTime != null">
+             o_time=now(),
+        </if>
+        <if test="qTime != null">
+             q_time=now(),
+        </if>
+        stocks=#{stocks},money=#{money}
+          where id=#{id}
     </update>
 
-    <!--退库-->
-    <update id="quitstocks">
-        update  storage set stocks=stocks+#{stocks},money=money+#{money},q_time=now()  where id=#{id}
-    </update>
+
 
 </mapper>

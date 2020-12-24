@@ -29,9 +29,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </resultMap>
 
     <sql id="selectStorageoutbillVo">
-        select customer,sum(money) as money,purchaseid,applyid,contractid,invoiceid,expressid,instoragecause,projectname,proposer,s.id, storageoutid, outsourcewarehouse, outsourcewarehouseid, stockrequisition, warehouseadmin, stockpeople, storageouttime, s.comments, s.c_time, s.u_time, del_status
-        from storageoutbill s LEFT JOIN storageoutdetail s1
-				on storageoutid=storageoutbillid
+        select customer,purchaseid,applyid,contractid,invoiceid,expressid,instoragecause,projectname,proposer,id, storageoutid, outsourcewarehouse, outsourcewarehouseid, stockrequisition, warehouseadmin, stockpeople, storageouttime, comments, c_time, u_time, del_status
+        from storageoutbill
 
 
     </sql>
@@ -57,12 +56,12 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             </if>
 
         </where>
-        GROUP BY  s.storageoutid
+
     </select>
     
     <select id="selectStorageoutbillById" parameterType="Long" resultMap="StorageoutbillResult">
         <include refid="selectStorageoutbillVo"/>
-        where s.id = #{id}
+        where id = #{id}
     </select>
     <select id="selectStorageoutbillByStorageoutId" resultMap="StorageoutbillResult">
         <include refid="selectStorageoutbillVo"/>
@@ -74,7 +73,6 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="storageoutid != null  and storageoutid != ''">storageoutid,</if>
             <if test="purchaseid != null  and purchaseid != ''">purchaseid,</if>
-
             <if test="applyid != null  and applyid != ''">applyid,</if>
             <if test="contractid != null  and contractid != ''">contractid,</if>
             <if test="invoiceid != null  and invoiceid != ''">invoiceid,</if>

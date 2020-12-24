@@ -1,19 +1,23 @@
 package com.ruoyi.system.service.impl;
 
-import java.math.BigDecimal;
-import java.util.List;
-
+import com.ruoyi.common.core.text.Convert;
 import com.ruoyi.system.common.Const;
-import com.ruoyi.system.domain.*;
+import com.ruoyi.system.domain.Storage;
+import com.ruoyi.system.domain.Storagequitbill;
+import com.ruoyi.system.domain.Storagequitdetail;
+import com.ruoyi.system.domain.WarehouseRecord;
 import com.ruoyi.system.mapper.StorageMapper;
+import com.ruoyi.system.mapper.StoragequitbillMapper;
 import com.ruoyi.system.mapper.StoragequitdetailMapper;
 import com.ruoyi.system.mapper.WarehouseRecordMapper;
+import com.ruoyi.system.service.IStoragequitbillService;
+import com.ruoyi.system.util.BigDecimalUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import com.ruoyi.system.mapper.StoragequitbillMapper;
-import com.ruoyi.system.service.IStoragequitbillService;
-import com.ruoyi.common.core.text.Convert;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.math.BigDecimal;
+import java.util.List;
 
 /**
  * 退料单列表Service业务层处理
@@ -113,27 +117,22 @@ public class StoragequitbillServiceImpl implements IStoragequitbillService
         for (Storagequitdetail storagequitdetail: storagequitdetails) {
             Storage storage=new Storage();
             WarehouseRecord warehouseRecord=new WarehouseRecord();
-            storage.setStocks(storagequitdetail.getCounts());
-            storage.setMoney(new BigDecimal(storagequitdetail.getMoney()).setScale(2,BigDecimal.ROUND_HALF_UP).doubleValue());
             storage.setId(storagequitdetail.getSid());
-            storageMapper.updatereducestocks(storage);
-            if(storageMapper.selectStorageById(storage.getId()).getStocks()==0){
-                Storage storage1=new Storage();
-                storage1.setId(storage.getId());
-                storage1.setMoney(new BigDecimal(0).doubleValue());
-                storageMapper.updateStorage(storage1);
-            }
+            Storage oldstorage = storageMapper.selectStorageById(storage.getId());
+            storage.setMoney( BigDecimalUtil.mul(oldstorage.getPrice(), oldstorage.getStocks() - storagequitdetail.getCounts()).doubleValue());
+            storage.setStocks(oldstorage.getStocks() - storagequitdetail.getCounts());
+            Long oldstocks = storageMapper.selectStorageById(storagequitdetail.getSid()).getStocks();
+            storageMapper.updateStorageById(storage);
+            //添加至查询记录
             warehouseRecord.setType(Const.WarehouseRecordStatus.STORAGE_QUIT_HC);
             warehouseRecord.setNumber(storagequitbill.getStoragequitbillid());
             warehouseRecord.setMaterialcode(storagequitdetail.getMaterialcode());
-            warehouseRecord.setName(storagequitdetail.getName());
             warehouseRecord.setCount(storagequitdetail.getCounts());
-            warehouseRecord.setPrice(storagequitdetail.getPrice());
-            warehouseRecord.setMoney(storagequitdetail.getMoney());
             warehouseRecord.setSerialNumber(storagequitdetail.getSerialNumber());
-            warehouseRecord.setSupplier(storagequitdetail.getSupplier());
+            warehouseRecord.setRemark(storagequitdetail.getRemark());
             warehouseRecordMapper.insertWarehouseRecord(warehouseRecord);
         }
+        //修改退料单状态
         return storagequitbillMapper.updatedelStatus(id);
     }
 }

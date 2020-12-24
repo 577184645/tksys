@@ -61,17 +61,6 @@ public class StorageindetailServiceImpl implements IStorageindetailService
         return storageindetailMapper.insertStorageindetail(storageindetail);
     }
 
-    /**
-     * 修改入库产品列表
-     * 
-     * @param storageindetail 入库产品列表
-     * @return 结果
-     */
-    @Override
-    public int updateStorageindetail(Storageindetail storageindetail)
-    {
-        return storageindetailMapper.updateStorageindetail(storageindetail);
-    }
 
     /**
      * 删除入库产品列表对象

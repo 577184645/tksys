@@ -184,7 +184,7 @@ public class DemoTableController extends BaseController
     @GetMapping("/child")
     public String child()
     {
-        return prefix + "/child";
+        return prefix + "/materialChild";
     }
 
     /**

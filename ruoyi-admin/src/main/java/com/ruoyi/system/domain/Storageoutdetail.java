@@ -1,10 +1,9 @@
 package com.ruoyi.system.domain;
 
-import java.util.Date;
-import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
 import com.ruoyi.common.annotation.Excel;
 import com.ruoyi.common.core.domain.BaseEntity;
+import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
 
 /**
  * 出库产品列表对象 storageoutdetail
@@ -24,7 +23,7 @@ public class Storageoutdetail extends BaseEntity
 
 
 
-    private  Integer rownum;
+
     /** 所属入库单 */
     @Excel(name = "所属入库单")
     private String storageoutbillid;
@@ -33,45 +32,23 @@ public class Storageoutdetail extends BaseEntity
     @Excel(name = "物料代码")
     private String materialcode;
 
-    /** 物料名称 */
-    @Excel(name = "物料名称")
-    private String name;
 
-    /** 物料型号 */
-    @Excel(name = "物料型号")
-    private String partnumber;
-
-
-    @Excel(name = "描述")
-    private String description;
-
-    /** 封装 */
-    @Excel(name = "封装")
-    private String footprint;
 
     /** 序列号 */
     @Excel(name = "序列号")
     private String serialNumber;
 
-    /** 品牌 */
-    @Excel(name = "品牌")
-    private String manufacture;
 
-    /** 单价 */
-    @Excel(name = "单价")
-    private Double price;
+
+
 
     /** 数量 */
     @Excel(name = "数量")
     private Long counts;
 
-    /** 总金额 */
-    @Excel(name = "总金额")
-    private Double money;
 
-    /** 单位 */
-    @Excel(name = "单位")
-    private String unit;
+
+
 
     /** 供应商 */
     @Excel(name = "供应商")
@@ -86,26 +63,12 @@ public class Storageoutdetail extends BaseEntity
     private String comments;
 
 
-
-    /** 创建时间 */
-    @Excel(name = "创建时间", width = 30, dateFormat = "yyyy-MM-dd")
-    private Date cTime;
-
-    /** 修改时间 */
-    @Excel(name = "修改时间", width = 30, dateFormat = "yyyy-MM-dd")
-    private Date uTime;
-
-    public Integer getRownum() {
-        return rownum;
+    public String getSerialNumber() {
+        return serialNumber;
     }
 
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
+    public void setSerialNumber(String serialNumber) {
+        this.serialNumber = serialNumber;
     }
 
     public Long getSid() {
@@ -116,9 +79,6 @@ public class Storageoutdetail extends BaseEntity
         this.sid = sid;
     }
 
-    public void setRownum(Integer rownum) {
-        this.rownum = rownum;
-    }
 
     public String getComments() {
         return comments;
@@ -155,60 +115,9 @@ public class Storageoutdetail extends BaseEntity
     {
         return materialcode;
     }
-    public void setName(String name) 
-    {
-        this.name = name;
-    }
-
-    public String getName() 
-    {
-        return name;
-    }
-    public void setPartnumber(String partnumber) 
-    {
-        this.partnumber = partnumber;
-    }
-
-    public String getPartnumber() 
-    {
-        return partnumber;
-    }
-    public void setFootprint(String footprint) 
-    {
-        this.footprint = footprint;
-    }
-
-    public String getFootprint() 
-    {
-        return footprint;
-    }
-    public void setSerialNumber(String serialNumber) 
-    {
-        this.serialNumber = serialNumber;
-    }
-
-    public String getSerialNumber() 
-    {
-        return serialNumber;
-    }
-    public void setManufacture(String manufacture) 
-    {
-        this.manufacture = manufacture;
-    }
-
-    public String getManufacture() 
-    {
-        return manufacture;
-    }
 
 
-    public Double getPrice() {
-        return price;
-    }
 
-    public void setPrice(Double price) {
-        this.price = price;
-    }
 
     public Long getCounts() {
         return counts;
@@ -218,52 +127,16 @@ public class Storageoutdetail extends BaseEntity
         this.counts = counts;
     }
 
-    public Double getMoney() {
-        return money;
-    }
-
-    public void setMoney(Double money) {
-        this.money = money;
-    }
-
-    public void setUnit(String unit)
-    {
-        this.unit = unit;
-    }
-
-    public String getUnit() 
-    {
-        return unit;
-    }
     public void setSupplier(String supplier) 
     {
         this.supplier = supplier;
     }
-
 
     public String getSupplier() 
     {
         return supplier;
     }
 
-    public void setcTime(Date cTime) 
-    {
-        this.cTime = cTime;
-    }
-
-    public Date getcTime() 
-    {
-        return cTime;
-    }
-    public void setuTime(Date uTime) 
-    {
-        this.uTime = uTime;
-    }
-
-    public Date getuTime() 
-    {
-        return uTime;
-    }
 
     @Override
     public String toString() {
@@ -271,18 +144,8 @@ public class Storageoutdetail extends BaseEntity
             .append("id", getId())
             .append("storageoutbillid", getStorageoutbillid())
             .append("materialcode", getMaterialcode())
-            .append("name", getName())
-            .append("partnumber", getPartnumber())
-            .append("footprint", getFootprint())
-            .append("serialNumber", getSerialNumber())
-            .append("manufacture", getManufacture())
-            .append("price", getPrice())
             .append("counts", getCounts())
-            .append("money", getMoney())
-            .append("unit", getUnit())
             .append("supplier", getSupplier())
-            .append("cTime", getcTime())
-            .append("uTime", getuTime())
             .toString();
     }
 }

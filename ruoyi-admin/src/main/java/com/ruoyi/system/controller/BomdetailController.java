@@ -12,6 +12,7 @@ import com.ruoyi.system.service.IStorageService;
 import com.ruoyi.system.vo.BomdetailVo;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.poifs.filesystem.POIFSFileSystem;
+import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
@@ -87,12 +88,14 @@ public class BomdetailController extends BaseController
         int excelRealRow = com.ruoyi.system.util.ExcelUtil.getExcelRealRow(sheet);
         for (int i=4;i<excelRealRow;i++){
             Row row = sheet.getRow(i);
-            if(row.getCell(0).equals("Approved")||(int)row.getCell(0).getNumericCellValue()==0){
-                continue;
+            if(row.getCell(0)==null||row.getCell(0).getCellType() == Cell.CELL_TYPE_BLANK||row.getCell(0).getCellType()==Cell.CELL_TYPE_STRING){
+                     break;
             }
             BomdetailVo bomdetailVo=new BomdetailVo();
             bomdetailVo.setNo((int)row.getCell(0).getNumericCellValue());
-            bomdetailVo.setComment(row.getCell(1).getStringCellValue());
+            Cell cell1 = row.getCell(1);
+            cell1.setCellType(Cell.CELL_TYPE_STRING);
+            bomdetailVo.setComment(cell1.getStringCellValue());
             bomdetailVo.setFootprint(row.getCell(2).getStringCellValue());
             bomdetailVo.setDescription(row.getCell(3).getStringCellValue());
             bomdetailVo.setDesignator(row.getCell(4).getStringCellValue());
@@ -102,6 +105,8 @@ public class BomdetailController extends BaseController
             bomdetailVo.setSmaterialcodes(null);
             bomDetailList.add(bomdetailVo);
         }
+
+
 
 
 

@@ -1549,7 +1549,7 @@ S2.define('select2/selection/base',[
   };
 
   BaseSelection.prototype.update = function (data) {
-    throw new Error('The `update` method must be defined in child classes.');
+    throw new Error('The `update` method must be defined in materialChild classes.');
   };
 
   return BaseSelection;
@@ -3108,11 +3108,11 @@ S2.define('select2/data/base',[
   Utils.Extend(BaseAdapter, Utils.Observable);
 
   BaseAdapter.prototype.current = function (callback) {
-    throw new Error('The `current` method must be defined in child classes.');
+    throw new Error('The `current` method must be defined in materialChild classes.');
   };
 
   BaseAdapter.prototype.query = function (params, callback) {
-    throw new Error('The `query` method must be defined in child classes.');
+    throw new Error('The `query` method must be defined in materialChild classes.');
   };
 
   BaseAdapter.prototype.bind = function (container, $container) {
@@ -3257,7 +3257,7 @@ S2.define('select2/data/select',[
   };
 
   SelectAdapter.prototype.destroy = function () {
-    // Remove anything added to child elements
+    // Remove anything added to materialChild elements
     this.$element.find('*').each(function () {
       // Remove any custom data set by Select2
       Utils.RemoveData(this);
@@ -4954,7 +4954,7 @@ S2.define('select2/defaults',[
         // This is required as we modify the object to remove any non-matches
         var match = $.extend(true, {}, data);
 
-        // Check each child of the option
+        // Check each materialChild of the option
         for (var c = data.children.length - 1; c >= 0; c--) {
           var child = data.children[c];
 
