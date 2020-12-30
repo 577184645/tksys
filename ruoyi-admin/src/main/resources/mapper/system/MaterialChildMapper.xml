@@ -36,13 +36,13 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         select id, name, partnumber, description, footprint, manufacture, unit, inputoperator, inputdate, approvedby, approveddate, approvedstatus, productmpq, productmoq, leadtime, comments, type_id, dept_id, safestock, ordernumber, buyer, del_flag, material_id, c_time, u_time from material_child
     </sql>
 
-    <select id="selectMaterialChildList" parameterType="MaterialChild" resultMap="MaterialChildResult">
+
+
+    <select id="selectMaterialChildByMaterialId" parameterType="Integer" resultMap="MaterialChildResult">
         <include refid="selectMaterialChildVo"/>
-        <where>
-           and  material_id=#{materialId}
-        </where>
+        where material_id = #{materialId}
     </select>
-    
+
     <select id="selectMaterialChildById" parameterType="Integer" resultMap="MaterialChildResult">
         <include refid="selectMaterialChildVo"/>
         where id = #{id}

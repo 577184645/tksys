@@ -6,6 +6,7 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
 import java.util.Date;
+import java.util.List;
 
 /**
  * 库存列表对象 storage
@@ -29,7 +30,6 @@ public class Storage extends BaseEntity
 
 
     /** 单价 */
-    @Excel(name = "单价")
     private Double price;
 
     /** 库存类型 */
@@ -46,7 +46,6 @@ public class Storage extends BaseEntity
     private Long stocks;
 
     /** 总价 */
-    @Excel(name = "总价")
     private Double money;
 
     /** 库存类别 */
@@ -92,6 +91,7 @@ public class Storage extends BaseEntity
     private String description;
     private String footprint;
     private String manufacture;
+    private List<MaterialChild> materialChildList;
     public Long getDeptId() {
         return deptId;
     }
@@ -99,6 +99,14 @@ public class Storage extends BaseEntity
         return name;
     }
 
+
+    public List<MaterialChild> getMaterialChildList() {
+        return materialChildList;
+    }
+
+    public void setMaterialChildList(List<MaterialChild> materialChildList) {
+        this.materialChildList = materialChildList;
+    }
 
     public Long getMaterialId() {
         return materialId;

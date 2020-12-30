@@ -41,7 +41,7 @@ public class MaterialChildServiceImpl implements IMaterialChildService
     @Override
     public List<MaterialChild> selectMaterialChildList(MaterialChild materialChild)
     {
-        return materialChildMapper.selectMaterialChildList(materialChild);
+        return materialChildMapper.selectMaterialChildByMaterialId(materialChild.getId());
     }
 
     /**

@@ -14,12 +14,7 @@
                                 <label>销售识别码：</label>
                                 <input type="text" name="projectreportHeadingcode"/>
                             </li>
-                            <li class="select-time">
-                                <label>报备时间：</label>
-                                <input type="text" class="time-input" id="startTime" placeholder="开始时间" name="params[beginProjectreportDate]"/>
-                                <span>-</span>
-                                <input type="text" class="time-input" id="endTime" placeholder="结束时间" name="params[endProjectreportDate]"/>
-                            </li>
+
                             <li>
                                 <label>最终用户：</label>
                                 <input type="text" name="projectreportLastuser"/>
@@ -31,6 +26,12 @@
                             <li>
                                 <label>设计院：</label>
                                 <input type="text" name="projectreportDesigninginstitute"/>
+                            </li>
+                            <li class="select-time">
+                                <label>报备时间：</label>
+                                <input type="text" class="time-input" id="startTime" placeholder="开始时间" name="params[beginProjectreportDate]"/>
+                                <span>-</span>
+                                <input type="text" class="time-input" id="endTime" placeholder="结束时间" name="params[endProjectreportDate]"/>
                             </li>
                               <input type="hidden" name="projectreportType" th:value="${projectreportType}" />
                             <li>

@@ -36,6 +36,10 @@
                                 <input type="text" name="name"/>
                             </li>
                             <li>
+                                <label>所属项目：</label>
+                                <input type="text" name="project"/>
+                            </li>
+                            <li>
                                 <label>型号：</label>
                                 <input type="text" name="partnumber"/>
                             </li>
@@ -44,17 +48,14 @@
                                 <input type="text" name="description"/>
                             </li>
                             <li>
-                                <label>发布状态：</label>
+                                <label>状态：</label>
                                 <select name="publishstatus" id="publishstatus"  th:with="type=${@dict.getType('publishstatus')}">
                                     <option value=""></option>
 
                                     <option th:each="dict : ${type}" th:text="${dict.dictLabel}" th:value="${dict.dictLabel}"></option>
                                 </select>
                             </li>
-                            <li>
-                                <label>所属项目：</label>
-                                <input type="text" name="project"/>
-                            </li>
+
                             <li>
                                 <label>产品大类：</label>
                                 <select name="producttype" id="producttype" th:with="type=${@dict.getType('producttype')}">
@@ -63,18 +64,7 @@
                                     <option th:each="dict : ${type}" th:text="${dict.dictLabel}" th:value="${dict.dictLabel}"></option>
                                 </select>
                             </li>
-                            <li>
-                                <label>设计者：</label>
-                                <input type="text" name="designer"/>
-                            </li>
-                            <li>
-                                <label>检查者：</label>
-                                <input type="text" name="scrutineer"/>
-                            </li>
-                            <li>
-                                <label>批准者：</label>
-                                <input type="text" name="approver"/>
-                            </li>
+
 
                             <li>
                                 <a class="btn btn-primary btn-rounded btn-sm" onclick="$.table.search()"><i class="fa fa-search"></i>&nbsp;搜索</a>

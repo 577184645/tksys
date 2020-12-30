@@ -72,19 +72,19 @@
 									<input type="text" name="materialcode"/>
 								</li>
 								<li>
-									<label>名称：</label>
+									<label>物料名称：</label>
 									<input type="text" name="name"/>
 								</li>
 								<li>
-									<label>型号：</label>
+									<label>物料型号：</label>
 									<input type="text" name="partnumber"/>
 								</li>
 								<li>
-									<label>品牌：</label>
+									<label>物料品牌：</label>
 									<input type="text" name="manufacture"/>
 								</li>
 								<li>
-									<label>描述：</label>
+									<label>物料描述：</label>
 									<input type="text" name="description"/>
 								</li>
 								<li>
@@ -283,11 +283,7 @@
 
 
 
-        function add() {
-            var row=$("#bootstrap-table").bootstrapTable('getSelections')[0];
-            table.set();
-            $.modal.open("添加后缀编码", prefix+"/addsuffix/"+row.id);
-        }
+
 
 		function queryDeptTree()
 		{

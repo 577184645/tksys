@@ -1,7 +1,8 @@
 package com.ruoyi.system.mapper;
 
-import java.util.List;
 import com.ruoyi.system.domain.MaterialChild;
+
+import java.util.List;
 
 /**
  * 物料Mapper接口
@@ -11,6 +12,8 @@ import com.ruoyi.system.domain.MaterialChild;
  */
 public interface MaterialChildMapper 
 {
+
+    public List<MaterialChild> selectMaterialChildByMaterialId(Integer materialId);
     /**
      * 查询物料
      * 
@@ -19,13 +22,7 @@ public interface MaterialChildMapper
      */
     public MaterialChild selectMaterialChildById(Integer id);
 
-    /**
-     * 查询物料列表
-     * 
-     * @param materialChild 物料
-     * @return 物料集合
-     */
-    public List<MaterialChild> selectMaterialChildList(MaterialChild materialChild);
+
 
     /**
      * 新增物料

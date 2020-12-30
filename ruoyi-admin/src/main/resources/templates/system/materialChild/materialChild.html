@@ -42,7 +42,7 @@
     <script th:inline="javascript">
         var editFlag = [[${@permission.hasPermi('system:materialChild:edit')}]];
         var removeFlag = [[${@permission.hasPermi('system:materialChild:remove')}]];
-        var prefix = ctx + "system/child";
+        var prefix = ctx + "system/materialChild";
 
         $(function() {
             var options = {
@@ -60,14 +60,16 @@
                     title: 'null',
                     visible: false
                 },
+
+                    {
+                        field: 'materialcode',
+                        title: '编码'
+                    },
                 {
                     field: 'name', 
                     title: '名称'
                 },
-                {
-                    field: 'materialcode', 
-                    title: '编码'
-                },
+
                 {
                     field: 'partnumber', 
                     title: '型号'
@@ -87,74 +89,6 @@
                 {
                     field: 'unit', 
                     title: '单位'
-                },
-                {
-                    field: 'inputoperator', 
-                    title: '物料信息注册者'
-                },
-                {
-                    field: 'inputdate', 
-                    title: '物料信息注册时间'
-                },
-                {
-                    field: 'approvedby', 
-                    title: '批准者'
-                },
-                {
-                    field: 'approveddate', 
-                    title: '批准时间'
-                },
-                {
-                    field: 'approvedstatus', 
-                    title: '批准状态'
-                },
-                {
-                    field: 'productmpq', 
-                    title: '最少包装量'
-                },
-                {
-                    field: 'productmoq', 
-                    title: '最少起订量'
-                },
-                {
-                    field: 'leadtime', 
-                    title: '交期'
-                },
-                {
-                    field: 'comments', 
-                    title: '备注'
-                },
-                {
-                    field: 'typeId', 
-                    title: '类型id'
-                },
-                {
-                    field: 'deptId', 
-                    title: '部门'
-                },
-                {
-                    field: 'safestock', 
-                    title: '安全库存'
-                },
-                {
-                    field: 'ordernumber', 
-                    title: '供方料号'
-                },
-                {
-                    field: 'buyer', 
-                    title: '采购员'
-                },
-                {
-                    field: 'materialId', 
-                    title: 'null'
-                },
-                {
-                    field: 'cTime', 
-                    title: '创建时间'
-                },
-                {
-                    field: 'uTime', 
-                    title: '修改时间'
                 },
                 {
                     title: '操作',

@@ -23,9 +23,13 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
+import javax.servlet.http.HttpServletResponse;
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
 import java.math.BigDecimal;
+import java.net.URLEncoder;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
@@ -460,10 +464,19 @@ public  class StorageServiceImpl implements IStorageService {
         return storageMapper.deleteStorageById(id);
     }
 
+
+    @Override
+    public void exportStorage(List<Storage> list, HttpServletResponse response) {
+        Workbook workbook = new XSSFWorkbook();
+        Sheet sheet = workbook.createSheet("仓库出入库台账");
+
+    }
+
     public  void fillExcelStorage(String date) throws  Exception
              {
         Workbook workbook=new XSSFWorkbook();
         Sheet sheet=workbook.createSheet("仓库出入库台账");
+
         Row row1=sheet.createRow(0);
         Cell cell=row1.createCell(0);
         Row row2=sheet.createRow(1);

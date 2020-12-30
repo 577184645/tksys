@@ -21,6 +21,9 @@ public class MaterialChild extends BaseEntity
     private Integer id;
 
     /** 名称 */
+    @Excel(name = "物料编码")
+    private String  materialcode;
+
     @Excel(name = "名称")
     private String name;
 
@@ -46,74 +49,74 @@ public class MaterialChild extends BaseEntity
     private String unit;
 
     /** 物料信息注册者 */
-    @Excel(name = "物料信息注册者")
+
     private String inputoperator;
 
     /** 物料信息注册时间 */
-    @Excel(name = "物料信息注册时间", width = 30, dateFormat = "yyyy-MM-dd")
+
     private Date inputdate;
 
     /** 批准者 */
-    @Excel(name = "批准者")
+
     private String approvedby;
 
     /** 批准时间 */
-    @Excel(name = "批准时间", width = 30, dateFormat = "yyyy-MM-dd")
+
     private Date approveddate;
 
     /** 批准状态 */
-    @Excel(name = "批准状态")
+
     private String approvedstatus;
 
     /** 最少包装量 */
-    @Excel(name = "最少包装量")
+
     private Integer productmpq;
 
     /** 最少起订量 */
-    @Excel(name = "最少起订量")
+
     private Integer productmoq;
 
     /** 交期 */
-    @Excel(name = "交期")
+
     private Integer leadtime;
 
     /** 备注 */
-    @Excel(name = "备注")
+
     private String comments;
 
     /** 类型id */
-    @Excel(name = "类型id")
+
     private Long typeId;
 
     /** 部门 */
-    @Excel(name = "部门")
+
     private Long deptId;
 
     /** 安全库存 */
-    @Excel(name = "安全库存")
+
     private Long safestock;
 
     /** 供方料号 */
-    @Excel(name = "供方料号")
+
     private String ordernumber;
 
     /** 采购员 */
-    @Excel(name = "采购员")
+
     private String buyer;
 
     /** 删除状态 */
     private String delFlag;
 
     /** null */
-    @Excel(name = "null")
+
     private Long materialId;
 
     /** 创建时间 */
-    @Excel(name = "创建时间", width = 30, dateFormat = "yyyy-MM-dd")
+
     private Date cTime;
 
     /** 修改时间 */
-    @Excel(name = "修改时间", width = 30, dateFormat = "yyyy-MM-dd")
+
     private Date uTime;
 
     public void setId(Integer id) 
@@ -135,7 +138,15 @@ public class MaterialChild extends BaseEntity
         return name;
     }
 
-    public void setPartnumber(String partnumber) 
+    public String getMaterialcode() {
+        return materialcode;
+    }
+
+    public void setMaterialcode(String materialcode) {
+        this.materialcode = materialcode;
+    }
+
+    public void setPartnumber(String partnumber)
     {
         this.partnumber = partnumber;
     }

@@ -28,12 +28,9 @@
                                 <label>出库单号：</label>
                                 <input type="text" name="storageoutid"/>
                             </li>
+
                             <li>
-                                <label>外协库：</label>
-                                <input type="text" name="outsourcewarehouse"/>
-                            </li>
-                            <li>
-                                <label>客户：</label>
+                                <label>出库客户：</label>
                                 <input type="text" name="customer"/>
                             </li>
                             <li>
@@ -49,15 +46,10 @@
                                 <input type="text" name="expressid"/>
                             </li>
                             <li>
-                                <label>领料单：</label>
+                                <label>领料单号：</label>
                                 <input type="text" name="stockrequisition"/>
                             </li>
-                            <li class="select-time">
-                                <label>入库时间： </label>
-                                <input type="text"   class="form-control" id="datetimepicker-startTime" placeholder="开始时间" name="params[beginTime]">
-                                <span>-</span>
-                                <input type="text"   class="form-control" id="datetimepicker-endTime" placeholder="结束时间" name="params[endTime]"/>
-                            </li>
+
                             <li>
                                 <label>出库原因：</label>
                                 <input type="text" name="instoragecause"/>
@@ -67,19 +59,20 @@
                                 <input type="text" name="projectname"/>
                             </li>
                             <li>
-                                <label>备注：</label>
+                                <label>出库备注：</label>
                                 <input type="text" name="comments"/>
+                            </li>
+                            <li class="select-time">
+                                <label>入库时间： </label>
+                                <input type="text"   class="form-control" id="datetimepicker-startTime" placeholder="开始时间" name="params[beginTime]">
+                                <span>-</span>
+                                <input type="text"   class="form-control" id="datetimepicker-endTime" placeholder="结束时间" name="params[endTime]"/>
                             </li>
                             <li>
                                 <label>红冲状态：</label>
-                                <div class="form-group">
-                                    <div class="col-sm-8">
-                                        <div class="radio-box" th:each="dict : ${@dict.getType('reddashed_status')}">
-                                            <input type="radio" th:id="${dict.dictCode}" name="delStatus" th:value="${dict.dictValue}" th:checked="1">
-                                            <label th:for="${dict.dictCode}" th:text="${dict.dictLabel}"></label>
-                                        </div>
-                                    </div>
-                                </div>
+                                <select name="delStatus" th:with="type=${@dict.getType('reddashed_status')}">
+                                    <option th:each="dict : ${type}" th:text="${dict.dictLabel}" th:value="${dict.dictValue}"></option>
+                                </select>
 
                             </li>
                             <li>

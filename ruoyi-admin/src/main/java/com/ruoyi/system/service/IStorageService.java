@@ -5,6 +5,7 @@ import com.ruoyi.system.domain.Storageinbill;
 import com.ruoyi.system.domain.Storageoutbill;
 import com.ruoyi.system.domain.Storagequitbill;
 
+import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 
 /**
@@ -16,7 +17,7 @@ import java.util.List;
 public interface IStorageService 
 {
 
-
+    public void exportStorage(List<Storage> list, HttpServletResponse response) ;
 
 
     public List<Storage> selectByBom(String comments,String footprint);

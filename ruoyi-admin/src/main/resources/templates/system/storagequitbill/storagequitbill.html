@@ -14,39 +14,28 @@
                                 <label>退料单号：</label>
                                 <input type="text" name="storagequitbillid"/>
                             </li>
-                            <li>
-                                <label>外协库：</label>
-                                <input type="text" name="outsourcewarehouse"/>
-                            </li>
-                            <li>
-                                <label>退料人：</label>
-                                <input type="text" name="outpeople"/>
-                            </li>
+
+
                             <li>
                                 <label>退料原因：</label>
                                 <input type="text" name="outstoragecause"/>
                             </li>
                             <li>
-                                <label>备注：</label>
+                                <label>退料备注：</label>
                                 <input type="text" name="comments"/>
+                            </li>
+
+                            <li>
+                                <label>红冲状态：</label>
+                                <select name="delStatus" th:with="type=${@dict.getType('reddashed_status')}">
+                                    <option th:each="dict : ${type}" th:text="${dict.dictLabel}" th:value="${dict.dictValue}"></option>
+                                </select>
                             </li>
                             <li class="select-time">
                                 <label>退料时间：</label>
                                 <input type="text" class="time-input" id="startTime" placeholder="开始时间" name="params[beginCTime]"/>
                                 <span>-</span>
                                 <input type="text" class="time-input" id="endTime" placeholder="结束时间" name="params[endCTime]"/>
-                            </li>
-                            <li>
-                                <label>红冲状态：</label>
-                                <div class="form-group">
-                                    <div class="col-sm-8">
-                                        <div class="radio-box" th:each="dict : ${@dict.getType('reddashed_status')}">
-                                            <input type="radio" th:id="${dict.dictCode}" name="delStatus" th:value="${dict.dictValue}" th:checked="1">
-                                            <label th:for="${dict.dictCode}" th:text="${dict.dictLabel}"></label>
-                                        </div>
-                                    </div>
-                                </div>
-
                             </li>
                             <li>
                                 <a class="btn btn-primary btn-rounded btn-sm" onclick="$.table.search()"><i class="fa fa-search"></i>&nbsp;搜索</a>

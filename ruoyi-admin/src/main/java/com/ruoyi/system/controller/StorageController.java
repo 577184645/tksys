@@ -5,21 +5,25 @@ import com.ruoyi.common.core.controller.BaseController;
 import com.ruoyi.common.core.domain.AjaxResult;
 import com.ruoyi.common.core.page.TableDataInfo;
 import com.ruoyi.common.enums.BusinessType;
-import com.ruoyi.common.utils.poi.ExcelUtil;
 import com.ruoyi.framework.util.ShiroUtils;
 import com.ruoyi.system.domain.*;
 import com.ruoyi.system.service.IProjectService;
 import com.ruoyi.system.service.IStorageService;
 import com.ruoyi.system.service.ISupplierService;
 import com.ruoyi.system.service.ISysUserService;
+import com.ruoyi.system.util.WebUtil;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 
 /**
@@ -45,6 +49,7 @@ public class StorageController extends BaseController
     private IProjectService iProjectService;
     @Autowired
     private ISupplierService iSupplierService;
+
 
     @RequiresPermissions("system:storage:view")
     @GetMapping()
@@ -97,13 +102,20 @@ public class StorageController extends BaseController
      */
     @RequiresPermissions("system:storage:export")
     @Log(title = "库存列表", businessType = BusinessType.EXPORT)
-    @PostMapping("/export")
-    @ResponseBody
-    public AjaxResult export(Storage storage)
+    @GetMapping("/export")
+    public void export(Storage storage, HttpServletResponse response)
     {
-        List<Storage> list = storageService.selectStorageList(storage);
-        ExcelUtil<Storage> util = new ExcelUtil<Storage>(Storage.class);
-        return util.exportExcel(list, "storage");
+        try {
+         //   List<Storage> list = storageService.selectStorageList(storage);
+            Workbook workbook=new XSSFWorkbook();
+            Sheet sheet=workbook.createSheet("仓库出入库台账");
+            WebUtil.downloadExcel(response,workbook,"仓库出入库台账.xlsx");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+
+
     }
 
     /**

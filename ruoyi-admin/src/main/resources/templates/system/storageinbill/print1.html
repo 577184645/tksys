@@ -36,35 +36,31 @@
             <span>类别:</span> <span style="padding-right: 215;" th:text="${storageinbill.outsourcewarehouse}"></span> <span style="position: absolute;right: 175">单据编号:</span> <span style="position: absolute;right: 60" th:text="${storageinbill.stockinid}"></span>
 
         </div>
+        <center>
         <table style="border:1px solid #F00;border-collapse: collapse">
             <tbody>
             <tr style="border:1px solid #F00;">
                 <td style="border:1px solid #F00;" width="50" align="center" >序号</td>
                 <td style="border:1px solid #F00;" width="121" align="center">编码</td>
-                <td style="border:1px solid #F00;" width="121" align="center">名称</td>
-                <td style="border:1px solid #F00;" width="182" align="center">型号</td>
-                <td style="border:1px solid #F00;" width="50" align="center">单位</td>
+
                 <td style="border:1px solid #F00;" width="50" align="center">数量</td>
                 <td style="border:1px solid #F00;" width="70" align="center">单价</td>
                 <td style="border:1px solid #F00;" width="70" align="center">金额</td>
             </tr>
             <tr th:each="storageindetail : ${storageindetails}" style="border:1px solid #F00;">
-                <td style="border:1px solid #F00;" align="center" th:text="${storageindetail.rownum}"></td>
+                <td style="border:1px solid #F00;" align="center" th:text="${storageindetailStat.index+1}"></td>
                 <td style="border:1px solid #F00;" align="center" th:text="${storageindetail.materialcode}"></td>
-                <td style="border:1px solid #F00;" align="center" th:text="${storageindetail.name}"></td>
-                <td style="border:1px solid #F00;" align="center" th:text="${storageindetail.partnumber}"></td>
-                <td style="border:1px solid #F00;" align="center" th:text="${storageindetail.unit}"> </td>
                 <td style="border:1px solid #F00;" align="center" th:text="${storageindetail.counts}"   > </td>
                 <td style="border:1px solid #F00;" align="center" th:text="${storageindetail.price}"> </td>
                 <td style="border:1px solid #F00;" align="center" th:text="${storageindetail.money}"> </td>
             </tr>
             <tr>
                 <td  style="border:1px solid #F00;" align="center">总金额</td>
-                <td colspan="7" style="border:1px solid #F00;" align="center" th:text="  ${storageinbill.money}"></td>
+                <td colspan="4" style="border:1px solid #F00;" align="center" th:text="  ${storageinbill.money}"></td>
             </tr>
             </tbody>
         </table>
-
+        </center>
         <div class="div" style="position: relative;margin-top: 5px;" >
             <span style="position: absolute;left: 50px;font-size: 18px;">仓库:</span>   <span style="position: absolute;left: 100px;font-size: 18px;">赵建忠</span> <span style="position: absolute;right: 150px;font-size: 18px;">主管:</span> <span style="position: absolute;right: 90px;font-size: 18px;">闵高祥</span>
         </div>
