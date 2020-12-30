@@ -14,9 +14,7 @@ import com.ruoyi.system.service.ISysUserService;
 import com.ruoyi.system.util.WebUtil;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
-import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
-import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -106,10 +104,10 @@ public class StorageController extends BaseController
     public void export(Storage storage, HttpServletResponse response)
     {
         try {
-         //   List<Storage> list = storageService.selectStorageList(storage);
-            Workbook workbook=new XSSFWorkbook();
-            Sheet sheet=workbook.createSheet("仓库出入库台账");
-            WebUtil.downloadExcel(response,workbook,"仓库出入库台账.xlsx");
+            List<Storage> list = storageService.selectStorageList(storage);
+            Workbook workbook= WebUtil.readStorageList(list);
+            WebUtil.downloadExcel(response,workbook,System.currentTimeMillis()+"库存列表.xlsx");
+
         } catch (Exception e) {
             e.printStackTrace();
         }

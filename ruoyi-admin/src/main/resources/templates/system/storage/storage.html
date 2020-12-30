@@ -180,17 +180,16 @@
 
 
     function exportData() {
-        //todo
-        var data=new Object();
-       var   deptId=$("#prefix")
-        parentId
-        name
-        partnumber
-        manufacture
-        footprint
-        description
-        status
-        window.location.href=prefix+"/export?name=天天";
+        var   deptId=$("#deptId").val();
+        var   parentId=$("#parentId").val();
+        var   materialcode=$("#materialcode").val();
+        var   name=$("#name").val();
+        var   partnumber=$("#partnumber").val();
+        var   manufacture=$("#manufacture").val();
+        var   footprint=$("#footprint").val();
+        var   description=$("#description").val();
+        var   status=$("#status").val();
+        window.location.href=prefix+"/export?deptId="+deptId+"&parentId="+parentId+"&materialcode="+materialcode+"&name="+name+"&partnumber="+partnumber+"&manufacture="+manufacture+"&footprint="+footprint+"&description="+description+"&status="+status;
     };
 
 
@@ -296,9 +295,8 @@
             columns: [
 
                 {
-                    field: 'id',
-                    title: 'id',
-                    visible: false
+                    field: '',
+                    title: ''
                 },
                 {
                     field: 'name',

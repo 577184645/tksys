@@ -13,7 +13,7 @@ import java.util.List;
 public interface MaterialChildMapper 
 {
 
-    public List<MaterialChild> selectMaterialChildByMaterialId(Integer materialId);
+    public List<MaterialChild> selectMaterialChildByMaterialId(Long materialId);
     /**
      * 查询物料
      * 

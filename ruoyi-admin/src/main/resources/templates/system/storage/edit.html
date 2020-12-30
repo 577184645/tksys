@@ -291,16 +291,10 @@
                                     <input type="text" name="description"/>
                                 </li>
                                 <li style="display: none">
-                                    <label>显示库存为0的产品：</label>
-                                    <div class="form-group">
-                                        <div class="col-sm-8">
-                                            <div class="radio-box" th:each="dict : ${@dict.getType('storage_status')}">
-                                                <input type="radio" th:id="${dict.dictCode}" name="status" th:value="${dict.dictValue}" th:checked="${dict.default}">
-                                                <label th:for="${dict.dictCode}" th:text="${dict.dictLabel}"></label>
-                                            </div>
-                                        </div>
-                                    </div>
-
+                                    <label>库存为0：</label>
+                                    <select name="status" id="status" th:with="type=${@dict.getType('storage_status')}">
+                                        <option th:each="dict : ${type}" th:text="${dict.dictLabel}" th:value="${dict.dictValue}"></option>
+                                    </select>
                                 </li>
                                 <li>
                                     <a class="btn btn-primary btn-rounded btn-sm" onclick="$.table.search('form2', 'bootstrap-table2')"><i class="fa fa-search"></i>&nbsp;搜索</a>

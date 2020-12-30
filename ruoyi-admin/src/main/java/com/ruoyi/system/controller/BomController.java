@@ -69,9 +69,11 @@ public class BomController extends BaseController
     @ResponseBody
     public AjaxResult export(Bom bom)
     {
+
         List<Bom> list = bomService.selectBomList(bom);
         ExcelUtil<Bom> util = new ExcelUtil<Bom>(Bom.class);
         return util.exportExcel(list, "bom");
+
     }
 
 

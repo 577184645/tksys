@@ -36,7 +36,7 @@ spring:
             testOnBorrow: false
             testOnReturn: false
             webStatFilter: 
-                enabled: true
+                enabled:  true
             statViewServlet:
                 enabled: true
                 # 设置白名单，不填则允许所有访问
