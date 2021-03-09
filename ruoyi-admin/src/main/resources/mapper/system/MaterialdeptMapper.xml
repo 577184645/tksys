@@ -14,7 +14,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </resultMap>
 
     <sql id="selectMaterialdeptVo">
-        select id, deptname, order_num, code, c_time, u_time from materialdept
+        select id, deptname, order_num, code, c_time, u_time from mat_dept
     </sql>
 
     <select id="selectMaterialdeptList" parameterType="Materialdept" resultMap="MaterialdeptResult">
@@ -40,7 +40,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </select>
         
     <insert id="insertMaterialdept" parameterType="Materialdept" useGeneratedKeys="true" keyProperty="id">
-        insert into materialdept
+        insert into mat_dept
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="deptname != null  and deptname != ''">deptname,</if>
             <if test="orderNum != null ">order_num,</if>
@@ -58,7 +58,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </insert>
 
     <update id="updateMaterialdept" parameterType="Materialdept">
-        update materialdept
+        update mat_dept
         <trim prefix="SET" suffixOverrides=",">
             <if test="deptname != null  and deptname != ''">deptname = #{deptname},</if>
             <if test="orderNum != null ">order_num = #{orderNum},</if>
@@ -70,11 +70,11 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </update>
 
     <delete id="deleteMaterialdeptById" parameterType="Long">
-        delete from materialdept where id = #{id}
+        delete from mat_dept where id = #{id}
     </delete>
 
     <delete id="deleteMaterialdeptByIds" parameterType="String">
-        delete from materialdept where id in
+        delete from mat_dept where id in
         <foreach item="id" collection="array" open="(" separator="," close=")">
             #{id}
         </foreach>

@@ -1,10 +1,12 @@
 package com.ruoyi.system.domain;
 
-import java.util.Date;
-import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
 import com.ruoyi.common.annotation.Excel;
 import com.ruoyi.common.core.domain.BaseEntity;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+import java.util.Date;
+import java.util.List;
 
 /**
  * 入库单列表对象 storageinbill
@@ -12,6 +14,8 @@ import com.ruoyi.common.core.domain.BaseEntity;
  * @author ruoyi
  * @date 2020-06-04
  */
+@Data
+@NoArgsConstructor
 public class Storageinbill extends BaseEntity
 {
     private static final long serialVersionUID = 1L;
@@ -19,6 +23,8 @@ public class Storageinbill extends BaseEntity
     /** null */
     private Long id;
 
+
+    @Excel(name = "入库金额")
     private Double money;
 
     /** 入库单号 */
@@ -45,9 +51,7 @@ public class Storageinbill extends BaseEntity
     @Excel(name = "库管员")
     private String warehouseadmin;
 
-    /** 入库时间 */
-    @Excel(name = "入库时间", width = 30, dateFormat = "yyyy-MM-dd")
-    private Date storagentime;
+
 
 
     /** 申请单号 */
@@ -87,17 +91,13 @@ public class Storageinbill extends BaseEntity
 
    private Integer storageStatus;
 
-    private String delStatus;
+    private Integer delStatus;
 
     /** 删除状态 */
     private Long status;
 
     /** 创建时间 */
     private Date cTime;
-
-    private String Supplier;
-
-
 
 
     /** 修改时间 */
@@ -106,223 +106,12 @@ public class Storageinbill extends BaseEntity
     private Long outsourcewarehouseid;
 
 
-    public String getChecknumber() {
-        return checknumber;
-    }
 
-    public void setChecknumber(String checknumber) {
-        this.checknumber = checknumber;
-    }
+    private List<Storageindetail> storageindetailList;
 
-    public String getSupplier() {
-        return Supplier;
-    }
 
-    public void setSupplier(String supplier) {
-        Supplier = supplier;
-    }
-
-    public String getDelStatus() {
-        return delStatus;
-    }
-
-    public Integer getStorageStatus() {
-        return storageStatus;
-    }
-
-    public void setStorageStatus(Integer storageStatus) {
-        this.storageStatus = storageStatus;
-    }
-
-    public void setDelStatus(String delStatus) {
-        this.delStatus = delStatus;
-    }
-
-    public String getApplyid() {
-        return applyid;
-    }
-
-    public void setApplyid(String applyid) {
-        this.applyid = applyid;
-    }
-
-    public String getContractid() {
-        return contractid;
-    }
-
-    public void setContractid(String contractid) {
-        this.contractid = contractid;
-    }
-
-    public String getInvoiceid() {
-        return invoiceid;
-    }
-
-    public void setInvoiceid(String invoiceid) {
-        this.invoiceid = invoiceid;
-    }
-
-    public String getExpressid() {
-        return expressid;
-    }
-
-    public void setExpressid(String expressid) {
-        this.expressid = expressid;
-    }
-
-    public String getInstoragecause() {
-        return instoragecause;
-    }
-
-    public void setInstoragecause(String instoragecause) {
-        this.instoragecause = instoragecause;
-    }
-
-    public String getProjectname() {
-        return projectname;
-    }
-
-    public void setProjectname(String projectname) {
-        this.projectname = projectname;
-    }
-
-    public String getProposer() {
-        return proposer;
-    }
-
-    public void setProposer(String proposer) {
-        this.proposer = proposer;
-    }
-
-    public Double getMoney() {
-        return money;
-    }
-
-    public void setMoney(Double money) {
-        this.money = money;
-    }
-
-    public Long getOutsourcewarehouseid() {
-        return outsourcewarehouseid;
-    }
-
-    public void setOutsourcewarehouseid(Long outsourcewarehouseid) {
-        this.outsourcewarehouseid = outsourcewarehouseid;
-    }
-
-    public void setId(Long id)
-    {
+    public Storageinbill(Long id, Double money) {
         this.id = id;
-    }
-
-    public Long getId() 
-    {
-        return id;
-    }
-    public void setStockinid(String stockinid) 
-    {
-        this.stockinid = stockinid;
-    }
-
-    public String getStockinid() 
-    {
-        return stockinid;
-    }
-    public void setOutsourcewarehouse(String outsourcewarehouse) 
-    {
-        this.outsourcewarehouse = outsourcewarehouse;
-    }
-
-    public String getOutsourcewarehouse() 
-    {
-        return outsourcewarehouse;
-    }
-    public void setPurchaseid(String purchaseid) 
-    {
-        this.purchaseid = purchaseid;
-    }
-
-    public String getPurchaseid() 
-    {
-        return purchaseid;
-    }
-    public void setDeliveryman(String deliveryman) 
-    {
-        this.deliveryman = deliveryman;
-    }
-
-    public String getDeliveryman() 
-    {
-        return deliveryman;
-    }
-    public void setWarehouseadmin(String warehouseadmin) 
-    {
-        this.warehouseadmin = warehouseadmin;
-    }
-
-    public String getWarehouseadmin() 
-    {
-        return warehouseadmin;
-    }
-    public void setStoragentime(Date storagentime) 
-    {
-        this.storagentime = storagentime;
-    }
-
-    public Date getStoragentime() 
-    {
-        return storagentime;
-    }
-    public void setComments(String comments) 
-    {
-        this.comments = comments;
-    }
-
-    public String getComments() 
-    {
-        return comments;
-    }
-
-    public Long getStatus() {
-        return status;
-    }
-
-    public void setStatus(Long status) {
-        this.status = status;
-    }
-
-    public void setcTime(Date cTime)
-    {
-        this.cTime = cTime;
-    }
-
-    public Date getcTime() 
-    {
-        return cTime;
-    }
-    public void setuTime(Date uTime) 
-    {
-        this.uTime = uTime;
-    }
-
-    public Date getuTime() 
-    {
-        return uTime;
-    }
-
-    @Override
-    public String toString() {
-        return new ToStringBuilder(this,ToStringStyle.MULTI_LINE_STYLE)
-            .append("id", getId())
-            .append("stockinid", getStockinid())
-            .append("outsourcewarehouse", getOutsourcewarehouse())
-            .append("purchaseid", getPurchaseid())
-            .append("deliveryman", getDeliveryman())
-            .append("warehouseadmin", getWarehouseadmin())
-            .append("storagentime", getStoragentime())
-            .append("comments", getComments())
-            .append("cTime", getcTime())
-            .append("uTime", getuTime())
-            .toString();
+        this.money = money;
     }
 }

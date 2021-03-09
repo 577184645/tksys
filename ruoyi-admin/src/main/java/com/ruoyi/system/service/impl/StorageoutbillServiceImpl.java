@@ -26,6 +26,7 @@ import java.util.List;
  * @date 2020-06-09
  */
 @Service
+@Transactional
 public class StorageoutbillServiceImpl implements IStorageoutbillService
 {
     @Autowired
@@ -114,29 +115,21 @@ public class StorageoutbillServiceImpl implements IStorageoutbillService
     }
 
     @Override
-    @Transactional
     public int reddashed(Long id) {
         Storageoutbill storageoutbill = storageoutbillMapper.selectStorageoutbillById(id);
-        List<Storageoutdetail> storageoutdetails = storageoutdetailMapper.selectStorageindetailByStorageoutdetailId(storageoutbill.getStorageoutid());
+        List<Storageoutdetail> storageoutdetails = storageoutdetailMapper.selectStorageindetailByStorageoutbillId(storageoutbill.getId());
         for (Storageoutdetail storageoutdetail: storageoutdetails) {
             Storage storage=new Storage();
-            WarehouseRecord warehouseRecord=new WarehouseRecord();
             storage.setId(storageoutdetail.getSid());
             //得到原有库存相减得到更新库存价格
             Storage oldstorage = storageMapper.selectStorageById(storage.getId());
             storage.setMoney( BigDecimalUtil.mul(oldstorage.getPrice(), oldstorage.getStocks() + storageoutdetail.getCounts()).doubleValue());
             storage.setStocks(oldstorage.getStocks() + storageoutdetail.getCounts());
-            Long oldstocks = storageMapper.selectStorageById(storageoutdetail.getSid()).getStocks();
+            Integer oldstocks = storageMapper.selectStorageById(storageoutdetail.getSid()).getStocks();
             storage.setStocks(oldstocks+storageoutdetail.getCounts());
             storageMapper.updateStorageById(storage);
             //添加至查询记录
-            warehouseRecord.setType(Const.WarehouseRecordStatus.STORAGE_OUT_HC);
-            warehouseRecord.setNumber(storageoutbill.getStorageoutid());
-            warehouseRecord.setMaterialcode(storageoutdetail.getMaterialcode());
-            warehouseRecord.setCount(storageoutdetail.getCounts());
-            warehouseRecord.setSerialNumber(storageoutdetail.getSerialNumber());
-            warehouseRecord.setRemark(storageoutdetail.getRemark());
-            warehouseRecordMapper.insertWarehouseRecord(warehouseRecord);
+            warehouseRecordMapper.insertWarehouseRecord(new WarehouseRecord(Const.WarehouseRecordStatus.STORAGE_OUT_HC,storageoutbill.getStorageoutid(),storageoutdetail.getMaterialcode(),storageoutdetail.getCounts(),null,null,null,storageoutdetail.getSerialNumber(),storageoutdetail.getComments()));
         }
         //修改出库单的状态
         return storageoutbillMapper.updatedelStatus(id);

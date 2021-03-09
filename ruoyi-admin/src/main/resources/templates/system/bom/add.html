@@ -429,7 +429,6 @@
                 url: prefix1 + "/listimport",
                 importUrl: prefix1 + "/importData",
                 importTemplateUrl: prefix1 + "/importTemplate",
-
                 pagination:false,
                 showSearch: false,
                 showRefresh:false,
@@ -445,143 +444,52 @@
                         title: '序号'
                     },
                     {
-                        field: 'mmaterialcodes',
-                        title: '物料编码(手写)',
+                        field: 'code',
+                        title: '物料编码',
                         editable : {
                             type : 'text',
                             title : '主物料编码'
                         }
                     },
                     {
-                        field: 'smaterialcodes',
-                        title: '备用物料编码(手写)',
-                        editable : {
-                            type : 'text',
-                            title : '备用物料编码(逗号分割多个)'
-                        }
-                    },
-
-                    {
-                        field: 'mmaterialcode',
-                        title: '主物料编码',
-                        editable : {
-                            type : 'select',
-                            title : '主物料编码',
-                            separator:",",
-                            source: function () {
-                                var result = [];
-                                var data = $("#bootstrap-table").bootstrapTable('getData'),
-                                    index = $(this).parents('tr').data('index');
-                                $.ajax({
-                                    url: prefix2+'/selectByBom',
-                                    async: false,
-                                    type: "get",
-                                    data: {"comments":data[index].comment,"footprint":data[index].footprint},
-                                    success: function (data, status) {
-                                        result.push({ value: "", text: "" });
-
-                                        $.each(data, function (key, value) {
-
-                                            result.push({ value: value.id, text: value.materialcode });
-                                        });
-                                    }
-                                });
-                                return result;
-                            }
-                        }
-                    },
-                    {
-                        field: 'smaterialcode',
-                        title: '备用物料编码',
-                        editable : {
-                            type : 'checklist',
-                            title : '备用物料编码',
-                            separator:",",
-                            source: function () {
-                                var result = [];
-                                var data = $("#bootstrap-table").bootstrapTable('getData'),
-                                    index = $(this).parents('tr').data('index');
-                                $.ajax({
-                                    url: prefix2+'/selectByBom',
-                                    async: false,
-                                    type: "get",
-                                    data: {"comments":data[index].comment,"footprint":data[index].footprint},
-                                    success: function (data, status) {
-
-                                        $.each(data, function (key, value) {
-
-                                            result.push({ value: value.materialcode, text: value.materialcode });
-                                        });
-                                    }
-                                });
-                                return result;
-                            }
-                        }
-                    },
-                    {
                         field: 'price',
-                        title: 'Price',
-                        editable : {
-                            type : 'text',
-                            title : '价格'
-                        }
-                    },
-                    {
-                        field: 'supplier',
-                        title: 'Supplier'
+                        title: '价格'
                     },
 
                     {
                         field: 'comment',
-                        title: 'Comment'
+                        title: 'comment(元件)'
                     },
-
+                    {
+                        field: 'link',
+                        title: 'link(参考购买链接)'
+                    },
                     {
                         field: 'footprint',
-                        title: 'Footprint'
+                        title: 'footprint(封装)'
                     },
                     {
                         field: 'description',
-                        title: 'Description'
+                        title: 'description(描述)'
+                    },
+                    {
+                        field: 'parttype',
+                        title: 'parttype(型号)'
                     },
                     {
                         field: 'designator',
-                        title: 'Designator'
+                        title: 'designator(位号)'
                     },
                     {
                         field: 'quantity',
-                        title: 'Quantity'
+                        title: 'quantity(数量)'
 
                     }
 
 
 
 
-                ] ,onEditableSave: function (field, row, oldValue,$el) {
-
-
-                    if(row.mmaterialcode!=null&&row.mmaterialcode!=''){
-                          $.ajax({
-                            url: prefix1+'/selectBomBySupplierAndPrice',
-                            type: "post",
-                            async: false,
-                            data: {"id":row.mmaterialcode},
-                            success: function (data) {
-
-                                row.price =data.price;
-                                row.supplier=data.supplier;
-                            }
-                        });
-                    }
-
-                    $('#bootstrap-table').bootstrapTable('updateRow', {index: row.randomId, row: row});
-
-
-                    getsum();
-                 /*   getsum();
-                    $('#bootstrap-table').bootstrapTable('updateRow', {index: row.materialcode, row: row});
-*/
-                }
+                ]
 
             };
             $.table.init(options);
@@ -597,7 +505,20 @@
 
 
 
-
+        /** 将text中的html字符转义， 仅转义  ', ", <, > 四个字符
+         * @param  { String } str 需要转义的字符串
+         * @returns { String }     转义后的字符串
+         */
+      function  unhtml(str) {
+            return str ? str.replace(/[<">']/g, (a) => {
+                            return {
+                                '<': '&lt;',
+                                '"': '&quot;',
+                                '>': '&gt;',
+                                "'": '&#39;'
+                            }[a]
+                         }) : '';
+      }
 
         function submitHandler() {
 
@@ -606,12 +527,19 @@
 
 
                 var data = $("#bootstrap-table" ).bootstrapTable('getData');
+               for (var i=0;i<data.length;i++){
+                   data[i].comment=unhtml(data[i].comment);
+                   data[i].footprint= unhtml(data[i].footprint)
+                   data[i].description= unhtml(data[i].description);
+                   data[i].parttype= unhtml(data[i].parttype);
+                   data[i].designator=unhtml(data[i].designator);
+               }
 
 
 
 
                 if(data==null||data.length==0){
-                    alert("请填写bom产品!");
+                    $.modal.alertWarning("请填写bom产品!");
                     return;
                 }
 
@@ -651,6 +579,7 @@
                     }
                 })
             };
+             $.modal.alertWarning("请填写完整信息!");
         }
 
 
@@ -704,40 +633,15 @@
 
 
         function downloadFile(){
-            window.location.href = ctx + "common/download/resource?resource=/profile/upload/2020/09/23/BOM_USE.xlt" ;
+            window.location.href = ctx + "common/download/resource?resource=/profile/template/BOM_Template.xlsx" ;
         }
         
         
 
         
-        
-        function updatecount() {
-            var data = $("#bootstrap-table").bootstrapTable('getData');
 
-            if(data.length==0){
-                alert("请导入bom清单");
-            }
-            for (var i=0;i<data.length;i++){
-                $("#bootstrap-table").bootstrapTable('updateRow', {
-                    index: i, // 你想插入到哪，0表示第一行
-                    row: {
-                        count:$("#counts").val(),
-                        sumcount:$("#counts").val()*data[i].quantity
-                    }
-                })
-            }
 
-        }
 
-        function getsum() {
-            var data = $("#bootstrap-table").bootstrapTable('getData');
-            var sum=parseFloat(0);
-            for(var i=0;i<data.length;i++) {
-                sum+=parseFloat(data[i].price)*parseInt(data[i].quantity);
-            }
-
-            $("#price").val(sum.toFixed(2));
-        }
 
         $("#form-bom-add").validate({
             focusCleanup: true
@@ -776,11 +680,7 @@
                 dataType: 'json',
                 success: function(result) {
                     $('#myModal').modal('hide');
-
                     $("#bootstrap-table").bootstrapTable('refresh');
-
-
-
                     $.modal.alertSuccess(result.msg);
 
                 },

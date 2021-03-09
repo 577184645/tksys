@@ -27,8 +27,6 @@
                 <div class="form-group">
                     <label class="col-sm-3 control-label">供应商：</label>
                     <div class="col-sm-8">
-
-
                             <select  name="supplier" id="supplier" class="form-control">
                                 <option  th:each="supplier:${supplierList}"
                                          th:value="${supplier.name}"
@@ -305,20 +303,21 @@
     function submitHandler() {
 
         if($("#deptId").val()==""){
-            alert("请选择子仓库");
+            $.modal.alertWarning("请选择子仓库");
             return;
         }
         if ($.validate.form()) {
 
                 var data = $("#bootstrap-table1" ).bootstrapTable('getData');
                 if(data==null||data.length==0){
-                    alert("请填写入库产品!");
+                    $.modal.alertWarning("请填写入库产品!");
                     return;
                 }
-
                 for(var i=0;i<data.length;i++){
-                    if(data[i].counts<=0){
-                        alert("入库数量必须大于0!")
+                    console.log(data);
+                    if(data[i].counts<=0||data[i].price==""||data[i].money==""){
+                        $.modal.alertWarning("数量必须大于0,单价和总价不能为空!")
+
                         return;
                     }
                 }
@@ -372,7 +371,7 @@
 
     function zOnClick(event, treeId, treeNode) {
        if(treeNode.name=="上海库"||treeNode.name=="天长库"){
-           alert("不能选择上海库或天长库,如没有子库 请刷新!");
+           $.modal.alertWarning("不能选择上海库或天长库,如没有子库 请刷新!");
            return;
        }
 
@@ -381,7 +380,7 @@
             $("#deptId").val(treeNode.id);
             $("#parentId").val(treeNode.pId);
         }else{
-            alert("请选择子仓库");
+            $.modal.alertWarning("请选择子仓库");
             $("#deptId").val("");
         }
 
@@ -428,6 +427,11 @@
             {
                 field: 'materialcode',
                 title: '物料代码'
+            },
+            {
+                field: 'materialId',
+                title: '物料代码',
+                visible: false
             },
 
             {
@@ -641,6 +645,7 @@
                   id: data[i].id,
                   name: data[i].name,
                   materialcode: data[i].materialcode,
+                  materialId: data[i].materialId,
                   comments:"",
                   taxamount:"",
                   rate:"",

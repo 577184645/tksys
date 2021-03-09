@@ -5,14 +5,13 @@ import com.ruoyi.common.core.controller.BaseController;
 import com.ruoyi.common.core.domain.AjaxResult;
 import com.ruoyi.common.core.page.TableDataInfo;
 import com.ruoyi.common.enums.BusinessType;
+import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.common.utils.poi.ExcelUtil;
 import com.ruoyi.system.domain.Bomdetail;
+import com.ruoyi.system.domain.Storage;
 import com.ruoyi.system.service.IBomdetailService;
 import com.ruoyi.system.service.IStorageService;
-import com.ruoyi.system.vo.BomdetailVo;
-import org.apache.poi.hssf.usermodel.HSSFWorkbook;
-import org.apache.poi.poifs.filesystem.POIFSFileSystem;
-import org.apache.poi.ss.usermodel.Cell;
+import com.ruoyi.system.util.POIUtils;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
@@ -24,8 +23,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
-import java.io.ByteArrayInputStream;
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -48,7 +45,7 @@ public class BomdetailController extends BaseController
     @Autowired
     private IStorageService storageService;
 
-    List<BomdetailVo> bomDetailList=new ArrayList<>();
+    List<Map<String,Object>> bomDetailList=new ArrayList<>();
 
     @RequiresPermissions("system:bomdetail:view")
     @GetMapping()
@@ -63,7 +60,7 @@ public class BomdetailController extends BaseController
     public Map clearbomDetailList(){
         Map<String,Object> ret=new HashMap<>();
         bomDetailList.clear();
-        ret.put("msg","sucess");
+        ret.put("msg","success");
         return  ret;
     }
 
@@ -80,36 +77,40 @@ public class BomdetailController extends BaseController
     @ResponseBody
     public AjaxResult importData(MultipartFile file, boolean updateSupport, HttpServletRequest request) throws Exception
     {
-        bomDetailList.clear();
-        InputStream in= new ByteArrayInputStream(file.getBytes());
-        POIFSFileSystem fs = new POIFSFileSystem(in);
-        Workbook wb = new HSSFWorkbook(fs);
-        Sheet sheet = wb.getSheetAt(0);
-        int excelRealRow = com.ruoyi.system.util.ExcelUtil.getExcelRealRow(sheet);
-        for (int i=4;i<excelRealRow;i++){
-            Row row = sheet.getRow(i);
-            if(row.getCell(0)==null||row.getCell(0).getCellType() == Cell.CELL_TYPE_BLANK||row.getCell(0).getCellType()==Cell.CELL_TYPE_STRING){
-                     break;
+        try {
+            bomDetailList.clear();
+            POIUtils.checkFile(file);
+            Workbook wb =POIUtils.getWorkBook(file);
+            Sheet sheet = wb.getSheetAt(0);
+            int excelRealRow = POIUtils.getExcelRealRow(sheet);
+            for (int i=5;i<excelRealRow;i++){
+                Row row = sheet.getRow(i);
+                if(StringUtils.isBlank(POIUtils.getCellValue(row.getCell(0)))){
+                         break;
+                }
+                Map<String,Object> map=new HashMap<>();
+                map.put("no",POIUtils.getCellValue(row.getCell(0)));
+                map.put("code",POIUtils.getCellValue(row.getCell(1)));
+                Object code = map.get("code");
+                if(code!=null){
+                    Storage storage = storageService.selectStorageListBymaterialcode(code.toString());
+                    if(storage!=null){
+                        map.put("price",storage.getPrice());
+                    }
+                }
+                map.put("link",POIUtils.getCellValue(row.getCell(2)));
+                map.put("comment",POIUtils.getCellValue(row.getCell(3)));
+                map.put("footprint",POIUtils.getCellValue(row.getCell(4)));
+                map.put("description",POIUtils.getCellValue(row.getCell(5)));
+                map.put("parttype",POIUtils.getCellValue(row.getCell(6)));
+                map.put("designator",POIUtils.getCellValue(row.getCell(7)));
+                map.put("quantity",POIUtils.getCellValue(row.getCell(8)));
+                bomDetailList.add(map);
             }
-            BomdetailVo bomdetailVo=new BomdetailVo();
-            bomdetailVo.setNo((int)row.getCell(0).getNumericCellValue());
-            Cell cell1 = row.getCell(1);
-            cell1.setCellType(Cell.CELL_TYPE_STRING);
-            bomdetailVo.setComment(cell1.getStringCellValue());
-            bomdetailVo.setFootprint(row.getCell(2).getStringCellValue());
-            bomdetailVo.setDescription(row.getCell(3).getStringCellValue());
-            bomdetailVo.setDesignator(row.getCell(4).getStringCellValue());
-            bomdetailVo.setQuantity((int)row.getCell(5).getNumericCellValue());
-            bomdetailVo.setPrice(0);
-            bomdetailVo.setMmaterialcodes(null);
-            bomdetailVo.setSmaterialcodes(null);
-            bomDetailList.add(bomdetailVo);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return AjaxResult.error("操作失败!");
         }
-
-
-
-
-
         return AjaxResult.success("操作成功!");
     }
 

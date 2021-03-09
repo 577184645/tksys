@@ -24,7 +24,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </resultMap>
 
     <sql id="selectMaterialtypeVo">
-        select dept_id, parent_id, code,ancestors, dept_name, order_num, leader, phone, email, status, del_flag, create_by, create_time, update_by, update_time from materialtype
+        select dept_id, parent_id, code,ancestors, dept_name, order_num, leader, phone, email, status, del_flag, create_by, create_time, update_by, update_time from mat_type
     </sql>
 
     <select id="selectMaterialtypeList" parameterType="Materialtype" resultMap="MaterialtypeResult">
@@ -37,21 +37,21 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     
     <select id="selectMaterialtypeById" parameterType="Long" resultMap="MaterialtypeResult">
         select t.dept_id, t.parent_id,t.code, t.ancestors, t.dept_name, t.order_num, t.leader, t.phone, t.email, t.status, t.del_flag, t.create_by, t.create_time, t.update_by, t.update_time, p.dept_id as parent_name
-        from materialtype t
-        left join materialtype p on p.dept_id = t.parent_id
+        from mat_type t
+        left join mat_type p on p.dept_id = t.parent_id
         where t.dept_id = #{deptId}
     </select>
 
 
     <select id="selectMaterialtypeByCode"  resultMap="MaterialtypeResult">
         select t.dept_id, t.parent_id,t.code, t.ancestors, t.dept_name, t.order_num, t.leader, t.phone, t.email, t.status, t.del_flag, t.create_by, t.create_time, t.update_by, t.update_time, p.dept_id as parent_name
-        from materialtype t
-        left join materialtype p on p.dept_id = t.parent_id
+        from mat_type t
+        left join mat_type p on p.dept_id = t.parent_id
         where t.code = #{code}
     </select>
 
     <insert id="insertMaterialtype" parameterType="Materialtype" useGeneratedKeys="true" keyProperty="deptId">
-        insert into materialtype
+        insert into mat_type
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="parentId != null ">parent_id,</if>
             <if test="code != null ">code,</if>
@@ -87,7 +87,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </insert>
 
     <update id="updateMaterialtype" parameterType="Materialtype">
-        update materialtype
+        update mat_type
         <trim prefix="SET" suffixOverrides=",">
             <if test="parentId != null ">parent_id = #{parentId},</if>
             <if test="code != null ">code = #{code},</if>
@@ -108,11 +108,11 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </update>
 
     <delete id="deleteMaterialtypeById" parameterType="Long">
-        delete from materialtype where dept_id = #{deptId}
+        delete from mat_type where dept_id = #{deptId}
     </delete>
 
     <delete id="deleteMaterialtypeByIds" parameterType="String">
-        delete from materialtype where dept_id in 
+        delete from mat_type where dept_id in
         <foreach item="deptId" collection="array" open="(" separator="," close=")">
             #{deptId}
         </foreach>
@@ -120,12 +120,12 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 
 
     <select id="checkDeptExistUser" parameterType="Long" resultType="int">
-		select count(1) from material where dept_id = #{deptId}
+		select count(1) from mat_list where dept_id = #{deptId}
 	</select>
 
 
     <select id="selectMaterialtypeCount" parameterType="SysDept" resultType="int">
-        select count(1) from materialtype
+        select count(1) from mat_type
         where 1=1
         <if test="deptId != null and deptId != 0"> and dept_id = #{deptId} </if>
         <if test="parentId != null and parentId != 0"> and parent_id = #{parentId} </if>

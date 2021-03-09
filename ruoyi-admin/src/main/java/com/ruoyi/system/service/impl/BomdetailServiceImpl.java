@@ -83,50 +83,6 @@ public class BomdetailServiceImpl implements IBomdetailService
         return bomdetailMapper.deleteBomdetailByIds(Convert.toStrArray(ids));
     }
 
-    /**
-     * 删除bom详细清单信息
-     * 
-     * @param id bom详细清单ID
-     * @return 结果
-     */
-    @Override
-    public int deleteBomdetailById(Integer id)
-    {
-        return bomdetailMapper.deleteBomdetailById(id);
-    }
 
-    @Override
-    public String importBomdetail(List<Bomdetail> bomdetailList) {
-        if (StringUtils.isNull(bomdetailList) || bomdetailList.size() == 0)
-    {
-        throw new BusinessException("导入数据不能为空！");
-    }
-        int successNum = 0;
-        int failureNum = 0;
-        StringBuilder successMsg = new StringBuilder();
-        StringBuilder failureMsg = new StringBuilder();
-        for (Bomdetail bomdetail : bomdetailList)
-        {
-            try
-            {
-
-                successNum++;
-            }
-            catch (Exception e)
-            {
-                failureNum++;
-            }
-        }
-        if (failureNum > 0)
-        {
-            failureMsg.insert(0, "很抱歉，导入失败！共 " + failureNum + " 条数据格式不正确，错误如下：");
-            throw new BusinessException(failureMsg.toString());
-        }
-        else
-        {
-            successMsg.insert(0, "恭喜您，数据已全部导入成功！共 " + successNum + " 条，数据如下：");
-        }
-        return successMsg.toString();
-    }
     
 }

@@ -2,8 +2,7 @@ package com.ruoyi.system.domain;
 
 import com.ruoyi.common.annotation.Excel;
 import com.ruoyi.common.core.domain.BaseEntity;
-import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
+import lombok.Data;
 
 import java.util.Date;
 
@@ -13,6 +12,7 @@ import java.util.Date;
  * @author ruoyi
  * @date 2020-09-18
  */
+@Data
 public class SalesContract extends BaseEntity
 {
     private static final long serialVersionUID = 1L;
@@ -77,159 +77,5 @@ public class SalesContract extends BaseEntity
     private String isReturned;
 
 
-    public String getIsInvoice() {
-        return isInvoice;
-    }
 
-    public void setIsInvoice(String isInvoice) {
-        this.isInvoice = isInvoice;
-    }
-
-    public String getIsReturned() {
-        return isReturned;
-    }
-
-    public void setIsReturned(String isReturned) {
-        this.isReturned = isReturned;
-    }
-
-    public String getContractStatus() {
-        return contractStatus;
-    }
-
-    public void setContractStatus(String contractStatus) {
-        this.contractStatus = contractStatus;
-    }
-
-    public String getYear() {
-        return year;
-    }
-
-    public void setYear(String year) {
-        this.year = year;
-    }
-
-    public String getContractProjectname() {
-        return contractProjectname;
-    }
-
-    public void setContractProjectname(String contractProjectname) {
-        this.contractProjectname = contractProjectname;
-    }
-
-    public String getGroupNumber() {
-        return groupNumber;
-    }
-
-    public void setGroupNumber(String groupNumber) {
-        this.groupNumber = groupNumber;
-    }
-
-    public void setContractId(Long contractId)
-    {
-        this.contractId = contractId;
-    }
-
-    public Long getContractId() 
-    {
-        return contractId;
-    }
-    public void setContractNumber(String contractNumber) 
-    {
-        this.contractNumber = contractNumber;
-    }
-
-    public String getContractNumber() 
-    {
-        return contractNumber;
-    }
-    public void setContractCustomer(String contractCustomer) 
-    {
-        this.contractCustomer = contractCustomer;
-    }
-
-    public String getContractCustomer() 
-    {
-        return contractCustomer;
-    }
-    public void setContractMoney(Double contractMoney) 
-    {
-        this.contractMoney = contractMoney;
-    }
-
-    public Double getContractMoney() 
-    {
-        return contractMoney;
-    }
-    public void setContractInvoicemoney(Double contractInvoicemoney) 
-    {
-        this.contractInvoicemoney = contractInvoicemoney;
-    }
-
-    public Double getContractInvoicemoney() 
-    {
-        return contractInvoicemoney;
-    }
-    public void setContractPayment(String contractPayment) 
-    {
-        this.contractPayment = contractPayment;
-    }
-
-    public String getContractPayment() 
-    {
-        return contractPayment;
-    }
-    public void setContractDeliverstatus(String contractDeliverstatus) 
-    {
-        this.contractDeliverstatus = contractDeliverstatus;
-    }
-
-    public String getContractDeliverstatus() 
-    {
-        return contractDeliverstatus;
-    }
-    public void setContractReturnedmoney(Double contractReturnedmoney) 
-    {
-        this.contractReturnedmoney = contractReturnedmoney;
-    }
-
-    public Double getContractReturnedmoney() 
-    {
-        return contractReturnedmoney;
-    }
-
-    public void setcTime(Date cTime) 
-    {
-        this.cTime = cTime;
-    }
-
-    public Date getcTime() 
-    {
-        return cTime;
-    }
-    public void setuTime(Date uTime) 
-    {
-        this.uTime = uTime;
-    }
-
-    public Date getuTime() 
-    {
-        return uTime;
-    }
-
-    @Override
-    public String toString() {
-        return new ToStringBuilder(this,ToStringStyle.MULTI_LINE_STYLE)
-            .append("contractId", getContractId())
-            .append("contractNumber", getContractNumber())
-            .append("contractCustomer", getContractCustomer())
-            .append("contractMoney", getContractMoney())
-            .append("contractInvoicemoney", getContractInvoicemoney())
-            .append("contractPayment", getContractPayment())
-            .append("contractDeliverstatus", getContractDeliverstatus())
-            .append("contractReturnedmoney", getContractReturnedmoney())
-            .append("cTime", getcTime())
-            .append("uTime", getuTime())
-            .toString();
-    }
 }

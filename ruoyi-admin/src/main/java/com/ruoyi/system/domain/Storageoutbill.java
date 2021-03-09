@@ -2,10 +2,11 @@ package com.ruoyi.system.domain;
 
 import com.ruoyi.common.annotation.Excel;
 import com.ruoyi.common.core.domain.BaseEntity;
-import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.util.Date;
+import java.util.List;
 
 /**
  * 出库单列表对象 storageoutbill
@@ -13,6 +14,8 @@ import java.util.Date;
  * @author ruoyi
  * @date 2020-06-09
  */
+@Data
+@NoArgsConstructor
 public class Storageoutbill extends BaseEntity
 {
     private static final long serialVersionUID = 1L;
@@ -83,9 +86,10 @@ public class Storageoutbill extends BaseEntity
     @Excel(name = "申请人")
     private String proposer;
 
-    /** 出库日期 */
-    @Excel(name = "出库日期", width = 30, dateFormat = "yyyy-MM-dd")
-    private Date storageouttime;
+    @Excel(name = "出库金额")
+    private Double outmoney;
+
+
 
     /** 备注 */
     @Excel(name = "备注")
@@ -100,221 +104,15 @@ public class Storageoutbill extends BaseEntity
     private Date uTime;
 
 
-    private double money;
-
-    public String getPurchaseid() {
-        return purchaseid;
-    }
-
-    public void setPurchaseid(String purchaseid) {
-        this.purchaseid = purchaseid;
-    }
-
     /** 删除状态 */
     private Long delStatus;
 
 
+    private List<Storageoutdetail> storageoutdetailList;
 
 
-    public double getMoney() {
-        return money;
-    }
-
-    public void setMoney(double money) {
-        this.money = money;
-    }
-
-    public void setId(Long id)
-    {
+    public Storageoutbill(Long id, Double outmoney) {
         this.id = id;
-    }
-
-    public Long getId() 
-    {
-        return id;
-    }
-    public void setStorageoutid(String storageoutid) 
-    {
-        this.storageoutid = storageoutid;
-    }
-
-    public String getStorageoutid() 
-    {
-        return storageoutid;
-    }
-    public void setOutsourcewarehouse(String outsourcewarehouse) 
-    {
-        this.outsourcewarehouse = outsourcewarehouse;
-    }
-
-    public String getOutsourcewarehouse() 
-    {
-        return outsourcewarehouse;
-    }
-    public void setOutsourcewarehouseid(Long outsourcewarehouseid) 
-    {
-        this.outsourcewarehouseid = outsourcewarehouseid;
-    }
-
-    public Long getOutsourcewarehouseid() 
-    {
-        return outsourcewarehouseid;
-    }
-    public void setStockrequisition(String stockrequisition) 
-    {
-        this.stockrequisition = stockrequisition;
-    }
-
-    public String getStockrequisition() 
-    {
-        return stockrequisition;
-    }
-    public void setWarehouseadmin(String warehouseadmin) 
-    {
-        this.warehouseadmin = warehouseadmin;
-    }
-
-
-
-
-    public String getWarehouseadmin()
-    {
-        return warehouseadmin;
-    }
-    public void setStockpeople(String stockpeople) 
-    {
-        this.stockpeople = stockpeople;
-    }
-
-    public String getStockpeople() 
-    {
-        return stockpeople;
-    }
-    public void setStorageouttime(Date storageouttime) 
-    {
-        this.storageouttime = storageouttime;
-    }
-
-    public Date getStorageouttime() 
-    {
-        return storageouttime;
-    }
-    public void setComments(String comments) 
-    {
-        this.comments = comments;
-    }
-
-    public String getComments() 
-    {
-        return comments;
-    }
-    public void setcTime(Date cTime) 
-    {
-        this.cTime = cTime;
-    }
-
-    public Date getcTime() 
-    {
-        return cTime;
-    }
-    public void setuTime(Date uTime) 
-    {
-        this.uTime = uTime;
-    }
-
-    public Date getuTime() 
-    {
-        return uTime;
-    }
-    public void setDelStatus(Long delStatus) 
-    {
-        this.delStatus = delStatus;
-    }
-
-    public String getApplyid() {
-        return applyid;
-    }
-
-    public void setApplyid(String applyid) {
-        this.applyid = applyid;
-    }
-
-    public String getContractid() {
-        return contractid;
-    }
-
-    public void setContractid(String contractid) {
-        this.contractid = contractid;
-    }
-
-    public String getInvoiceid() {
-        return invoiceid;
-    }
-
-    public void setInvoiceid(String invoiceid) {
-        this.invoiceid = invoiceid;
-    }
-
-    public String getCustomer() {
-        return customer;
-    }
-
-    public void setCustomer(String customer) {
-        this.customer = customer;
-    }
-
-    public String getExpressid() {
-        return expressid;
-    }
-
-    public void setExpressid(String expressid) {
-        this.expressid = expressid;
-    }
-
-    public String getInstoragecause() {
-        return instoragecause;
-    }
-
-    public void setInstoragecause(String instoragecause) {
-        this.instoragecause = instoragecause;
-    }
-
-    public String getProjectname() {
-        return projectname;
-    }
-
-    public void setProjectname(String projectname) {
-        this.projectname = projectname;
-    }
-
-    public String getProposer() {
-        return proposer;
-    }
-
-    public void setProposer(String proposer) {
-        this.proposer = proposer;
-    }
-
-    public Long getDelStatus()
-    {
-        return delStatus;
-    }
-
-    @Override
-    public String toString() {
-        return new ToStringBuilder(this,ToStringStyle.MULTI_LINE_STYLE)
-            .append("id", getId())
-            .append("storageoutid", getStorageoutid())
-            .append("outsourcewarehouse", getOutsourcewarehouse())
-            .append("outsourcewarehouseid", getOutsourcewarehouseid())
-            .append("stockrequisition", getStockrequisition())
-            .append("warehouseadmin", getWarehouseadmin())
-            .append("stockpeople", getStockpeople())
-            .append("storageouttime", getStorageouttime())
-            .append("comments", getComments())
-            .append("cTime", getcTime())
-            .append("uTime", getuTime())
-            .append("delStatus", getDelStatus())
-            .toString();
+        this.outmoney = outmoney;
     }
 }

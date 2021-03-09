@@ -3,7 +3,7 @@
 PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.ruoyi.system.mapper.StorageMapper">
-    
+
     <resultMap type="Storage" id="StorageResult">
         <result property="id"    column="id"    />
         <result property="materialcode"    column="materialcode"    />
@@ -13,7 +13,6 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="typeId"    column="type_id"    />
         <result property="deptId"    column="dept_id"    />
         <result property="materialId"    column="material_id"    />
-        <result property="cTime"    column="c_time"    />
         <result property="uTime"    column="u_time"    />
         <result property="oTime"    column="o_time"    />
         <result property="qTime"    column="q_time"    />
@@ -35,89 +34,29 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 
 
 
-    <resultMap id="StorageWarehouseRecord" type="com.ruoyi.system.vo.WarehouseBillVo">
-        <result property="id"    column="id"    />
-        <result property="name"    column="name"    />
-        <result property="description"    column="description"    />
-        <result property="materialcode"    column="materialcode"    />
-        <result property="partnumber"    column="partnumber"    />
-        <result property="unit"    column="unit"    />
-        <result property="inprice"    column="inprice"    />
-        <result property="inmoney"    column="inmoney"    />
-        <result property="incount"    column="incount"    />
-        <result property="outmoney"    column="outmoney"    />
-        <result property="outprice"    column="outprice"    />
-        <result property="outcount"    column="outcount"    />
-        <result property="thiscount"    column="thiscount"    />
-        <result property="thismoney"    column="thismoney"    />
-        <result property="thisprice"    column="thisprice"    />
-        <result property="number"    column="number"    />
-
-
-
-    </resultMap>
-
-    <select id="selectStoragebyDate" resultMap="StorageWarehouseRecord">
-SELECT number,m.materialcode materialcode,m.`name` `name`,m.partnumber partnumber,m.description description,m.unit unit,sum(count) as incount, round((SUM(w.money)/sum(count)),2) as inprice,SUM(w.money) inmoney FROM warehouse_record w left JOIN material m
-on w.materialcode=m.materialcode
-
-WHERE DATE_FORMAT(#{date}, '%Y%m' ) = DATE_FORMAT(w.c_time , '%Y%m' ) and w.type=1
-GROUP BY materialcode
-    </select>
-
-    <select id="selectoutStoragebyDate" resultMap="StorageWarehouseRecord">
-SELECT number,m.materialcode materialcode,m.`name` `name`,m.partnumber partnumber,m.description description,m.unit unit,sum(count) as outcount, round((SUM(w.money)/sum(count)),2) as outprice,SUM(w.money) outmoney FROM warehouse_record w left JOIN material m
-on w.materialcode=m.materialcode
-
-WHERE DATE_FORMAT(#{date}, '%Y%m' ) = DATE_FORMAT(w.c_time , '%Y%m' ) and w.type=2
-GROUP BY materialcode
-    </select>
-
-
-
-    <select id="selectStoragebyDatedashed" resultMap="StorageWarehouseRecord">
-SELECT number,m.materialcode materialcode,m.`name` `name`,m.partnumber partnumber,m.description description,m.unit unit,sum(count) as incount, round((SUM(w.money)/sum(count)),2) as inprice,SUM(w.money) inmoney FROM warehouse_record w left JOIN material m
-on w.materialcode=m.materialcode
-WHERE DATE_FORMAT(#{date}, '%Y%m' ) = DATE_FORMAT( w.c_time , '%Y%m' ) and w.type=4
-GROUP BY materialcode
-    </select>
 
 
 
 
-
-
-    <select id="selectoutStoragebyDatedashed" resultMap="StorageWarehouseRecord">
-SELECT number,m.materialcode materialcode,m.`name` `name`,m.partnumber partnumber,m.description description,m.unit unit,sum(count) as outcount, round((SUM(w.money)/sum(count)),2) as outprice,SUM(w.money) outmoney
-FROM warehouse_record w left JOIN material m
-on w.materialcode=m.materialcode
-WHERE DATE_FORMAT(#{date}, '%Y%m' ) = DATE_FORMAT( w.c_time , '%Y%m' ) and w.type=5
-GROUP BY materialcode
-    </select>
 
 
     <sql id="selectStorageVo">
-        select id, materialcode, price, stocks, money, type_id from storage
+        select id, materialcode, price, stocks, money, type_id from st_list
     </sql>
 
-    <select id="StoragefindList" resultMap="StorageResult">
-    select id, name, materialcode, partnumber, footprint, manufacture, unit, avg(price) price, sum(stocks) stocks, sum(money) money, type_id, serial_number,  c_time, u_time from storage
-     group by  materialcode
-    </select>
+
 
 
     <select id="selectStorageListBymaterialcode" resultMap="StorageResult">
-         select m.description, u.id,m.leadtime,u.`name`, o_time,u.materialcode, q_time,u.partnumber, m.footprint, u.manufacture, u.unit, u.serial_number, u.type_id,   avg(price) price,sum(stocks) stocks,sum(money) money,u.c_time,u.u_time from storage u  LEFT JOIN storagetype d
-        on u.type_id=d.dept_id LEFT JOIN material m on m.materialcode=u.materialcode
-        where   u.materialcode = #{materialcode}
-   and stocks>0
+      <include refid="selectStorageVo"/>
+        where   materialcode = #{materialcode}
     </select>
 
     <select id="selectStorageList" parameterType="Storage" resultMap="StorageResult">
-        select s.material_id,s.id,m.materialcode,price,stocks,money,ancestors,dept_name, s.u_time,o_time,q_time from `storage`  s
-        LEFT JOIN storagetype s1  on type_id=dept_id
-        left JOIN material   m   on m.materialcode=s.materialcode
-        left join material_child m1 on m.id=m1.material_id
+        select s.material_id,s.id,m.materialcode,price,stocks,money,ancestors,dept_name, s.u_time,o_time,q_time from `st_list`  s
+        LEFT JOIN st_type s1  on type_id=dept_id
+        left JOIN mat_list  m   on m.materialcode=s.materialcode
+        left join mat_listchild m1 on m.id=m1.material_id
         <where>
          <if test="name != null  and name != ''"> and m1.name like concat('%', #{name}, '%')</if>
             <if test="description != null  and description != ''"> and m1.description like concat('%', #{description}, '%')</if>
@@ -128,7 +67,7 @@ GROUP BY materialcode
             <if test="status==2 "> and stocks > 0</if>
             <if test="status==1 "> and stocks = 0</if>
             <if test="deptId != null and deptId != 0">
-                AND (s.type_id = #{deptId} OR s.type_id IN ( SELECT t.dept_id FROM storagetype t WHERE FIND_IN_SET (#{deptId},ancestors) ))
+                AND (s.type_id = #{deptId} OR s.type_id IN ( SELECT t.dept_id FROM st_type t WHERE FIND_IN_SET (#{deptId},ancestors) ))
             </if>
         </where>
 
@@ -140,42 +79,24 @@ GROUP BY materialcode
         where id = #{id}
     </select>
 
-    <select id="selectByBom"  resultMap="StorageResult">
-        <include refid="selectStorageVo"/>
-        where partnumber like concat('%',#{comments},'%')
-        and   footprint like concat('%',#{footprint},'%')
 
-    </select>
 
-        
+
     <insert id="insertStorage" parameterType="Storage" useGeneratedKeys="true" keyProperty="id">
-        insert into storage (materialcode,price,stocks,money,type_id,material_id,u_time)
+        insert into st_list (materialcode,price,stocks,money,type_id,material_id,u_time)
         values  (#{materialcode},#{price},#{stocks},#{money},#{typeId},#{materialId},now())
     </insert>
 
 
 
-    <delete id="deleteStorageById" parameterType="Integer">
-        delete from storage where id = #{id}
+
+    <delete id="deleteStorageByMaterialId">
+        delete from st_list where material_id = #{materialId}
     </delete>
 
-
-
-    <delete id="deleteStorageByIds" parameterType="String">
-        delete from storage where id in 
-        <foreach item="id" collection="array" open="(" separator="," close=")">
-            #{id}
-        </foreach>
+    <delete id="deleteStorageById">
+        delete  from st_list where id=#{id}
     </delete>
-
-
-
-    <select id="selectStorageInfoByMaterialcodeAndTypeid" resultMap="StorageResult">
-        <include refid="selectStorageVo"/>
-        where
-        materialcode=#{materialcode}
-        and type_id=#{typeId}
-    </select>
 
 
     <select id="selectStorageByMaterialcode" resultMap="StorageResult">
@@ -185,20 +106,58 @@ GROUP BY materialcode
         materialcode=#{materialcode}
 
     </select>
-
+    <select id="selectStorageByMaterialId" resultMap="StorageResult">
+        <include refid="selectStorageVo"/>
+        where
+        material_id=#{materialId}
+    </select>
+    <select id="selectStorageByDate" resultType="java.util.Map">
+        select s.materialcode,
+               ( SELECT GROUP_CONCAT(DISTINCT name) from mat_listchild m INNER JOIN mat_list m1 on m.material_id=m1.id
+                 where	m1.materialcode=s.materialcode
+               ) name,
+               ( SELECT GROUP_CONCAT(DISTINCT partnumber) from mat_listchild m INNER JOIN mat_list m1 on m.material_id=m1.id
+                 where	m1.materialcode=s.materialcode
+               ) partnumber,
+               ( SELECT GROUP_CONCAT(DISTINCT unit) from mat_listchild m INNER JOIN mat_list m1 on m.material_id=m1.id
+                 where	m1.materialcode=s.materialcode
+               ) unit,
+               ( SELECT GROUP_CONCAT(DISTINCT s.supplier) from st_inbill s  INNER JOIN st_indetail s1 on s.id=s1.storageinbill_id
+                 WHERE DATE_FORMAT(#{date}, '%Y%m' ) = DATE_FORMAT(c_time , '%Y%m' )   and del_status=1
+                   and	s1.materialcode=s.materialcode
+               ) supplier,
+               ( SELECT sum(counts) from st_inbill s  INNER JOIN st_indetail s1 on s.id=s1.storageinbill_id
+                 WHERE DATE_FORMAT(#{date}, '%Y%m' ) = DATE_FORMAT(c_time , '%Y%m' )   and del_status=1
+                   and	s1.materialcode=s.materialcode
+               ) incount,
+               ( SELECT sum(counts)*s.price from st_inbill s  INNER JOIN st_indetail s1 on s.id=s1.storageinbill_id
+                 WHERE DATE_FORMAT(#{date}, '%Y%m' ) = DATE_FORMAT(c_time , '%Y%m' )   and del_status=1
+                   and	s1.materialcode=s.materialcode
+               ) inmoney,
+               ( SELECT sum(counts) from st_outbill s  INNER JOIN st_outdetail s1 on s.id=s1.storageoutbill_id
+                 WHERE DATE_FORMAT(#{date}, '%Y%m' ) = DATE_FORMAT(c_time , '%Y%m' )   and del_status=1
+                   and	s1.materialcode=s.materialcode
+               ) outcount,
+               ( SELECT sum(counts)*s.price from st_outbill s  INNER JOIN st_outdetail s1 on s.id=s1.storageoutbill_id
+                 WHERE DATE_FORMAT(#{date}, '%Y%m' ) = DATE_FORMAT(c_time , '%Y%m' )   and del_status=1
+                   and	s1.materialcode=s.materialcode
+               ) outmoney,
+               stocks,price,money from st_list s
+        where DATE_FORMAT(#{date}, '%Y%m' ) = DATE_FORMAT(u_time , '%Y%m' )
+           or DATE_FORMAT(#{date}, '%Y%m' ) = DATE_FORMAT(o_time , '%Y%m' )
+    </select>
 
 
     <update id="updateStorageByMaterialcodeAndTypeId">
-         update  storage set stocks=#{stocks},money=#{money},price=#{price},
+         update  st_list set stocks=#{stocks},money=#{money},price=#{price},
          u_time=now()  where materialcode=#{materialcode} and type_id=#{typeId}
     </update>
 
 
 
 
-    <!--出库-->
     <update id="updateStorageById">
-        update  storage set
+        update  st_list set
         <if test="price != null">
             price=#{price},
         </if>

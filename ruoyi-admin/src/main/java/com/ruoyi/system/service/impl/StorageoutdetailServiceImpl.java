@@ -33,8 +33,8 @@ public class StorageoutdetailServiceImpl implements IStorageoutdetailService
     }
 
     @Override
-    public List<Storageoutdetail> selectStorageindetailByStorageoutdetailId(String storageoutbillid) {
-        return storageoutdetailMapper.selectStorageindetailByStorageoutdetailId(storageoutbillid);
+    public List<Storageoutdetail> selectStorageindetailByStorageoutdetailId(Long storageoutbillid) {
+        return storageoutdetailMapper.selectStorageindetailByStorageoutbillId(storageoutbillid);
     }
 
     /**

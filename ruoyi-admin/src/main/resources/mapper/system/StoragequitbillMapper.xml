@@ -15,11 +15,15 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="cTime"    column="c_time"    />
         <result property="uTime"    column="u_time"    />
         <result property="delStatus"    column="del_status"    />
-
+        <result property="quitmoney"    column="quitmoney"    />
+        <collection property="storagequitdetailList" ofType="com.ruoyi.system.domain.Storagequitdetail"
+        column="id"
+         select="com.ruoyi.system.mapper.StoragequitdetailMapper.selectStorageindetailByStoragequitbillId"
+        />
     </resultMap>
 
     <sql id="selectStoragequitbillVo">
-        select id,del_status, storagequitbillid, outsourcewarehouse, outsourcewarehouseid, outpeople, outstoragecause, comments, c_time, u_time from storagequitbill
+        select quitmoney,id,del_status, storagequitbillid, outsourcewarehouse, outsourcewarehouseid, outpeople, outstoragecause, comments, c_time, u_time from st_quitbill
     </sql>
 
     <select id="selectStoragequitbillList" parameterType="Storagequitbill" resultMap="StoragequitbillResult">
@@ -48,7 +52,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </select>
         
     <insert id="insertStoragequitbill" parameterType="Storagequitbill" useGeneratedKeys="true" keyProperty="id">
-        insert into storagequitbill
+        insert into st_quitbill
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="storagequitbillid != null  and storagequitbillid != ''">storagequitbillid,</if>
             <if test="outsourcewarehouse != null  and outsourcewarehouse != ''">outsourcewarehouse,</if>
@@ -72,7 +76,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </insert>
 
     <update id="updateStoragequitbill" parameterType="Storagequitbill">
-        update storagequitbill
+        update st_quitbill
         <trim prefix="SET" suffixOverrides=",">
             <if test="storagequitbillid != null  and storagequitbillid != ''">storagequitbillid = #{storagequitbillid},</if>
             <if test="outsourcewarehouse != null  and outsourcewarehouse != ''">outsourcewarehouse = #{outsourcewarehouse},</if>
@@ -82,22 +86,23 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="comments != null  and comments != ''">comments = #{comments},</if>
             <if test="cTime != null ">c_time = #{cTime},</if>
             <if test="uTime != null ">u_time = #{uTime},</if>
+            <if test="quitmoney != null ">quitmoney = #{quitmoney},</if>
         </trim>
         where id = #{id}
     </update>
 
     <delete id="deleteStoragequitbillById" parameterType="Long">
-        delete from storagequitbill where id = #{id}
+        delete from st_quitbill where id = #{id}
     </delete>
 
     <delete id="deleteStoragequitbillByIds" parameterType="String">
-        delete from storagequitbill where id in 
+        delete from st_quitbill where id in
         <foreach item="id" collection="array" open="(" separator="," close=")">
             #{id}
         </foreach>
     </delete>
     <update id="updatedelStatus">
-      update storagequitbill set del_status='2' where id=#{id}
+      update st_quitbill set del_status=2 where id=#{id}
 </update>
 
 </mapper>

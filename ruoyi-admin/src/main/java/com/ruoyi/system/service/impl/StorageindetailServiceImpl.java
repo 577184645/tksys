@@ -20,10 +20,7 @@ public class StorageindetailServiceImpl implements IStorageindetailService
     @Autowired
     private StorageindetailMapper storageindetailMapper;
 
-    @Override
-    public List<Storageindetail> selectStorageindetailByStorageinbillId(String storageinbillid) {
-        return storageindetailMapper.selectStorageindetailByStorageinbillId(storageinbillid);
-    }
+
 
     /**
      * 查询入库产品列表
@@ -62,17 +59,7 @@ public class StorageindetailServiceImpl implements IStorageindetailService
     }
 
 
-    /**
-     * 删除入库产品列表对象
-     * 
-     * @param ids 需要删除的数据ID
-     * @return 结果
-     */
-    @Override
-    public int deleteStorageindetailByIds(String ids)
-    {
-        return storageindetailMapper.deleteStorageindetailByIds(Convert.toStrArray(ids));
-    }
+
 
     /**
      * 删除入库产品列表信息

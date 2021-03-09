@@ -1,7 +1,6 @@
 package com.ruoyi.system.mapper;
 
 import com.ruoyi.system.domain.Storageindetail;
-import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
@@ -22,17 +21,14 @@ public interface StorageindetailMapper
     public Storageindetail selectStorageindetailById(Long id);
 
 
+    public List<Storageindetail> findByStorageinbillId(Long id);
     /**
      * 查询入库产品列表
      */
     public List<Storageindetail> selectStorageindetailByStorageinbillSid(Long storageinbillid);
 
 
-    public int updateMaterial(@Param("name") String name, @Param("partnumber") String partnumber, @Param("footprint") String footprint, @Param("unit") String unit, @Param("manufacture") String manufacture, @Param("materialcode") String materialcode);
-    /**
-     * 查询入库产品列表
-     */
-    public List<Storageindetail> selectStorageindetailByStorageinbillId(String storageinbillid);
+
     /**
      * 查询入库产品列表列表
      * 
@@ -59,11 +55,5 @@ public interface StorageindetailMapper
      */
     public int deleteStorageindetailById(Long id);
 
-    /**
-     * 批量删除入库产品列表
-     * 
-     * @param ids 需要删除的数据ID
-     * @return 结果
-     */
-    public int deleteStorageindetailByIds(String[] ids);
+
 }

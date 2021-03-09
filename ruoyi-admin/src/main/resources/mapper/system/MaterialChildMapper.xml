@@ -24,7 +24,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="typeId"    column="type_id"    />
         <result property="deptId"    column="dept_id"    />
         <result property="safestock"    column="safestock"    />
-        <result property="ordernumber"    column="ordernumber"    />
+        <result property="link"    column="link"    />
         <result property="buyer"    column="buyer"    />
         <result property="delFlag"    column="del_flag"    />
         <result property="materialId"    column="material_id"    />
@@ -33,7 +33,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </resultMap>
 
     <sql id="selectMaterialChildVo">
-        select id, name, partnumber, description, footprint, manufacture, unit, inputoperator, inputdate, approvedby, approveddate, approvedstatus, productmpq, productmoq, leadtime, comments, type_id, dept_id, safestock, ordernumber, buyer, del_flag, material_id, c_time, u_time from material_child
+        select id, name, partnumber, description, footprint, manufacture, unit, inputoperator, inputdate, approvedby, approveddate, approvedstatus, productmpq, productmoq, leadtime, comments, type_id, dept_id, safestock, link, buyer, del_flag, material_id, c_time, u_time from mat_listchild
     </sql>
 
 
@@ -47,9 +47,10 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <include refid="selectMaterialChildVo"/>
         where id = #{id}
     </select>
-        
+
+
     <insert id="insertMaterialChild" parameterType="MaterialChild" useGeneratedKeys="true" keyProperty="id">
-        insert into material_child
+        insert into mat_listchild
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="name != null  and name != ''">name,</if>
             <if test="partnumber != null  and partnumber != ''">partnumber,</if>
@@ -69,7 +70,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="typeId != null ">type_id,</if>
             <if test="deptId != null ">dept_id,</if>
             <if test="safestock != null ">safestock,</if>
-            <if test="ordernumber != null  and ordernumber != ''">ordernumber,</if>
+            <if test="link != null  and link != ''">link,</if>
             <if test="buyer != null  and buyer != ''">buyer,</if>
             <if test="delFlag != null  and delFlag != ''">del_flag,</if>
             <if test="materialId != null ">material_id,</if>
@@ -95,7 +96,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="typeId != null ">#{typeId},</if>
             <if test="deptId != null ">#{deptId},</if>
             <if test="safestock != null ">#{safestock},</if>
-            <if test="ordernumber != null  and ordernumber != ''">#{ordernumber},</if>
+            <if test="link != null  and link != ''">#{link},</if>
             <if test="buyer != null  and buyer != ''">#{buyer},</if>
             <if test="delFlag != null  and delFlag != ''">#{delFlag},</if>
             <if test="materialId != null ">#{materialId},</if>
@@ -105,7 +106,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </insert>
 
     <update id="updateMaterialChild" parameterType="MaterialChild">
-        update material_child
+        update mat_listchild
         set  name = #{name},
              partnumber = #{partnumber},
              description = #{description},
@@ -122,21 +123,24 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
              leadtime = #{leadtime},
              comments = #{comments},
              safestock = #{safestock},
-             ordernumber = #{ordernumber},
+             link = #{link},
              buyer = #{buyer}
         where id = #{id}
 
     </update>
 
     <delete id="deleteMaterialChildById" parameterType="Integer">
-        delete from material_child where id = #{id}
+        delete from mat_listchild where id = #{id}
     </delete>
 
     <delete id="deleteMaterialChildByIds" parameterType="String">
-        delete from material_child where id in 
+        delete from mat_listchild where id in
         <foreach item="id" collection="array" open="(" separator="," close=")">
             #{id}
         </foreach>
     </delete>
-    
+    <delete id="deleteMaterialChildByMaterialId">
+        delete from mat_listchild where material_id = #{materialId}
+    </delete>
+
 </mapper>

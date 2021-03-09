@@ -6,6 +6,8 @@ import com.ruoyi.common.exception.BusinessException;
 import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.framework.util.ShiroUtils;
 import com.ruoyi.system.domain.Material;
+import com.ruoyi.system.domain.MaterialChild;
+import com.ruoyi.system.domain.Storage;
 import com.ruoyi.system.domain.SysUser;
 import com.ruoyi.system.mapper.*;
 import com.ruoyi.system.service.IMaterialService;
@@ -23,6 +25,7 @@ import java.util.List;
  * @date 2020-06-01
  */
 @Service
+@Transactional
 public class MaterialServiceImpl implements IMaterialService {
     @Autowired
     private MaterialMapper materialMapper;
@@ -40,6 +43,8 @@ public class MaterialServiceImpl implements IMaterialService {
     private StoragequitdetailMapper storagequitdetailMapper;
     @Autowired
     private WarehouseRecordMapper warehouseRecordMapper;
+    @Autowired
+    private MaterialChildMapper materialChildMapper;
     /**
      * 查询物料列表
      *
@@ -74,11 +79,6 @@ public class MaterialServiceImpl implements IMaterialService {
             }
         }
 
-
-
-
-
-
         return materialCode;
 
     }
@@ -112,33 +112,25 @@ public class MaterialServiceImpl implements IMaterialService {
     /**
      * 删除物料列表对象
      *
-     * @param ids 需要删除的数据ID
+     * @param id 需要删除的数据ID
      * @return 结果
      */
     @Override
-    public AjaxResult deleteMaterialByIds(String ids) {
-        String[] strings = Convert.toStrArray(ids);
-        int sueecessscount=0;
-        int errorcount=0;
-        for (int i = 0; i < strings.length; i++) {
-            if(storageMapper.selectStorageByMaterialcode(materialMapper.selectMaterialById(Long.valueOf(strings[i])).getMaterialcode()).size()>0){
-                errorcount++;
-            }else{
-                materialMapper.deleteMaterialById(Long.valueOf(strings[i]));
-                sueecessscount++;
-            }
-        }
-
-
-
-
-        return AjaxResult.success("操作成功,删除数据成功"+sueecessscount+"条"+"删除数据失败"+errorcount+"条,因为该物料在库存已存在！请联系管理员!");
+    public AjaxResult deleteMaterial(Long id) {
+       Storage storage=storageMapper.selectStorageByMaterialId(id);
+       if(storage!=null){
+           return AjaxResult.error("该物料有库存无法删除!");
+       }
+        materialMapper.deleteMaterialById(id);
+        materialChildMapper.deleteMaterialChildByMaterialId(id);
+        storageMapper.deleteStorageByMaterialId(id);
+        return AjaxResult.success("操作成功!");
     }
 
 
 
     @Override
-    @Transactional
+
     public String importMaterial(List<Material> materialList) {
         if (StringUtils.isNull(materialList) || materialList.size() == 0) {
             throw new BusinessException("导入数据不能为空！");
@@ -150,8 +142,6 @@ public class MaterialServiceImpl implements IMaterialService {
         StringBuilder successMsg = new StringBuilder();
         StringBuilder failureMsg = new StringBuilder();
         for (Material material : materialList) {
-            /*    material.setInputdate(new Date());
-                material.setInputoperator(user.getUserName());*/
             String code = material.getTypeIdExcel();
             String code1 =material.getDeptIdExcel();
             String materialcode = materialMapper.selectMaterialMaxMaterialcode(code + code1);
@@ -170,22 +160,13 @@ public class MaterialServiceImpl implements IMaterialService {
                     material.setMaterialcode(String.valueOf(count+1));
                 }
             }
-            material.setDeptId(materialdeptMapper.selectMaterialdeptByCode(material.getDeptIdExcel()).getId());
-            material.setTypeId(materialtypeMapper.selectMaterialtypeByCode(material.getTypeIdExcel()).getDeptId());
-          /*  if(materialMapper.selectMaterialRepetition(material.getName(),material.getPartnumber(),material.getFootprint(),material.getManufacture(),material.getDeptId())>0){
-                       repetitionNum++;
-                          continue;
-            }
-*/
-
-
+                material.setDeptId(materialdeptMapper.selectMaterialdeptByCode(material.getDeptIdExcel()).getId());
+                material.setTypeId(materialtypeMapper.selectMaterialtypeByCode(material.getTypeIdExcel()).getDeptId());
                 insertMaterial(material);
                 successNum++;
             }
                 failureNum++;
-
             successMsg.insert(0, "恭喜您，数据已全部导入成功！共 " + successNum + " 条，其中重复数据"+repetitionNum+"条,数据如下：");
-
         return successMsg.toString();
 
     }

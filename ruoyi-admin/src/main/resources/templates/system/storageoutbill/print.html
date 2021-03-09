@@ -29,7 +29,7 @@
     <div class="table-d" id="context" >
         <h1 style="text-align: center;">出库单</h1>
         <div class="div" style="position: relative">
-            <span>客户:</span> <span style="padding-right: 230;" th:text="${storageoutbill.customer}"></span> <span style="position: absolute;right: 202">日期: </span> <span style="position: absolute;right: 133" th:text="${#dates.format(storageoutbill.storageouttime,'yyyy-MM-dd')}"></span>
+            <span>客户:</span> <span style="padding-right: 230;" th:text="${storageoutbill.customer}"></span> <span style="position: absolute;right: 202">日期: </span> <span style="position: absolute;right: 133" th:text="${#dates.format(storageoutbill.cTime,'yyyy-MM-dd')}"></span>
 
         </div>
         <div class="div" style="position: relative">
@@ -41,31 +41,41 @@
             <tr style="border:1px solid #F00;">
                 <td style="border:1px solid #F00;" width="50" align="center" >序号</td>
                 <td style="border:1px solid #F00;" width="121" align="center">物料编码</td>
-
                 <td style="border:1px solid #F00;" width="121" align="center">物品名称</td>
                 <td style="border:1px solid #F00;" width="182" align="center">规格型号</td>
-                <td style="border:1px solid #F00;" width="50" align="center">单位</td>
                 <td style="border:1px solid #F00;" width="50" align="center">数量</td>
                 <td style="border:1px solid #F00;" width="70" align="center">单价</td>
                 <td style="border:1px solid #F00;" width="70" align="center">金额</td>
                 <td style="border:1px solid #F00;" width="112" align="center">备注</td>
             </tr>
-            <tr th:each="storageoutdetail : ${storageoutdetails}" style="border:1px solid #F00;">
-                <td style="border:1px solid #F00;" align="center" th:text="${storageoutdetail.rownum}"></td>
-                <td style="border:1px solid #F00;" align="center" th:text="${storageoutdetail.materialcode}"></td>
-                <td style="border:1px solid #F00;" align="center" th:text="${storageoutdetail.name}"></td>
-                <td style="border:1px solid #F00;" align="center" th:text="${storageoutdetail.partnumber}"></td>
-                <td style="border:1px solid #F00;" align="center" th:text="${storageoutdetail.unit}"> </td>
+            <tr th:each="storageoutdetail : ${storageoutbill.storageoutdetailList}" style="border:1px solid #F00;">
+                <td style="border:1px solid #F00;" align="center" th:text="${storageoutdetailStat.index+1}"></td>
+                <td  style="border:1px solid #F00;" align="center" th:text="${storageoutdetail.materialcode}"></td>
+                <td style="border:1px solid #F00;" align="center">
+                    <table>
+                        <tr  th:each="materialchild : ${storageoutdetail.materialChildList}">
+                            <td style="border-bottom:1px solid #F00;" align="center" th:text="${materialchild.name}"> </td>
+                        </tr>
+
+                    </table>
+                </td>
+                <td style="border:1px solid #F00;" align="center">
+                    <table>
+                        <tr  th:each="materialchild : ${storageoutdetail.materialChildList}">
+                            <td style="border-bottom:1px solid #F00;" align="center" th:text="${materialchild.partnumber}"></td>
+                        </tr>
+                    </table>
+                </td>
                 <td style="border:1px solid #F00;" align="center" th:text="${storageoutdetail.counts}"   > </td>
                 <td style="border:1px solid #F00;" align="center" th:text="${storageoutdetail.price}"> </td>
                 <td style="border:1px solid #F00;" align="center" th:text="${storageoutdetail.money}"> </td>
+                <td style="border:1px solid #F00;" align="center" th:text="${storageoutdetail.comments}"> </td>
 
-                <td style="border:1px solid #F00;" align="center" th:text="${storageoutdetail.comments}"></td>
             </tr>
             <tr>
-                <td colspan="2" style="border:1px solid #F00;" align="center">总金额</td>
-                <td colspan="5" style="border:1px solid #F00;" align="center" th:text="${storageoutbill.money}"></td>
-                <td id="summoney" colspan="2" align="center" style="border:1px solid #F00;" ></td>
+                <td  colspan="2" style="border:1px solid #F00;" align="center">总金额</td>
+                <td colspan="3" style="border:1px solid #F00;" align="center" th:text="  ${storageoutbill.outmoney}"></td>
+                <td id="summoney" colspan="3" align="center" style="border:1px solid #F00;" ></td>
             </tr>
             </tbody>
         </table>
@@ -88,27 +98,12 @@
     <script src="http://www.jq22.com/jquery/jquery-migrate-1.2.1.min.js"></script>
     <script type="text/javascript" th:src="@{/js/jquery.jqprint-0.3.js}"></script>
     <script type="text/javascript">
-        var prefix = ctx + "system/storageindetail";
-
-
-
-
-        var prefix = ctx + "system/storageindetail"
-        $("#form-storageindetail-add").validate({
-            focusCleanup: true
-        });
-
-        function submitHandler() {
-            if ($.validate.form()) {
-                $.operate.save(prefix + "/add", $('#form-storageindetail-add').serialize());
-            }
-        }
 
         function print() {
             $("#context").jqprint();
         }
 
-        var money= [[${storageoutbill.money}]];
+        var money= [[${storageoutbill.outmoney!=null?storageoutbill.outmoney:0}]];
         $("#summoney").html(changeNumMoneyToChinese(money));
 
 

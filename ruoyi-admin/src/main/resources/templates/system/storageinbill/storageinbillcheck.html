@@ -62,9 +62,9 @@
                             </li>
                             <li class="select-time">
                                 <label>入库时间： </label>
-                                <input type="text"   class="form-control" id="datetimepicker-startTime" placeholder="开始时间" name="params[beginTime]">
+                                <input type="text" class="time-input" id="startTime" placeholder="开始时间" name="params[beginTime]"/>
                                 <span>-</span>
-                                <input type="text"   class="form-control" id="datetimepicker-endTime" placeholder="结束时间" name="params[endTime]"/>
+                                <input type="text" class="time-input" id="endTime" placeholder="结束时间" name="params[endTime]"/>
                             </li>
                             <li>
                                 <a class="btn btn-primary btn-rounded btn-sm" onclick="$.table.search()"><i class="fa fa-search"></i>&nbsp;搜索</a>
@@ -76,9 +76,7 @@
             </div>
 
             <div class="btn-group-sm" id="toolbar" role="group">
-                <a class="btn btn-primary single disabled" onclick="Info()" shiro:hasPermission="system:storageinbill:info" >
-                    <i class="fa fa-edit"></i> 查看
-                </a>
+
 
             </div>
             <div class="col-sm-12 select-table table-striped">
@@ -236,60 +234,58 @@
                 sidePagination: "server",
                 contentType: "application/x-www-form-urlencoded",
                 queryParams : {
-                    storageinbillid: row1.stockinid
+                    storageinbillId: row1.id
                 },
                 columns: [
 
                     {
                         field: 'id',
-                        title: 'id',
+                        title: 'null',
                         visible: false
                     },
-
                     {
-                        field: 'name',
-                        title: '物料名称',
-                        width:140
-                    },
-
-                    {
-                        field: 'partnumber',
-                        title: '物料型号',
-                        width:230
+                        field: 'materialcode',
+                        title: '物料代码',
                     },
 
                     {
                         field: 'price',
                         title: '单价',
-                        width:130
                     },
-
                     {
                         field: 'counts',
                         title: '数量',
-                        width:130
                     },
                     {
                         field: 'money',
                         title: '总金额',
-                        width:130
+                    },
+
+                    {
+                        field: 'supplier',
+                        title: '供应商',
+                    },
+                    {
+                        field: 'rate',
+                        title: '税率',
+                    },
+                    {
+                        field: 'taxamount',
+                        title: '税额',
                     },
                     {
                         field: 'serialNumber',
                         title: '序列号',
-                        width:120
+                    },
+
+                    {
+                        field: 'comments',
+                        title: '备注',
                     }
 
                 ]
             });
         };
-        function Info(id) {
-            table.set();
-
-             var rows = $("#bootstrap-table").bootstrapTable('getSelections')[0];
-                $.modal.openTab("入库单详细信息", prefix1+"/"+rows.stockinid);
-
-        }
 
 
 
@@ -300,10 +296,10 @@
        table.set();
        $.modal.confirm("确定批准该入库单吗？", function() {
            $.ajax({
-               url : prefix+'/ratify',
+               url : prefix+'/examine',
                dataType : 'json',
                type : 'post',
-               data:{"id":id},
+               data:{"id":id, "value":2},
                beforeSend: function () {
                    $.modal.loading("正在处理中，请稍后...");
                },
@@ -324,10 +320,10 @@
             table.set();
             $.modal.confirm("确定驳回该入库单吗？", function() {
                 $.ajax({
-                    url : prefix+'/turn',
+                    url : prefix+'/examine',
                     dataType : 'json',
                     type : 'post',
-                    data:{"id":id},
+                    data:{"id":id,"value":3},
                     beforeSend: function () {
                         $.modal.loading("正在处理中，请稍后...");
                     },

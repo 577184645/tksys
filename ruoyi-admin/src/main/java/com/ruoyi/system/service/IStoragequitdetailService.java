@@ -1,7 +1,8 @@
 package com.ruoyi.system.service;
 
-import java.util.List;
 import com.ruoyi.system.domain.Storagequitdetail;
+
+import java.util.List;
 
 /**
  * 退料Service接口
@@ -58,4 +59,9 @@ public interface IStoragequitdetailService
      * @return 结果
      */
     public int deleteStoragequitdetailById(Long id);
+
+
+    public List<Storagequitdetail> selectStorageindetailByStoragequitbillId(Long storagequitbillid);
+
+
 }

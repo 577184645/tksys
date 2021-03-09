@@ -2,8 +2,7 @@ package com.ruoyi.system.domain;
 
 import com.ruoyi.common.annotation.Excel;
 import com.ruoyi.common.core.domain.BaseEntity;
-import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
+import lombok.Data;
 
 import java.util.Date;
 
@@ -13,6 +12,7 @@ import java.util.Date;
  * @author ruoyi
  * @date 2020-09-07
  */
+@Data
 public class Offer extends BaseEntity
 {
     private static final long serialVersionUID = 1L;
@@ -73,162 +73,5 @@ public class Offer extends BaseEntity
 
     private String status;
 
-    public String getStatus() {
-        return status;
-    }
 
-    public void setStatus(String status) {
-        this.status = status;
-    }
-
-    public String getFilename() {
-        return filename;
-    }
-
-    public void setFilename(String filename) {
-        this.filename = filename;
-    }
-
-    public void setOfferId(Long offerId)
-    {
-        this.offerId = offerId;
-    }
-
-    public String getIsGroup() {
-        return isGroup;
-    }
-
-    public void setIsGroup(String isGroup) {
-        this.isGroup = isGroup;
-    }
-
-    public Long getOfferId()
-    {
-        return offerId;
-    }
-    public void setOfferNumber(String offerNumber) 
-    {
-        this.offerNumber = offerNumber;
-    }
-
-    public String getOfferNumber() 
-    {
-        return offerNumber;
-    }
-    public void setOfferUsername(String offerUsername) 
-    {
-        this.offerUsername = offerUsername;
-    }
-
-    public String getOfferUsername() 
-    {
-        return offerUsername;
-    }
-    public void setOfferSalesman(String offerSalesman) 
-    {
-        this.offerSalesman = offerSalesman;
-    }
-
-    public String getOfferSalesman() 
-    {
-        return offerSalesman;
-    }
-    public void setOfferSalesmancontactway(String offerSalesmancontactway) 
-    {
-        this.offerSalesmancontactway = offerSalesmancontactway;
-    }
-
-    public String getApprovestatus() {
-        return approvestatus;
-    }
-
-    public void setApprovestatus(String approvestatus) {
-        this.approvestatus = approvestatus;
-    }
-
-    public String getOfferSalesmancontactway()
-    {
-        return offerSalesmancontactway;
-    }
-    public void setOfferMoney(Double offerMoney) 
-    {
-        this.offerMoney = offerMoney;
-    }
-
-    public Double getOfferMoney() 
-    {
-        return offerMoney;
-    }
-    public void setOfferProject(String offerProject) 
-    {
-        this.offerProject = offerProject;
-    }
-
-    public String getOfferProject() 
-    {
-        return offerProject;
-    }
-    public void setOfferTime(Date offerTime) 
-    {
-        this.offerTime = offerTime;
-    }
-
-    public Date getOfferTime() 
-    {
-        return offerTime;
-    }
-    public void setContext(String context) 
-    {
-        this.context = context;
-    }
-
-    public String getContext() 
-    {
-        return context;
-    }
-    public void setAccessory(String accessory) 
-    {
-        this.accessory = accessory;
-    }
-
-    public String getAccessory() 
-    {
-        return accessory;
-    }
-    public void setcTime(Date cTime) 
-    {
-        this.cTime = cTime;
-    }
-
-    public Date getcTime() 
-    {
-        return cTime;
-    }
-    public void setuTime(Date uTime) 
-    {
-        this.uTime = uTime;
-    }
-
-    public Date getuTime() 
-    {
-        return uTime;
-    }
-
-    @Override
-    public String toString() {
-        return new ToStringBuilder(this,ToStringStyle.MULTI_LINE_STYLE)
-            .append("offerId", getOfferId())
-            .append("offerNumber", getOfferNumber())
-            .append("offerUsername", getOfferUsername())
-            .append("offerSalesman", getOfferSalesman())
-            .append("offerSalesmancontactway", getOfferSalesmancontactway())
-            .append("offerMoney", getOfferMoney())
-            .append("offerProject", getOfferProject())
-            .append("offerTime", getOfferTime())
-            .append("context", getContext())
-            .append("accessory", getAccessory())
-            .append("cTime", getcTime())
-            .append("uTime", getuTime())
-            .toString();
-    }
 }

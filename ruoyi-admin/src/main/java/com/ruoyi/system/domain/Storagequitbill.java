@@ -2,10 +2,11 @@ package com.ruoyi.system.domain;
 
 import com.ruoyi.common.annotation.Excel;
 import com.ruoyi.common.core.domain.BaseEntity;
-import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.util.Date;
+import java.util.List;
 
 /**
  * 退料单列表对象 storagequitbill
@@ -13,6 +14,8 @@ import java.util.Date;
  * @author ruoyi
  * @date 2020-06-18
  */
+@Data
+@NoArgsConstructor
 public class Storagequitbill extends BaseEntity
 {
     private static final long serialVersionUID = 1L;
@@ -55,110 +58,18 @@ public class Storagequitbill extends BaseEntity
 
     private Integer delStatus;
 
-    public Integer getDelStatus() {
-        return delStatus;
-    }
 
-    public void setDelStatus(Integer delStatus) {
-        this.delStatus = delStatus;
-    }
+    @Excel(name = "退料金额")
+    private Double quitmoney;
 
-    public void setId(Long id)
-    {
+    /**
+     * 扩展字段
+     */
+    private List<Storagequitdetail> storagequitdetailList;
+
+
+    public Storagequitbill(Long id, Double quitmoney) {
         this.id = id;
-    }
-
-    public Long getId() 
-    {
-        return id;
-    }
-    public void setStoragequitbillid(String storagequitbillid) 
-    {
-        this.storagequitbillid = storagequitbillid;
-    }
-
-    public String getStoragequitbillid() 
-    {
-        return storagequitbillid;
-    }
-    public void setOutsourcewarehouse(String outsourcewarehouse) 
-    {
-        this.outsourcewarehouse = outsourcewarehouse;
-    }
-
-    public String getOutsourcewarehouse() 
-    {
-        return outsourcewarehouse;
-    }
-    public void setOutsourcewarehouseid(Long outsourcewarehouseid) 
-    {
-        this.outsourcewarehouseid = outsourcewarehouseid;
-    }
-
-    public Long getOutsourcewarehouseid() 
-    {
-        return outsourcewarehouseid;
-    }
-    public void setOutpeople(String outpeople) 
-    {
-        this.outpeople = outpeople;
-    }
-
-    public String getOutpeople() 
-    {
-        return outpeople;
-    }
-    public void setOutstoragecause(String outstoragecause) 
-    {
-        this.outstoragecause = outstoragecause;
-    }
-
-    public String getOutstoragecause() 
-    {
-        return outstoragecause;
-    }
-    public void setComments(String comments) 
-    {
-        this.comments = comments;
-    }
-
-    public String getComments() 
-    {
-        return comments;
-    }
-    public void setcTime(Date cTime) 
-    {
-        this.cTime = cTime;
-    }
-
-    public Date getcTime() 
-    {
-        return cTime;
-    }
-    public void setuTime(Date uTime) 
-    {
-        this.uTime = uTime;
-    }
-
-
-
-    public Date getuTime()
-    {
-        return uTime;
-    }
-
-    @Override
-    public String toString() {
-        return new ToStringBuilder(this,ToStringStyle.MULTI_LINE_STYLE)
-            .append("id", getId())
-            .append("storagequitbillid", getStoragequitbillid())
-            .append("outsourcewarehouse", getOutsourcewarehouse())
-            .append("outsourcewarehouseid", getOutsourcewarehouseid())
-            .append("outpeople", getOutpeople())
-            .append("outstoragecause", getOutstoragecause())
-            .append("comments", getComments())
-            .append("cTime", getcTime())
-            .append("uTime", getuTime())
-            .toString();
+        this.quitmoney = quitmoney;
     }
 }

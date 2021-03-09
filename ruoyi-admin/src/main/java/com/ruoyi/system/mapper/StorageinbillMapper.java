@@ -1,7 +1,9 @@
 package com.ruoyi.system.mapper;
 
-import java.util.List;
 import com.ruoyi.system.domain.Storageinbill;
+import org.apache.ibatis.annotations.Param;
+
+import java.util.List;
 
 /**
  * 入库单列表Mapper接口
@@ -31,24 +33,9 @@ public interface StorageinbillMapper
 
 
 
-    /**
-     * 修改status为1
-     * @param
-     * @return
-     */
-    public int updateStorageinbillApply(Long id);
-    /**
-     * 修改status为2
-     * @param
-     * @return
-     */
-    public int updateStorageinbillFatify(Long id);
-    /**
-     * 修改status为0
-     * @param
-     * @return
-     */
-    public int updateStorageinbillTurn(Long id);
+
+    public int updateStorageinbillByStatus(@Param("value") Integer value,@Param("id") Long id);
+
 
     public Storageinbill selectStorageinbillByStockinid(String stockinid);
 
@@ -91,4 +78,7 @@ public interface StorageinbillMapper
      * @return 结果
      */
     public int deleteStorageinbillByIds(String[] ids);
+
+
+
 }

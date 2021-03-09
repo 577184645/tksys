@@ -4,10 +4,12 @@ import com.ruoyi.common.core.text.Convert;
 import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.system.domain.Bom;
 import com.ruoyi.system.domain.Bomdetail;
+import com.ruoyi.system.domain.Storage;
 import com.ruoyi.system.mapper.BomMapper;
 import com.ruoyi.system.mapper.BomdetailMapper;
 import com.ruoyi.system.mapper.StorageMapper;
 import com.ruoyi.system.service.IBomService;
+import com.ruoyi.system.util.jsonlistUtil;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,13 +20,13 @@ import java.util.List;
 
 /**
  * bom列表Service业务层处理
- * 
+ *
  * @author ruoyi
  * @date 2020-07-24
  */
 @Service
-public class BomServiceImpl implements IBomService 
-{
+@Transactional
+public class BomServiceImpl implements IBomService {
     @Autowired
     private BomMapper bomMapper;
     @Autowired
@@ -34,199 +36,107 @@ public class BomServiceImpl implements IBomService
 
     /**
      * 查询bom列表
-     * 
+     *
      * @param id bom列表ID
      * @return bom列表
      */
     @Override
-    public Bom selectBomById(Long id)
-    {
+    public Bom selectBomById(Long id) {
         return bomMapper.selectBomById(id);
     }
 
     /**
      * 查询bom列表列表
-     * 
+     *
      * @param bom bom列表
      * @return bom列表
      */
     @Override
-    public List<Bom> selectBomList(Bom bom)
-    {
+    public List<Bom> selectBomList(Bom bom) {
         return bomMapper.selectBomList(bom);
     }
 
-    /**
-     * 新增bom列表
-     * 
-     * @param bom bom列表
-     * @return 结果
-     */
-    @Override
-    public int insertBom(Bom bom)
-    {
-        return bomMapper.insertBom(bom);
-    }
 
     @Override
-    @Transactional
     public int addBom(String bomList, Bom bom) {
-        if (bomMapper.insertBom(bom) > 0) {
-
-            JSONArray productArray = JSONArray.fromObject(bomList);
-
-            for (int i = 0; i < productArray.size(); i++) {
-                Bomdetail bomdetail = new Bomdetail();
-                JSONObject jsonObject = productArray.getJSONObject(i);
-                if(jsonObject.has("mmaterialcodes")&&StringUtils.isNotBlank(jsonObject.getString("mmaterialcodes"))&&!jsonObject.getString("mmaterialcodes").equals("null")){
-                    bomdetail.setMsid( jsonObject.getString("mmaterialcodes"));
-                }
-                if(jsonObject.has("smaterialcodes")&&StringUtils.isNotBlank(jsonObject.getString("smaterialcodes"))&&!jsonObject.getString("smaterialcodes").equals("null")){
-
-                    bomdetail.setSsid(jsonObject.getString("smaterialcodes"));
-                }
-                if(jsonObject.has("mmaterialcode")&&StringUtils.isNotBlank(jsonObject.getString("mmaterialcode"))&&!jsonObject.getString("mmaterialcode").equals("null")){
-
-
-                    bomdetail.setMsid(storageMapper.selectStorageById(jsonObject.getLong("mmaterialcode")).getMaterialcode());                }
-
-                if(jsonObject.has("smaterialcode")&&StringUtils.isNotBlank(jsonObject.getString("smaterialcode"))&&!jsonObject.getString("smaterialcode").equals("null")) {
-                    JSONArray materialcode = jsonObject.getJSONArray("smaterialcode");
-                    if (materialcode.size()>0){
-                        String sid = "";
-                        for (int i1 = 0; i1 < materialcode.size(); i1++) {
-                            sid += materialcode.get(i1) + ",";
-                        }
-                        bomdetail.setSsid(sid.substring(0,sid.lastIndexOf(",")));
-                    }
-
-                }
-                bomdetail.setBomid(bom.getId());
-                if(jsonObject.has("supplier")){
-                    bomdetail.setSupplier(jsonObject.getString("supplier"));
-                }
-                bomdetail.setPrice(jsonObject.getDouble("price"));
-                bomdetail.setComment(jsonObject.getString("comment"));
-                bomdetail.setFootprint(jsonObject.getString("footprint"));
-                bomdetail.setDescription(jsonObject.getString("description"));
-                bomdetail.setDesignator(jsonObject.getString("designator"));
-                bomdetail.setQuantity(jsonObject.getInt("quantity"));
-                bomdetailMapper.insertBomdetail(bomdetail);
-            }
-        }
-            return 1;
-        }
-
-    @Override
-    @Transactional
-    public int editBom(String bomList, Bom bom) {
-
-
-        Bomdetail bomdetaildel=new Bomdetail();
-        bomdetaildel.setBomid(bom.getId());
-        List<Bomdetail> bomdetails = bomdetailMapper.selectBomdetailList(bomdetaildel);
-        if(bomdetails.size()>0){
-            for (Bomdetail bomdetaileach:bomdetails
-            ) {
-                bomdetailMapper.deleteBomdetailById(bomdetaileach.getId());
-            }
-        }
-
-        JSONArray productArray = JSONArray.fromObject(bomList);
-        for (int i = 0; i < productArray.size(); i++) {
-
-            JSONObject jsonObject = productArray.getJSONObject(i);
-
+        int length = bomMapper.insertBom(bom);
+        Double sum=0.0;
+        List<String[]> jsonList = jsonlistUtil.getJsonList(bomList, new String[]{"code", "link", "price", "comment", "footprint", "description", "designator", "parttype", "quantity"});
+        for (int i = 0; i < jsonList.size(); i++) {
+            String[] strings = jsonList.get(i);
             Bomdetail bomdetail = new Bomdetail();
             bomdetail.setBomid(bom.getId());
-
-            if(jsonObject.has("msid")&&StringUtils.isNotBlank(jsonObject.getString("msid"))&&!jsonObject.getString("msid").equals("null")){
-
-                bomdetail.setMsid(jsonObject.getString("msid"));
-            }
-            if(jsonObject.has("ssid")&&StringUtils.isNotBlank(jsonObject.getString("ssid"))&&!jsonObject.getString("ssid").equals("null")){
-
-                bomdetail.setSsid(jsonObject.getString("ssid"));
-            }
-           if(StringUtils.isNotBlank(jsonObject.getString("price"))){
-               bomdetail.setPrice(jsonObject.getDouble("price"));
-           }
-            if(StringUtils.isNotBlank(jsonObject.getString("supplier"))){
-                bomdetail.setSupplier(jsonObject.getString("supplier"));
-            }
-            if(StringUtils.isNotBlank(jsonObject.getString("comment"))){
-                bomdetail.setComment(jsonObject.getString("comment"));
-            }
-            if(StringUtils.isNotBlank(jsonObject.getString("footprint"))){
-                bomdetail.setFootprint(jsonObject.getString("footprint"));
-            }
-            if(StringUtils.isNotBlank(jsonObject.getString("description"))){
-                bomdetail.setDescription(jsonObject.getString("description"));
-            }
-            if(StringUtils.isNotBlank(jsonObject.getString("designator"))){
-                bomdetail.setDesignator(jsonObject.getString("designator"));
-            }
-            if(StringUtils.isNotBlank(jsonObject.getString("quantity"))){
-                bomdetail.setQuantity(jsonObject.getInt("quantity"));
-            }
-
-
-
-
-
-
-
-      //            bomdetail.setCount(jsonObject.getInt("count"));
-       //     bomdetail.setSumcount(jsonObject.getInt("sumcount"));
+            bomdetail.setCode(strings[0]);
+            bomdetail.setLink(strings[1]);
+            bomdetail.setPrice(strings[2]!=null?Double.parseDouble(strings[2]):0.0);
+            bomdetail.setComment(strings[3]);
+            bomdetail.setFootprint(strings[4]);
+            bomdetail.setDescription(strings[5]);
+            bomdetail.setDesignator(strings[6]);
+            bomdetail.setParttype(strings[7]);
+            bomdetail.setQuantity(strings[8]!=null?Long.parseLong(strings[8]):0);
+            sum+=bomdetail.getPrice()*bomdetail.getQuantity();
             bomdetailMapper.insertBomdetail(bomdetail);
         }
-        return bomMapper.updateBom(bom);
+        Bom editbom=new Bom();
+        editbom.setId(bom.getId());
+        editbom.setPrice(sum);
+        bomMapper.updateBom(editbom);
+        return length;
     }
 
-    /**
-     * 修改bom列表
-     * 
-     * @param bom bom列表
-     * @return 结果
-     */
-    @Override
-    public int updateBom(Bom bom)
-    {
-        return bomMapper.updateBom(bom);
-    }
 
     /**
      * 删除bom列表对象
-     * 
+     *
      * @param ids 需要删除的数据ID
      * @return 结果
      */
     @Override
-    public int deleteBomByIds(String ids)
-    {
+    public int deleteBomByIds(String ids) {
 
         return bomMapper.deleteBomByIds(Convert.toStrArray(ids));
     }
 
     /**
      * 删除bom列表信息
-     * 
+     *
      * @param id bom列表ID
      * @return 结果
      */
     @Override
-    @Transactional
-    public int deleteBomById(Long id)
-    {
-        Bomdetail bomdetail=new Bomdetail();
-        bomdetail.setBomid(id);
-        List<Bomdetail> bomdetails = bomdetailMapper.selectBomdetailList(bomdetail);
-       if(bomdetails.size()>0){
-           for (Bomdetail bomdetaileach:bomdetails
-                 ) {
-               bomdetailMapper.deleteBomdetailById(bomdetaileach.getId());
-           }
-       }
+    public int deleteBomById(Long id) {
+
+        List<Bomdetail> bomdetails = bomdetailMapper.selectBomBybomId(id);
+        if (bomdetails.size() > 0) {
+            for (Bomdetail bomdetaileach : bomdetails) {
+                bomdetailMapper.deleteBomdetailById(bomdetaileach.getId());
+            }
+        }
         return bomMapper.deleteBomById(id);
+    }
+
+    @Override
+    public boolean refresh(String ids) {
+        String[] id = ids.split(",");
+        for (String s : id) {
+            Double sum=0.0;
+            List<Bomdetail> bomdetails = bomdetailMapper.selectBomBybomId(Long.valueOf(s));
+            for (Bomdetail bomdetail : bomdetails) {
+                Storage storage = storageMapper.selectStorageByMaterialcode(bomdetail.getCode());
+                if(storage!=null){
+                    Bomdetail bomdetail1=new Bomdetail();
+                    bomdetail1.setId(bomdetail.getId());
+                    bomdetail1.setPrice(storage.getPrice());
+                    bomdetailMapper.updateBomdetail(bomdetail);
+                    sum+= (bomdetail1.getPrice()!=null?bomdetail1.getPrice():0)*(bomdetail.getQuantity()!=null?bomdetail.getQuantity():0);
+                 }
+            }
+            Bom bom=new Bom();
+            bom.setId(Long.valueOf(s));
+            bom.setPrice(sum);
+            bomMapper.updateBom(bom);
+        }
+        return true;
     }
 }

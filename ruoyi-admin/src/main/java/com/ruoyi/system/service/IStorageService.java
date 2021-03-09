@@ -1,5 +1,6 @@
 package com.ruoyi.system.service;
 
+import com.ruoyi.common.core.domain.AjaxResult;
 import com.ruoyi.system.domain.Storage;
 import com.ruoyi.system.domain.Storageinbill;
 import com.ruoyi.system.domain.Storageoutbill;
@@ -20,7 +21,7 @@ public interface IStorageService
     public void exportStorage(List<Storage> list, HttpServletResponse response) ;
 
 
-    public List<Storage> selectByBom(String comments,String footprint);
+
 
     public Storage selectStorageListBymaterialcode(String materialcode);
 
@@ -46,7 +47,7 @@ public interface IStorageService
      * @param storageinbill  productList库存列表
      * @return 结果
      */
-    public int insertStorage(Storageinbill storageinbill, String productList);
+    public void insertStorage(Storageinbill storageinbill, String productList);
 
     /**
      * 出库
@@ -54,7 +55,7 @@ public interface IStorageService
      * @param storageoutbill productList 库存列表
      * @return 结果
      */
-    public int updateStorage(Storageoutbill storageoutbill, String productList);
+    public void updateStorage(Storageoutbill storageoutbill, String productList);
 
 
 
@@ -64,24 +65,18 @@ public interface IStorageService
      * @param storagequitbill  productList库存列表
      * @return 结果
      */
-    public int quitStorage(Storagequitbill storagequitbill, String productList);
-    /**
-     * 批量删除库存列表
-     * 
-     * @param ids 需要删除的数据ID
-     * @return 结果
-     */
-    public int deleteStorageByIds(String ids);
+    public void quitStorage(Storagequitbill storagequitbill, String productList);
 
-    /**
-     * 删除库存列表信息
-     * 
-     * @param id 库存列表ID
-     * @return 结果
-     */
-    public int deleteStorageById(Integer id);
 
 
     public void fillExcelStorage(String date)
             throws Exception;
+
+    /**
+     * 删除项目列表信息
+     *
+     * @param id 项目列表ID
+     * @return 结果
+     */
+    public AjaxResult deleteProjectById(Long id);
 }

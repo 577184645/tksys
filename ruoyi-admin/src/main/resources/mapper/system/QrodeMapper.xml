@@ -21,7 +21,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </resultMap>
 
     <sql id="selectQrodeVo">
-        select id, name, partnumber, serialnumber, customer, website, enchiridionaddress, productiontime, leavefactorytime, warrantytime, macaddress, c_time, u_time from qrode
+        select id, name, partnumber, serialnumber, customer, website, enchiridionaddress, productiontime, leavefactorytime, warrantytime, macaddress, c_time, u_time from qr_code
     </sql>
 
     <select id="selectQrodeList" parameterType="Qrode" resultMap="QrodeResult">
@@ -42,7 +42,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         where serialnumber = #{serialnumber}
     </select>
     <insert id="insertQrode" parameterType="Qrode" useGeneratedKeys="true" keyProperty="id">
-        insert into qrode
+        insert into qr_code
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="name != null  and name != ''">name,</if>
             <if test="partnumber != null  and partnumber != ''">partnumber,</if>
@@ -74,7 +74,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </insert>
 
     <update id="updateQrode" parameterType="Qrode">
-        update qrode
+        update qr_code
         <trim prefix="SET" suffixOverrides=",">
             <if test="name != null  and name != ''">name = #{name},</if>
             <if test="partnumber != null  and partnumber != ''">partnumber = #{partnumber},</if>
@@ -93,11 +93,11 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </update>
 
     <delete id="deleteQrodeById" parameterType="Long">
-        delete from qrode where id = #{id}
+        delete from qr_code where id = #{id}
     </delete>
 
     <delete id="deleteQrodeByIds" parameterType="String">
-        delete from qrode where id in 
+        delete from qr_code where id in
         <foreach item="id" collection="array" open="(" separator="," close=")">
             #{id}
         </foreach>

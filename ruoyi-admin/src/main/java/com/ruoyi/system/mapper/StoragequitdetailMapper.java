@@ -1,11 +1,8 @@
 package com.ruoyi.system.mapper;
 
-import java.util.List;
-
-import com.ruoyi.system.domain.Storage;
-import com.ruoyi.system.domain.Storageoutdetail;
 import com.ruoyi.system.domain.Storagequitdetail;
-import org.apache.ibatis.annotations.Param;
+
+import java.util.List;
 
 /**
  * 退料Mapper接口
@@ -24,20 +21,13 @@ public interface StoragequitdetailMapper
     public Storagequitdetail selectStoragequitdetailById(Long id);
 
 
-    /**
-     * 查询退料单列表
-     *
-     * @param storagequitbillid 退料单列表ID
-     * @return 退料单列表
-     */
-    public Storagequitdetail selectStoragequitbilldetailByStoragequitbillId(String storagequitbillid);
+
     /**
      * 查询入库产品列表
      */
-    public List<Storagequitdetail> selectStorageindetailByStoragequitbillId(String storagequitbillid);
+    public List<Storagequitdetail> selectStorageindetailByStoragequitbillId(Long storagequitbillid);
 
 
-    public int updateMaterial(@Param("name") String name, @Param("partnumber") String partnumber, @Param("footprint") String footprint, @Param("unit") String unit, @Param("manufacture") String manufacture, @Param("materialcode") String materialcode);
 
     /**
      * 查询退料列表

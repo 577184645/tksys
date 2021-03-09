@@ -1,7 +1,8 @@
 package com.ruoyi.system.service;
 
-import java.util.List;
 import com.ruoyi.system.domain.Storageindetail;
+
+import java.util.List;
 
 /**
  * 入库产品列表Service接口
@@ -12,7 +13,6 @@ import com.ruoyi.system.domain.Storageindetail;
 public interface IStorageindetailService
 {
 
-    public List<Storageindetail> selectStorageindetailByStorageinbillId(String storageinbillid);
 
 
     /**
@@ -41,13 +41,7 @@ public interface IStorageindetailService
 
 
 
-    /**
-     * 批量删除入库产品列表
-     * 
-     * @param ids 需要删除的数据ID
-     * @return 结果
-     */
-    public int deleteStorageindetailByIds(String ids);
+
 
     /**
      * 删除入库产品列表信息

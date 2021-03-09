@@ -53,10 +53,10 @@ public interface IMaterialService
     /**
      * 批量删除物料列表
      * 
-     * @param ids 需要删除的数据ID
+     * @param id 需要删除的数据ID
      * @return 结果
      */
-    public AjaxResult deleteMaterialByIds(String ids);
+    public AjaxResult deleteMaterial(Long id);
 
 
 

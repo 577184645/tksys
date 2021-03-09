@@ -35,10 +35,10 @@ public class StorageindetailController extends BaseController
     private IStorageinbillService iStorageinbillService;
 
 
-    @GetMapping("/{stockinid}")
-public String storageindetail(@PathVariable("stockinid") String stockinid,ModelMap mmap)
+    @GetMapping("/{storageinbillId}")
+public String storageindetail(@PathVariable("storageinbillId") String storageinbillId,ModelMap mmap)
 {
-    mmap.put("stockinid",stockinid);
+    mmap.put("storageinbillId",storageinbillId);
     return prefix + "/storageindetail";
 }
 
@@ -114,15 +114,5 @@ public String storageindetail(@PathVariable("stockinid") String stockinid,ModelM
 
 
 
-    /**
-     * 删除入库产品列表
-     */
-    @RequiresPermissions("system:storageindetail:remove")
-    @Log(title = "入库产品列表", businessType = BusinessType.DELETE)
-    @PostMapping( "/remove")
-    @ResponseBody
-    public AjaxResult remove(String ids)
-    {
-        return toAjax(storageindetailService.deleteStorageindetailByIds(ids));
-    }
+
 }

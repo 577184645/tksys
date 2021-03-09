@@ -2,6 +2,7 @@ package com.ruoyi.system.domain;
 
 import com.ruoyi.common.annotation.Excel;
 import com.ruoyi.common.core.domain.BaseEntity;
+import lombok.Data;
 
 /**
  * 物料列表对象 material
@@ -9,6 +10,7 @@ import com.ruoyi.common.core.domain.BaseEntity;
  * @author ruoyi
  * @date 2020-06-01
  */
+@Data
 public class Material extends BaseEntity
 {
     private static final long serialVersionUID = 1L;
@@ -46,91 +48,5 @@ public class Material extends BaseEntity
     private String manufacture;
 
 
-    public String getName() {
-        return name;
-    }
 
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getPartnumber() {
-        return partnumber;
-    }
-
-    public void setPartnumber(String partnumber) {
-        this.partnumber = partnumber;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public String getFootprint() {
-        return footprint;
-    }
-
-    public void setFootprint(String footprint) {
-        this.footprint = footprint;
-    }
-
-    public String getManufacture() {
-        return manufacture;
-    }
-
-    public void setManufacture(String manufacture) {
-        this.manufacture = manufacture;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getDeptIdExcel() {
-        return deptIdExcel;
-    }
-
-    public void setDeptIdExcel(String deptIdExcel) {
-        this.deptIdExcel = deptIdExcel;
-    }
-
-    public String getTypeIdExcel() {
-        return typeIdExcel;
-    }
-
-    public void setTypeIdExcel(String typeIdExcel) {
-        this.typeIdExcel = typeIdExcel;
-    }
-
-    public Long getTypeId() {
-        return typeId;
-    }
-
-    public void setTypeId(Long typeId) {
-        this.typeId = typeId;
-    }
-
-    public Long getDeptId() {
-        return deptId;
-    }
-
-    public void setDeptId(Long deptId) {
-        this.deptId = deptId;
-    }
-
-    public String getMaterialcode() {
-        return materialcode;
-    }
-
-    public void setMaterialcode(String materialcode) {
-        this.materialcode = materialcode;
-    }
 }

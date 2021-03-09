@@ -24,6 +24,33 @@ public class Const {
     public interface OfferData{
        Map<String,Offer>  map=new HashMap<>();
     }
+    public enum Storageinbilldelstatus{
+        NOHONGCHONG(1,"未红冲"),
+        HONGCHONG(2,"以红冲");
+
+        private int code;
+        private String  value;
+        Storageinbilldelstatus(int code,String value){
+            this.code = code;
+            this.value = value;
+        }
+
+        public int getCode() {
+            return code;
+        }
+
+        public void setCode(int code) {
+            this.code = code;
+        }
+
+        public String getValue() {
+            return value;
+        }
+
+        public void setValue(String value) {
+            this.value = value;
+        }
+    }
 
     public enum Storagestatus{
         BEFOREHAND(1,"预入库"),

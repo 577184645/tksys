@@ -21,16 +21,21 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="stockrequisition"    column="stockrequisition"    />
         <result property="warehouseadmin"    column="warehouseadmin"    />
         <result property="stockpeople"    column="stockpeople"    />
-        <result property="storageouttime"    column="storageouttime"    />
         <result property="comments"    column="comments"    />
         <result property="cTime"    column="c_time"    />
         <result property="uTime"    column="u_time"    />
         <result property="delStatus"    column="del_status"    />
+        <result property="outmoney"    column="outmoney"    />
+        <collection property="storageoutdetailList" ofType="com.ruoyi.system.domain.Storageoutdetail" column="id"
+        select="com.ruoyi.system.mapper.StorageoutdetailMapper.selectStorageindetailByStorageoutbillId"
+        />
+
+
     </resultMap>
 
     <sql id="selectStorageoutbillVo">
-        select customer,purchaseid,applyid,contractid,invoiceid,expressid,instoragecause,projectname,proposer,id, storageoutid, outsourcewarehouse, outsourcewarehouseid, stockrequisition, warehouseadmin, stockpeople, storageouttime, comments, c_time, u_time, del_status
-        from storageoutbill
+        select outmoney, customer,purchaseid,applyid,contractid,invoiceid,expressid,instoragecause,projectname,proposer,id, storageoutid, outsourcewarehouse, outsourcewarehouseid, stockrequisition, warehouseadmin, stockpeople, comments, c_time, u_time, del_status
+        from st_outbill
 
 
     </sql>
@@ -49,10 +54,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="invoiceid != null  and invoiceid != ''"> and invoiceid like concat('%', #{invoiceid}, '%')</if>
             <if test="invoiceid != null  and contractid != ''"> and contractid like concat('%', #{contractid}, '%')</if>
             <if test="stockrequisition != null  and stockrequisition != ''"> and stockrequisition like concat('%', #{stockrequisition}, '%')</if>
-            <if test="storageouttime != null "> and storageouttime = #{storageouttime}</if>
             <if test="comments != null  and comments != ''"> and s.comments like concat('%', #{comments}, '%')</if>
             <if test="params.beginTime != null and params.beginTime != '' and params.endTime != null and params.endTime != '' "><!-- 开始时间检索 -->
-                AND  storageouttime    between  #{params.beginTime} and #{params.endTime}
+                AND  c_time    between  #{params.beginTime} and #{params.endTime}
             </if>
 
         </where>
@@ -69,7 +73,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </select>
         
     <insert id="insertStorageoutbill" parameterType="Storageoutbill" useGeneratedKeys="true" keyProperty="id">
-        insert into storageoutbill
+        insert into st_outbill
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="storageoutid != null  and storageoutid != ''">storageoutid,</if>
             <if test="purchaseid != null  and purchaseid != ''">purchaseid,</if>
@@ -86,7 +90,6 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="stockrequisition != null  and stockrequisition != ''">stockrequisition,</if>
             <if test="warehouseadmin != null  and warehouseadmin != ''">warehouseadmin,</if>
             <if test="stockpeople != null  and stockpeople != ''">stockpeople,</if>
-            <if test="storageouttime != null ">storageouttime,</if>
             <if test="comments != null  and comments != ''">comments,</if>
             <if test="cTime != null ">c_time,</if>
             <if test="uTime != null ">u_time,</if>
@@ -108,7 +111,6 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="stockrequisition != null  and stockrequisition != ''">#{stockrequisition},</if>
             <if test="warehouseadmin != null  and warehouseadmin != ''">#{warehouseadmin},</if>
             <if test="stockpeople != null  and stockpeople != ''">#{stockpeople},</if>
-            <if test="storageouttime != null ">#{storageouttime},</if>
             <if test="comments != null  and comments != ''">#{comments},</if>
             <if test="cTime != null ">#{cTime},</if>
             <if test="uTime != null ">#{uTime},</if>
@@ -117,7 +119,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </insert>
 
     <update id="updateStorageoutbill" parameterType="Storageoutbill">
-        update storageoutbill
+        update st_outbill
         <trim prefix="SET" suffixOverrides=",">
             <if test="storageoutid != null  and storageoutid != ''">storageoutid = #{storageoutid},</if>
             <if test="outsourcewarehouse != null  and outsourcewarehouse != ''">outsourcewarehouse = #{outsourcewarehouse},</if>
@@ -125,7 +127,6 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="stockrequisition != null  and stockrequisition != ''">stockrequisition = #{stockrequisition},</if>
             <if test="warehouseadmin != null  and warehouseadmin != ''">warehouseadmin = #{warehouseadmin},</if>
             <if test="stockpeople != null  and stockpeople != ''">stockpeople = #{stockpeople},</if>
-            <if test="storageouttime != null ">storageouttime = #{storageouttime},</if>
             <if test="comments != null  and comments != ''">comments = #{comments},</if>
             <if test="customer != null  and customer != ''">customer = #{customer},</if>
             <if test="purchaseid != null  and purchaseid != ''">purchaseid = #{purchaseid},</if>
@@ -139,11 +140,13 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="cTime != null ">c_time = #{cTime},</if>
             <if test="uTime != null ">u_time = #{uTime},</if>
             <if test="delStatus != null  and delStatus != ''">del_status = #{delStatus},</if>
+            outmoney = #{outmoney},
+
         </trim>
         where id = #{id}
     </update>
     <delete id="deleteStorageoutbillById" parameterType="Long">
-        delete from storageoutbill where id = #{id}
+        delete from st_outbill where id = #{id}
 
     </delete>
 
@@ -151,14 +154,14 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 
 
     <delete id="deleteStorageoutbillByIds" parameterType="String">
-        delete from storageoutbill where id in 
+        delete from st_outbill where id in
         <foreach item="id" collection="array" open="(" separator="," close=")">
             #{id}
         </foreach>
     </delete>
 
     <update id="updatedelStatus">
-      update storageoutbill set del_status='2' where id=#{id}
+      update st_outbill set del_status=2 where id=#{id}
 </update>
 
 

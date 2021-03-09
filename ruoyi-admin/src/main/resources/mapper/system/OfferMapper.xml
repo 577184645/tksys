@@ -24,12 +24,12 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </resultMap>
 
     <sql id="selectOfferVo">
-        select offer_id,filename,approvestatus, status,offer_number, offer_username, offer_salesman, offer_salesmancontactway, offer_money, offer_project, offer_time, context, accessory, c_time, u_time from offer
+        select offer_id,filename,approvestatus, status,offer_number, offer_username, offer_salesman, offer_salesmancontactway, offer_money, offer_project, offer_time, context, accessory, c_time, u_time from sale_offer
     </sql>
 
     <select id="selectOfferList" parameterType="Offer" resultMap="OfferResult">
 
-        select a.approvestatus,a.offer_id, a.offer_number,a.status, a.offer_username, a.offer_salesman, a.offer_salesmancontactway, a.offer_money, a.offer_project, a.offer_time, a.context, a.accessory, a.c_time, a.u_time from offer a LEFT JOIN (SELECT offer_number,max(offer_time) offer_time from offer GROUP BY offer_number) b on   a.offer_number=b.offer_number and a.offer_time=b.offer_time
+        select a.approvestatus,a.offer_id, a.offer_number,a.status, a.offer_username, a.offer_salesman, a.offer_salesmancontactway, a.offer_money, a.offer_project, a.offer_time, a.context, a.accessory, a.c_time, a.u_time from sale_offer a LEFT JOIN (SELECT offer_number,max(offer_time) offer_time from sale_offer GROUP BY offer_number) b on   a.offer_number=b.offer_number and a.offer_time=b.offer_time
 
 
         <where>  
@@ -67,13 +67,13 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 
 
     <select id="selectOfferMaxNumber"  resultType="String">
-             select max(offer_number)  from offer limit 1
+             select max(offer_number)  from sale_offer limit 1
 
     </select>
 
         
     <insert id="insertOffer" parameterType="Offer" useGeneratedKeys="true" keyProperty="offerId">
-        insert into offer
+        insert into sale_offer
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="status != null  and status != ''">status,</if>
             <if test="offerNumber != null  and offerNumber != ''">offer_number,</if>
@@ -108,7 +108,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </insert>
 
     <update id="updateOffer" parameterType="Offer">
-        update offer
+        update sale_offer
         <trim prefix="SET" suffixOverrides=",">
             <if test="offerNumber != null  and offerNumber != ''">offer_number = #{offerNumber},</if>
             <if test="offerUsername != null  and offerUsername != ''">offer_username = #{offerUsername},</if>
@@ -131,11 +131,11 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </update>
 
     <delete id="deleteOfferById" parameterType="Long">
-        delete from offer where offer_id = #{offerId}
+        delete from sale_offer where offer_id = #{offerId}
     </delete>
 
     <delete id="deleteOfferByIds" parameterType="String">
-        delete from offer where offer_id in 
+        delete from sale_offer where offer_id in
         <foreach item="offerId" collection="array" open="(" separator="," close=")">
             #{offerId}
         </foreach>

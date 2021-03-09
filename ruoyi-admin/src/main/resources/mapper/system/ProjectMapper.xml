@@ -12,7 +12,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </resultMap>
 
     <sql id="selectProjectVo">
-        select id, name, c_time, u_time from project
+        select id, name, c_time, u_time from base_project
     </sql>
 
     <select id="selectProjectList" parameterType="Project" resultMap="ProjectResult">
@@ -28,7 +28,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </select>
         
     <insert id="insertProject" parameterType="Project" useGeneratedKeys="true" keyProperty="id">
-        insert into project
+        insert into base_project
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="name != null  and name != ''">name,</if>
             <if test="cTime != null ">c_time,</if>
@@ -42,7 +42,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </insert>
 
     <update id="updateProject" parameterType="Project">
-        update project
+        update base_project
         <trim prefix="SET" suffixOverrides=",">
             <if test="name != null  and name != ''">name = #{name},</if>
             <if test="cTime != null ">c_time = #{cTime},</if>
@@ -52,11 +52,11 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </update>
 
     <delete id="deleteProjectById" parameterType="Long">
-        delete from project where id = #{id}
+        delete from base_project where id = #{id}
     </delete>
 
     <delete id="deleteProjectByIds" parameterType="String">
-        delete from project where id in 
+        delete from base_project where id in
         <foreach item="id" collection="array" open="(" separator="," close=")">
             #{id}
         </foreach>

@@ -8,7 +8,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="id"    column="id"    />
         <result property="sid"    column="sid"    />
         <result property="serialNumber"    column="serial_number"    />
-        <result property="storageinbillid"    column="storageinbillid"    />
+        <result property="storageinbillId"    column="storageinbill_id"    />
         <result property="materialcode"    column="materialcode"    />
         <result property="price"    column="price"    />
         <result property="counts"    column="counts"    />
@@ -17,73 +17,68 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="rate"    column="rate"    />
         <result property="comments"    column="comments"    />
         <result property="taxamount"    column="taxamount"    />
+        <result property="materialId" column="material_id"/>
+        <collection property="materialChildList" column="material_id" ofType="com.ruoyi.system.domain.MaterialChild"
+        select="com.ruoyi.system.mapper.MaterialChildMapper.selectMaterialChildByMaterialId"
+        >
+
+        </collection>
     </resultMap>
 
     <sql id="selectStorageindetailVo" >
-        select  sid, id, storageinbillid,serial_number,materialcode,price, counts, money, supplier, rate,  comments, taxamount from storageindetail
+        select  sid, id, material_id,storageinbill_id,serial_number,materialcode,price, counts, money, supplier, rate,  comments, taxamount from st_indetail
     </sql>
 
     <select id="selectStorageindetailList" parameterType="Storageindetail" resultMap="StorageindetailResult">
-
         <include refid="selectStorageindetailVo"/>
         <where>
-            <if test="storageinbillid != null  and storageinbillid != ''"> and storageinbillid = #{storageinbillid}</if>
-
-         <!--   <if test="name != null  and name != ''"> and name like concat('%', #{name}, '%')</if>
-            <if test="partnumber != null  and partnumber != ''"> and s.partnumber like concat('%', #{partnumber}, '%')</if>
-            <if test="manufacture != null  and manufacture != ''"> and s.manufacture like concat('%', #{manufacture}, '%')</if>
-            <if test="params.beginTime != null and params.beginTime != ''">&lt;!&ndash; 开始时间检索 &ndash;&gt;
-                and date_format(s.c_time,'%y%m%d') &gt;= date_format(#{params.beginTime},'%y%m%d')
-            </if>
-            <if test="params.endTime != null and params.endTime != ''">&lt;!&ndash; 结束时间检索 &ndash;&gt;
-                and date_format(s.c_time,'%y%m%d') &lt;= date_format(#{params.endTime},'%y%m%d')
-            </if>-->
+            <if test="storageinbillId != null  and storageinbillId != ''"> and storageinbill_id = #{storageinbillId}</if>
         </where>
     </select>
-    
     <select id="selectStorageindetailById" parameterType="Long" resultMap="StorageindetailResult">
         <include refid="selectStorageindetailVo"/>
         where id = #{id}
     </select>
 
-
     <select id="selectStorageindetailByStorageinbillSid" resultMap="StorageindetailResult">
-        select price  from storageindetail s
-      left join storageinbill s1 on s1.stockinid=s.storageinbillid
+        select price  from st_indetail s
+      left join st_inbill s1 on s1.id=s.storageinbill_id
       where sid=#{sid}   and   s1.del_status=1
     </select>
 
-    <select id="selectStorageindetailByStorageinbillId"  resultMap="StorageindetailResult">
-     <include refid="selectStorageindetailVo"/>
-        where storageinbillid = #{storageinbillid}
+
+    <select id="findByStorageinbillId" resultMap="StorageindetailResult">
+        <include refid="selectStorageindetailVo" />
+        where storageinbill_id=#{id}
     </select>
-    <update id="updateMaterial">
-    update  storageindetail set name=#{name},partnumber=#{partnumber},footprint=#{footprint},unit=#{unit},manufacture=#{manufacture} where materialcode=#{materialcode}
-    </update>
+
     <insert id="insertStorageindetail" parameterType="Storageindetail" useGeneratedKeys="true" keyProperty="id">
-        insert into storageindetail
+        insert into st_indetail
         <trim prefix="(" suffix=")" suffixOverrides=",">
+
+            <if test="materialId != null  and materialId != ''">material_id,</if>
             <if test="sid != null  and sid != ''">sid,</if>
-            <if test="storageinbillid != null  and storageinbillid != ''">storageinbillid,</if>
+            <if test="storageinbillId != null  and storageinbillId != ''">storageinbill_id,</if>
             <if test="materialcode != null  and materialcode != ''">materialcode,</if>
             <if test="serialNumber != null and serialNumber!=''  ">serial_number,</if>
-            price,
-           counts,
-           money,
+            <if test="price != null">price,</if>
+            <if test="counts != null  and counts != ''">counts,</if>
+            <if test="money != null">money,</if>
             <if test="supplier != null  and supplier != ''">supplier,</if>
             <if test="rate != null  and rate != ''">rate,</if>
             <if test="comments != null  and comments != ''">comments,</if>
             <if test="taxamount != null and taxamount !='' ">taxamount,</if>
-
          </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
+
+          <if test="materialId != null  and materialId != ''">#{materialId},</if>
             <if test="sid != null  and sid != ''">#{sid},</if>
-            <if test="storageinbillid != null  and storageinbillid != ''">#{storageinbillid},</if>
+            <if test="storageinbillId != null  and storageinbillId != ''">#{storageinbillId},</if>
             <if test="materialcode != null  and materialcode != ''">#{materialcode},</if>
             <if test="serialNumber != null  and serialNumber != ''">#{serialNumber},</if>
-            #{price},
-            #{counts},
-             #{money},
+            <if test="price != null ">#{price},</if>
+            <if test="counts != null  and counts != ''">#{counts},</if>
+            <if test="money != null ">#{money},</if>
             <if test="supplier != null  and supplier != ''">#{supplier},</if>
             <if test="rate != null  and rate != ''">#{rate},</if>
             <if test="comments != null  and comments != ''">#{comments},</if>
@@ -94,14 +89,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 
 
     <delete id="deleteStorageindetailById" parameterType="Long">
-        delete from storageindetail where id = #{id}
+        delete from st_indetail where id = #{id}
     </delete>
 
-    <delete id="deleteStorageindetailByIds" parameterType="String">
-        delete from storageindetail where id in 
-        <foreach item="id" collection="array" open="(" separator="," close=")">
-            #{id}
-        </foreach>
-    </delete>
+
     
 </mapper>

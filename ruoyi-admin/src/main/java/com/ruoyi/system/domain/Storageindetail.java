@@ -2,8 +2,10 @@ package com.ruoyi.system.domain;
 
 import com.ruoyi.common.annotation.Excel;
 import com.ruoyi.common.core.domain.BaseEntity;
-import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+import java.util.List;
 
 /**
  * 入库产品列表对象 storageindetail
@@ -11,6 +13,8 @@ import org.apache.commons.lang3.builder.ToStringStyle;
  * @author ruoyi
  * @date 2020-06-05
  */
+@Data
+@NoArgsConstructor
 public class Storageindetail extends BaseEntity
 {
     private static final long serialVersionUID = 1L;
@@ -22,7 +26,7 @@ public class Storageindetail extends BaseEntity
 
     /** 所属入库单 */
     @Excel(name = "所属出库单")
-    private String storageinbillid;
+    private Long storageinbillId;
 
     @Excel(name = "物料编码")
     private  String materialcode;
@@ -32,7 +36,7 @@ public class Storageindetail extends BaseEntity
 
     /** 数量 */
     @Excel(name = "数量")
-    private Long counts;
+    private Integer counts;
 
     /** 总金额 */
     @Excel(name = "总金额")
@@ -63,131 +67,24 @@ public class Storageindetail extends BaseEntity
     private Double taxamount;
 
 
+    private Long materialId;
 
 
-
-    public String getRate() {
-        return rate;
-    }
-
-    public String getComments() {
-        return comments;
-    }
+   private List<MaterialChild> materialChildList;
 
 
-    public Long getSid() {
-        return sid;
-    }
-
-    public void setSid(Long sid) {
-        this.sid = sid;
-    }
-
-    public void setComments(String comments) {
-        this.comments = comments;
-    }
-
-
-    public String getSerialNumber() {
-        return serialNumber;
-    }
-
-    public void setSerialNumber(String serialNumber) {
-        this.serialNumber = serialNumber;
-    }
-
-    public void setId(Long id)
-    {
-        this.id = id;
-    }
-
-
-    public Long getId()
-    {
-        return id;
-    }
-    public void setStorageinbillid(String storageinbillid)
-    {
-        this.storageinbillid = storageinbillid;
-    }
-
-    public String getStorageinbillid()
-    {
-        return storageinbillid;
-    }
-
-
-    public Double getPrice() {
-        return price;
-    }
-
-    public void setPrice(Double price) {
-        this.price = price;
-    }
-
-    public void setCounts(Long counts)
-    {
-        this.counts = counts;
-    }
-
-    public Long getCounts()
-    {
-        return counts;
-    }
-
-    public Double getMoney() {
-        return money;
-    }
-
-    public void setMoney(Double money) {
-        this.money = money;
-    }
-
-
-    public void setSupplier(String supplier) 
-    {
-        this.supplier = supplier;
-    }
-
-    public String getSupplier() 
-    {
-        return supplier;
-    }
-    public void setRate(String rate) 
-    {
-        this.rate = rate;
-    }
-
-
-    public void setTaxamount(Double taxamount) 
-    {
-        this.taxamount = taxamount;
-    }
-
-    public Double getTaxamount() 
-    {
-        return taxamount;
-    }
-
-    public String getMaterialcode() {
-        return materialcode;
-    }
-
-    public void setMaterialcode(String materialcode) {
+    public Storageindetail(Long materialId, String materialcode,Integer counts, Double price,  Double money,String rate,  Double taxamount, String comments, String serialNumber,String supplier,Long storageinbillId) {
+        this.materialId = materialId;
         this.materialcode = materialcode;
+        this.price = price;
+        this.counts = counts;
+        this.money = money;
+        this.rate = rate;
+        this.taxamount=taxamount;
+        this.comments = comments;
+        this.serialNumber = serialNumber;
+        this.supplier=supplier;
+        this.storageinbillId=storageinbillId;
     }
 
-    @Override
-    public String toString() {
-        return new ToStringBuilder(this,ToStringStyle.MULTI_LINE_STYLE)
-            .append("id", getId())
-            .append("storageinbillid", getStorageinbillid())
-            .append("materialcode", getMaterialcode())
-            .append("price", getPrice())
-            .append("counts", getCounts())
-            .append("money", getMoney())
-            .append("supplier", getSupplier())
-            .append("taxamount", getTaxamount())
-            .toString();
-    }
 }

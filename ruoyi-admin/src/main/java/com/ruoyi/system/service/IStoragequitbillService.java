@@ -1,7 +1,8 @@
 package com.ruoyi.system.service;
 
-import java.util.List;
 import com.ruoyi.system.domain.Storagequitbill;
+
+import java.util.List;
 
 /**
  * 退料单列表Service接口
@@ -67,4 +68,7 @@ public interface IStoragequitbillService
      * @return 入库单列表
      */
       public int reddashed(Long id);
+
+
+
 }

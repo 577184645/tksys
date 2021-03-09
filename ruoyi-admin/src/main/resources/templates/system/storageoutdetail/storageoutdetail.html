@@ -2,6 +2,8 @@
 <html lang="zh" xmlns:th="http://www.thymeleaf.org" xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
 <head>
     <th:block th:include="include :: header('出库产品列表列表')" />
+    <link th:href="@{/css/bootstrap-table.min.css}" rel="stylesheet" type="text/css" />
+
     <style>
         .select-table table {
             table-layout:fixed;
@@ -9,14 +11,15 @@
 
     </style>
 </head>
-   <input name="storageoutbillid" id="storageoutbillid" th:value="${storageoutid}" hidden="hidden"/>
+   <input name="storageoutbillId" id="storageoutbillId" th:value="${storageoutbillId}" hidden="hidden"/>
 
 
 
             <div class="btn-group-sm" id="toolbar" role="group">
-                <a class="btn btn-warning" onclick="$.table.exportExcel()" >
-                    <i class="fa fa-download"></i> 导出
+                <a class="btn btn-success" id="button"  >
+                    展开(收缩)
                 </a>
+
             </div>
             <div class="col-sm-12 select-table table-striped">
                 <table id="bootstrap-table"></table>
@@ -24,11 +27,22 @@
         </div>
     </div>
     <th:block th:include="include :: footer" />
+<script type="text/javascript" th:src="@{/js/bootstrap-table.min.js}"></script>
     <script th:inline="javascript">
         var editFlag = [[${@permission.hasPermi('system:storageoutdetail:edit')}]];
         var removeFlag = [[${@permission.hasPermi('system:storageoutdetail:remove')}]];
         var prefix = ctx + "system/storageoutdetail";
+        var prefix1 = ctx + "system/materialChild";
+        $button = $('#button');
+        var $table = $('#bootstrap-table');
+        $button.click(function () {
+            var data=  $("#bootstrap-table" ).bootstrapTable('getData');
 
+            for (var i=0;i<data.length;i++){
+                $table.bootstrapTable('toggleDetailView', i)
+            }
+
+        })
         $(function() {
             var options = {
                 url: prefix + "/list",
@@ -38,7 +52,11 @@
                 exportUrl: prefix + "/export",
                 modalName: "出库产品列表",
                 queryParams : {
-                    storageoutbillid: $("#storageoutbillid").val()
+                    storageoutbillId: $("#storageoutbillId").val()
+                },
+                detailView: true,
+                onExpandRow : function(index, row, $detail) {
+                    initChildTable(index, row, $detail);
                 },
                 columns: [{
                     checkbox: true
@@ -48,22 +66,24 @@
                     title: 'null',
                     visible: false
                 },
-                {
-                    field: 'storageoutbillid', 
-                    title: '所属出库单'
-
-
-                },
                     {
                         field: 'materialcode',
                         title: '物料代码'
                     },
 
+
+                    {
+                        field: 'price',
+                        title: '单价'
+                    },
                     {
                         field: 'counts',
                         title: '数量'
                     },
-
+                    {
+                        field: 'money',
+                        title: '金额'
+                    },
 
                     {
                         field: 'serialNumber',
@@ -77,6 +97,54 @@
                 ]
             };
             $.table.init(options);
+            initChildTable = function(index, row, $detail) {
+                var childTable = $detail.html('<table style="table-layout:fixed"></table>').find('table');
+                $(childTable).bootstrapTable({
+                    url: prefix1 + "/list",
+                    method: 'post',
+                    sidePagination: "server",
+                    contentType: "application/x-www-form-urlencoded",
+                    queryParams: {
+                        materialId:row.materialId
+                    },
+                    columns: [
+
+                        {
+                            field: '',
+                            title: ''
+                        },
+                        {
+                            field: 'name',
+                            title: '名称'
+                        },
+                        {
+                            field: 'partnumber',
+                            title: '型号'
+                        },
+                        {
+                            field: 'description',
+                            title: '描述'
+                        },
+                        {
+                            field: 'footprint',
+                            title: '封装'
+                        },
+                        {
+                            field: 'manufacture',
+                            title: '品牌'
+                        },
+                        {
+                            field: 'unit',
+                            title: '单位'
+                        },
+                        {
+                            field: 'comments',
+                            title: '备注'
+                        }
+                    ]
+                });
+
+            };
         });
     </script>
 </body>

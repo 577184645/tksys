@@ -21,8 +21,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 
 
     <sql id="selectMaterialVo">
-        select m.id,m.materialcode,m.type_id,m.dept_id from material  m LEFT JOIN material_child m1
-                                                                 on m.id=m1.material_id left JOIN materialtype m2 on  m2.dept_id=m.dept_id
+        select m.id,m.materialcode,m.type_id,m.dept_id from mat_list  m LEFT JOIN mat_listchild m1
+                                                                 on m.id=m1.material_id left JOIN mat_type m2 on  m2.dept_id=m.dept_id
  </sql>
 
     <select id="selectMaterialList"  resultMap="MaterialResult">
@@ -35,12 +35,10 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="manufacture != null  and manufacture != ''">and m1.manufacture  like concat('%', #{manufacture}, '%')</if>
             <if test="description != null  and description != ''">and m1.description  like concat('%', #{description}, '%')</if>
             <if test="deptId != null and deptId != 0">
-                AND (m.type_id = #{deptId} OR m.type_id IN ( SELECT m2.dept_id FROM materialtype t WHERE FIND_IN_SET (#{deptId},ancestors) ))
+                AND (m.type_id = #{deptId} OR m.type_id IN ( SELECT m2.dept_id FROM mat_type t WHERE FIND_IN_SET (#{deptId},ancestors) ))
             </if>
-
         </where>
         group by  m.materialcode
-
     </select>
 
 
@@ -48,7 +46,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 
 
     <select id="selectMaterialMaxMaterialcode" resultType="String" >
-        select max(materialcode) from material
+        select max(materialcode) from mat_list
         where left(materialcode, 4)=#{materialcode};
     </select>
 
@@ -63,20 +61,15 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 
 
     <insert id="insertMaterial"  useGeneratedKeys="true" keyProperty="id">
-        insert into material(type_id,dept_id,materialcode) values (#{typeId},#{deptId},#{materialcode})
+        insert into mat_list(type_id,dept_id,materialcode) values (#{typeId},#{deptId},#{materialcode})
     </insert>
 
 
 
     <delete id="deleteMaterialById" >
-        delete from material where id = #{id}
+        delete from mat_list where id = #{id}
     </delete>
 
-    <delete id="deleteMaterialByIds" parameterType="String">
-        delete from material where id in
-        <foreach item="id" collection="array" open="(" separator="," close=")">
-            #{id}
-        </foreach>
-    </delete>
+
     
 </mapper>

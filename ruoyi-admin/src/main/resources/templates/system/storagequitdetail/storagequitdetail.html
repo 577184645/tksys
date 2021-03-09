@@ -2,6 +2,7 @@
 <html lang="zh" xmlns:th="http://www.thymeleaf.org" xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
 <head>
     <th:block th:include="include :: header('退料列表')" />
+    <link th:href="@{/css/bootstrap-table.min.css}" rel="stylesheet" type="text/css" />
     <style>
         .select-table table {
             table-layout:fixed;
@@ -13,21 +14,14 @@
 <body class="gray-bg">
      <div class="container-div">
         <div class="row">
-            <input name="storagequitbillid" id="storagequitbillid" th:value="${storagequitid}" hidden="hidden"/>
+            <input name="storagequitbillId" id="storagequitbillId" th:value="${storagequitbillId}" hidden="hidden"/>
 
             <div class="btn-group-sm" id="toolbar" role="group">
-             <!--   <a class="btn btn-success" onclick="$.operate.add()" shiro:hasPermission="system:storagequitdetail:add">
-                    <i class="fa fa-plus"></i> 添加
+                <a class="btn btn-success" id="button"  >
+                    展开(收缩)
                 </a>
-                <a class="btn btn-primary single disabled" onclick="$.operate.edit()" shiro:hasPermission="system:storagequitdetail:edit">
-                    <i class="fa fa-edit"></i> 修改
-                </a>
-                <a class="btn btn-danger multiple disabled" onclick="$.operate.removeAll()" shiro:hasPermission="system:storagequitdetail:remove">
-                    <i class="fa fa-remove"></i> 删除
-                </a>-->
-                <a class="btn btn-warning" onclick="$.table.exportExcel()" shiro:hasPermission="system:storagequitdetail:export">
-                    <i class="fa fa-download"></i> 导出
-                </a>
+
+
             </div>
             <div class="col-sm-12 select-table table-striped">
                 <table id="bootstrap-table"></table>
@@ -35,11 +29,23 @@
         </div>
     </div>
     <th:block th:include="include :: footer" />
-    <script th:inline="javascript">
+     <script type="text/javascript" th:src="@{/js/bootstrap-table.min.js}"></script>
+
+     <script th:inline="javascript">
         var editFlag = [[${@permission.hasPermi('system:storagequitdetail:edit')}]];
         var removeFlag = [[${@permission.hasPermi('system:storagequitdetail:remove')}]];
         var prefix = ctx + "system/storagequitdetail";
+        var prefix1 = ctx + "system/materialChild";
+        $button = $('#button');
+        var $table = $('#bootstrap-table');
+        $button.click(function () {
+            var data=  $("#bootstrap-table" ).bootstrapTable('getData');
 
+            for (var i=0;i<data.length;i++){
+                $table.bootstrapTable('toggleDetailView', i)
+            }
+
+        })
         $(function() {
             var options = {
                 url: prefix + "/list",
@@ -49,7 +55,11 @@
                 exportUrl: prefix + "/export",
                 modalName: "退料",
                 queryParams : {
-                    storagequitbillid: $("#storagequitbillid").val()
+                    storagequitbillId: $("#storagequitbillId").val()
+                },
+                detailView: true,
+                onExpandRow : function(index, row, $detail) {
+                    initChildTable(index, row, $detail);
                 },
                 columns: [{
                     checkbox: true
@@ -59,33 +69,36 @@
                     title: 'null',
                     visible: false
                 },
-                    {
-                        field: 'storagequitbillid',
-                        title: '所属退料单',
 
-                    },
                     {
                         field: 'materialcode',
                         title: '物料代码'
                     },
 
                     {
+                        field: 'price',
+                        title: '单价'
+                    },
+                    {
                         field: 'counts',
                         title: '数量'
                     },
-
-
                     {
-                        field: 'supplier',
-                        title: '供应商'
+                        field: 'money',
+                        title: '金额'
                     },
 
                     {
                         field: 'serialNumber',
                         title: '序列号'
                     },
+                    {
+                        field: 'comments',
+                        title: '备注'
+                    },
 
-                {
+
+                    {
                     title: '操作',
                     align: 'center',
                     formatter: function(value, row, index) {
@@ -97,6 +110,54 @@
                 }]
             };
             $.table.init(options);
+            initChildTable = function(index, row, $detail) {
+                var childTable = $detail.html('<table style="table-layout:fixed"></table>').find('table');
+                $(childTable).bootstrapTable({
+                    url: prefix1 + "/list",
+                    method: 'post',
+                    sidePagination: "server",
+                    contentType: "application/x-www-form-urlencoded",
+                    queryParams: {
+                        materialId:row.materialId
+                    },
+                    columns: [
+
+                        {
+                            field: '',
+                            title: ''
+                        },
+                        {
+                            field: 'name',
+                            title: '名称'
+                        },
+                        {
+                            field: 'partnumber',
+                            title: '型号'
+                        },
+                        {
+                            field: 'description',
+                            title: '描述'
+                        },
+                        {
+                            field: 'footprint',
+                            title: '封装'
+                        },
+                        {
+                            field: 'manufacture',
+                            title: '品牌'
+                        },
+                        {
+                            field: 'unit',
+                            title: '单位'
+                        },
+                        {
+                            field: 'comments',
+                            title: '备注'
+                        }
+                    ]
+                });
+
+            };
         });
     </script>
 </body>

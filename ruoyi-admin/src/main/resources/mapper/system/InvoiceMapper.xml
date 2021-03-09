@@ -15,7 +15,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </resultMap>
 
     <sql id="selectInvoiceVo">
-        select invoice_id, contract_id, invoice_number, invoice_date, invoice_money, c_time, u_time from invoice
+        select invoice_id, contract_id, invoice_number, invoice_date, invoice_money, c_time, u_time from sale_invoice
     </sql>
 
     <select id="selectInvoiceList" parameterType="Invoice" resultMap="InvoiceResult">
@@ -32,7 +32,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 
 
     <select id="yearsummoney" resultType="double">
-       SELECT sum(invoice_money) FROM invoice where invoice_date like concat('%',#{yyyy},'%')
+       SELECT sum(invoice_money) FROM sale_invoice where invoice_date like concat('%',#{yyyy},'%')
     </select>
 
     <select id="selectInvoiceById" parameterType="Long" resultMap="InvoiceResult">
@@ -41,7 +41,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </select>
         
     <insert id="insertInvoice" parameterType="Invoice" useGeneratedKeys="true" keyProperty="invoiceId">
-        insert into invoice
+        insert into sale_invoice
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="contractId != null ">contract_id,</if>
             <if test="invoiceNumber != null  and invoiceNumber != ''">invoice_number,</if>
@@ -61,7 +61,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </insert>
 
     <update id="updateInvoice" parameterType="Invoice">
-        update invoice
+        update sale_invoice
         <trim prefix="SET" suffixOverrides=",">
             <if test="contractId != null ">contract_id = #{contractId},</if>
             <if test="invoiceNumber != null  and invoiceNumber != ''">invoice_number = #{invoiceNumber},</if>
@@ -74,11 +74,11 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </update>
 
     <delete id="deleteInvoiceById" parameterType="Long">
-        delete from invoice where invoice_id = #{invoiceId}
+        delete from sale_invoice where invoice_id = #{invoiceId}
     </delete>
 
     <delete id="deleteInvoiceByIds" parameterType="String">
-        delete from invoice where invoice_id in 
+        delete from sale_invoice where invoice_id in
         <foreach item="invoiceId" collection="array" open="(" separator="," close=")">
             #{invoiceId}
         </foreach>

@@ -10,7 +10,7 @@ import java.util.regex.Pattern;
 
 public  class Office2PDF {
     //文件转换pdf成功后保存的地址
-    private static   String SAVE_PATH = "C:/";
+    private static   String SAVE_PATH = "C:/ruoyi/zhuanhua/";
     private Office2PDF(){}
 
     /**

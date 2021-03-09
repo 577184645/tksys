@@ -7,32 +7,28 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     <resultMap type="Storagequitdetail" id="StoragequitdetailResult">
         <result property="id"    column="id"    />
         <result property="sid"    column="sid"    />
-
-        <result property="storagequitbillid"    column="storagequitbillid"    />
+        <result property="storagequitbillId"    column="storagequitbill_id"    />
         <result property="materialcode"    column="materialcode"    />
-        <result property="name"    column="name"    />
-        <result property="partnumber"    column="partnumber"    />
-        <result property="footprint"    column="footprint"    />
         <result property="serialNumber"    column="serial_number"    />
-        <result property="manufacture"    column="manufacture"    />
-        <result property="price"    column="price"    />
         <result property="counts"    column="counts"    />
-        <result property="money"    column="money"    />
-        <result property="unit"    column="unit"    />
-        <result property="supplier"    column="supplier"    />
         <result property="comments"    column="comments"    />
-        <result property="cTime"    column="c_time"    />
-        <result property="uTime"    column="u_time"    />
+        <result property="price"    column="price"    />
+        <result property="money"    column="money"    />
+        <result property="materialId"    column="material_id"    />
+        <collection property="materialChildList" column="material_id" ofType="com.ruoyi.system.domain.MaterialChild"
+                    select="com.ruoyi.system.mapper.MaterialChildMapper.selectMaterialChildByMaterialId"
+        >
+        </collection>
     </resultMap>
 
     <sql id="selectStoragequitdetailVo">
-        select id,sid, storagequitbillid, materialcode, serial_number, counts,  comments from storagequitdetail
+        select id,sid,material_id, storagequitbill_id, materialcode, serial_number, counts,  comments,(select price from st_list where id=sid) price,(select (price*counts) from st_list where id=sid) money from st_quitdetail
     </sql>
 
     <select id="selectStoragequitdetailList" parameterType="Storagequitdetail" resultMap="StoragequitdetailResult">
         <include refid="selectStoragequitdetailVo"/>
         <where>
-            <if test="storagequitbillid != null  and storagequitbillid != ''"> and storagequitbillid = #{storagequitbillid}</if>
+            <if test="storagequitbillId != null  and storagequitbillId != ''"> and storagequitbill_id = #{storagequitbillId}</if>
             <if test="materialcode != null  and materialcode != ''"> and materialcode = #{materialcode}</if>
 
         </where>
@@ -45,83 +41,52 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 
     <select id="selectStorageindetailByStoragequitbillId"  resultMap="StoragequitdetailResult">
         <include refid="selectStoragequitdetailVo"/>
-        where storagequitbillid = #{storagequitbillid}
+        where storagequitbill_id = #{storagequitbillId}
     </select>
 
     <insert id="insertStoragequitdetail" parameterType="Storagequitdetail" useGeneratedKeys="true" keyProperty="id">
-        insert into storagequitdetail
+        insert into st_quitdetail
         <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="materialId != null  and materialId != ''">material_id,</if>
             <if test="sid != null  and sid != ''">sid,</if>
-
-            <if test="storagequitbillid != null  and storagequitbillid != ''">storagequitbillid,</if>
+            <if test="storagequitbillId != null  and storagequitbillId != ''">storagequitbill_id,</if>
             <if test="materialcode != null  and materialcode != ''">materialcode,</if>
-            <if test="name != null  and name != ''">name,</if>
-            <if test="partnumber != null  and partnumber != ''">partnumber,</if>
-            <if test="footprint != null  and footprint != ''">footprint,</if>
             <if test="serialNumber != null  and serialNumber != ''">serial_number,</if>
-            <if test="manufacture != null  and manufacture != ''">manufacture,</if>
-            <if test="price != null ">price,</if>
             <if test="counts != null ">counts,</if>
-            <if test="money != null ">money,</if>
-            <if test="unit != null  and unit != ''">unit,</if>
-            <if test="supplier != null  and supplier != ''">supplier,</if>
             <if test="comments != null  and comments != ''">comments,</if>
-            <if test="cTime != null ">c_time,</if>
-            <if test="uTime != null ">u_time,</if>
          </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="materialId != null  and materialId != ''">#{materialId},</if>
             <if test="sid != null  and sid != ''">#{sid},</if>
-            <if test="storagequitbillid != null  and storagequitbillid != ''">#{storagequitbillid},</if>
+            <if test="storagequitbillId != null  and storagequitbillId != ''">#{storagequitbillId},</if>
             <if test="materialcode != null  and materialcode != ''">#{materialcode},</if>
-            <if test="name != null  and name != ''">#{name},</if>
-            <if test="partnumber != null  and partnumber != ''">#{partnumber},</if>
-            <if test="footprint != null  and footprint != ''">#{footprint},</if>
             <if test="serialNumber != null  and serialNumber != ''">#{serialNumber},</if>
-            <if test="manufacture != null  and manufacture != ''">#{manufacture},</if>
-            <if test="price != null ">#{price},</if>
             <if test="counts != null ">#{counts},</if>
-            <if test="money != null ">#{money},</if>
-            <if test="unit != null  and unit != ''">#{unit},</if>
-            <if test="supplier != null  and supplier != ''">#{supplier},</if>
             <if test="comments != null  and comments != ''">#{comments},</if>
-            <if test="cTime != null ">#{cTime},</if>
-            <if test="uTime != null ">#{uTime},</if>
          </trim>
     </insert>
 
     <update id="updateStoragequitdetail" parameterType="Storagequitdetail">
-        update storagequitdetail
+        update st_quitdetail
         <trim prefix="SET" suffixOverrides=",">
-            <if test="storagequitbillid != null  and storagequitbillid != ''">storagequitbillid = #{storagequitbillid},</if>
+            <if test="storagequitbillId != null  and storagequitbillId != ''">storagequitbill_id = #{storagequitbillId},</if>
             <if test="materialcode != null  and materialcode != ''">materialcode = #{materialcode},</if>
-            <if test="name != null  and name != ''">name = #{name},</if>
-            <if test="partnumber != null  and partnumber != ''">partnumber = #{partnumber},</if>
-            <if test="footprint != null  and footprint != ''">footprint = #{footprint},</if>
             <if test="serialNumber != null  and serialNumber != ''">serial_number = #{serialNumber},</if>
-            <if test="manufacture != null  and manufacture != ''">manufacture = #{manufacture},</if>
-            <if test="price != null ">price = #{price},</if>
             <if test="counts != null ">counts = #{counts},</if>
-            <if test="money != null ">money = #{money},</if>
-            <if test="unit != null  and unit != ''">unit = #{unit},</if>
-            <if test="supplier != null  and supplier != ''">supplier = #{supplier},</if>
             <if test="comments != null  and comments != ''">comments = #{comments},</if>
-            <if test="cTime != null ">c_time = #{cTime},</if>
-            <if test="uTime != null ">u_time = #{uTime},</if>
         </trim>
         where id = #{id}
     </update>
-    <update id="updateMaterial">
-    update  storagequitdetail set name=#{name},partnumber=#{partnumber},footprint=#{footprint},unit=#{unit},manufacture=#{manufacture} where materialcode=#{materialcode}
-    </update>
+
     <delete id="deleteStoragequitdetailById" parameterType="Long">
-        delete from storagequitdetail where id = #{id}
+        delete from st_quitdetail where id = #{id}
     </delete>
 
 
 
 
     <delete id="deleteStoragequitdetailByIds" parameterType="String">
-        delete from storagequitdetail where id in 
+        delete from st_quitdetail where id in
         <foreach item="id" collection="array" open="(" separator="," close=")">
             #{id}
         </foreach>

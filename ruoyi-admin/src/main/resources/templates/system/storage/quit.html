@@ -107,6 +107,10 @@
                                 <input type="hidden" id="deptId1" name="deptId">
                                 <input type="hidden" id="parentId" name="parentId">
                                 <li>
+                                    <label>物料编码：</label>
+                                    <input type="text" name="materialcode"/>
+                                </li>
+                                <li>
                                     <label>名称：</label>
                                     <input type="text" name="name"/>
                                 </li>
@@ -212,28 +216,11 @@
                     $.tree.init(options);
 
                     function zOnClick(event, treeId, treeNode) {
-
-                     /*   if(treeNode.name=="上海库"||treeNode.name=="天长库"){
-                            alert("不能选择上海库或天长库,如没有子库 请刷新!");
-                            return;
-                        }
-*/
                         $("#deptId").val(treeNode.id);
                         $("#deptId1").val(treeNode.id);
                         $("#parentId").val(treeNode.pId);
                         query();
                         $.table.search('form2', 'bootstrap-table2')
-                       /* if(treeNode.children==null) {
-                            $("#deptId").val(treeNode.id);
-                            $("#deptId1").val(treeNode.id);
-                            $("#parentId").val(treeNode.pId);
-                            query();
-                            $.table.search('form2', 'bootstrap-table2')
-                        }else{
-                            alert("请选择子仓库");
-                            $("#deptId").val("");
-                        }
-*/
                     }
 
 
@@ -318,9 +305,6 @@
                             }
                         ] ,onEditableSave: function (field, row, oldValue,$el) {
 
-                            /*   row.money = (row.price * row.counts).toFixed(2);;
-                               $('#bootstrap-table1').bootstrapTable('updateRow', {index: row.randomId, row: row});
-   */
                         }
                     };
 
@@ -359,7 +343,6 @@
                         var randomId = 100 + ~~(Math.random() * 100)
                         var data = $("#" + table.options.id).bootstrapTable('getSelections');
                         var datas = $("#bootstrap-table1").bootstrapTable('getData');
-
                         for (var i=0;i<data.length;i++){
                             $("#bootstrap-table1").bootstrapTable('insertRow', {
                                 index: datas.length+i, // 你想插入到哪，0表示第一行
@@ -370,6 +353,7 @@
                                     serialNumber:"",
                                     counts:"",
                                     materialId:data[i].materialId,
+                                    stocks:data[i].stocks,
                                     randomId:randomId
                                 }
                             })

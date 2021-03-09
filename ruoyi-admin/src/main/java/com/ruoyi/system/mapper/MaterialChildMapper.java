@@ -14,6 +14,8 @@ public interface MaterialChildMapper
 {
 
     public List<MaterialChild> selectMaterialChildByMaterialId(Long materialId);
+
+
     /**
      * 查询物料
      * 
@@ -47,6 +49,11 @@ public interface MaterialChildMapper
      * @return 结果
      */
     public int deleteMaterialChildById(Integer id);
+
+
+
+
+    public int deleteMaterialChildByMaterialId(Long id);
 
     /**
      * 批量删除物料

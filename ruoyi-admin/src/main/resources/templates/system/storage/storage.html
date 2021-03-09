@@ -116,19 +116,8 @@
                     <a class="btn btn-danger" onclick="quitTab()" shiro:hasPermission="system:storage:quit">
                     <i class="fa fa-exclamation"></i> 退料
                 </a>
-                <!--
-              <a class="btn btn-primary single disabled" onclick="$.operate.edit()" shiro:hasPermission="system:user:edit">
-                  <i class="fa fa-edit"></i> 修改
-              </a>
-              <a class="btn btn-danger multiple disabled" onclick="$.operate.removeAll()" shiro:hasPermission="system:user:remove">
-                  <i class="fa fa-remove"></i> 删除
-              </a>
--->
 
 
-
-
-          
               <a class="btn btn-warning" onclick="exportData()" shiro:hasPermission="system:storage:export">
                   <i class="fa fa-download"></i> 导出
               </a>
@@ -146,9 +135,7 @@
 <th:block th:include="include :: ztree-js" />
 <script type="text/javascript" th:src="@{/js/bootstrap-table.min.js}"></script>
 <script th:inline="javascript">
-    var editFlag = [[${@permission.hasPermi('system:user:edit')}]];
-    var removeFlag = [[${@permission.hasPermi('system:user:remove')}]];
-    var resetPwdFlag = [[${@permission.hasPermi('system:user:resetPwd')}]];
+    var removeFlag = [[${@permission.hasPermi('system:storage:remove')}]];
     var prefix = ctx + "system/storage";
     var prefix1 = ctx + "system/materialChild";
 
@@ -251,28 +238,26 @@
                 },
 
                 {
-                    field: 'uTime',
+                    field: 'utime',
                     title: '最后入库时间'
                 }
                 ,
                 {
-                    field: 'oTime',
+                    field: 'otime',
                     title: '最后出库时间'
                 }, {
-                    field: 'qTime',
+                    field: 'qtime',
                     title: '最后退料时间'
-                }
-
-              /*  {
+                },
+                {
                     title: '操作',
                     align: 'center',
                     formatter: function(value, row, index) {
                         var actions = [];
-                        actions.push('<a class="btn btn-success btn-xs ' + editFlag + '" href="javascript:void(0)" onclick="$.operate.edit(\'' + row.id + '\')"><i class="fa fa-edit"></i>编辑</a> ');
                         actions.push('<a class="btn btn-danger btn-xs ' + removeFlag + '" href="javascript:void(0)" onclick="$.operate.remove(\'' + row.id + '\')"><i class="fa fa-remove"></i>删除</a>');
                         return actions.join('');
                     }
-                }*/]
+                }]
         };
         $.table.init(options);
 
@@ -283,6 +268,7 @@
 
 
     initChildTable = function(index, row, $detail) {
+
         var childTable = $detail.html('<table style="table-layout:fixed"></table>').find('table');
         $(childTable).bootstrapTable({
             url: prefix1 + "/list",

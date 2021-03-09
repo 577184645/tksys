@@ -95,9 +95,9 @@
                             </li>
                             <li class="select-time">
                                 <label>入库时间： </label>
-                                <input type="text"   class="form-control" id="datetimepicker-startTime" placeholder="开始时间" name="params[beginTime]">
+                                <input type="text" class="time-input" id="startTime" placeholder="开始时间" name="params[beginTime]"/>
                                 <span>-</span>
-                                <input type="text"   class="form-control" id="datetimepicker-endTime" placeholder="结束时间" name="params[endTime]"/>
+                                <input type="text" class="time-input" id="endTime" placeholder="结束时间" name="params[endTime]"/>
                             </li>
                             <li>
                                 <a class="btn btn-primary btn-rounded btn-sm" onclick="$.table.search()"><i class="fa fa-search"></i>&nbsp;搜索</a>
@@ -118,11 +118,6 @@
                 <a class="btn btn-primary single disabled" onclick="$.operate.edit()" shiro:hasPermission="system:storageinbill:edit">
                     <i class="fa fa-edit"></i> 修改
                 </a>
-                <a class="btn btn-warning" onclick="$.table.exportExcel()" shiro:hasPermission="system:storageinbill:export">
-                    <i class="fa fa-download"></i> 导出
-                </a>
-
-
                 <a class="btn btn-danger single disabled" onclick="reddashed()" shiro:hasPermission="system:storageinbill:reddashed">
                     <i class="fa fa-exclamation"></i> 红冲
                 </a>
@@ -173,7 +168,7 @@
                 },
                 onDblClickRow:function(row, $element, field)
                 {
-                    Infotwo(row.stockinid);
+                    Infotwo(row.id,row.stockinid);
                 },
                 columns: [{
                     checkbox: true
@@ -190,9 +185,9 @@
                     width:155
                 },
                 {
-                    field: 'outsourcewarehouse', 
+                    field: 'outsourcewarehouse',
                     title: '外协库',
-                    width:200
+                    width:155
                 },
                     {
                         field: 'money',
@@ -209,11 +204,7 @@
                     title: '库管员',
                     width:100
                 },
-                {
-                    field: 'storagentime', 
-                    title: '入库时间',
-                    width:160
-                },
+
                     {
                         field: 'supplier',
                         title: '供应商',
@@ -291,7 +282,7 @@
                  actions.push('<a class="btn btn-success btn-xs ' + applyFlag + '" href="javascript:void(0)" onclick="apply(\'' + row.id + '\')"><i class="fa fa-edit"></i>申请</a> ');
              }
                             if(row.status==2) {
-                                actions.push('<a class="btn btn-success btn-xs ' + checkprintFlag + '" href="javascript:void(0)" onclick="print1(\'' + row.id + '\')"><i class="fa fa-print"></i>打印</a> ');
+                                actions.push('<a class="btn btn-success btn-xs ' + checkprintFlag + '" href="javascript:void(0)" onclick="print(\'' + row.id + '\')"><i class="fa fa-print"></i>打印</a> ');
                             }
                             return actions.join('');
                         }
@@ -302,20 +293,33 @@
              ]
             };
             $.table.init(options);
+
+
         });
 
 
 
-        function Infotwo(id) {
+        function Infotwo(id,stockinid) {
             table.set();
-            $.modal.openTab("入库单详细信息",prefix1+"/"+id);
+            $.modal.openTab(stockinid+"入库单详细信息",prefix1+"/"+id);
         }
 
         function Info(id) {
             table.set();
             var row = $("#bootstrap-table").bootstrapTable('getSelections')[0];
-            $.modal.openTab("入库单详细信息",prefix1+"/"+row.stockinid);
+            $.modal.openTab(row.stockinid+"入库单详细信息",prefix1+"/"+row.id);
 
+        }
+
+
+
+        function print(id) {
+            var id=id;
+            if(id==undefined){
+                 id = $("#bootstrap-table").bootstrapTable('getSelections')[0].id;
+            }
+            table.set();
+            $.modal.openTab("打印入库单",prefix+"/print/"+id);
 
 
         }
@@ -323,37 +327,13 @@
 
 
 
-        function print() {
+
+
+
+
+        function reddashed() {
             table.set();
-            var row = $("#bootstrap-table").bootstrapTable('getSelections')[0];
-            $.modal.openTab("打印入库单",prefix+"/print/"+row.id);
-
-
-        }
-
-
-
-
-
-
-
-
-        function reddashed(id) {
-            table.set();
-            var row = $("#" + table.options.id).bootstrapTreeTable('getSelections')[0];
-
-            if($.common.isEmpty(id) && table.options.type == table_type.bootstrapTreeTable) {
-                if ($.common.isEmpty(row)) {
-                    $.modal.alertWarning("请至少选择一条记录");
-                    return;
-                }
-                var url = table.options.updateUrl.replace("{id}", row[table.options.uniqueId]);
-
-                $.modal.openTab("修改" + table.options.modalName, url);
-            } else {
-
-    var  url= editUrl2();
-                var id= url.substring( (url.lastIndexOf("/"))+1,url.length) ;
+            var id = $("#bootstrap-table").bootstrapTable('getSelections')[0].id;
                 $.modal.confirm("确定红冲该入库单吗？", function() {
                     $.ajax({
                         url : prefix+'/reddashed',
@@ -373,43 +353,12 @@
                     });
                     $.ajax(config)
                 });
-
-
-            }
         }
 
 
-        function editUrl2(id) {
-            var url = "/404.html";
-            if ($.common.isNotEmpty(id)) {
-
-                url = table.options.updateUrl.replace("{id}", id);
-
-            } else {
-                var id = $.common.isEmpty(table.options.uniqueId) ? $.table.selectFirstColumns() : $.table.selectColumns(table.options.uniqueId);
-
-                if (id.length == 0) {
-                    $.modal.alertWarning("请至少选择一条记录");
-                    return;
-                }
-                url = prefix+"/print/"+(id);
-
-            }
-            return url;
-        }
-
-
-        function print1(id) {
-            table.set();
 
 
 
-
-            $.modal.openTab("打印入库单", url = prefix+"/print1/"+(id));
-
-
-
-        }
 
 
 
@@ -419,10 +368,10 @@
             table.set();
             $.modal.confirm("确定提交该入库单吗？", function() {
                 $.ajax({
-                    url : prefix+'/apply',
+                    url : prefix+'/examine',
                     dataType : 'json',
                     type : 'post',
-                    data:{"id":id},
+                    data:{"id":id,"value":1},
                     beforeSend: function () {
                         $.modal.loading("正在处理中，请稍后...");
                     },

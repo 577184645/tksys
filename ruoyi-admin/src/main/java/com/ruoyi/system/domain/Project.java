@@ -1,10 +1,10 @@
 package com.ruoyi.system.domain;
 
-import java.util.Date;
-import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
 import com.ruoyi.common.annotation.Excel;
 import com.ruoyi.common.core.domain.BaseEntity;
+import lombok.Data;
+
+import java.util.Date;
 
 /**
  * 项目列表对象 project
@@ -12,6 +12,7 @@ import com.ruoyi.common.core.domain.BaseEntity;
  * @author ruoyi
  * @date 2020-06-04
  */
+@Data
 public class Project extends BaseEntity
 {
     private static final long serialVersionUID = 1L;
@@ -31,50 +32,5 @@ public class Project extends BaseEntity
     @Excel(name = "修改时间", width = 30, dateFormat = "yyyy-MM-dd")
     private Date uTime;
 
-    public void setId(Long id) 
-    {
-        this.id = id;
-    }
 
-    public Long getId() 
-    {
-        return id;
-    }
-    public void setName(String name) 
-    {
-        this.name = name;
-    }
-
-    public String getName() 
-    {
-        return name;
-    }
-    public void setcTime(Date cTime) 
-    {
-        this.cTime = cTime;
-    }
-
-    public Date getcTime() 
-    {
-        return cTime;
-    }
-    public void setuTime(Date uTime) 
-    {
-        this.uTime = uTime;
-    }
-
-    public Date getuTime() 
-    {
-        return uTime;
-    }
-
-    @Override
-    public String toString() {
-        return new ToStringBuilder(this,ToStringStyle.MULTI_LINE_STYLE)
-            .append("id", getId())
-            .append("name", getName())
-            .append("cTime", getcTime())
-            .append("uTime", getuTime())
-            .toString();
-    }
 }

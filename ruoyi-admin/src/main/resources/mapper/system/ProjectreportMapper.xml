@@ -40,7 +40,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </resultMap>
 
     <sql id="selectProjectreportVo">
-        select projectreport__id, projectreport_type,projectreport__headingcode, projectreport__date, projectreport__lastuser, projectreport__name, projectreport__designinginstitute, projectreport__capitalsource, projectreport__investorinfo, projectreport__isepcproject, projectreport_projectaddress, projectreport_projectpurchaser, projectreport_biddate, projectreport_product, projectreport_dapproximatelymoney, projectreport_cphoneandposition, projectreport_sphoneandposition, projectreport_competitorinfo, projectreport_tenderer, projectreport_offersize, projectreport_probability, projectreport_problem, projectreport_reason, projectreport_visitingclients, projectreport_relation, projectreport_projectstatus, projectreport_honeywellconfirmation, c_time, u_time from projectreport
+        select projectreport__id, projectreport_type,projectreport__headingcode, projectreport__date, projectreport__lastuser, projectreport__name, projectreport__designinginstitute, projectreport__capitalsource, projectreport__investorinfo, projectreport__isepcproject, projectreport_projectaddress, projectreport_projectpurchaser, projectreport_biddate, projectreport_product, projectreport_dapproximatelymoney, projectreport_cphoneandposition, projectreport_sphoneandposition, projectreport_competitorinfo, projectreport_tenderer, projectreport_offersize, projectreport_probability, projectreport_problem, projectreport_reason, projectreport_visitingclients, projectreport_relation, projectreport_projectstatus, projectreport_honeywellconfirmation, c_time, u_time from sale_projectreport
     </sql>
 
     <select id="selectProjectreportList" parameterType="Projectreport" resultMap="ProjectreportResult">
@@ -82,7 +82,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </select>
         
     <insert id="insertProjectreport" parameterType="Projectreport" useGeneratedKeys="true" keyProperty="projectreportId">
-        insert into projectreport
+        insert into sale_projectreport
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="projectreportType != null  and projectreportType != ''"> projectreport_type,</if>
 
@@ -148,7 +148,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </insert>
 
     <update id="updateProjectreport" parameterType="Projectreport">
-        update projectreport
+        update sale_projectreport
         <trim prefix="SET" suffixOverrides=",">
             <if test="projectreportHeadingcode != null  and projectreportHeadingcode != ''">projectreport__headingcode = #{projectreportHeadingcode},</if>
             <if test="projectreportDate != null ">projectreport__date = #{projectreportDate},</if>
@@ -182,11 +182,11 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </update>
 
     <delete id="deleteProjectreportById" parameterType="Long">
-        delete from projectreport where projectreport__id = #{projectreportId}
+        delete from sale_projectreport where projectreport__id = #{projectreportId}
     </delete>
 
     <delete id="deleteProjectreportByIds" parameterType="String">
-        delete from projectreport where projectreport__id in 
+        delete from sale_projectreport where projectreport__id in
         <foreach item="projectreportId" collection="array" open="(" separator="," close=")">
             #{projectreportId}
         </foreach>

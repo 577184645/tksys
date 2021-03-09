@@ -14,7 +14,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </resultMap>
 
     <sql id="selectReturnedVo">
-        select returned_id, contract_id, returned_money, returned_date, c_time, u_time from returned
+        select returned_id, contract_id, returned_money, returned_date, c_time, u_time from sale_returned
     </sql>
 
     <select id="selectReturnedList" parameterType="Returned" resultMap="ReturnedResult">
@@ -29,7 +29,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </select>
 
     <select id="yearsummoney" resultType="double">
-      SELECT sum(returned_money) FROM returned where returned_date like concat('%',#{yyyy},'%')
+      SELECT sum(returned_money) FROM sale_returned where returned_date like concat('%',#{yyyy},'%')
     </select>
     
     <select id="selectReturnedById" parameterType="Long" resultMap="ReturnedResult">
@@ -38,7 +38,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </select>
         
     <insert id="insertReturned" parameterType="Returned" useGeneratedKeys="true" keyProperty="returnedId">
-        insert into returned
+        insert into sale_returned
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="contractId != null ">contract_id,</if>
             <if test="returnedMoney != null ">returned_money,</if>
@@ -56,7 +56,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </insert>
 
     <update id="updateReturned" parameterType="Returned">
-        update returned
+        update sale_returned
         <trim prefix="SET" suffixOverrides=",">
             <if test="contractId != null ">contract_id = #{contractId},</if>
             <if test="returnedMoney != null ">returned_money = #{returnedMoney},</if>
@@ -68,11 +68,11 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </update>
 
     <delete id="deleteReturnedById" parameterType="Long">
-        delete from returned where returned_id = #{returnedId}
+        delete from sale_returned where returned_id = #{returnedId}
     </delete>
 
     <delete id="deleteReturnedByIds" parameterType="String">
-        delete from returned where returned_id in 
+        delete from sale_returned where returned_id in
         <foreach item="returnedId" collection="array" open="(" separator="," close=")">
             #{returnedId}
         </foreach>

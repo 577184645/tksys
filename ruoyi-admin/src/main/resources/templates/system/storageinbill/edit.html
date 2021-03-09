@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+ <!DOCTYPE html>
 <html lang="zh" xmlns:th="http://www.thymeleaf.org" >
 <head>
     <th:block th:include="include :: header('修改入库单')" />
@@ -76,15 +76,7 @@
                 </select>
             </div>
         </div>
-        <div class="form-group">
-            <label class="col-sm-3 control-label">入库时间：</label>
-            <div class="col-sm-8">
-                <div class="input-group date">
-                    <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
-                    <input name="storagentime" th:value="${#dates.format(storageinbill.storagentime, 'yyyy-MM-dd')}" class="form-control" placeholder="yyyy-MM-dd" type="text">
-                </div>
-            </div>
-        </div>
+
         <div class="form-group">
             <label class="col-sm-3 control-label">采购单号：</label>
             <div class="col-sm-8">

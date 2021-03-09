@@ -1,7 +1,8 @@
 package com.ruoyi.system.mapper;
 
-import java.util.List;
 import com.ruoyi.system.domain.Bomdetail;
+
+import java.util.List;
 
 /**
  * bom详细清单Mapper接口
@@ -27,6 +28,9 @@ public interface BomdetailMapper
      */
     public List<Bomdetail> selectBomdetailList(Bomdetail bomdetail);
 
+    public List<Bomdetail> selectBomBybomId(Long bomid);
+
+
     /**
      * 新增bom详细清单
      * 
@@ -49,7 +53,7 @@ public interface BomdetailMapper
      * @param id bom详细清单ID
      * @return 结果
      */
-    public int deleteBomdetailById(Integer id);
+    public int deleteBomdetailById(Long id);
 
     /**
      * 批量删除bom详细清单

@@ -1,6 +1,7 @@
 package com.ruoyi.system.controller;
 
 import com.ruoyi.common.annotation.Log;
+import com.ruoyi.common.config.Global;
 import com.ruoyi.common.core.controller.BaseController;
 import com.ruoyi.common.core.domain.AjaxResult;
 import com.ruoyi.common.core.page.TableDataInfo;
@@ -11,17 +12,20 @@ import com.ruoyi.system.service.IProjectService;
 import com.ruoyi.system.service.IStorageService;
 import com.ruoyi.system.service.ISupplierService;
 import com.ruoyi.system.service.ISysUserService;
-import com.ruoyi.system.util.WebUtil;
-import net.sf.json.JSONArray;
-import net.sf.json.JSONObject;
-import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.ss.usermodel.*;
+import org.apache.poi.ss.util.CellRangeAddress;
+import org.apache.poi.xssf.usermodel.XSSFSheet;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
+import java.io.File;
+import java.io.FileInputStream;
 import java.util.List;
 
 /**
@@ -80,12 +84,6 @@ public class StorageController extends BaseController
 
 
 
-    @RequestMapping("/selectByBom")
-    @ResponseBody
-    public List<Storage> selectByBom(String comments,String footprint){
-
-        return     storageService.selectByBom(comments,footprint);
-    }
 
 
     @GetMapping("/findlist/{materialcode}")
@@ -105,9 +103,108 @@ public class StorageController extends BaseController
     {
         try {
             List<Storage> list = storageService.selectStorageList(storage);
-            Workbook workbook= WebUtil.readStorageList(list);
-            WebUtil.downloadExcel(response,workbook,System.currentTimeMillis()+"库存列表.xlsx");
+            String file = Global.getProfile()+"/template/storage.xlsx";
+            XSSFWorkbook workbook=new XSSFWorkbook(new FileInputStream(new File(file)));
+            XSSFSheet sheet = workbook.getSheetAt(0);
+            CellStyle cellStyle2=workbook.createCellStyle();
+            cellStyle2.setAlignment(HorizontalAlignment.CENTER);
+            cellStyle2.setVerticalAlignment(VerticalAlignment.CENTER);
+            cellStyle2.setWrapText(true);
+            CreationHelper createHelper = workbook.getCreationHelper();
+            CellStyle cellStyle = workbook.createCellStyle();
+            cellStyle.setDataFormat(createHelper.createDataFormat().getFormat("yyyy-MM-dd"));
+            cellStyle.setAlignment(HorizontalAlignment.CENTER);
+            cellStyle.setVerticalAlignment(VerticalAlignment.CENTER);
+            cellStyle.setWrapText(true);
+            int index=0;
+            for (int i1 = 0; i1 < list.size(); i1++) {
+                index++;
+                Row row1 = sheet.createRow(index);
+                row1.createCell(0).setCellValue(list.get(i1).getMaterialcode());
+                row1.createCell(6).setCellValue(list.get(i1).getStocks());
+                row1.createCell(10).setCellValue(list.get(i1).getUTime());
+                row1.getCell(10).setCellStyle(cellStyle);
+                row1.createCell(8).setCellValue(list.get(i1).getOTime());
+                row1.getCell(8).setCellStyle(cellStyle);
+                row1.createCell(9).setCellValue(list.get(i1).getQTime());
+                row1.getCell(9).setCellStyle(cellStyle);
+                row1.createCell(7).setCellValue(list.get(i1).getPrice()!=null?list.get(i1).getPrice():0);
+                List<MaterialChild> materialChildList = list.get(i1).getMaterialChildList();
+                row1.createCell(1).setCellValue(materialChildList.get(0).getName());
+                row1.createCell(2).setCellValue(materialChildList.get(0).getPartnumber());
+                row1.createCell(3).setCellValue(materialChildList.get(0).getManufacture());
+                row1.createCell(4).setCellValue(materialChildList.get(0).getFootprint());
+                row1.createCell(5).setCellValue(materialChildList.get(0).getDescription());
+                for (int i = 0; i < row1.getLastCellNum(); i++) {
+                    if(i<8){
+                        row1.getCell(i).setCellStyle(cellStyle2);
+                    }else{
+                        row1.getCell(i).setCellStyle(cellStyle);
+                    }
 
+                }
+
+                if(materialChildList.size()>1){
+                    for (int i = 1; i < materialChildList.size(); i++) {
+                        index++;
+                        Row row2 = sheet.createRow(index);
+                        row2.createCell(1).setCellValue(materialChildList.get(i).getName());
+                        row2.createCell(2).setCellValue(materialChildList.get(i).getPartnumber());
+                        for (Cell cell : row2) {
+                            cell.setCellStyle(cellStyle2);
+                        }
+                    }
+                    boolean flag=true;
+                    if(flag) {
+                        sheet.addMergedRegion(new CellRangeAddress(
+                                index-materialChildList.size()+1,   //起始行
+                                index,   //结束行
+                                0,   //起始列
+                                0    //结束列
+                        ));
+                        sheet.addMergedRegion(new CellRangeAddress(
+                                index-materialChildList.size()+1,   //起始行
+                                index,   //结束行
+                                6,   //起始列
+                                6    //结束列
+                        ));
+                        sheet.addMergedRegion(new CellRangeAddress(
+                                index-materialChildList.size()+1,   //起始行
+                                index,   //结束行
+                                7,   //起始列
+                                7    //结束列
+                        ));
+                        sheet.addMergedRegion(new CellRangeAddress(
+                                index-materialChildList.size()+1,   //起始行
+                                index,   //结束行
+                                8,   //起始列
+                                8    //结束列
+                        ));
+                        sheet.addMergedRegion(new CellRangeAddress(
+                                index-materialChildList.size()+1,   //起始行
+                                index,   //结束行
+                                9,   //起始列
+                                9    //结束列
+                        ));
+                        sheet.addMergedRegion(new CellRangeAddress(
+                                index-materialChildList.size()+1,   //起始行
+                                index,   //结束行
+                                10,   //起始列
+                                10    //结束列
+                        ));
+                    }
+                    flag = false;
+                }
+
+            }
+            String filename=System.currentTimeMillis()+"库存列表.xlsx";
+            ServletOutputStream outputStream=response.getOutputStream();
+            response.setContentType("application/vnd.ms-excel");
+            response.setHeader("content-Disposition", "attachment;filename="+new String(filename.getBytes("utf-8"),"iso-8859-1"));
+            workbook.write(outputStream);
+            outputStream.flush();
+            outputStream.close();
+            workbook.close();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -140,9 +237,8 @@ public class StorageController extends BaseController
     @ResponseBody
     public AjaxResult addSave(String StorageinbillList,Storageinbill Storageinbill)
     {
-
-
-        return toAjax(storageService.insertStorage(Storageinbill,StorageinbillList));
+            storageService.insertStorage(Storageinbill,StorageinbillList);
+            return    toAjax(true);
     }
 
     /**
@@ -168,21 +264,8 @@ public class StorageController extends BaseController
     @ResponseBody
     public AjaxResult editSave(String StorageoutbillList, Storageoutbill storageoutbill)
     {
-
-        JSONArray productArray = JSONArray.fromObject(StorageoutbillList);
-
-        for (int i = 0; i < productArray.size(); i++) {
-            JSONObject jsonObject = productArray.getJSONObject(i);
-            Long stocks = storageService.selectStorageById(jsonObject.getLong("id")).getStocks();
-            if(stocks<Long.valueOf(jsonObject.getString("counts"))){
-
-                return AjaxResult.warn("库存不足！");
-
-            }
-        }
-
-
-        return toAjax(storageService.updateStorage(storageoutbill,StorageoutbillList));
+        storageService.updateStorage(storageoutbill,StorageoutbillList);
+        return toAjax(true);
     }
 
 
@@ -206,19 +289,19 @@ public class StorageController extends BaseController
     public AjaxResult quit(String StoragequitbillList, Storagequitbill storagequitbill)
     {
 
-
-        return toAjax(storageService.quitStorage(storagequitbill,StoragequitbillList));
+        storageService.quitStorage(storagequitbill,StoragequitbillList);
+        return toAjax(true);
     }
 
     /**
-     * 删除库存列表
+     * 删除项目列表
      */
     @RequiresPermissions("system:storage:remove")
-    @Log(title = "库存列表", businessType = BusinessType.DELETE)
+    @Log(title = "项目列表", businessType = BusinessType.DELETE)
     @PostMapping( "/remove")
     @ResponseBody
-    public AjaxResult remove(String ids)
-    {
-        return toAjax(storageService.deleteStorageByIds(ids));
+    public AjaxResult remove(String ids) {
+        return storageService.deleteProjectById(Long.valueOf(ids));
+
     }
 }

@@ -5,6 +5,7 @@ import com.ruoyi.common.core.controller.BaseController;
 import com.ruoyi.common.core.domain.AjaxResult;
 import com.ruoyi.common.core.page.TableDataInfo;
 import com.ruoyi.common.enums.BusinessType;
+import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.common.utils.poi.ExcelUtil;
 import com.ruoyi.system.domain.Material;
 import com.ruoyi.system.domain.Materialtype;
@@ -106,7 +107,7 @@ public class MaterialController extends BaseController
     @ResponseBody
     public Map<String,Object> getMaterialcode(@RequestParam(name = "typeId",required = false,defaultValue = "") String typeId,@RequestParam(name = "deptId",required = false,defaultValue = "") String deptId){
       Map<String,Object> ret=new HashMap<>();
-        if(deptId!=""&&typeId!=""){
+        if(StringUtils.isNotBlank(deptId)&&StringUtils.isNotBlank(typeId)){
             ret.put("materialcode", materialService.getMaterialcode(Long.valueOf(typeId),Long.valueOf(deptId)));
       }
         return ret;
@@ -161,8 +162,14 @@ public class MaterialController extends BaseController
     @Log(title = "物料列表", businessType = BusinessType.DELETE)
     @PostMapping( "/remove")
     @ResponseBody
-    public AjaxResult remove(String ids)
+    public AjaxResult remove(Long id)
     {
-        return materialService.deleteMaterialByIds(ids);
+        try {
+            return materialService.deleteMaterial(id);
+        }catch (Exception e){
+            e.printStackTrace();
+            return  AjaxResult.error("删除失败!");
+        }
+
     }
 }

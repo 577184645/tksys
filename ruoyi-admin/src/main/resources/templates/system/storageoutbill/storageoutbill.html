@@ -63,10 +63,10 @@
                                 <input type="text" name="comments"/>
                             </li>
                             <li class="select-time">
-                                <label>入库时间： </label>
-                                <input type="text"   class="form-control" id="datetimepicker-startTime" placeholder="开始时间" name="params[beginTime]">
+                                <label>出库时间： </label>
+                                <input type="text" class="time-input" id="startTime" placeholder="开始时间" name="params[beginTime]"/>
                                 <span>-</span>
-                                <input type="text"   class="form-control" id="datetimepicker-endTime" placeholder="结束时间" name="params[endTime]"/>
+                                <input type="text" class="time-input" id="endTime" placeholder="结束时间" name="params[endTime]"/>
                             </li>
                             <li>
                                 <label>红冲状态：</label>
@@ -91,14 +91,14 @@
                 <a class="btn btn-primary single disabled"  onclick="print()" shiro:hasPermission="system:storageoutbill:print" >
                     <i class="fa fa-print"></i> 打印
                 </a>
-                <a class="btn btn-warning" onclick="$.table.exportExcel()" shiro:hasPermission="system:storageoutbill:export">
-                    <i class="fa fa-download"></i> 导出
-                </a>
                 <a class="btn btn-primary single disabled" onclick="$.operate.edit()" shiro:hasPermission="system:storageoutbill:edit">
                     <i class="fa fa-edit"></i> 修改
                 </a>
                 <a class="btn btn-danger single disabled" onclick="reddashed()" shiro:hasPermission="system:storageoutbill:reddashed">
                     <i class="fa fa-exclamation"></i> 红冲
+                </a>
+                <a class="btn btn-warning single disabled" onclick="exportExcel()" shiro:hasPermission="system:storageoutbill:export">
+                    <i class="fa fa-download"></i> 导出
                 </a>
             </div>
             <div class="col-sm-12 select-table table-striped">
@@ -133,7 +133,7 @@
                 modalName: "出库单列表",
                 onDblClickRow:function(row, $element, field)
                 {
-                    Infotwo(row.storageoutid);
+                    Infotwo(row.id,row.storageoutid);
                 },
                 rowStyle: function (row, index) {
                     var style = "";
@@ -158,10 +158,15 @@
                     width:155
                 },
                 {
-                    field: 'outsourcewarehouse',
-                    title: '外协库',
-                    width:200
-                },
+                        field: 'outsourcewarehouse',
+                        title: '外协库',
+                        width:200
+                    },
+                    {
+                        field: 'outmoney',
+                        title: '出库金额',
+                        width:100
+                    },
 
                 {
                     field: 'warehouseadmin',
@@ -173,11 +178,7 @@
                     title: '领料人',
                     width:100
                 },
-                {
-                    field: 'storageouttime',
-                    title: '出库日期',
-                    width:160
-                },
+
                 {
                     field: 'comments',
                     title: '备注',
@@ -236,102 +237,42 @@
         });
 
 
-        function Info(id) {
+        function Info() {
             table.set();
             var row = $("#bootstrap-table").bootstrapTable('getSelections')[0];
-
-
-
-                $.modal.openTab("出库单详细信息",prefix1+"/"+row.storageoutid);
-
-
-
+            $.modal.openTab(row.storageoutid+"出库单详细信息",prefix1+"/"+row.id);
         }
-
+        function Infotwo(id,storageoutid) {
+            table.set();
+            $.modal.openTab(storageoutid+"出库单详细信息",prefix1+"/"+id);
+        }
 
 
         function print(id) {
-            table.set();
-            var row = $("#" + table.options.id).bootstrapTreeTable('getSelections')[0];
-
-            if($.common.isEmpty(id) && table.options.type == table_type.bootstrapTreeTable) {
-                if ($.common.isEmpty(row)) {
-                    $.modal.alertWarning("请至少选择一条记录");
-                    return;
-                }
-                var url = table.options.updateUrl.replace("{id}", row[table.options.uniqueId]);
-
-                $.modal.openTab("修改" + table.options.modalName, url);
-            } else {
-
-
-                $.modal.openTab("打印出库单",editUrl1(id));
-
-
+            var id=id;
+            if(id==undefined){
+                id = $("#bootstrap-table").bootstrapTable('getSelections')[0].id;
             }
-        }
-
-
-
-        function editUrl1(id) {
-            var url = "/404.html";
-            if ($.common.isNotEmpty(id)) {
-
-                url = table.options.updateUrl.replace("{id}", id);
-
-            } else {
-                var id = $.common.isEmpty(table.options.uniqueId) ? $.table.selectFirstColumns() : $.table.selectColumns(table.options.uniqueId);
-
-                if (id.length == 0) {
-                    $.modal.alertWarning("请至少选择一条记录");
-                    return;
-                }
-                url = prefix+"/print/"+(id);
-
-            }
-            return url;
-        }
-
-
-        function Infotwo(id) {
             table.set();
-            $.modal.openTab("出库单详细信息",prefix1+"/"+id);
-        }
-        function editUrl2(id) {
-            var url = "/404.html";
-            if ($.common.isNotEmpty(id)) {
+            $.modal.openTab("打印出库单",prefix+"/print/"+id);
 
-                url = table.options.updateUrl.replace("{id}", id);
-
-            } else {
-                var id = $.common.isEmpty(table.options.uniqueId) ? $.table.selectFirstColumns() : $.table.selectColumns(table.options.uniqueId);
-
-                if (id.length == 0) {
-                    $.modal.alertWarning("请至少选择一条记录");
-                    return;
-                }
-                url = prefix+"/print/"+(id);
-
-            }
-            return url;
         }
 
-        function reddashed(id) {
+
+
+        function exportExcel(){
+            var row=$("#bootstrap-table").bootstrapTable('getSelections')[0];
+            window.location.href = prefix+'/export?id='+row.id;
+        }
+
+
+
+
+
+
+        function reddashed() {
             table.set();
-            var row = $("#" + table.options.id).bootstrapTreeTable('getSelections')[0];
-
-            if($.common.isEmpty(id) && table.options.type == table_type.bootstrapTreeTable) {
-                if ($.common.isEmpty(row)) {
-                    $.modal.alertWarning("请至少选择一条记录");
-                    return;
-                }
-                var url = table.options.updateUrl.replace("{id}", row[table.options.uniqueId]);
-
-                $.modal.openTab("修改" + table.options.modalName, url);
-            } else {
-
-                var  url= editUrl2();
-                var id= url.substring( (url.lastIndexOf("/"))+1,url.length) ;
+            var id = $("#bootstrap-table").bootstrapTable('getSelections')[0].id;
                 $.modal.confirm("确定红冲该出库单吗？", function() {
                     $.ajax({
                         url : prefix+'/reddashed',
@@ -351,9 +292,6 @@
                     });
                     $.ajax(config)
                 });
-
-
-            }
         }
 
     </script>

@@ -26,6 +26,7 @@ import java.util.List;
  * @date 2020-06-18
  */
 @Service
+@Transactional
 public class StoragequitbillServiceImpl implements IStoragequitbillService 
 {
     @Autowired
@@ -110,27 +111,20 @@ public class StoragequitbillServiceImpl implements IStoragequitbillService
     }
 
     @Override
-    @Transactional
+
     public int reddashed(Long id) {
         Storagequitbill storagequitbill = storagequitbillMapper.selectStoragequitbillById(id);
-        List<Storagequitdetail> storagequitdetails = storagequitdetailMapper.selectStorageindetailByStoragequitbillId(storagequitbill.getStoragequitbillid());
+        List<Storagequitdetail> storagequitdetails = storagequitdetailMapper.selectStorageindetailByStoragequitbillId(storagequitbill.getId());
         for (Storagequitdetail storagequitdetail: storagequitdetails) {
             Storage storage=new Storage();
-            WarehouseRecord warehouseRecord=new WarehouseRecord();
             storage.setId(storagequitdetail.getSid());
             Storage oldstorage = storageMapper.selectStorageById(storage.getId());
             storage.setMoney( BigDecimalUtil.mul(oldstorage.getPrice(), oldstorage.getStocks() - storagequitdetail.getCounts()).doubleValue());
             storage.setStocks(oldstorage.getStocks() - storagequitdetail.getCounts());
-            Long oldstocks = storageMapper.selectStorageById(storagequitdetail.getSid()).getStocks();
+            Integer oldstocks = storageMapper.selectStorageById(storagequitdetail.getSid()).getStocks();
             storageMapper.updateStorageById(storage);
             //添加至查询记录
-            warehouseRecord.setType(Const.WarehouseRecordStatus.STORAGE_QUIT_HC);
-            warehouseRecord.setNumber(storagequitbill.getStoragequitbillid());
-            warehouseRecord.setMaterialcode(storagequitdetail.getMaterialcode());
-            warehouseRecord.setCount(storagequitdetail.getCounts());
-            warehouseRecord.setSerialNumber(storagequitdetail.getSerialNumber());
-            warehouseRecord.setRemark(storagequitdetail.getRemark());
-            warehouseRecordMapper.insertWarehouseRecord(warehouseRecord);
+            warehouseRecordMapper.insertWarehouseRecord(new WarehouseRecord(Const.WarehouseRecordStatus.STORAGE_QUIT_HC,storagequitbill.getStoragequitbillid(),storagequitdetail.getMaterialcode(),storagequitdetail.getCounts(),null,null,null,storagequitdetail.getSerialNumber(),storagequitdetail.getComments()));
         }
         //修改退料单状态
         return storagequitbillMapper.updatedelStatus(id);

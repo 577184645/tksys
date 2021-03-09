@@ -25,7 +25,7 @@ public interface StorageoutdetailMapper
     /**
      * 查询入库产品列表
      */
-    public List<Storageoutdetail> selectStorageindetailByStorageoutdetailId(String storageoutbillid);
+    public List<Storageoutdetail> selectStorageindetailByStorageoutbillId(Long storageoutbillId);
 
     /**
      * 查询出库产品列表列表

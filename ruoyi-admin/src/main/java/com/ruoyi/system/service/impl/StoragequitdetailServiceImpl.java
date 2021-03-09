@@ -91,4 +91,9 @@ public class StoragequitdetailServiceImpl implements IStoragequitdetailService
     {
         return storagequitdetailMapper.deleteStoragequitdetailById(id);
     }
+
+    @Override
+    public List<Storagequitdetail> selectStorageindetailByStoragequitbillId(Long storagequitbillid) {
+        return storagequitdetailMapper.selectStorageindetailByStoragequitbillId(storagequitbillid);
+    }
 }

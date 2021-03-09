@@ -1,28 +1,24 @@
 package com.ruoyi.system.controller;
 
-import java.util.List;
-import java.util.Map;
-
-import com.ruoyi.system.domain.Storageindetail;
-import com.ruoyi.system.domain.Testss;
+import com.ruoyi.common.annotation.Log;
+import com.ruoyi.common.core.controller.BaseController;
+import com.ruoyi.common.core.domain.AjaxResult;
+import com.ruoyi.common.core.page.TableDataInfo;
+import com.ruoyi.common.enums.BusinessType;
+import com.ruoyi.common.utils.poi.ExcelUtil;
+import com.ruoyi.system.common.Const;
+import com.ruoyi.system.domain.Storageinbill;
 import com.ruoyi.system.service.IProjectService;
+import com.ruoyi.system.service.IStorageinbillService;
 import com.ruoyi.system.service.IStorageindetailService;
 import com.ruoyi.system.service.ISysUserService;
-import io.swagger.models.auth.In;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
-import com.ruoyi.common.annotation.Log;
-import com.ruoyi.common.enums.BusinessType;
-import com.ruoyi.system.domain.Storageinbill;
-import com.ruoyi.system.service.IStorageinbillService;
-import com.ruoyi.common.core.controller.BaseController;
-import com.ruoyi.common.core.domain.AjaxResult;
-import com.ruoyi.common.utils.poi.ExcelUtil;
-import com.ruoyi.common.core.page.TableDataInfo;
-import org.springframework.web.multipart.MultipartFile;
+
+import java.util.List;
 
 /**
  * 入库单列表Controller
@@ -68,19 +64,13 @@ public class StorageinbillController extends BaseController
       return       storageinbillService.selectStorageinbillList(storageinbill).size()+1;
     }
 
-
-
     @Log(title = "入库单红冲", businessType = BusinessType.DELETE)
     @PostMapping("/reddashed")
     @ResponseBody
-    public AjaxResult reddashed(Long id,String list){
-       if(storageinbillService.selectStorageinbillById(id).getDelStatus().equals("2")){
+    public AjaxResult reddashed(Long id){
+       if(storageinbillService.selectStorageinbillById(id).getDelStatus()==Const.Storageinbilldelstatus.HONGCHONG.getCode()){
            return AjaxResult.warn("操作失败！该入库单已红冲");
        }
-        if(storageinbillService.selectStorageinbillById(id).getDelStatus().equals("3")){
-            return AjaxResult.warn("操作失败！该出库单已被管理员冻结,请联系管理员!");
-        }
-
         if(storageinbillService.reddashed(id)>0){
             return AjaxResult.warn("操作成功");
         }
@@ -88,34 +78,16 @@ public class StorageinbillController extends BaseController
     }
 
     @Log(title = "入库单批准", businessType = BusinessType.UPDATE)
-    @PostMapping("/ratify")
+    @PostMapping("/examine")
     @ResponseBody
-    public AjaxResult ratify(@RequestParam("id") Long id){
-        if(storageinbillService.updateStorageinbillFatify(id)>0){
+    public AjaxResult examine(@RequestParam("value") Integer value,@RequestParam("id") Long id){
+        if(storageinbillService.updateStorageinbillExamine(value,id)>0){
             return AjaxResult.warn("操作成功");
         }
         return    AjaxResult.warn("操作失败,请联系管理员")   ;
     }
 
-    @Log(title = "入库单驳回", businessType = BusinessType.UPDATE)
-    @PostMapping("/turn")
-    @ResponseBody
-    public AjaxResult turn(@RequestParam("id") Long id){
-        if(storageinbillService.updateStorageinbillTurn(id)>0){
-            return AjaxResult.warn("操作成功");
-        }
-        return    AjaxResult.warn("操作失败,请联系管理员")   ;
-    }
 
-    @Log(title = "入库单申请", businessType = BusinessType.UPDATE)
-    @PostMapping("/apply")
-    @ResponseBody
-    public AjaxResult apply(@RequestParam("id") Long id){
-        if(storageinbillService.updateStorageinbillApply(id)>0){
-                return AjaxResult.warn("操作成功");
-        }
-        return    AjaxResult.warn("操作失败,请联系管理员")   ;
-    }
 
     /**
      * 查询入库单列表列表
@@ -188,9 +160,7 @@ public class StorageinbillController extends BaseController
     public String print(@PathVariable("id") Long id, ModelMap mmap)
     {
         Storageinbill storageinbill = storageinbillService.selectStorageinbillById(id);
-        mmap.put("storageinbill", storageinbill);
-        List<Storageindetail> storageindetails = iStorageindetailService.selectStorageindetailByStorageinbillId(storageinbill.getStockinid());
-        mmap.put("storageindetails", storageindetails);
+        mmap.put("storageinbill",storageinbill);
         return prefix + "/print";
     }
 
@@ -199,19 +169,7 @@ public class StorageinbillController extends BaseController
 
 
 
-    /**
-     * 打印入库产品列表
-     */
-    @GetMapping("/print1/{id}")
-    public String print1(@PathVariable("id") Long id, ModelMap mmap)
-    {
-        Storageinbill storageinbill = storageinbillService.selectStorageinbillById(id);
-        mmap.put("storageinbill", storageinbill);
 
-        List<Storageindetail> storageindetails = iStorageindetailService.selectStorageindetailByStorageinbillId(storageinbill.getStockinid());
-        mmap.put("storageindetails", storageindetails);
-        return prefix + "/print1";
-    }
 
     /**
      * 修改保存入库单列表

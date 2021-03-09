@@ -2,8 +2,8 @@ package com.ruoyi.system.domain;
 
 import com.ruoyi.common.annotation.Excel;
 import com.ruoyi.common.core.domain.BaseEntity;
-import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.util.Date;
 
@@ -13,6 +13,8 @@ import java.util.Date;
  * @author ruoyi
  * @date 2020-06-24
  */
+@Data
+@NoArgsConstructor
 public class WarehouseRecord extends BaseEntity
 {
     private static final long serialVersionUID = 1L;
@@ -36,7 +38,7 @@ public class WarehouseRecord extends BaseEntity
 
     /** 数量 */
     @Excel(name = "数量")
-    private Long count;
+    private Integer count;
 
     /** 单价 */
     @Excel(name = "单价")
@@ -66,131 +68,15 @@ public class WarehouseRecord extends BaseEntity
     @Excel(name = "时间", width = 30, dateFormat = "yyyy-MM-dd")
     private Date cTime;
 
-
-    @Override
-    public String getRemark() {
-        return remark;
-    }
-
-    @Override
-    public void setRemark(String remark) {
-        this.remark = remark;
-    }
-
-    public void setId(Long id)
-    {
-        this.id = id;
-    }
-
-    public Long getId() 
-    {
-        return id;
-    }
-
-    public Integer getType() {
-        return type;
-    }
-
-    public void setType(Integer type) {
+    public WarehouseRecord( Integer type, String number, String materialcode, Integer count, Double price, Double money, String supplier, String serialNumber, String remark) {
         this.type = type;
-    }
-
-    public void setNumber(String number)
-    {
         this.number = number;
-    }
-
-    public String getNumber() 
-    {
-        return number;
-    }
-    public void setMaterialcode(String materialcode) 
-    {
         this.materialcode = materialcode;
-    }
-
-    public String getMaterialcode() 
-    {
-        return materialcode;
-    }
-
-    public void setCount(Long count) 
-    {
         this.count = count;
-    }
-
-    public Long getCount() 
-    {
-        return count;
-    }
-
-    public Double getPrice() {
-        return price;
-    }
-
-    public void setPrice(Double price) {
         this.price = price;
-    }
-
-    public Double getMoney() {
-        return money;
-    }
-
-    public void setMoney(Double money) {
         this.money = money;
-    }
-
-    public void setSupplier(String supplier)
-    {
         this.supplier = supplier;
-    }
-
-    public String getSupplier() 
-    {
-        return supplier;
-    }
-    public void setSerialNumber(String serialNumber) 
-    {
         this.serialNumber = serialNumber;
-    }
-
-    public String getSerialNumber() 
-    {
-        return serialNumber;
-    }
-    public void setDelStatus(String delStatus) 
-    {
-        this.delStatus = delStatus;
-    }
-
-    public String getDelStatus() 
-    {
-        return delStatus;
-    }
-    public void setcTime(Date cTime) 
-    {
-        this.cTime = cTime;
-    }
-
-    public Date getcTime() 
-    {
-        return cTime;
-    }
-
-    @Override
-    public String toString() {
-        return new ToStringBuilder(this,ToStringStyle.MULTI_LINE_STYLE)
-            .append("id", getId())
-            .append("type", getType())
-            .append("number", getNumber())
-            .append("materialcode", getMaterialcode())
-            .append("count", getCount())
-            .append("price", getPrice())
-            .append("money", getMoney())
-            .append("supplier", getSupplier())
-            .append("serialNumber", getSerialNumber())
-            .append("delStatus", getDelStatus())
-            .append("cTime", getcTime())
-            .toString();
+        this.remark = remark;
     }
 }

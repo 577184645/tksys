@@ -7,35 +7,34 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     <resultMap type="Bomdetail" id="BomdetailResult">
         <result property="id"    column="id"    />
         <result property="bomid"    column="bomid"    />
-        <result property="msid"    column="msid"    />
-        <result property="ssid"    column="ssid"    />
+        <result property="code"    column="code"    />
+        <result property="link"    column="link"    />
         <result property="comment"    column="comment"    />
         <result property="footprint"    column="footprint"    />
         <result property="description"    column="description"    />
         <result property="designator"    column="designator"    />
         <result property="quantity"    column="quantity"    />
-        <result property="count"    column="count"    />
-        <result property="sumcount"    column="sumcount"    />
         <result property="price"    column="price"    />
-        <result property="supplier"    column="supplier"    />
+        <result property="parttype"    column="parttype"   />
     </resultMap>
 
     <sql id="selectBomdetailVo">
-        select supplier,price,id, bomid, msid,ssid, comment, footprint, description, designator, quantity, count, sumcount from bomdetail
+        select id, bomid, code, link,parttype, comment, footprint, description, designator, quantity, price from bom_listdetail
     </sql>
 
     <select id="selectBomdetailList" parameterType="Bomdetail" resultMap="BomdetailResult">
         <include refid="selectBomdetailVo"/>
         <where>  
             <if test="bomid != null "> and bomid = #{bomid}</if>
-            <if test="msid != null "> and msid = #{msid}</if>
+            <if test="code != null  and code != ''"> and code = #{code}</if>
+            <if test="link != null  and link != ''"> and link = #{link}</if>
             <if test="comment != null  and comment != ''"> and comment = #{comment}</if>
             <if test="footprint != null  and footprint != ''"> and footprint = #{footprint}</if>
             <if test="description != null  and description != ''"> and description = #{description}</if>
             <if test="designator != null  and designator != ''"> and designator = #{designator}</if>
             <if test="quantity != null "> and quantity = #{quantity}</if>
-            <if test="count != null "> and count = #{count}</if>
-            <if test="sumcount != null "> and sumcount = #{sumcount}</if>
+            <if test="price != null "> and price = #{price}</if>
+
         </where>
     </select>
     
@@ -43,64 +42,62 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <include refid="selectBomdetailVo"/>
         where id = #{id}
     </select>
-        
+    <select id="selectBomBybomId" resultType="com.ruoyi.system.domain.Bomdetail">
+        <include refid="selectBomdetailVo"/>
+        where bomid = #{bomid}
+    </select>
+
     <insert id="insertBomdetail" parameterType="Bomdetail" useGeneratedKeys="true" keyProperty="id">
-        insert into bomdetail
+        insert into bom_listdetail
         <trim prefix="(" suffix=")" suffixOverrides=",">
-            <if test="supplier != null and supplier != '' ">supplier,</if>
-            <if test="price != null and price != ''  ">price,</if>
             <if test="bomid != null ">bomid,</if>
-            <if test="msid != null ">msid,</if>
-            <if test="ssid != null ">ssid,</if>
+            <if test="parttype != null ">parttype,</if>
+            <if test="code != null  and code != ''">code,</if>
+            <if test="link != null  and link != ''">link,</if>
             <if test="comment != null  and comment != ''">comment,</if>
             <if test="footprint != null  and footprint != ''">footprint,</if>
             <if test="description != null  and description != ''">description,</if>
             <if test="designator != null  and designator != ''">designator,</if>
             <if test="quantity != null ">quantity,</if>
-            <if test="count != null ">count,</if>
-            <if test="sumcount != null ">sumcount,</if>
+             price,
          </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
-            <if test="supplier != null and supplier != '' ">#{supplier},</if>
-            <if test="price != null and price != ''  ">#{price},</if>
             <if test="bomid != null ">#{bomid},</if>
-            <if test="msid != null ">#{msid},</if>
-            <if test="ssid != null ">#{ssid},</if>
+            <if test="parttype != null ">#{parttype},</if>
+            <if test="code != null  and code != ''">#{code},</if>
+            <if test="link != null  and link != ''">#{link},</if>
             <if test="comment != null  and comment != ''">#{comment},</if>
             <if test="footprint != null  and footprint != ''">#{footprint},</if>
             <if test="description != null  and description != ''">#{description},</if>
             <if test="designator != null  and designator != ''">#{designator},</if>
             <if test="quantity != null ">#{quantity},</if>
-            <if test="count != null ">#{count},</if>
-            <if test="sumcount != null ">#{sumcount},</if>
+            #{price},
          </trim>
     </insert>
 
     <update id="updateBomdetail" parameterType="Bomdetail">
-        update bomdetail
+        update bom_listdetail
         <trim prefix="SET" suffixOverrides=",">
-            <if test="supplier != null and supplier != '' ">supplier=#{supplier}</if>
-            <if test="price != null and price != ''  ">#{price}</if>
+            <if test="parttype != null ">parttype=#{parttype},</if>
             <if test="bomid != null ">bomid = #{bomid},</if>
-            <if test="msid != null ">msid = #{msid},</if>
-            <if test="ssid != null ">ssid = #{ssid},</if>
+            <if test="code != null  and code != ''">code = #{code},</if>
+            <if test="link != null  and link != ''">link = #{link},</if>
             <if test="comment != null  and comment != ''">comment = #{comment},</if>
             <if test="footprint != null  and footprint != ''">footprint = #{footprint},</if>
             <if test="description != null  and description != ''">description = #{description},</if>
             <if test="designator != null  and designator != ''">designator = #{designator},</if>
             <if test="quantity != null ">quantity = #{quantity},</if>
-            <if test="count != null ">count = #{count},</if>
-            <if test="sumcount != null ">sumcount = #{sumcount},</if>
+            <if test="price != null ">price = #{price},</if>
         </trim>
         where id = #{id}
     </update>
 
     <delete id="deleteBomdetailById" parameterType="Integer">
-        delete from bomdetail where id = #{id}
+        delete from bom_listdetail where id = #{id}
     </delete>
 
     <delete id="deleteBomdetailByIds" parameterType="String">
-        delete from bomdetail where id in 
+        delete from bom_listdetail where id in
         <foreach item="id" collection="array" open="(" separator="," close=")">
             #{id}
         </foreach>

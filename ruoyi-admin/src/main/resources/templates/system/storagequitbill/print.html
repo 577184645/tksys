@@ -27,13 +27,13 @@
 
 <center>
     <div class="table-d" id="context" >
-        <h1 style="text-align: center;">入库单</h1>
+        <h1 style="text-align: center;">退料单</h1>
         <div class="div" style="position: relative">
-            <span>供应商:</span> <span style="padding-right: 230;" th:text="${storageinbill.supplier}"></span> <span style="position: absolute;right: 202">日期: </span> <span style="position: absolute;right: 133" th:text="${#dates.format(storageinbill.cTime,'yyyy-MM-dd')}"></span>
+            <span>退料原因:</span> <span style="padding-right: 230;" th:text="${storagequitbill.outstoragecause}"></span> <span style="position: absolute;right: 202">日期: </span> <span style="position: absolute;right: 133" th:text="${#dates.format(storagequitbill.cTime,'yyyy-MM-dd')}"></span>
 
         </div>
         <div class="div" style="position: relative">
-            <span>类别:</span> <span style="padding-right: 215;" th:text="${storageinbill.outsourcewarehouse}"></span> <span style="position: absolute;right: 175">单据编号:</span> <span style="position: absolute;right: 60" th:text="${storageinbill.stockinid}"></span>
+            <span>类别:</span> <span style="padding-right: 215;" th:text="${storagequitbill.outsourcewarehouse}"></span> <span style="position: absolute;right: 175">单据编号:</span> <span style="position: absolute;right: 60" th:text="${storagequitbill.storagequitbillid}"></span>
 
         </div>
         <center>
@@ -50,12 +50,12 @@
                     <td style="border:1px solid #F00;" width="170" align="center">备注</td>
 
                 </tr>
-                <tr th:each="storageindetail : ${storageinbill.storageindetailList}" style="border:1px solid #F00;">
-                    <td style="border:1px solid #F00;" align="center" th:text="${storageindetailStat.index+1}"></td>
-                    <td  style="border:1px solid #F00;" align="center" th:text="${storageindetail.materialcode}"></td>
+                <tr th:each="storagequitdetail : ${storagequitbill.storagequitdetailList}" style="border:1px solid #F00;">
+                    <td style="border:1px solid #F00;" align="center" th:text="${storagequitdetailStat.index+1}"></td>
+                    <td  style="border:1px solid #F00;" align="center" th:text="${storagequitdetail.materialcode}"></td>
                     <td style="border:1px solid #F00;" align="center">
                         <table>
-                            <tr  th:each="materialchild : ${storageindetail.materialChildList}">
+                            <tr  th:each="materialchild : ${storagequitdetail.materialChildList}">
                                 <td style="border-bottom:1px solid #F00;" align="center" th:text="${materialchild.name}"> </td>
                             </tr>
 
@@ -63,20 +63,20 @@
                     </td>
                     <td style="border:1px solid #F00;" align="center">
                         <table>
-                            <tr  th:each="materialchild : ${storageindetail.materialChildList}">
+                            <tr  th:each="materialchild : ${storagequitdetail.materialChildList}">
                                 <td style="border-bottom:1px solid #F00;" align="center" th:text="${materialchild.partnumber}"></td>
                             </tr>
                         </table>
                     </td>
-                    <td style="border:1px solid #F00;" align="center" th:text="${storageindetail.counts}"   > </td>
-                    <td style="border:1px solid #F00;" align="center" th:text="${storageindetail.price}"> </td>
-                    <td style="border:1px solid #F00;" align="center" th:text="${storageindetail.money}"> </td>
-                    <td style="border:1px solid #F00;" align="center" th:text="${storageindetail.comments}"> </td>
+                    <td style="border:1px solid #F00;" align="center" th:text="${storagequitdetail.counts}"   > </td>
+                    <td style="border:1px solid #F00;" align="center" th:text="${storagequitdetail.price}"> </td>
+                    <td style="border:1px solid #F00;" align="center" th:text="${storagequitdetail.money}"> </td>
+                    <td style="border:1px solid #F00;" align="center" th:text="${storagequitdetail.comments}"> </td>
 
                 </tr>
                 <tr>
                     <td  colspan="2" style="border:1px solid #F00;" align="center">总金额</td>
-                    <td colspan="3" style="border:1px solid #F00;" align="center" th:text="  ${storageinbill.money}"></td>
+                    <td colspan="3" style="border:1px solid #F00;" align="center" th:text="  ${storagequitbill.quitmoney}"></td>
                     <td id="summoney" colspan="3" align="center" style="border:1px solid #F00;" ></td>
                 </tr>
                 </tbody>
@@ -99,27 +99,13 @@
 <script src="http://www.jq22.com/jquery/jquery-migrate-1.2.1.min.js"></script>
 <script type="text/javascript" th:src="@{/js/jquery.jqprint-0.3.js}"></script>
 <script type="text/javascript">
-    var prefix = ctx + "system/storageindetail";
 
-
-
-
-    var prefix = ctx + "system/storageindetail"
-    $("#form-storageindetail-add").validate({
-        focusCleanup: true
-    });
-
-    function submitHandler() {
-        if ($.validate.form()) {
-            $.operate.save(prefix + "/add", $('#form-storageindetail-add').serialize());
-        }
-    }
 
     function print() {
         $("#context").jqprint();
     }
 
-    var money= [[${storageinbill.money!=null?storageinbill.money:0}]];
+    var money= [[${storagequitbill.quitmoney!=null?storagequitbill.quitmoney:0}]];
     $("#summoney").html(changeNumMoneyToChinese(money));
 
 

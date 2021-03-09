@@ -68,11 +68,5 @@ public interface MaterialMapper
      */
     public int deleteMaterialById(Long id);
 
-    /**
-     * 批量删除物料列表
-     * 
-     * @param ids 需要删除的数据ID
-     * @return 结果
-     */
-    public int deleteMaterialByIds(String[] ids);
+
 }

@@ -1,11 +1,9 @@
 package com.ruoyi.system.mapper;
 
 import com.ruoyi.system.domain.Storage;
-import com.ruoyi.system.vo.WarehouseBillVo;
-import org.apache.ibatis.annotations.Param;
 
-import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 /**
  * 库存列表Mapper接口
@@ -18,15 +16,9 @@ public interface StorageMapper
 
 
 
-    public List<Storage>   selectStorageByMaterialcode(String materialcode);
+    public Storage   selectStorageByMaterialcode(String materialcode);
 
-    /**
-     * 查询库存下是否有产品
-     *
-     * @param storage
-     * @return 库存列表
-     */
-    public Storage   selectStorageInfoByMaterialcodeAndTypeid(Storage storage);
+
 
 
 
@@ -49,27 +41,18 @@ public interface StorageMapper
 
 
 
-    public List<Storage> selectByBom(@Param("comments") String comments,@Param("footprint") String footprint);
 
 
 
     /**
-     * 查询当前本月的数据
+     * 查询当前本月的数据(出入库台账)
      *
      * @param date 库存列表
      * @return
      */
 
-    public List<WarehouseBillVo> selectStoragebyDate(Date date);
+    public List<Map<String,Object>>  selectStorageByDate(String date);
 
-
-    public List<WarehouseBillVo> selectStoragebyDatedashed(Date date);
-
-
-    public List<WarehouseBillVo> selectoutStoragebyDate(Date date);
-
-
-    public List<WarehouseBillVo> selectoutStoragebyDatedashed(Date date);
 
 
     /**
@@ -81,7 +64,7 @@ public interface StorageMapper
     public List<Storage> selectStorageList(Storage storage);
 
 
-    public List<Storage> StoragefindList();
+
 
 
     public Storage selectStorageListBymaterialcode(String materialcode);
@@ -103,16 +86,19 @@ public interface StorageMapper
      * @param id 库存列表ID
      * @return 结果
      */
-    public int deleteStorageById(Integer id);
+    public int deleteStorageByMaterialId(Long id);
 
 
+    Storage selectStorageByMaterialId(Long id);
 
 
     /**
-     * 批量删除库存列表
-     * 
-     * @param ids 需要删除的数据ID
+     * 删除项目列表信息
+     *
+     * @param id 项目列表ID
      * @return 结果
      */
-    public int deleteStorageByIds(String[] ids);
+    public int deleteStorageById(Long id);
+
+
 }

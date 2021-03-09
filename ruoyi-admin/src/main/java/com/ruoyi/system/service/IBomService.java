@@ -1,7 +1,8 @@
 package com.ruoyi.system.service;
 
-import java.util.List;
 import com.ruoyi.system.domain.Bom;
+
+import java.util.List;
 
 /**
  * bom列表Service接口
@@ -30,23 +31,12 @@ public interface IBomService
     /**
      * 新增bom列表
      * 
-     * @param bom bom列表
+     * @param bom bomList
      * @return 结果
      */
-    public int insertBom(Bom bom);
 
     public int addBom(String bomList,Bom bom);
 
-    /**
-     * 修改bom列表
-     * 
-     * @param bom bom列表
-     * @return 结果
-     */
-
-    public int editBom(String bomList,Bom bom);
-
-    public int updateBom(Bom bom);
 
     /**
      * 批量删除bom列表
@@ -63,4 +53,6 @@ public interface IBomService
      * @return 结果
      */
     public int deleteBomById(Long id);
+
+    boolean refresh(String ids);
 }

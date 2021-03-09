@@ -23,7 +23,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </resultMap>
 
     <sql id="selectStoragetypeVo">
-        select dept_id, parent_id, ancestors, dept_name, order_num, leader, phone, email, status, del_flag, create_by, create_time, update_by, update_time from storagetype
+        select dept_id, parent_id, ancestors, dept_name, order_num, leader, phone, email, status, del_flag, create_by, create_time, update_by, update_time from st_type
     </sql>
 
     <select id="selectStoragetypeList" parameterType="Storagetype" resultMap="StoragetypeResult">
@@ -36,8 +36,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     
     <select id="selectStoragetypeById" parameterType="Long" resultMap="StoragetypeResult">
         select t.dept_id, t.parent_id, t.ancestors, t.dept_name, t.order_num, t.leader, t.phone, t.email, t.status, t.del_flag, t.create_by, t.create_time, t.update_by, t.update_time, p.dept_id as parent_name
-        from storagetype t
-        left join storagetype p on p.dept_id = t.parent_id
+        from st_type t
+        left join st_type p on p.dept_id = t.parent_id
         where t.dept_id = #{deptId}
 
     </select>
@@ -48,7 +48,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 
         
     <insert id="insertStoragetype" parameterType="Storagetype" useGeneratedKeys="true" keyProperty="deptId">
-        insert into storagetype
+        insert into st_type
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="parentId != null ">parent_id,</if>
             <if test="ancestors != null  and ancestors != ''">ancestors,</if>
@@ -82,7 +82,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </insert>
 
     <update id="updateStoragetype" parameterType="Storagetype">
-        update storagetype
+        update st_type
         <trim prefix="SET" suffixOverrides=",">
             <if test="parentId != null ">parent_id = #{parentId},</if>
             <if test="ancestors != null  and ancestors != ''">ancestors = #{ancestors},</if>
@@ -102,18 +102,18 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </update>
 
     <delete id="deleteStoragetypeById" parameterType="Long">
-        delete from storagetype where dept_id = #{deptId}
+        delete from st_type where dept_id = #{deptId}
     </delete>
 
     <delete id="deleteStoragetypeByIds" parameterType="String">
-        delete from storagetype where dept_id in 
+        delete from st_type where dept_id in
         <foreach item="deptId" collection="array" open="(" separator="," close=")">
             #{deptId}
         </foreach>
     </delete>
 
     <select id="selectMaterialtypeCount"  resultType="int">
-        select count(1) from storagetype
+        select count(1) from st_type
         where 1=1
         <if test="deptId != null and deptId != 0"> and dept_id = #{deptId} </if>
         <if test="parentId != null and parentId != 0"> and parent_id = #{parentId} </if>
@@ -122,7 +122,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 
 
     <select id="checkDeptExistUser" parameterType="Long" resultType="int">
-		select count(1) from storage where type_id = #{deptId}
+		select count(1) from st_list where type_id = #{deptId}
 	</select>
 
 

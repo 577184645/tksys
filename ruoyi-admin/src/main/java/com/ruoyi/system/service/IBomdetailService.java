@@ -1,7 +1,8 @@
 package com.ruoyi.system.service;
 
-import java.util.List;
 import com.ruoyi.system.domain.Bomdetail;
+
+import java.util.List;
 
 /**
  * bom详细清单Service接口
@@ -51,17 +52,5 @@ public interface IBomdetailService
      */
     public int deleteBomdetailByIds(String ids);
 
-    /**
-     * 删除bom详细清单信息
-     * 
-     * @param id bom详细清单ID
-     * @return 结果
-     */
-    public int deleteBomdetailById(Integer id);
 
-
-
-
-
-    public String importBomdetail(List<Bomdetail> bomdetailList);
 }

@@ -35,10 +35,10 @@ public class StorageoutdetailController extends BaseController
     private IStorageoutbillService iStorageoutbillService;
 
 
-    @GetMapping("/{storageoutid}")
-    public String storageoutdetail(@PathVariable("storageoutid") String storageoutid,ModelMap mmap)
+    @GetMapping("/{storageoutbillId}")
+    public String storageoutdetail(@PathVariable("storageoutbillId") Long storageoutbillId,ModelMap mmap)
     {
-        mmap.put("storageoutid",storageoutid);
+        mmap.put("storageoutbillId",storageoutbillId);
         return prefix + "/storageoutdetail";
     }
 

@@ -23,12 +23,21 @@ server:
     # 应用的访问路径
     context-path: /
   tomcat:
+    # 存放Tomcat的日志目录
+    basedir: C:/ruoyi/uploadPathTksys/logs
+    accesslog:
+      # 开启日志记录
+      enabled: true
+      # 访问日志存放目录
+      directory: logs
     # tomcat的URI编码
     uri-encoding: UTF-8
     # tomcat最大线程数，默认为200
     max-threads: 800
     # Tomcat启动初始化的线程数，默认值25
     min-spare-threads: 30
+
+
  
 # 日志配置
 logging:
@@ -44,6 +53,9 @@ user:
 
 # Spring配置
 spring:
+  http:
+  multipart:
+    location: /data/upload_tmp
   # 模板引擎
   thymeleaf:
     mode: HTML
@@ -80,7 +92,7 @@ spring:
     properties.mail.smtp.auth: true
     properties.mail.smtp.port: 465 #465或者994
     properties.mail.smtp.ssl.enable: true
-    recipient: zjz@tksys.com.cn
+    recipient: ck@tksys.com.cn
 # MyBatis
 mybatis:
     # 搜索指定包别名
