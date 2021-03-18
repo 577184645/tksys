@@ -55,4 +55,6 @@ public interface IBomService
     public int deleteBomById(Long id);
 
     boolean refresh(String ids);
+
+    boolean scrap(String ids);
 }

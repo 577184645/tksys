@@ -2,6 +2,7 @@ package com.ruoyi.system.service.impl;
 
 import com.ruoyi.common.core.text.Convert;
 import com.ruoyi.common.utils.StringUtils;
+import com.ruoyi.system.common.Const;
 import com.ruoyi.system.domain.Bom;
 import com.ruoyi.system.domain.Bomdetail;
 import com.ruoyi.system.domain.Storage;
@@ -16,6 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.security.PublicKey;
 import java.util.List;
 
 /**
@@ -125,11 +127,11 @@ public class BomServiceImpl implements IBomService {
             for (Bomdetail bomdetail : bomdetails) {
                 Storage storage = storageMapper.selectStorageByMaterialcode(bomdetail.getCode());
                 if(storage!=null){
-                    Bomdetail bomdetail1=new Bomdetail();
-                    bomdetail1.setId(bomdetail.getId());
-                    bomdetail1.setPrice(storage.getPrice());
-                    bomdetailMapper.updateBomdetail(bomdetail);
-                    sum+= (bomdetail1.getPrice()!=null?bomdetail1.getPrice():0)*(bomdetail.getQuantity()!=null?bomdetail.getQuantity():0);
+                    Bomdetail newBomDetail=new Bomdetail();
+                    newBomDetail.setId(bomdetail.getId());
+                    newBomDetail.setPrice(storage.getPrice());
+                    bomdetailMapper.updateBomdetail(newBomDetail);
+                    sum+= (newBomDetail.getPrice()!=null?newBomDetail.getPrice():0)*(bomdetail.getQuantity()!=null?bomdetail.getQuantity():0);
                  }
             }
             Bom bom=new Bom();
@@ -139,4 +141,18 @@ public class BomServiceImpl implements IBomService {
         }
         return true;
     }
+
+    @Override
+    public boolean scrap(String ids) {
+        String[] id = ids.split(",");
+        for (String s : id) {
+            Bom bom=new Bom();
+            bom.setId(Long.valueOf(s));
+            bom.setDelStatus(Const.BomStatus.BOM_SCRAP);
+            bomMapper.updateBom(bom);
+        }
+        return true;
+    }
+
+
 }

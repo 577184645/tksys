@@ -323,22 +323,23 @@ public  class StorageServiceImpl implements IStorageService {
             row.createCell(2).setCellValue(map.get("partnumber")!=null?map.get("partnumber").toString():"");
             row.createCell(3).setCellValue(map.get("supplier")!=null?map.get("supplier").toString():"");
             row.createCell(4).setCellValue(map.get("unit")!=null?map.get("unit").toString():"");
-            row.createCell(6).setCellValue(map.get("incount")!=null?Integer.parseInt(map.get("incount").toString()):0);
-            row.createCell(7).setCellValue(map.get("inmoney")!=null?Double.parseDouble(map.get("inmoney").toString()):0);
-            row.createCell(8).setCellValue(map.get("outcount")!=null?Integer.parseInt(map.get("outcount").toString()):0);
-            row.createCell(9).setCellValue(map.get("outmoney")!=null?Double.parseDouble(map.get("outmoney").toString()):0);
-            row.createCell(10).setCellValue(map.get("stocks")!=null?Integer.parseInt(map.get("stocks").toString()):0);
-            row.createCell(11).setCellValue(map.get("price")!=null?Double.parseDouble(map.get("price").toString()):0);
-            row.createCell(12).setCellValue(map.get("money")!=null?Double.parseDouble(map.get("money").toString()):0);
-            row.createCell(5).setCellValue(row.getCell(10).getNumericCellValue()-row.getCell(6).getNumericCellValue()+row.getCell(8).getNumericCellValue());
+            row.createCell(7).setCellValue(map.get("incount")!=null?Integer.parseInt(map.get("incount").toString()):0);
+            row.createCell(8).setCellValue(map.get("inmoney")!=null?Double.parseDouble(map.get("inmoney").toString()):0);
+            row.createCell(9).setCellValue(map.get("outcount")!=null?Integer.parseInt(map.get("outcount").toString()):0);
+            row.createCell(10).setCellValue(map.get("outmoney")!=null?Double.parseDouble(map.get("outmoney").toString()):0);
+            row.createCell(11).setCellValue(map.get("stocks")!=null?Integer.parseInt(map.get("stocks").toString()):0);
+            row.createCell(12).setCellValue(map.get("price")!=null?Double.parseDouble(map.get("price").toString()):0);
+            row.createCell(13).setCellValue(map.get("money")!=null?Double.parseDouble(map.get("money").toString()):0);
+            row.createCell(5).setCellValue(row.getCell(11).getNumericCellValue()-row.getCell(7).getNumericCellValue()+row.getCell(9).getNumericCellValue());
+            row.createCell(6).setCellValue(row.getCell(12).getNumericCellValue()*row.getCell(5).getNumericCellValue());
             for (Cell cell : row) {
                 cell.setCellStyle(cellStyle2);
             }
         }
-        FileOutputStream fileOut=new FileOutputStream("C:\\ruoyi\\taizhang\\"+date+"仓库出入库台账.xlsx");
+        FileOutputStream fileOut=new FileOutputStream("C:\\ruoyi\\taizhang\\"+date+"仓库出入库台账.xls");
         workbook.write(fileOut);
         fileOut.close();
-        SimpleMailMessage("C:\\ruoyi\\taizhang\\"+date+"仓库出入库台账.xlsx");
+        SimpleMailMessage("C:\\ruoyi\\taizhang\\"+date+"仓库出入库台账.xls");
     }
 
     @Override

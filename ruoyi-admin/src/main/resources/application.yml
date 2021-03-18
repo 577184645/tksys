@@ -92,7 +92,7 @@ spring:
     properties.mail.smtp.auth: true
     properties.mail.smtp.port: 465 #465或者994
     properties.mail.smtp.ssl.enable: true
-    recipient: ck@tksys.com.cn
+    recipient: qincan@tksys.com.cn
 # MyBatis
 mybatis:
     # 搜索指定包别名

@@ -80,6 +80,9 @@ public class Bom extends BaseEntity
     @Excel(name = "批准时间", width = 30, dateFormat = "yyyy-MM-dd")
     private Date approvaltime;
 
+    @Excel(name = "状态")
+    private Integer delStatus;
+
     /** 创建时间 */
     @Excel(name = "创建时间", width = 30, dateFormat = "yyyy-MM-dd")
     private Date cTime;

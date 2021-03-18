@@ -154,8 +154,7 @@ public class StorageController extends BaseController
                             cell.setCellStyle(cellStyle2);
                         }
                     }
-                    boolean flag=true;
-                    if(flag) {
+
                         sheet.addMergedRegion(new CellRangeAddress(
                                 index-materialChildList.size()+1,   //起始行
                                 index,   //结束行
@@ -193,8 +192,6 @@ public class StorageController extends BaseController
                                 10    //结束列
                         ));
                     }
-                    flag = false;
-                }
 
             }
             String filename=System.currentTimeMillis()+"库存列表.xlsx";

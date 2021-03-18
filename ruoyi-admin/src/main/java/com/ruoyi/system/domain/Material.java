@@ -4,6 +4,8 @@ import com.ruoyi.common.annotation.Excel;
 import com.ruoyi.common.core.domain.BaseEntity;
 import lombok.Data;
 
+import java.util.List;
+
 /**
  * 物料列表对象 material
  *
@@ -47,6 +49,6 @@ public class Material extends BaseEntity
 
     private String manufacture;
 
-
+    private List<MaterialChild> materialChildList;
 
 }

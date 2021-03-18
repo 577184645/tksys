@@ -90,10 +90,10 @@ public class BomdetailController extends BaseController
                 }
                 Map<String,Object> map=new HashMap<>();
                 map.put("no",POIUtils.getCellValue(row.getCell(0)));
-                map.put("code",POIUtils.getCellValue(row.getCell(1)));
-                Object code = map.get("code");
+                String code = row.getCell(1).toString().replaceAll(" ", "");
+                map.put("code",code);
                 if(code!=null){
-                    Storage storage = storageService.selectStorageListBymaterialcode(code.toString());
+                    Storage storage = storageService.selectStorageListBymaterialcode(code);
                     if(storage!=null){
                         map.put("price",storage.getPrice());
                     }

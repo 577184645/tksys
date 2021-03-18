@@ -14,6 +14,10 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="manufacture"    column="manufacture"    />
         <result property="typeId"    column="type_id"    />
         <result property="deptId"    column="dept_id"    />
+        <collection property="materialChildList"
+                    select="com.ruoyi.system.mapper.MaterialChildMapper.selectMaterialChildByMaterialId"
+                    column="id"
+        />
     </resultMap>
 
 

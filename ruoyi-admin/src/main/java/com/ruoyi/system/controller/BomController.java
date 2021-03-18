@@ -100,8 +100,6 @@ public class BomController extends BaseController {
             int firstRowNum = sheetAt.getFirstRowNum();
             //获得当前sheet的结束行
             int lastRowNum = sheetAt.getLastRowNum();
-            System.out.println(firstRowNum);
-            System.out.println(lastRowNum);
             for (int i = 0; i < bomdetails.size(); i++) {
                 XSSFRow row = sheetAt.createRow(index++);
                 row.createCell(0).setCellValue(i + 1);
@@ -113,13 +111,15 @@ public class BomController extends BaseController {
                 row.createCell(6).setCellValue(bomdetails.get(i).getParttype() != null ? bomdetails.get(i).getParttype().toString() : "");
                 row.createCell(7).setCellValue(bomdetails.get(i).getDesignator() != null ? bomdetails.get(i).getDesignator().toString() : "");
                 row.createCell(8).setCellValue(bomdetails.get(i).getQuantity() != null ? bomdetails.get(i).getQuantity().toString() : "");
+                row.createCell(9).setCellValue(bomdetails.get(i).getPrice() != null ? bomdetails.get(i).getPrice().toString() : "");
+
                 for (Cell cell : row) {
                     cell.setCellStyle(cellStyle2);
                 }
             }
             ServletOutputStream outputStream = response.getOutputStream();
             response.setContentType("application/vnd.ms-excel");
-            response.setHeader("content-Disposition", "attachment;filename=BOM_" + name + ".xlsx");
+            response.setHeader("content-Disposition", "attachment;filename=BOM_" + new String(name.getBytes("utf-8"),"iso8859-1") + ".xlsx");
             workbook.write(outputStream);
             outputStream.flush();
             outputStream.close();
@@ -207,4 +207,12 @@ public class BomController extends BaseController {
     public AjaxResult refresh(String ids) {
         return toAjax(bomService.refresh(ids));
     }
+
+    @PostMapping("/scrap")
+    @ResponseBody
+    @Log(title = "bom报废", businessType = BusinessType.UPDATE)
+    public AjaxResult scrap(String ids) {
+        return toAjax(bomService.scrap(ids));
+    }
+
 }

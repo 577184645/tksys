@@ -20,6 +20,11 @@ public class Const {
         int  STORAGE_QUIT_HC=6 ;
     }
 
+    public interface BomStatus{
+        int BOM_SCRAP = 1;
+
+    }
+
 
     public interface OfferData{
        Map<String,Offer>  map=new HashMap<>();

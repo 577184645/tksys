@@ -92,7 +92,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         where id = #{id}
     </update>
 
-    <delete id="deleteBomdetailById" parameterType="Integer">
+    <delete id="deleteBomdetailById" parameterType="Long">
         delete from bom_listdetail where id = #{id}
     </delete>
 

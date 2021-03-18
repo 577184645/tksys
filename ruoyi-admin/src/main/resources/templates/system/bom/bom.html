@@ -64,6 +64,14 @@
                                     <option th:each="dict : ${type}" th:text="${dict.dictLabel}" th:value="${dict.dictLabel}"></option>
                                 </select>
                             </li>
+                            <li>
+                                <label>报废状态：</label>
+                                <select name="delStatus" id="delStatus" >
+                                    <option value=0>未报废</option>
+                                    <option value=1>已报废</option>
+                                    </option>
+                                </select>
+                            </li>
 
 
                             <li>
@@ -88,9 +96,13 @@
                 <a class="btn btn-danger single disabled" onclick="$.operate.removeAll()" shiro:hasPermission="system:bom:remove">
                     <i class="fa fa-remove"></i> 删除
                 </a>
+                <a class="btn btn-danger single disabled" onclick="scrap()" shiro:hasPermission="system:bom:remove">
+                    <i class="fa fa-remove"></i> 报废
+                </a>
                 <a class="btn btn-primary single disabled" onclick="exportExcel()" shiro:hasPermission="system:bom:export">
                     <i class="fa fa-download"></i> 导出
                 </a>
+
 
 
             </div>
@@ -119,6 +131,15 @@
                 onDblClickRow:function(row, $element, field)
                 {
                     Info(row.id);
+                },
+                rowStyle: function (row, index) {
+                    var style = "";
+                    if(row.delStatus==1) {
+                        style = 'danger';
+                        return {classes: style}
+                    }else{
+                        return {classes: style}
+                    }
                 },
                 columns: [{
                     checkbox: true
@@ -223,6 +244,21 @@
             table.set();
             var id = $.common.isEmpty(table.options.uniqueId) ? $.table.selectFirstColumns() : $.table.selectColumns(table.options.uniqueId);
             $.modal.openTab("bom信息",  prefix+"/userinfo/"+(id));
+        }
+
+
+        function scrap() {
+            table.set();
+            var rows = $.common.isEmpty(table.options.uniqueId) ? $.table.selectFirstColumns() : $.table.selectColumns(table.options.uniqueId);
+            if (rows.length == 0) {
+                $.modal.alertWarning("请至少选择一条记录");
+                return;
+            }
+            $.modal.confirm("确认要报废选中的" + rows.length + "条数据吗?", function() {
+                var url = prefix+"/scrap";
+                var data = { "ids": rows.join() };
+                $.operate.submit(url, "post", "json", data);
+            });
         }
 
      function refresh() {

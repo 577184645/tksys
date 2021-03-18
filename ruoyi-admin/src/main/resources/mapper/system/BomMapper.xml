@@ -24,10 +24,12 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="remark"    column="remark"    />
         <result property="cTime"    column="c_time"    />
         <result property="uTime"    column="u_time"    />
+        <result property="delStatus"    column="del_status"    />
+
     </resultMap>
 
     <sql id="selectBomVo">
-        select id, number, version, name, partnumber, description, publishstatus, project, producttype, price, designer, scrutineer, approver, timeofmaking, inspectiontime, approvaltime, remark, c_time, u_time from bom_list
+        select id, number,del_status, version, name, partnumber, description, publishstatus, project, producttype, price, designer, scrutineer, approver, timeofmaking, inspectiontime, approvaltime, remark, c_time, u_time from bom_list
     </sql>
 
     <select id="selectBomList" parameterType="Bom" resultMap="BomResult">
@@ -38,18 +40,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="name != null  and name != ''"> and name like concat('%', #{name}, '%')</if>
             <if test="partnumber != null  and partnumber != ''"> and partnumber = #{partnumber}</if>
             <if test="description != null  and description != ''"> and description = #{description}</if>
-            <if test="publishstatus != null  and publishstatus != ''"> and publishstatus = #{publishstatus}</if>
             <if test="project != null  and project != ''"> and project = #{project}</if>
             <if test="producttype != null  and producttype != ''"> and producttype = #{producttype}</if>
-            <if test="price != null "> and price = #{price}</if>
-            <if test="designer != null  and designer != ''"> and designer = #{designer}</if>
-            <if test="scrutineer != null  and scrutineer != ''"> and scrutineer = #{scrutineer}</if>
-            <if test="approver != null  and approver != ''"> and approver = #{approver}</if>
-            <if test="timeofmaking != null "> and timeofmaking = #{timeofmaking}</if>
-            <if test="inspectiontime != null "> and inspectiontime = #{inspectiontime}</if>
-            <if test="approvaltime != null "> and approvaltime = #{approvaltime}</if>
-            <if test="cTime != null "> and c_time = #{cTime}</if>
-            <if test="uTime != null "> and u_time = #{uTime}</if>
+            <if test="delStatus != null "> and del_status = #{delStatus}</if>
         </where>
     </select>
 
@@ -79,7 +72,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="remark != null  and remark != ''">remark,</if>
             <if test="cTime != null ">c_time,</if>
             <if test="uTime != null ">u_time,</if>
-         </trim>
+
+
+        </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="number != null  and number != ''">#{number},</if>
             <if test="version != null  and version != ''">#{version},</if>
@@ -112,17 +107,18 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="description != null  and description != ''">description = #{description},</if>
             <if test="publishstatus != null  and publishstatus != ''">publishstatus = #{publishstatus},</if>
             <if test="project != null  and project != ''">project = #{project},</if>
-           producttype = #{producttype},
+            <if test="producttype != null  and producttype != ''">   producttype = #{producttype},</if>
             <if test="price != null ">price = #{price},</if>
-          designer = #{designer},
-         scrutineer = #{scrutineer},
-            approver = #{approver},
+            <if test="designer != null  and designer != ''">designer = #{designer},</if>
+            <if test="scrutineer != null  and scrutineer != ''"> scrutineer = #{scrutineer},</if>
+            <if test="approver != null  and approver != ''"> sapprover = #{approver},,</if>
             <if test="timeofmaking != null ">timeofmaking = #{timeofmaking},</if>
             <if test="inspectiontime != null ">inspectiontime = #{inspectiontime},</if>
             <if test="approvaltime != null ">approvaltime = #{approvaltime},</if>
             <if test="remark != null  and remark != ''">remark = #{remark},</if>
             <if test="cTime != null ">c_time = #{cTime},</if>
             <if test="uTime != null ">u_time = #{uTime},</if>
+            <if test="delStatus != null "> del_status = #{delStatus},</if>
         </trim>
         where id = #{id}
     </update>
