@@ -130,15 +130,19 @@ public class StorageController extends BaseController
                 row1.getCell(9).setCellStyle(cellStyle);
                 row1.createCell(7).setCellValue(list.get(i1).getPrice()!=null?list.get(i1).getPrice():0);
                 List<MaterialChild> materialChildList = list.get(i1).getMaterialChildList();
-                row1.createCell(1).setCellValue(materialChildList.get(0).getName());
-                row1.createCell(2).setCellValue(materialChildList.get(0).getPartnumber());
-                row1.createCell(3).setCellValue(materialChildList.get(0).getManufacture());
-                row1.createCell(4).setCellValue(materialChildList.get(0).getFootprint());
-                row1.createCell(5).setCellValue(materialChildList.get(0).getDescription());
-                for (int i = 0; i < row1.getLastCellNum(); i++) {
-                    if(i<8){
-                        row1.getCell(i).setCellStyle(cellStyle2);
-                    }else{
+                if(materialChildList.size()==1){
+                    row1.createCell(1).setCellValue(materialChildList.get(0).getName());
+                    row1.createCell(2).setCellValue(materialChildList.get(0).getPartnumber());
+                    row1.createCell(3).setCellValue(materialChildList.get(0).getManufacture());
+                    row1.createCell(4).setCellValue(materialChildList.get(0).getFootprint());
+                    row1.createCell(5).setCellValue(materialChildList.get(0).getDescription());
+                    for (int i = 0; i < row1.getLastCellNum(); i++) {
+                        if(i<8){
+                            row1.getCell(i).setCellStyle(cellStyle2);
+                        }
+
+                    }
+                    for (int i = 8; i < row1.getLastCellNum(); i++) {
                         row1.getCell(i).setCellStyle(cellStyle);
                     }
 

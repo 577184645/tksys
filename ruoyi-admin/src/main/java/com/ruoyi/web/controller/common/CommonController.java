@@ -1,18 +1,5 @@
 package com.ruoyi.web.controller.common;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import com.ruoyi.system.util.DateUtil;
-import com.ruoyi.system.util.FileUtil;
-import com.ruoyi.system.util.Office2PDF;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 import com.ruoyi.common.config.Global;
 import com.ruoyi.common.config.ServerConfig;
 import com.ruoyi.common.constant.Constants;
@@ -20,13 +7,38 @@ import com.ruoyi.common.core.domain.AjaxResult;
 import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.common.utils.file.FileUploadUtils;
 import com.ruoyi.common.utils.file.FileUtils;
+import com.ruoyi.system.domain.Bom;
+import com.ruoyi.system.domain.Bomdetail;
+import com.ruoyi.system.domain.MaterialChild;
+import com.ruoyi.system.domain.Storage;
+import com.ruoyi.system.service.IBomService;
+import com.ruoyi.system.service.IBomdetailService;
+import com.ruoyi.system.service.IStorageService;
+import com.ruoyi.system.util.DateUtil;
+import com.ruoyi.system.util.FileUtil;
+import com.ruoyi.system.util.Office2PDF;
+import org.apache.poi.ss.usermodel.*;
+import org.apache.poi.ss.util.CellRangeAddress;
+import org.apache.poi.xssf.usermodel.XSSFRow;
+import org.apache.poi.xssf.usermodel.XSSFSheet;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.ServletOutputStream;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.io.*;
-import java.net.URL;
 import java.net.URLEncoder;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.zip.ZipOutputStream;
 
 /**
  * 通用请求处理
@@ -40,6 +52,12 @@ public class CommonController
 
     @Autowired
     private ServerConfig serverConfig;
+    @Autowired
+    private IStorageService storageService;
+    @Autowired
+    private IBomService bomService;
+    @Autowired
+    private IBomdetailService bomdetailService;
 
 
     @Value("${ruoyi.profile}")
@@ -103,6 +121,207 @@ public class CommonController
         {
             return AjaxResult.error(e.getMessage());
         }
+    }
+
+
+    private void  writeStorage() throws Exception{
+        List<Storage> list = storageService.selectStorageList(null);
+        String file = Global.getProfile()+"/template/storage.xlsx";
+        XSSFWorkbook workbook=new XSSFWorkbook(new FileInputStream(new File(file)));
+        XSSFSheet sheet = workbook.getSheetAt(0);
+        CellStyle cellStyle2=workbook.createCellStyle();
+        cellStyle2.setAlignment(HorizontalAlignment.CENTER);
+        cellStyle2.setVerticalAlignment(VerticalAlignment.CENTER);
+        cellStyle2.setWrapText(true);
+        CreationHelper createHelper = workbook.getCreationHelper();
+        CellStyle cellStyle = workbook.createCellStyle();
+        cellStyle.setDataFormat(createHelper.createDataFormat().getFormat("yyyy-MM-dd"));
+        cellStyle.setAlignment(HorizontalAlignment.CENTER);
+        cellStyle.setVerticalAlignment(VerticalAlignment.CENTER);
+        cellStyle.setWrapText(true);
+        int index=0;
+        for (int i1 = 0; i1 < list.size(); i1++) {
+            index++;
+            Row row1 = sheet.createRow(index);
+            row1.createCell(0).setCellValue(list.get(i1).getMaterialcode());
+            row1.createCell(6).setCellValue(list.get(i1).getStocks());
+            row1.createCell(10).setCellValue(list.get(i1).getUTime());
+            row1.getCell(10).setCellStyle(cellStyle);
+            row1.createCell(8).setCellValue(list.get(i1).getOTime());
+            row1.getCell(8).setCellStyle(cellStyle);
+            row1.createCell(9).setCellValue(list.get(i1).getQTime());
+            row1.getCell(9).setCellStyle(cellStyle);
+            row1.createCell(7).setCellValue(list.get(i1).getPrice()!=null?list.get(i1).getPrice():0);
+            List<MaterialChild> materialChildList = list.get(i1).getMaterialChildList();
+            if(materialChildList.size()==1){
+                row1.createCell(1).setCellValue(materialChildList.get(0).getName());
+                row1.createCell(2).setCellValue(materialChildList.get(0).getPartnumber());
+                row1.createCell(3).setCellValue(materialChildList.get(0).getManufacture());
+                row1.createCell(4).setCellValue(materialChildList.get(0).getFootprint());
+                row1.createCell(5).setCellValue(materialChildList.get(0).getDescription());
+                for (int i = 0; i < row1.getLastCellNum(); i++) {
+                    if(i<8){
+                        row1.getCell(i).setCellStyle(cellStyle2);
+                    }
+
+                }
+                for (int i = 8; i < row1.getLastCellNum(); i++) {
+                    row1.getCell(i).setCellStyle(cellStyle);
+                }
+
+            }
+
+
+            if(materialChildList.size()>1){
+                for (int i = 1; i < materialChildList.size(); i++) {
+                    index++;
+                    Row row2 = sheet.createRow(index);
+                    row2.createCell(1).setCellValue(materialChildList.get(i).getName());
+                    row2.createCell(2).setCellValue(materialChildList.get(i).getPartnumber());
+                    for (Cell cell : row2) {
+                        cell.setCellStyle(cellStyle2);
+                    }
+                }
+
+                sheet.addMergedRegion(new CellRangeAddress(
+                        index-materialChildList.size()+1,   //起始行
+                        index,   //结束行
+                        0,   //起始列
+                        0    //结束列
+                ));
+                sheet.addMergedRegion(new CellRangeAddress(
+                        index-materialChildList.size()+1,   //起始行
+                        index,   //结束行
+                        6,   //起始列
+                        6    //结束列
+                ));
+                sheet.addMergedRegion(new CellRangeAddress(
+                        index-materialChildList.size()+1,   //起始行
+                        index,   //结束行
+                        7,   //起始列
+                        7    //结束列
+                ));
+                sheet.addMergedRegion(new CellRangeAddress(
+                        index-materialChildList.size()+1,   //起始行
+                        index,   //结束行
+                        8,   //起始列
+                        8    //结束列
+                ));
+                sheet.addMergedRegion(new CellRangeAddress(
+                        index-materialChildList.size()+1,   //起始行
+                        index,   //结束行
+                        9,   //起始列
+                        9    //结束列
+                ));
+                sheet.addMergedRegion(new CellRangeAddress(
+                        index-materialChildList.size()+1,   //起始行
+                        index,   //结束行
+                        10,   //起始列
+                        10    //结束列
+                ));
+            }
+
+        }
+        String filename=Global.getProfile()+"/backups/"+System.currentTimeMillis()+"库存列表.xlsx";
+        FileOutputStream outputStream=new FileOutputStream(filename);
+        workbook.write(outputStream);
+        outputStream.flush();
+        outputStream.close();
+        workbook.close();
+    }
+
+    private void writeBom() throws Exception{
+        List<Bom> boms = bomService.selectBomList(null);
+        for (Bom bom : boms) {
+            Bomdetail bomdetail = new Bomdetail();
+            bomdetail.setBomid(bom.getId());
+            List<Bomdetail> bomdetails = bomdetailService.selectBomdetailList(bomdetail);
+            String file = Global.getProfile() + "/template/BOM_exportTemplate.xlsx";
+            XSSFWorkbook workbook = new XSSFWorkbook(new FileInputStream(file));
+            XSSFSheet sheetAt = workbook.getSheetAt(0);
+            CellStyle cellStyle = workbook.createCellStyle();
+            CreationHelper createHelper = workbook.getCreationHelper();
+            cellStyle.setDataFormat(createHelper.createDataFormat().getFormat("yyyy-MM-dd"));
+            cellStyle.setAlignment(HorizontalAlignment.CENTER);
+            cellStyle.setVerticalAlignment(VerticalAlignment.CENTER);
+            cellStyle.setWrapText(true);
+            sheetAt.getRow(0).getCell(4).setCellValue(bom.getName());
+            sheetAt.getRow(1).getCell(4).setCellValue(bom.getVersion());
+            sheetAt.getRow(2).getCell(4).setCellValue(bom.getTimeofmaking());
+            sheetAt.getRow(2).getCell(4).setCellStyle(cellStyle);
+            sheetAt.getRow(0).getCell(7).setCellValue(bom.getNumber());
+            sheetAt.getRow(1).getCell(7).setCellValue(bom.getPartnumber());
+            sheetAt.getRow(2).getCell(7).setCellValue(bom.getRemark());
+
+            int index = 5;
+            Font font = workbook.createFont();
+            font.setFontName("黑体");
+            font.setFontHeightInPoints((short) 24);//设置字体大小
+            Font font1 = workbook.createFont();
+            font.setFontHeightInPoints((short) 16);
+            CellStyle cellStyle2 = workbook.createCellStyle();
+            cellStyle2.setAlignment(HorizontalAlignment.CENTER);
+            cellStyle2.setVerticalAlignment(VerticalAlignment.CENTER);
+            cellStyle2.setFont(font1);
+            cellStyle2.setWrapText(true);
+            for (int i = 0; i < bomdetails.size(); i++) {
+                XSSFRow row = sheetAt.createRow(index++);
+                row.createCell(0).setCellValue(i + 1);
+                row.createCell(1).setCellValue(bomdetails.get(i).getCode() != null ? bomdetails.get(i).getCode().toString() : "");
+                row.createCell(2).setCellValue(bomdetails.get(i).getLink() != null ? bomdetails.get(i).getLink().toString() : "");
+                row.createCell(3).setCellValue(bomdetails.get(i).getComment() != null ? bomdetails.get(i).getComment().toString() : "");
+                row.createCell(4).setCellValue(bomdetails.get(i).getFootprint() != null ? bomdetails.get(i).getFootprint().toString() : "");
+                row.createCell(5).setCellValue(bomdetails.get(i).getDescription() != null ? bomdetails.get(i).getDescription().toString() : "");
+                row.createCell(6).setCellValue(bomdetails.get(i).getParttype() != null ? bomdetails.get(i).getParttype().toString() : "");
+                row.createCell(7).setCellValue(bomdetails.get(i).getDesignator() != null ? bomdetails.get(i).getDesignator().toString() : "");
+                row.createCell(8).setCellValue(bomdetails.get(i).getQuantity() != null ? bomdetails.get(i).getQuantity().toString() : "");
+                row.createCell(9).setCellValue(bomdetails.get(i).getPrice() != null ? bomdetails.get(i).getPrice().toString() : "");
+
+                for (Cell cell : row) {
+                    cell.setCellStyle(cellStyle2);
+                }
+            }
+            String filename=Global.getProfile()+"/backups/"+bom.getPartnumber () +"bom列表.xlsx";
+            FileOutputStream outputStream=new FileOutputStream(filename);
+            workbook.write(outputStream);
+            outputStream.flush();
+            outputStream.close();
+            outputStream.flush();
+            outputStream.close();
+            workbook.close();
+        }
+
+    }
+
+    /**
+     * 本地资源通用下载
+     */
+    @GetMapping("/common/download/backups")
+    public void backups( HttpServletRequest request, HttpServletResponse response)
+            throws Exception
+    {
+        writeStorage();
+        writeBom();
+        File file = new File("C:\\ruoyi\\uploadPathTksys\\backups");
+        File[] srcfile = file.listFiles(new FileFilter() {
+            @Override
+            public boolean accept(File pathname) {
+                return pathname.toString().endsWith(".xlsx");
+            }
+        });
+        String downloadPath=Global.getProfile()+"/backups/backups.zip";
+        File zipfile=new File(downloadPath);
+        FileUtil.zipFiles(srcfile,zipfile);
+        for (File file1 : srcfile) {
+            file1.delete();
+        }
+        ServletOutputStream outputStream = response.getOutputStream();
+        response.setCharacterEncoding("utf-8");
+        response.setContentType("multipart/form-data");
+        response.setHeader("Content-Disposition",
+                "attachment;fileName=backups.zip");
+        FileUtils.writeBytes(downloadPath, response.getOutputStream());
+
     }
 
     /**

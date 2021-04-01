@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="zh" xmlns:th="http://www.thymeleaf.org" >
+<html lang="zh" xmlns:th="http://www.thymeleaf.org" xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
 <head>
     <th:block th:include="include :: header('bom合并')" />
     <th:block th:include="include :: datetimepicker-css" />
@@ -9,10 +9,16 @@
 
 <div class="container-div">
     <div class="btn-group-sm" id="toolbar" role="group">
-
+        <h4 class="form-header h4">bom合并</h4>
         <a class="btn btn-info" data-toggle="modal" data-target="#myModal">
             <i class="fa fa-upload"></i> 合并
         </a>
+        <h4 class="form-header h4">备份</h4>
+        <a class="btn btn-info" shiro:hasPermission="system:bom:backups" onclick="backups()">
+            <i class="fa fa-upload"></i> 备份
+        </a>
+
+
     </div>
     <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
         <div class="modal-dialog">
@@ -36,6 +42,12 @@
     <th:block th:include="include :: footer" />
     <th:block th:include="include :: datetimepicker-js" />
     <script type="text/javascript">
+
+
+        function backups() {
+            window.location.href="/common/download/backups";
+        }
+
         function sendFile() {
             var data = new FormData();
             for (var i=0;i<$('#filePath')[0].files.length;i++){

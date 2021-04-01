@@ -110,8 +110,7 @@ public class BomController extends BaseController {
             sheetAt.getRow(2).getCell(4).setCellStyle(cellStyle);
             sheetAt.getRow(0).getCell(7).setCellValue(bom.getNumber());
             sheetAt.getRow(1).getCell(7).setCellValue(bom.getPartnumber());
-            sheetAt.getRow(2).getCell(7).setCellValue(!bom.getRemark().equals("null") ? bom.getRemark() : "");
-
+            sheetAt.getRow(2).getCell(7).setCellValue(bom.getRemark());
             int index = 5;
             Font font = workbook.createFont();
             font.setFontName("黑体");
