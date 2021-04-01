@@ -83,14 +83,14 @@ public class BomdetailController extends BaseController
             Workbook wb =POIUtils.getWorkBook(file);
             Sheet sheet = wb.getSheetAt(0);
             int excelRealRow = POIUtils.getExcelRealRow(sheet);
-            for (int i=5;i<excelRealRow;i++){
+            for (int i=5;i<=excelRealRow;i++){
                 Row row = sheet.getRow(i);
                 if(StringUtils.isBlank(POIUtils.getCellValue(row.getCell(0)))){
                          break;
                 }
                 Map<String,Object> map=new HashMap<>();
                 map.put("no",POIUtils.getCellValue(row.getCell(0)));
-                String code = row.getCell(1).toString().replaceAll(" ", "");
+                String code = POIUtils.getCellValue(row.getCell(1)).replaceAll(" ", "");
                 map.put("code",code);
                 if(code!=null){
                     Storage storage = storageService.selectStorageListBymaterialcode(code);

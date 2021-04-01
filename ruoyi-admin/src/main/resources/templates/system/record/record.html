@@ -30,11 +30,7 @@
                     </div>
                 </form>
             </div>
-            <div class="btn-group-sm" id="toolbar" role="group">
-                <a class="btn btn-primary single disabled" onclick="Info()"  >
-                    <i class="fa fa-edit"></i> 查看
-                </a>
-            </div>
+
             <div class="col-sm-12 select-table table-striped">
                 <table id="bootstrap-table"></table>
             </div>
@@ -57,7 +53,7 @@
                 showToggle:false,
                 showSearch:false,
                 showRefresh:false,
-                pagination:false,
+                pagination:true,
                 showColumns:false,
                 queryParams : {
                     materialcode: $("#materialcode").val(),

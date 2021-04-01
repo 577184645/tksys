@@ -11,6 +11,9 @@ import com.ruoyi.system.domain.Bomdetail;
 import com.ruoyi.system.service.IBomService;
 import com.ruoyi.system.service.IBomdetailService;
 import com.ruoyi.system.service.IProjectService;
+import com.ruoyi.system.service.IStorageService;
+import com.ruoyi.system.util.POIUtils;
+import org.apache.commons.lang.StringUtils;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
@@ -20,13 +23,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.ServletOutputStream;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.util.List;
+import java.util.*;
 
 /**
  * bom列表Controller
@@ -45,7 +49,11 @@ public class BomController extends BaseController {
     private IProjectService iProjectService;
     @Autowired
     private IBomdetailService bomdetailService;
+    @Autowired
+    private IStorageService iStorageService;
 
+
+    private List<Map<String,Object>> mapList=new ArrayList<>();
 
     @RequiresPermissions("system:bom:view")
     @GetMapping()
@@ -53,6 +61,14 @@ public class BomController extends BaseController {
 
         return prefix + "/bom";
     }
+
+    @RequiresPermissions("system:bom:merge")
+    @GetMapping("/merge")
+    public String merge() {
+
+        return prefix + "/merge";
+    }
+
 
     /**
      * 查询bom列表列表
@@ -73,18 +89,29 @@ public class BomController extends BaseController {
     @Log(title = "bom列表", businessType = BusinessType.EXPORT)
     @GetMapping("/export")
     @ResponseBody
-    public AjaxResult export(Long id, String date, String version, String name, HttpServletResponse response) {
+    public AjaxResult export(Bom bom, HttpServletResponse response) {
         // 本地资源路径
         try {
             Bomdetail bomdetail = new Bomdetail();
-            bomdetail.setBomid(id);
+            bomdetail.setBomid(bom.getId());
             List<Bomdetail> bomdetails = bomdetailService.selectBomdetailList(bomdetail);
             String file = Global.getProfile() + "/template/BOM_exportTemplate.xlsx";
-            XSSFWorkbook workbook = new XSSFWorkbook(new FileInputStream(new File(file)));
+            XSSFWorkbook workbook = new XSSFWorkbook(new FileInputStream(file));
             XSSFSheet sheetAt = workbook.getSheetAt(0);
-            sheetAt.getRow(0).getCell(4).setCellValue(name);
-            sheetAt.getRow(1).getCell(4).setCellValue(version);
-            sheetAt.getRow(2).getCell(4).setCellValue(date);
+            CellStyle cellStyle = workbook.createCellStyle();
+            CreationHelper createHelper = workbook.getCreationHelper();
+            cellStyle.setDataFormat(createHelper.createDataFormat().getFormat("yyyy-MM-dd"));
+            cellStyle.setAlignment(HorizontalAlignment.CENTER);
+            cellStyle.setVerticalAlignment(VerticalAlignment.CENTER);
+            cellStyle.setWrapText(true);
+            sheetAt.getRow(0).getCell(4).setCellValue(bom.getName());
+            sheetAt.getRow(1).getCell(4).setCellValue(bom.getVersion());
+            sheetAt.getRow(2).getCell(4).setCellValue(bom.getTimeofmaking());
+            sheetAt.getRow(2).getCell(4).setCellStyle(cellStyle);
+            sheetAt.getRow(0).getCell(7).setCellValue(bom.getNumber());
+            sheetAt.getRow(1).getCell(7).setCellValue(bom.getPartnumber());
+            sheetAt.getRow(2).getCell(7).setCellValue(!bom.getRemark().equals("null") ? bom.getRemark() : "");
+
             int index = 5;
             Font font = workbook.createFont();
             font.setFontName("黑体");
@@ -96,10 +123,6 @@ public class BomController extends BaseController {
             cellStyle2.setVerticalAlignment(VerticalAlignment.CENTER);
             cellStyle2.setFont(font1);
             cellStyle2.setWrapText(true);
-            //获得当前sheet的开始行
-            int firstRowNum = sheetAt.getFirstRowNum();
-            //获得当前sheet的结束行
-            int lastRowNum = sheetAt.getLastRowNum();
             for (int i = 0; i < bomdetails.size(); i++) {
                 XSSFRow row = sheetAt.createRow(index++);
                 row.createCell(0).setCellValue(i + 1);
@@ -119,7 +142,7 @@ public class BomController extends BaseController {
             }
             ServletOutputStream outputStream = response.getOutputStream();
             response.setContentType("application/vnd.ms-excel");
-            response.setHeader("content-Disposition", "attachment;filename=BOM_" + new String(name.getBytes("utf-8"),"iso8859-1") + ".xlsx");
+            response.setHeader("content-Disposition", "attachment;filename=BOM_" + new String(bom.getPartnumber().getBytes("utf-8"), "iso8859-1") + ".xlsx");
             workbook.write(outputStream);
             outputStream.flush();
             outputStream.close();
@@ -215,4 +238,105 @@ public class BomController extends BaseController {
         return toAjax(bomService.scrap(ids));
     }
 
+    @PostMapping("/importData")
+    @Log(title = "bom合并", businessType = BusinessType.IMPORT)
+    @ResponseBody
+    public boolean merge(MultipartFile []  file, HttpServletResponse response, HttpServletRequest request) throws Exception {
+        mapList.clear();
+        try {
+
+            for (MultipartFile multipartFile : file) {
+
+                Workbook wb = POIUtils.getWorkBook(multipartFile);
+                Sheet sheet = wb.getSheetAt(0);
+               int count= (int)sheet. getRow(1).getCell(9).getNumericCellValue();
+                int excelRealRow = POIUtils.getExcelRealRow(sheet);
+                for (int i = 5; i <= excelRealRow; i++) {
+                    Row row = sheet.getRow(i);
+                    if (StringUtils.isBlank(POIUtils.getCellValue(row.getCell(0)))) {
+                        break;
+                    }
+                    if (StringUtils.isBlank(POIUtils.getCellValue(row.getCell(1)))) {
+                        return false;
+                    }
+                    Map<String,Object> map=new HashMap<>();
+                    String code = POIUtils.getCellValue(row.getCell(1)).replaceAll(" ", "");
+                    map.put("code",code);
+                    map.put("link",POIUtils.getCellValue(row.getCell(2)));
+                    map.put("comment",POIUtils.getCellValue(row.getCell(3)));
+                    map.put("footprint",POIUtils.getCellValue(row.getCell(4)));
+                    map.put("description",POIUtils.getCellValue(row.getCell(5)));
+                    map.put("parttype",POIUtils.getCellValue(row.getCell(6)));
+                    map.put("designator",POIUtils.getCellValue(row.getCell(7)));
+                    map.put("quantity",POIUtils.getCellValue(row.getCell(8)));
+                    map.put("price",POIUtils.getCellValue(row.getCell(9)));
+                    map.put("total",Integer.valueOf(map.get("quantity").toString())*count);
+                    mapList.add(map);
+                }
+              
+            }
+
+            HashMap<String, Map<String, Object>> tempMap = new HashMap<String, Map<String, Object>>();
+            for (Map<String, Object> map : mapList) {
+                String code = map.get("code").toString();
+                if(tempMap.containsKey(code)){
+                  int tatal= (int)tempMap.get(code).get("total")+(int)map.get("total");
+                    map.put("total",tatal);
+                    tempMap.put(code,map);
+                }else{
+                    tempMap.put(code,map);
+                }
+            }
+            mapList.clear();
+            for (String s : tempMap.keySet()) {
+                mapList.add(tempMap.get(s));
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+        return true;
+    }
+
+    @GetMapping("download")
+    public void download(HttpServletResponse response){
+        try {
+            String filetemp = Global.getProfile() + "/template/BOM_merge.xlsx";
+            XSSFWorkbook workbook = new XSSFWorkbook(new FileInputStream(filetemp));
+            XSSFSheet sheetAt = workbook.getSheetAt(0);
+            CellStyle cellStyle = workbook.createCellStyle();
+            cellStyle.setAlignment(HorizontalAlignment.CENTER);
+            cellStyle.setVerticalAlignment(VerticalAlignment.CENTER);
+            cellStyle.setWrapText(true);
+            int index=0;
+            for (Map<String, Object> map : mapList) {
+                XSSFRow row = sheetAt.createRow(++index);
+                row.createCell(0).setCellValue(index);
+                row.createCell(1).setCellValue(map.get("code") != null ?map.get("code").toString() : "");
+                row.createCell(2).setCellValue(map.get("link") != null ? map.get("link").toString() : "");
+                row.createCell(3).setCellValue(map.get("comment")!= null ? map.get("comment").toString() : "");
+                row.createCell(4).setCellValue(map.get("footprint")!= null ? map.get("footprint").toString() : "");
+                row.createCell(5).setCellValue(map.get("description") != null ? map.get("description").toString() : "");
+                row.createCell(6).setCellValue(map.get("parttype") != null ? map.get("parttype").toString() : "");
+                row.createCell(7).setCellValue(map.get("designator") != null ? map.get("designator").toString() : "");
+                row.createCell(8).setCellValue(map.get("total") != null ? map.get("total").toString() : "");
+                row.createCell(9).setCellValue(map.get("price") != null ? map.get("price").toString() : "");
+                for (Cell cell : row) {
+                    cell.setCellStyle(cellStyle);
+                }
+            }
+            mapList.clear();
+            ServletOutputStream outputStream = response.getOutputStream();
+            response.setContentType("application/vnd.ms-excel");
+            response.setHeader("content-Disposition", "attachment;filename="+System.currentTimeMillis()+"BOM_merge.xlsx");
+            workbook.write(outputStream);
+            outputStream.flush();
+            outputStream.close();
+            workbook.close();
+
+        }catch (IOException e){
+            e.printStackTrace();
+        }
+    }
 }

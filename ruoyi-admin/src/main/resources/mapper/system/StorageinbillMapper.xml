@@ -49,7 +49,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="checknumber != null  and checknumber != ''"> and checknumber like concat('%', #{checknumber}, '%')</if>
             <if test="applyid != null  and applyid != ''"> and applyid like concat('%', #{applyid}, '%')</if>
             <if test="status != null  and status != ''"> and status=#{status}</if>
-            <if test="delStatus == 1 "> and del_status in (1,3)</if>
+            <if test="delStatus == 1 "> and del_status =1</if>
             <if test="delStatus == 2 "> and del_status = 2</if>
             <if test="outsourcewarehouse != null  and outsourcewarehouse != ''"> and outsourcewarehouse like concat('%', #{outsourcewarehouse}, '%')</if>
             <if test="supplier != null  and supplier != ''"> and supplier like concat('%', #{supplier}, '%')</if>

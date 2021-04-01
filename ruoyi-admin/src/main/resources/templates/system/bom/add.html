@@ -680,8 +680,14 @@
                 dataType: 'json',
                 success: function(result) {
                     $('#myModal').modal('hide');
-                    $("#bootstrap-table").bootstrapTable('refresh');
-                    $.modal.alertSuccess(result.msg);
+                    if(result){
+                        $("#bootstrap-table").bootstrapTable('refresh');
+                        $.modal.alertSuccess(result.msg);
+                    }else{
+                        $.modal.alertWarning("上传失败。");
+                    }
+
+
 
                 },
                 error: function(error) {

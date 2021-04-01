@@ -120,20 +120,6 @@ public class OfferController extends BaseController
     public AjaxResult temporaryStorage(Offer offer)
     {
 
-     /*
-        JSONArray productArray = JSONArray.fromObject(data);
-        JSONObject jsonObject = productArray.getJSONObject(0);
-        Offer offer=new Offer();
-        offer.setOfferUsername(jsonObject.getString("offerUsername"));
-        offer.setOfferSalesman(jsonObject.getString("offerSalesman"));
-        offer.setOfferSalesmancontactway(jsonObject.getString("offerSalesmancontactway"));
-        if(StringUtils.isNotBlank(jsonObject.getString("offerMoney"))){
-            offer.setOfferMoney(jsonObject.getDouble("offerMoney"));
-        }
-        offer.setOfferProject(jsonObject.getString("offerProject"));
-       // offer.setOfferTime(DateUtils.jsonObject.getString("offerTime"));
-        offer.setContext(jsonObject.getString("context"));
-      */
         SysUser user = ShiroUtils.getSysUser();
         Const.OfferData.map.put(user.getUserName(),offer);
             return toAjax(true);

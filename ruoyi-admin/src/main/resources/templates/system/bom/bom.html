@@ -279,7 +279,7 @@
 
        function exportExcel(){
            var row=$("#bootstrap-table").bootstrapTable('getSelections')[0];
-            window.location.href = prefix+'/export?id='+row.id+'&date='+row.timeofmaking+"&version="+row.version+"&name="+row.name;
+            window.location.href = prefix+'/export?id='+row.id+'&timeofmaking='+row.timeofmaking+"&version="+row.version+"&name="+row.name+"&number="+row.number+"&partnumber="+row.partnumber+"&remark="+row.remark;
         }
 
     </script>

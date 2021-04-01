@@ -314,9 +314,8 @@
                     return;
                 }
                 for(var i=0;i<data.length;i++){
-                    console.log(data);
-                    if(data[i].counts<=0||data[i].price==""||data[i].money==""){
-                        $.modal.alertWarning("数量必须大于0,单价和总价不能为空!")
+                    if(data[i].counts==""||data[i].price==""||data[i].money==""){
+                        $.modal.alertWarning("数量,单价和总价不能为空!")
 
                         return;
                     }
@@ -451,8 +450,10 @@
 
             {
                 field: 'price',
-                title: '单价'
-
+                title: '单价',
+                editable: {
+                    title : '单价'
+                }
 
             },
 
@@ -516,7 +517,9 @@
             }
         ] ,onEditableSave: function (field, row, oldValue,$el) {
 
-            row.price = (row.money / row.counts).toFixed(4);
+            if(row.counts!=0){
+                row.price = (row.money / row.counts).toFixed(4);
+            }
 
             if (row.rate != "") {
                 row.taxamount =(row.money * (row.rate.substring(0, row.rate.length - 1) * 0.01)).toFixed(2);;
