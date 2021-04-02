@@ -62,12 +62,6 @@ public class BomController extends BaseController {
         return prefix + "/bom";
     }
 
-    @RequiresPermissions("system:bom:merge")
-    @GetMapping("/merge")
-    public String merge() {
-
-        return prefix + "/merge";
-    }
 
 
     /**
@@ -240,7 +234,7 @@ public class BomController extends BaseController {
     @PostMapping("/importData")
     @Log(title = "bom合并", businessType = BusinessType.IMPORT)
     @ResponseBody
-    public boolean merge(MultipartFile []  file, HttpServletResponse response, HttpServletRequest request) throws Exception {
+    public AjaxResult merge(MultipartFile []  file, HttpServletResponse response, HttpServletRequest request) throws Exception {
         mapList.clear();
         try {
 
@@ -249,14 +243,17 @@ public class BomController extends BaseController {
                 Workbook wb = POIUtils.getWorkBook(multipartFile);
                 Sheet sheet = wb.getSheetAt(0);
                int count= (int)sheet. getRow(1).getCell(9).getNumericCellValue();
-                int excelRealRow = POIUtils.getExcelRealRow(sheet);
+               if(count==0){
+                   return AjaxResult.error("合并失败,贴片数量为空！");
+               }
+               int excelRealRow = POIUtils.getExcelRealRow(sheet);
                 for (int i = 5; i <= excelRealRow; i++) {
                     Row row = sheet.getRow(i);
                     if (StringUtils.isBlank(POIUtils.getCellValue(row.getCell(0)))) {
                         break;
                     }
                     if (StringUtils.isBlank(POIUtils.getCellValue(row.getCell(1)))) {
-                        return false;
+                        return AjaxResult.error("合并失败,物料编码为空!");
                     }
                     Map<String,Object> map=new HashMap<>();
                     String code = POIUtils.getCellValue(row.getCell(1)).replaceAll(" ", "");
@@ -293,9 +290,9 @@ public class BomController extends BaseController {
 
         } catch (Exception e) {
             e.printStackTrace();
-            return false;
+            return AjaxResult.error("合并失败,程序异常!");
         }
-        return true;
+        return AjaxResult.success("操作成功！");
     }
 
     @GetMapping("download")

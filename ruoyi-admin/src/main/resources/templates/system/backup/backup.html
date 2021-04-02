@@ -9,15 +9,17 @@
 
 <div class="container-div">
     <div class="btn-group-sm" id="toolbar" role="group">
-        <h4 class="form-header h4">bom合并</h4>
-        <a class="btn btn-info" data-toggle="modal" data-target="#myModal">
+        <a class="btn btn-info" data-toggle="modal" shiro:hasPermission="system:bom:merge" data-target="#myModal">
             <i class="fa fa-upload"></i> 合并
         </a>
-        <h4 class="form-header h4">备份</h4>
-        <a class="btn btn-info" shiro:hasPermission="system:bom:backups" onclick="backups()">
-            <i class="fa fa-upload"></i> 备份
+        <h4 class="form-header h4"></h4>
+        <a class="btn btn-info" shiro:hasPermission="system:backups" onclick="backups()">
+            <i class="fa fa-upload"></i> bom库存备份
         </a>
-
+        <h4 class="form-header h4"></h4>
+        <a class="btn btn-info" shiro:hasPermission="system:databasebackups" onclick="databasebackups()">
+            <i class="fa fa-upload"></i> 数据库备份
+        </a>
 
     </div>
     <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
@@ -47,6 +49,11 @@
         function backups() {
             window.location.href="/common/download/backups";
         }
+        function databasebackups() {
+            window.location.href="/common/download/databasebackups";
+        }
+
+
 
         function sendFile() {
             var data = new FormData();
@@ -63,13 +70,11 @@
                 dataType: 'json',
                 success: function(result) {
                     $('#myModal').modal('hide');
-                    if(result){
+                    if(result.code==0){
                         window.location.href=ctx +"system/bom/download";
                     }else{
-                        $.modal.alertWarning("上传失败。");
+                        $.modal.alertError(result.msg);
                     }
-
-
 
                 },
                 error: function(error) {

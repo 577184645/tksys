@@ -324,6 +324,31 @@ public class CommonController
 
     }
 
+
+    @GetMapping("/common/download/databasebackups")
+    public void databasebackups( HttpServletRequest request, HttpServletResponse response)
+            throws Exception
+    {
+        File file = new File("C:\\数据库备份");
+        File[] files = file.listFiles();
+        File[] newfiles =new File[2];
+        int index=0;
+        for (int i = files.length-2; i < files.length; i++) {
+            newfiles[index++]= files[i];
+        }
+        String downloadPath=Global.getProfile()+"/backups/databasebackups.zip";
+        File zipfile=new File(downloadPath);
+        FileUtil.zipFiles(newfiles,zipfile);
+        // 下载名称
+        String downloadName ="数据库备份.zip";
+        response.setCharacterEncoding("utf-8");
+        response.setContentType("multipart/form-data");
+        response.setHeader("Content-Disposition",
+                "attachment;fileName=" + FileUtils.setFileDownloadHeader(request, downloadName));
+
+        FileUtils.writeBytes(downloadPath, response.getOutputStream());
+    }
+
     /**
      * 本地资源通用下载
      */
