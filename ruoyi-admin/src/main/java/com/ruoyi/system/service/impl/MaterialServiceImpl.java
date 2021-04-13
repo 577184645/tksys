@@ -171,5 +171,23 @@ public class MaterialServiceImpl implements IMaterialService {
 
     }
 
+    @Override
+    public AjaxResult abandoned(String ids) {
+        String[] split = ids.split(",");
+        for (String s : split) {
+            materialMapper.updateStatus(2,Long.valueOf(s));
+        }
+      return  AjaxResult.success("操作成功!");
+    }
+
+    @Override
+    public AjaxResult recovery(String ids) {
+        String[] split = ids.split(",");
+        for (String s : split) {
+            materialMapper.updateStatus(1,Long.valueOf(s));
+        }
+        return  AjaxResult.success("操作成功!");
+    }
+
 
 }

@@ -26,6 +26,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="uTime"    column="u_time"    />
         <result property="delStatus"    column="del_status"    />
         <result property="outmoney"    column="outmoney"    />
+        <result property="storageouttype"    column="storageouttype"    />
         <collection property="storageoutdetailList" ofType="com.ruoyi.system.domain.Storageoutdetail" column="id"
         select="com.ruoyi.system.mapper.StorageoutdetailMapper.selectStorageindetailByStorageoutbillId"
         />
@@ -34,7 +35,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </resultMap>
 
     <sql id="selectStorageoutbillVo">
-        select outmoney, customer,purchaseid,applyid,contractid,invoiceid,expressid,instoragecause,projectname,proposer,id, storageoutid, outsourcewarehouse, outsourcewarehouseid, stockrequisition, warehouseadmin, stockpeople, comments, c_time, u_time, del_status
+        select outmoney,storageouttype, customer,purchaseid,applyid,contractid,invoiceid,expressid,instoragecause,projectname,proposer,id, storageoutid, outsourcewarehouse, outsourcewarehouseid, stockrequisition, warehouseadmin, stockpeople, comments, c_time, u_time, del_status
         from st_outbill
 
 
@@ -91,6 +92,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="warehouseadmin != null  and warehouseadmin != ''">warehouseadmin,</if>
             <if test="stockpeople != null  and stockpeople != ''">stockpeople,</if>
             <if test="comments != null  and comments != ''">comments,</if>
+            <if test="storageouttype != null  and storageouttype != ''">storageouttype,</if>
             <if test="cTime != null ">c_time,</if>
             <if test="uTime != null ">u_time,</if>
             <if test="delStatus != null ">del_status,</if>
@@ -112,6 +114,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="warehouseadmin != null  and warehouseadmin != ''">#{warehouseadmin},</if>
             <if test="stockpeople != null  and stockpeople != ''">#{stockpeople},</if>
             <if test="comments != null  and comments != ''">#{comments},</if>
+            <if test="storageouttype != null  and storageouttype != ''">#{storageouttype},</if>
             <if test="cTime != null ">#{cTime},</if>
             <if test="uTime != null ">#{uTime},</if>
             <if test="delStatus != null ">#{delStatus},</if>

@@ -8,6 +8,7 @@ import com.ruoyi.common.core.page.TableDataInfo;
 import com.ruoyi.common.enums.BusinessType;
 import com.ruoyi.system.domain.Bom;
 import com.ruoyi.system.domain.Bomdetail;
+import com.ruoyi.system.domain.Storage;
 import com.ruoyi.system.service.IBomService;
 import com.ruoyi.system.service.IBomdetailService;
 import com.ruoyi.system.service.IProjectService;
@@ -54,6 +55,8 @@ public class BomController extends BaseController {
 
 
     private List<Map<String,Object>> mapList=new ArrayList<>();
+
+    private List<Map<String,Object>> mappriceList=new ArrayList<>();
 
     @RequiresPermissions("system:bom:view")
     @GetMapping()
@@ -231,6 +234,42 @@ public class BomController extends BaseController {
         return toAjax(bomService.scrap(ids));
     }
 
+
+
+    @PostMapping("/getprice")
+    @ResponseBody
+    public AjaxResult getprice(MultipartFile   file, HttpServletResponse response, HttpServletRequest request) throws Exception {
+        mappriceList.clear();
+        Workbook wb = POIUtils.getWorkBook(file);
+        Sheet sheet = wb.getSheetAt(0);
+        int excelRealRow = POIUtils.getExcelRealRow(sheet);
+        for (int i = 5; i <= excelRealRow; i++) {
+            Row row = sheet.getRow(i);
+            if (StringUtils.isBlank(POIUtils.getCellValue(row.getCell(0)))) {
+                break;
+            }
+            if (POIUtils.getCellValue(row.getCell(0)).equals("Approved")) {
+                break;
+            }
+            Map<String,Object> map=new HashMap<>();
+            String code = POIUtils.getCellValue(row.getCell(1)).replaceAll(" ", "");
+            map.put("code",code);
+            Storage storage = iStorageService.selectStorageListBymaterialcode(code);
+            if(storage!=null){
+                map.put("price",storage.getPrice());
+            }
+            map.put("link",POIUtils.getCellValue(row.getCell(3)));
+            map.put("comment",POIUtils.getCellValue(row.getCell(4)));
+            map.put("description",POIUtils.getCellValue(row.getCell(5)));
+            map.put("parttype",POIUtils.getCellValue(row.getCell(6)));
+            map.put("quantity",POIUtils.getCellValue(row.getCell(7)));
+            map.put("total",POIUtils.getCellValue(row.getCell(8)));
+            map.put("isbuy",POIUtils.getCellValue(row.getCell(9)));
+            mappriceList.add(map);
+        }
+        return AjaxResult.success("操作成功！");
+    }
+
     @PostMapping("/importData")
     @Log(title = "bom合并", businessType = BusinessType.IMPORT)
     @ResponseBody
@@ -326,6 +365,47 @@ public class BomController extends BaseController {
             ServletOutputStream outputStream = response.getOutputStream();
             response.setContentType("application/vnd.ms-excel");
             response.setHeader("content-Disposition", "attachment;filename="+System.currentTimeMillis()+"BOM_merge.xlsx");
+            workbook.write(outputStream);
+            outputStream.flush();
+            outputStream.close();
+            workbook.close();
+
+        }catch (IOException e){
+            e.printStackTrace();
+        }
+    }
+
+    @GetMapping("downloadprice")
+    public void downloadprice(HttpServletResponse response){
+        try {
+            String filetemp = Global.getProfile() + "/template/Integrate_BOM_Template.xlsx";
+            XSSFWorkbook workbook = new XSSFWorkbook(new FileInputStream(filetemp));
+            XSSFSheet sheetAt = workbook.getSheetAt(0);
+            CellStyle cellStyle = workbook.createCellStyle();
+            cellStyle.setAlignment(HorizontalAlignment.CENTER);
+            cellStyle.setVerticalAlignment(VerticalAlignment.CENTER);
+            cellStyle.setWrapText(true);
+            int index=4;
+            for (Map<String, Object> map : mappriceList) {
+                XSSFRow row = sheetAt.createRow(++index);
+                row.createCell(0).setCellValue(index-4);
+                row.createCell(1).setCellValue(map.get("code") != null ?map.get("code").toString() : "");
+                row.createCell(2).setCellValue(map.get("price") != null ? map.get("price").toString() : "");
+                row.createCell(3).setCellValue(map.get("link") != null ? map.get("link").toString() : "");
+                row.createCell(4).setCellValue(map.get("comment")!= null ? map.get("comment").toString() : "");
+                row.createCell(5).setCellValue(map.get("description") != null ? map.get("description").toString() : "");
+                row.createCell(6).setCellValue(map.get("parttype") != null ? map.get("parttype").toString() : "");
+                row.createCell(7).setCellValue(map.get("total") != null ? map.get("total").toString() : "");
+                row.createCell(8).setCellValue(map.get("isbuy") != null ? map.get("isbuy").toString() : "");
+
+                for (Cell cell : row) {
+                    cell.setCellStyle(cellStyle);
+                }
+            }
+            mappriceList.clear();
+            ServletOutputStream outputStream = response.getOutputStream();
+            response.setContentType("application/vnd.ms-excel");
+            response.setHeader("content-Disposition", "attachment;filename="+System.currentTimeMillis()+"BOM_exportTemplate.xlsx");
             workbook.write(outputStream);
             outputStream.flush();
             outputStream.close();

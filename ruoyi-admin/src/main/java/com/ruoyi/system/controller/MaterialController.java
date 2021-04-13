@@ -183,6 +183,42 @@ public class MaterialController extends BaseController
     }
 
 
+    /**
+     * 废弃物料
+     */
+    @RequiresPermissions("system:material:abandoned")
+    @Log(title = "物料列表", businessType = BusinessType.UPDATE)
+    @PostMapping( "/abandoned")
+    @ResponseBody
+    public AjaxResult abandoned(String ids)
+    {
+        try {
+            return materialService.abandoned(ids);
+        }catch (Exception e){
+            e.printStackTrace();
+            return  AjaxResult.error("操作失败!");
+        }
+
+    }
+
+    /**
+     * 恢复物料
+     */
+    @RequiresPermissions("system:material:recovery")
+    @Log(title = "物料列表", businessType = BusinessType.UPDATE)
+    @PostMapping( "/recovery")
+    @ResponseBody
+    public AjaxResult recovery(String ids)
+    {
+        try {
+            return materialService.recovery(ids);
+        }catch (Exception e){
+            e.printStackTrace();
+            return  AjaxResult.error("操作失败!");
+        }
+
+    }
+
 
     /**
      * 导出库存列表列表

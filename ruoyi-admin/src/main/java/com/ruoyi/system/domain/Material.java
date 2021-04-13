@@ -49,6 +49,9 @@ public class Material extends BaseEntity
 
     private String manufacture;
 
+    private Integer status;
+
+
     private List<MaterialChild> materialChildList;
 
 }

@@ -2,6 +2,9 @@
 <html lang="zh" xmlns:th="http://www.thymeleaf.org" xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
 <head>
     <th:block th:include="include :: header('退料单列表列表')" />
+    <th:block th:include="include :: layout-latest-css" />
+    <th:block th:include="include :: ztree-css" />
+    <th:block th:include="include :: bootstrap-editable-css" />
 </head>
 <body class="gray-bg">
      <div class="container-div">
@@ -69,6 +72,9 @@
         </div>
     </div>
     <th:block th:include="include :: footer" />
+     <th:block th:include="include :: layout-latest-js" />
+     <th:block th:include="include :: ztree-js" />
+     <th:block th:include="include :: bootstrap-table-editable-js" />
     <script th:inline="javascript">
         var prefix = ctx + "system/storagequitbill";
         var prefix1 = ctx + "system/storagequitdetail";
@@ -127,7 +133,7 @@
             $.table.init(options);
         });
 
-        function Info(id) {
+        function Info() {
             table.set();
             var row = $("#bootstrap-table").bootstrapTable('getSelections')[0];
 
@@ -144,9 +150,9 @@
             $.modal.openTab(storagequitbillid+"退库单详细信息",prefix1+"/"+id);
         }
 
-        function reddashed(id) {
+        function reddashed() {
             table.set();
-            var row = $("#" + table.options.id).bootstrapTreeTable('getSelections')[0];
+            var row = $("#bootstrap-table").bootstrapTable('getSelections')[0];
                 $.modal.confirm("确定红冲该出库单吗？", function() {
                     $.ajax({
                         url : prefix+'/reddashed',

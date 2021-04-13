@@ -30,6 +30,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="uTime"    column="u_time"    />
         <result property="delStatus"    column="del_status"    />
         <result property="storageStatus"    column="storage_status"    />
+        <result property="storageintype"    column="storageintype"    />
         <collection property="storageindetailList" ofType="com.ruoyi.system.domain.Storageindetail" column="id"
                     select="com.ruoyi.system.mapper.StorageindetailMapper.findByStorageinbillId">
 
@@ -37,7 +38,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </resultMap>
 
     <sql id="selectStorageinbillVo">
-        select id,money,checknumber,del_status,storage_status ,applyid,contractid,invoiceid,expressid,instoragecause,projectname,proposer, stockinid,supplier,outsourcewarehouseid,outsourcewarehouse,purchaseid,deliveryman,warehouseadmin,comments,status,c_time from st_inbill
+        select id,storageintype,money,checknumber,del_status,storage_status ,applyid,contractid,invoiceid,expressid,instoragecause,projectname,proposer, stockinid,supplier,outsourcewarehouseid,outsourcewarehouse,purchaseid,deliveryman,warehouseadmin,comments,status,c_time from st_inbill
 
     </sql>
 
@@ -99,6 +100,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="warehouseadmin != null  and warehouseadmin != ''">warehouseadmin,</if>
             <if test="comments != null  and comments != ''">comments,</if>
             <if test="status != null  and status != ''">status,</if>
+            <if test="storageintype != null  and storageintype != ''">storageintype,</if>
             <if test="cTime != null ">c_time,</if>
             <if test="uTime != null ">u_time,</if>
          </trim>
@@ -121,6 +123,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="warehouseadmin != null  and warehouseadmin != ''">#{warehouseadmin},</if>
             <if test="comments != null  and comments != ''">#{comments},</if>
             <if test="status != null  and status != ''">#{status},</if>
+            <if test="storageintype != null  and storageintype != ''">#{storageintype},</if>
             <if test="cTime != null ">#{cTime},</if>
             <if test="uTime != null ">#{uTime},</if>
          </trim>

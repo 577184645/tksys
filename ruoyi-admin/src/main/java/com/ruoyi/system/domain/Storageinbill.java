@@ -105,6 +105,9 @@ public class Storageinbill extends BaseEntity
 
     private Long outsourcewarehouseid;
 
+    private Integer storageintype;
+
+
 
 
     private List<Storageindetail> storageindetailList;

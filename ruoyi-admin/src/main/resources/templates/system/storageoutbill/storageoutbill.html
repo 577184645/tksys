@@ -113,6 +113,7 @@
         var removeFlag = [[${@permission.hasPermi('system:storageoutbill:remove')}]];
         var prefix = ctx + "system/storageoutbill";
         var prefix1 = ctx + "system/storageoutdetail";
+        var storageinouttype = [[${@dict.getType('storageinouttype')}]];
 
 
         $("#datetimepicker-startTime").datetimepicker({
@@ -166,6 +167,14 @@
                         field: 'outmoney',
                         title: '出库金额',
                         width:100
+                    },
+                    {
+                        field: 'storageouttype',
+                        title: '出库类型',
+                        width:120,
+                        formatter: function(value, row, index) {
+                            return $.table.selectDictLabel(storageinouttype, value);
+                        }
                     },
 
                 {

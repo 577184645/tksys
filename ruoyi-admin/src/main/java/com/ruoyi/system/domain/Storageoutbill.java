@@ -107,6 +107,8 @@ public class Storageoutbill extends BaseEntity
     /** 删除状态 */
     private Long delStatus;
 
+    private Integer   storageouttype;
+
 
     private List<Storageoutdetail> storageoutdetailList;
 

@@ -83,11 +83,6 @@
                     </div>
                 </div>
             </div>
-
-        </div>
-
-
-        <div class="row">
             <div class="col-sm-6">
                 <div class="form-group">
                     <label class="col-sm-3 control-label">发票单号
@@ -97,6 +92,11 @@
                     </div>
                 </div>
             </div>
+        </div>
+
+
+        <div class="row">
+
             <div class="col-sm-6">
                 <div class="form-group">
                     <label class="col-sm-3 control-label">
@@ -107,11 +107,6 @@
                     </div>
                 </div>
             </div>
-        </div>
-
-
-
-        <div class="row">
             <div class="col-sm-6">
                 <div class="form-group">
                     <label class="col-sm-3 control-label">快递单号
@@ -121,6 +116,12 @@
                     </div>
                 </div>
             </div>
+        </div>
+
+
+
+        <div class="row">
+
 
             <div class="col-sm-6">
                 <div class="form-group">
@@ -137,10 +138,6 @@
                     </div>
                 </div>
             </div>
-        </div>
-
-
-        <div class="row">
             <div class="col-sm-6">
                 <label class="col-sm-3 control-label">
                     申请人
@@ -155,6 +152,11 @@
                     </select>
                 </div>
             </div>
+        </div>
+
+
+        <div class="row">
+
             <div class="col-sm-6">
                 <div class="form-group">
                     <label class="col-sm-3 control-label">申请单号
@@ -164,10 +166,6 @@
                     </div>
                 </div>
             </div>
-        </div>
-
-
-        <div class="row">
             <div class="col-sm-6">
                 <label class="col-sm-3 control-label">采购单号：</label>
                 <div class="col-sm-8">
@@ -175,6 +173,11 @@
                 </div>
 
             </div>
+        </div>
+
+
+        <div class="row">
+
             <div class="col-sm-6">
                 <div class="form-group">
                     <label class="col-sm-3 control-label">
@@ -191,24 +194,25 @@
                     </div>
                 </div>
             </div>
+            <div class="col-sm-6">
+                <div class="form-group">
+                    <label class="col-sm-3 control-label">客户：</label>
+                    <div class="col-sm-8">
+                        <select  name="customer" id="customer" class="form-control">
+                            <option  th:each="supplier:${supplierList}"
+                                     th:value="${supplier.name}"
+                                     th:text="${supplier.name}"
+
+                            ></option>
+                        </select>
+                    </div>
+                </div>
+
+            </div>
         </div>
 
         <div class="row">
-        <div class="col-sm-6">
-            <div class="form-group">
-                <label class="col-sm-3 control-label">客户：</label>
-                <div class="col-sm-8">
-                    <select  name="customer" id="customer" class="form-control">
-                        <option  th:each="supplier:${supplierList}"
-                                 th:value="${supplier.name}"
-                                 th:text="${supplier.name}"
 
-                        ></option>
-                    </select>
-                </div>
-            </div>
-
-        </div>
         <div class="col-sm-6">
             <label class="col-sm-3 control-label">备注：</label>
             <div class="col-sm-8">
@@ -216,6 +220,20 @@
             </div>
 
         </div>
+            <div class="col-sm-6">
+                <div class="form-group">
+                    <label class="col-sm-3 control-label">出库类型
+                        ：</label>
+                    <div class="col-sm-8">
+                        <select name="storageouttype" required id="storageouttype" th:with="type=${@dict.getType('storageinouttype')}" class="form-control m-b">
+                            <option value="">所有</option>
+                            <option th:each="dict : ${type}" th:text="${dict.dictLabel}" th:value="${dict.dictValue}"></option>
+                        </select>
+                    </div>
+
+                </div>
+            </div>
+
         </div>
 
 
@@ -376,7 +394,8 @@
                                      "instoragecause": $("#instoragecause").val(),
                                      "projectname": $("#projectname").val(),
                                      "proposer": $("#proposer").val(),
-                                     "comments": $("#comments").val()
+                                     "comments": $("#comments").val(),
+                                    "storageouttype":$("#storageouttype").val()
                                 },
 
                                 success: function(result) {

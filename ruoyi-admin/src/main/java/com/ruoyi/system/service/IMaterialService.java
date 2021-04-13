@@ -69,4 +69,8 @@ public interface IMaterialService
      * @return 结果
      */
     public String importMaterial(List<Material> materialList);
+
+    AjaxResult abandoned(String ids);
+
+    AjaxResult recovery(String ids);
 }

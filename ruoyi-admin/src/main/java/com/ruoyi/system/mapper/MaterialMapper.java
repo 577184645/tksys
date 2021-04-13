@@ -1,6 +1,7 @@
 package com.ruoyi.system.mapper;
 
 import com.ruoyi.system.domain.Material;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
@@ -69,4 +70,5 @@ public interface MaterialMapper
     public int deleteMaterialById(Long id);
 
 
+   public   int updateStatus(@Param("status") Integer status,@Param("id") Long id);
 }

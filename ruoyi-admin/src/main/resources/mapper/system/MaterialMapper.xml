@@ -25,9 +25,12 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 
 
     <sql id="selectMaterialVo">
-        select m.id,m.materialcode,m.type_id,m.dept_id from mat_list  m LEFT JOIN mat_listchild m1
+        select m.status, m.id,m.materialcode,m.type_id,m.dept_id from mat_list  m LEFT JOIN mat_listchild m1
                                                                  on m.id=m1.material_id left JOIN mat_type m2 on  m2.dept_id=m.dept_id
  </sql>
+    <update id="updateStatus">
+        update mat_list set status=#{status} where id=#{id}
+    </update>
 
     <select id="selectMaterialList"  resultMap="MaterialResult">
         <include refid="selectMaterialVo" />

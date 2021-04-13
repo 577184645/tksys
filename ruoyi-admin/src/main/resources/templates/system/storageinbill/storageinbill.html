@@ -135,7 +135,7 @@
         var checkprintFlag = [[${@permission.hasPermi('system:storageinbill:checkprint')}]];
         var storageinbillStatusDatas = [[${@dict.getType('storageinbill_status')}]];
         var storageStutus = [[${@dict.getType('storageStatus')}]];
-
+        var storageinouttype = [[${@dict.getType('storageinouttype')}]];
 
         var prefix = ctx + "system/storageinbill";
         var prefix1 = ctx + "system/storageindetail";
@@ -193,6 +193,22 @@
                         field: 'money',
                         title: '入库金额',
                         width:120
+                    },
+                    {
+                        field: 'storageStatus',
+                        title: '入库状态',
+                        width:120,
+                        formatter: function(value, row, index) {
+                            return $.table.selectDictLabel(storageStutus, value);
+                        }
+                    },
+                    {
+                        field: 'storageintype',
+                        title: '入库类型',
+                        width:120,
+                        formatter: function(value, row, index) {
+                            return $.table.selectDictLabel(storageinouttype, value);
+                        }
                     },
                 {
                     field: 'deliveryman', 
@@ -252,14 +268,7 @@
                         title: '合同单号',
                         width:120
                     },
-                    {
-                        field: 'storageStatus',
-                        title: '入库状态',
-                        width:120,
-                        formatter: function(value, row, index) {
-                            return $.table.selectDictLabel(storageStutus, value);
-                        }
-                    },
+
                     {
                         field: 'status',
                         title: '申请状态',

@@ -108,6 +108,12 @@
 					<a class="btn btn-warning" onclick="exportData()" shiro:hasPermission="system:material:export">
 						<i class="fa fa-download"></i> 导出
 					</a>
+					<a class="btn btn-danger multiple disabled" onclick="Abandoned()" shiro:hasPermission="system:material:abandoned">
+					<i class="fa fa-remove"></i> 废弃
+				</a>
+					<a class="btn btn-primary multiple disabled" onclick="recovery()" shiro:hasPermission="system:material:recovery">
+						<i class="fa fa-edit"></i> 恢复
+					</a>
 		        </div>
 
 		        <div class="col-sm-12 select-table table-bordered">
@@ -154,6 +160,15 @@
                 pagination : true,
                 pageSize : 10,
                 pageNumber : 1,
+                rowStyle: function (row, index) {
+                    var style = "";
+                    if(row.status==2) {
+                        style = 'danger';
+                        return {classes: style}
+                    }else{
+                        return {classes: style}
+                    }
+                },
                 columns: [{
                     checkbox: true
                 },
@@ -274,9 +289,35 @@
 
 
 
+      function Abandoned() {
+          table.set();
+          var rows = $.common.isEmpty(table.options.uniqueId) ? $.table.selectFirstColumns() : $.table.selectColumns(table.options.uniqueId);
+          if (rows.length == 0) {
+              $.modal.alertWarning("请至少选择一条记录");
+              return;
+          }
+          $.modal.confirm("确认要废弃选中的" + rows.length + "条数据吗?", function() {
+              var url = prefix + "/abandoned";
+              var data = { "ids": rows.join() };
+              $.operate.submit(url, "post", "json", data);
+          });
+      }
+        function recovery() {
+            table.set();
+            var rows = $.common.isEmpty(table.options.uniqueId) ? $.table.selectFirstColumns() : $.table.selectColumns(table.options.uniqueId);
+            if (rows.length == 0) {
+                $.modal.alertWarning("请至少选择一条记录");
+                return;
+            }
+            $.modal.confirm("确认要恢复选中的" + rows.length + "条数据吗?", function() {
+                var url = prefix + "/recovery";
+                var data = { "ids": rows.join() };
+                $.operate.submit(url, "post", "json", data);
+            });
+        }
 
 
-		function queryDeptTree()
+        function queryDeptTree()
 		{
 			var url = ctx + "system/materialtype/treeData";
 			var options = {

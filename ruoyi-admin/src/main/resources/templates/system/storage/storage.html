@@ -80,7 +80,7 @@
 
                             <li>
                                 <label>库存为0：</label>
-                                <select name="status" id="status" th:with="type=${@dict.getType('storage_status')}">
+                                <select name="storageintype" id="storageintype" th:with="type=${@dict.getType('storage_status')}">
                                     <option th:each="dict : ${type}" th:text="${dict.dictLabel}" th:value="${dict.dictValue}"></option>
                                 </select>
                             </li>
