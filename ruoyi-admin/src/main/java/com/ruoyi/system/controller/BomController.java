@@ -248,9 +248,6 @@ public class BomController extends BaseController {
             if (StringUtils.isBlank(POIUtils.getCellValue(row.getCell(0)))) {
                 break;
             }
-            if (POIUtils.getCellValue(row.getCell(0)).equals("Approved")) {
-                break;
-            }
             Map<String,Object> map=new HashMap<>();
             String code = POIUtils.getCellValue(row.getCell(1)).replaceAll(" ", "");
             map.put("code",code);

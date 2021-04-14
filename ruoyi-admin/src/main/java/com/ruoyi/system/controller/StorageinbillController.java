@@ -60,8 +60,8 @@ public class StorageinbillController extends BaseController
 
     @PostMapping("/getstockinid")
     @ResponseBody
-    public Integer getstockinid(Storageinbill storageinbill){
-      return       storageinbillService.selectStorageinbillList(storageinbill).size()+1;
+    public int getstockinid(){
+      return      storageinbillService.getstockinid();
     }
 
     @Log(title = "入库单红冲", businessType = BusinessType.DELETE)

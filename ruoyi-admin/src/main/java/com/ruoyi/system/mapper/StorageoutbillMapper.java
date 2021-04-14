@@ -73,4 +73,6 @@ public interface StorageoutbillMapper
      */
     public int updatedelStatus(Long id);
 
+    Integer count();
+
 }

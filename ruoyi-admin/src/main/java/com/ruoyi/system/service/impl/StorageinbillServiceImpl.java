@@ -17,6 +17,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -151,6 +153,11 @@ public class StorageinbillServiceImpl implements IStorageinbillService
         }
         //修改入库单的状态
         return storageinbillMapper.updatedelStatus(id);
+    }
+
+    @Override
+    public int getstockinid() {
+        return storageinbillMapper.count()+1;
     }
 
 

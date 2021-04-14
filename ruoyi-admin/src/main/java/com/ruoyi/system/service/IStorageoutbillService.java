@@ -1,7 +1,8 @@
 package com.ruoyi.system.service;
 
-import java.util.List;
 import com.ruoyi.system.domain.Storageoutbill;
+
+import java.util.List;
 
 /**
  * 出库单列表Service接口
@@ -68,4 +69,6 @@ public interface IStorageoutbillService
      * @return 入库单列表
      */
     public int reddashed(Long id);
+
+    Integer getstorageoutid();
 }

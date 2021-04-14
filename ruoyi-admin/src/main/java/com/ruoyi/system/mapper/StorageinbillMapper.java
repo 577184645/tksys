@@ -21,6 +21,7 @@ public interface StorageinbillMapper
      */
     public Storageinbill selectStorageinbillById(Long id);
 
+    public int count();
 
     /**
      * 修改删除状态

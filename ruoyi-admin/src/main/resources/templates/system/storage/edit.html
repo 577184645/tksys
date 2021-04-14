@@ -35,9 +35,9 @@
                             <option  th:each="user:${userList}"
                                      th:value="${user.userName}"
                                      th:text="${user.userName}"
+                                     th:selected="${user.userName}==*{userName}"
                             ></option>
-                            <option  th:selected="*{userName=='陈忠'}">陈忠</option>
-                            <option  th:selected="*{userName=='赵建忠'}">赵建忠</option>
+
                         </select>
                     </div>
                 </div>
@@ -138,6 +138,7 @@
                     </div>
                 </div>
             </div>
+
             <div class="col-sm-6">
                 <label class="col-sm-3 control-label">
                     申请人
@@ -346,7 +347,7 @@
                 <script type="text/javascript">
                     var prefix = ctx + "system/storage"
                     var prefix1 = ctx + "system/materialChild"
-
+                    var prefix2 = ctx + "system/storageoutbill"
                     $("#form-storageinbill-add").validate({
                         focusCleanup: true
                     });
@@ -423,21 +424,7 @@
                         $("#parentId").val(treeNode.pId);
                         query();
                         $.table.search('form2', 'bootstrap-table2')
-                      /*  if(treeNode.name=="上海库"||treeNode.name=="天长库"){
-                            alert("不能选择上海库或天长库,如没有子库 请刷新!");
-                            return;
-                        }*/
 
-                       /* if(treeNode.children==null) {
-                            $("#deptId").val(treeNode.id);
-                            $("#deptId1").val(treeNode.id);
-                            $("#parentId").val(treeNode.pId);
-                            query();
-                            $.table.search('form2', 'bootstrap-table2')
-                        }else{
-                            alert("请选择子仓库");
-                            $("#deptId").val("");
-                        }*/
 
                     }
 
@@ -523,9 +510,7 @@
                             }
                         ] ,onEditableSave: function (field, row, oldValue,$el) {
 
-                         /*   row.money = (row.price * row.counts).toFixed(2);;
-                            $('#bootstrap-table1').bootstrapTable('updateRow', {index: row.randomId, row: row});
-*/
+
                         }
                     };
 
@@ -545,7 +530,7 @@
                         day="0"+day;
                     }
                     $.ajax({
-                        url : '../storageoutbill/getstorageoutid',
+                        url : prefix2+'/getstorageoutid',
                         dataType : 'json',
                         type : 'post',
                         success : function(result) {
@@ -640,41 +625,7 @@
 
 
 
-                /*    function insertRow() {
 
-                        var randomId = 100 + ~~(Math.random() * 100)
-                        var data = $("#" + table.options.id).bootstrapTable('getSelections');
-                        if (data == null || data.length == 0 || data.length > 1) {
-                            alert("请选中一行");
-                            return;
-                        }
-                        for (var i = 0; i < data.length; i++) {
-
-
-
-
-                            $("#bootstrap-table1").bootstrapTable('insertRow', {
-                                index: data.length+i, // 你想插入到哪，0表示第一行
-                                row: {
-                                    id: data[i].id,
-                                    name: data[i].name,
-                                    materialcode: data[i].materialcode,
-                                    partnumber: data[i].partnumber,
-                                    footprint: data[i].footprint,
-                                    manufacture: data[i].manufacture,
-                                    unit: data[i].unit,
-                                    comments:data[i].comments,
-                                    serialNumber:data[i].serialNumber,
-                                    supplier:data[i].supplier,
-                                    price:data[i].price.toFixed(4),
-                                    money: data[i].money,
-                                    counts: data[i].counts,
-                                    randomId:randomId,
-                                    stocks:data[i].stocks
-                                }
-                            })
-                        }
-                    }*/
                     /* 删除指定表格行 */
                     function removeRow(){
                         var ids = $.table.selectColumns("randomId");
@@ -753,6 +704,19 @@
                     $('#customer').editableSelect({
                         effects: 'slide' //可选参数default、fade
                     });
+                    $('#projectname').editableSelect({
+                        effects: 'slide' //可选参数default、fade
+                    });
+                    $('#proposer').editableSelect({
+                        effects: 'slide' //可选参数default、fade
+                    });
+                    $('#deliveryman').editableSelect({
+                        effects: 'slide' //可选参数default、fade
+                    });
+                    $('#stockpeople').editableSelect({
+                        effects: 'slide' //可选参数default、fade
+                    });
+
                 </script>
 
 

@@ -33,17 +33,22 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </sql>
 
     <select id="selectBomList" parameterType="Bom" resultMap="BomResult">
-        <include refid="selectBomVo"/>
+        select b.id, number,del_status, version, name, partnumber, b.description, publishstatus, project, producttype, b.price, designer, scrutineer, approver, timeofmaking, inspectiontime, approvaltime, remark, c_time, u_time from bom_list b
+        left JOIN bom_listdetail b1 on b.id=bomid
         <where>
             <if test="number != null  and number != ''"> and number = #{number}</if>
             <if test="version != null  and version != ''"> and version = #{version}</if>
             <if test="name != null  and name != ''"> and name like concat('%', #{name}, '%')</if>
             <if test="partnumber != null  and partnumber != ''"> and partnumber = #{partnumber}</if>
-            <if test="description != null  and description != ''"> and description = #{description}</if>
+            <if test="description != null  and description != ''"> and b.description = #{description}</if>
             <if test="project != null  and project != ''"> and project = #{project}</if>
             <if test="producttype != null  and producttype != ''"> and producttype = #{producttype}</if>
             <if test="delStatus != null "> and del_status = #{delStatus}</if>
+            <if test="code != null and code != '' "> and code like concat('%', #{code}, '%') </if>
+            <if test="parttype != null and parttype != '' "> and parttype like concat('%', #{parttype}, '%') </if>
+            <if test="footprint != null and footprint != '' "> and footprint like concat('%', #{footprint}, '%') </if>
         </where>
+        GROUP BY b.id
     </select>
 
     <select id="selectBomById" parameterType="Long" resultMap="BomResult">

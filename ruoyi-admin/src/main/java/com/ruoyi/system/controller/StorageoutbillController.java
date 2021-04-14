@@ -57,7 +57,7 @@ public class StorageoutbillController extends BaseController
     @PostMapping("/getstorageoutid")
     @ResponseBody
     public Integer getstorageoutid(Storageoutbill storageoutbill){
-        return       storageoutbillService.selectStorageoutbillList(storageoutbill).size()+1;
+        return       storageoutbillService.getstorageoutid();
     }
 
 

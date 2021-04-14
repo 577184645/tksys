@@ -96,14 +96,12 @@
                     ：</label>
                 <div class="col-sm-8">
                     <select  name="proposer" id="proposer" class="form-control m-b">
-                        <option value="">所有</option>
                         <option  th:each="user:${userList}"
                                  th:value="${user.userName}"
                                  th:text="${user.userName}"
 
                         ></option>
-                        <option  th:selected="*{userName=='陈忠'}">陈忠</option>
-                        <option  th:selected="*{userName=='赵建忠'}">陈荣</option>
+
                     </select>
                 </div>
             </div>
@@ -112,7 +110,6 @@
                     <label class="col-sm-3 control-label">送货人：</label>
                     <div class="col-sm-8">
                         <select  name="deliveryman" id="deliveryman" class="form-control m-b">
-                            <option value="">所有</option>
                             <option  th:each="user:${userList}"
                                      th:value="${user.userName}"
                                      th:text="${user.userName}"
@@ -148,7 +145,6 @@
                         ：</label>
                     <div class="col-sm-8">
                         <select  name="projectname" id="projectname" class="form-control m-b">
-                            <option value="">所有</option>
                             <option  th:each="project:${projectList}"
                                      th:value="${project.name}"
                                      th:text="${project.name}"
@@ -309,6 +305,7 @@
 <script type="text/javascript">
     var prefix = ctx + "system/material"
     var prefix1 = ctx + "system/materialChild"
+    var prefix2 = ctx + "system/storageinbill"
     $("#form-storageinbill-add").validate({
         focusCleanup: true
     });
@@ -409,7 +406,6 @@
         uniqueId: "randomId",
         id: "bootstrap-table1",
         toolbar: "toolbar1",
-        showFooter: true,
         modalName: "入库产品",
         exportUrl: ctx + "system/storageindetail" + "/export",
         height: 400,
@@ -639,7 +635,7 @@
         day="0"+day;
     }
     $.ajax({
-        url : '../storageinbill/getstockinid',
+        url : prefix2+'/getstockinid',
         dataType : 'json',
         type : 'post',
         success : function(result) {
@@ -709,6 +705,16 @@
         effects: 'slide' //可选参数default、fade
     });
 
+    $('#proposer').editableSelect({
+        effects: 'slide' //可选参数default、fade
+    });
+
+    $('#projectname').editableSelect({
+        effects: 'slide' //可选参数default、fade
+    });
+    $('#deliveryman').editableSelect({
+        effects: 'slide' //可选参数default、fade
+    });
 
 </script>
 </body>

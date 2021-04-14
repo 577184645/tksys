@@ -83,6 +83,9 @@ public class Bom extends BaseEntity
     @Excel(name = "状态")
     private Integer delStatus;
 
+
+
+
     /** 创建时间 */
     @Excel(name = "创建时间", width = 30, dateFormat = "yyyy-MM-dd")
     private Date cTime;
@@ -91,5 +94,10 @@ public class Bom extends BaseEntity
     @Excel(name = "修改时间", width = 30, dateFormat = "yyyy-MM-dd")
     private Date uTime;
 
+    private String parttype;
+
+    private String code;
+
+    private String footprint;
 
 }

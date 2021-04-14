@@ -79,5 +79,5 @@ public interface IStorageinbillService
     public int reddashed(Long id);
 
 
-
+    int getstockinid();
 }

@@ -135,4 +135,9 @@ public class StorageoutbillServiceImpl implements IStorageoutbillService
         return storageoutbillMapper.updatedelStatus(id);
     }
 
+    @Override
+    public Integer getstorageoutid() {
+        return storageoutbillMapper.count()+1;
+    }
+
 }
