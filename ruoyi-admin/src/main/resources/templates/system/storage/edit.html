@@ -355,19 +355,19 @@
                     function submitHandler() {
 
                         if($("#deptId").val()==""){
-                            alert("请选择子仓库");
+                            $.modal.alertWarning("请选择子仓库");
                             return;
                         }
                         if ($.validate.form()) {
 
                             var data = $("#bootstrap-table1" ).bootstrapTable('getData');
                             if(data==null||data.length==0){
-                                alert("请填写出库产品");
+                                $.modal.alertWarning("请填写出库产品");
                                 return;
                             }
                             for(var i=0;i<data.length;i++){
                                 if(data[i].counts<=0){
-                                    alert("出库数量必须大于0!")
+                                    $.modal.alertWarning("出库数量必须大于0!")
                                     return;
                                 }
                             }

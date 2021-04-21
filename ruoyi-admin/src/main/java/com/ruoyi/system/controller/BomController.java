@@ -58,6 +58,9 @@ public class BomController extends BaseController {
 
     private List<Map<String,Object>> mappriceList=new ArrayList<>();
 
+
+    private List<Map<String,Object>> contrastList=new ArrayList<>();
+
     @RequiresPermissions("system:bom:view")
     @GetMapping()
     public String bom() {
@@ -238,7 +241,7 @@ public class BomController extends BaseController {
 
     @PostMapping("/getprice")
     @ResponseBody
-    public AjaxResult getprice(MultipartFile   file, HttpServletResponse response, HttpServletRequest request) throws Exception {
+    public AjaxResult getprice(MultipartFile   file, HttpServletResponse response, HttpServletRequest request)  {
         mappriceList.clear();
         Workbook wb = POIUtils.getWorkBook(file);
         Sheet sheet = wb.getSheetAt(0);
@@ -270,7 +273,7 @@ public class BomController extends BaseController {
     @PostMapping("/importData")
     @Log(title = "bom合并", businessType = BusinessType.IMPORT)
     @ResponseBody
-    public AjaxResult merge(MultipartFile []  file, HttpServletResponse response, HttpServletRequest request) throws Exception {
+    public AjaxResult merge(MultipartFile []  file, HttpServletResponse response, HttpServletRequest request)  {
         mapList.clear();
         try {
 
@@ -331,6 +334,104 @@ public class BomController extends BaseController {
         return AjaxResult.success("操作成功！");
     }
 
+
+
+    @PostMapping("/contrast")
+    @Log(title = "bom对比", businessType = BusinessType.IMPORT)
+    @ResponseBody
+    public AjaxResult contrast(MultipartFile []  file, HttpServletResponse response, HttpServletRequest request)  {
+        contrastList.clear();
+         List<Map<String,Object>> mList=new ArrayList<>();
+
+        List<Map<String,Object>> sList=new ArrayList<>();
+
+
+        try {
+            for (MultipartFile multipartFile : file) {
+
+                Workbook wb = POIUtils.getWorkBook(multipartFile);
+                Sheet sheet = wb.getSheetAt(0);
+                int count= (int)sheet. getRow(2).getCell(7).getNumericCellValue();
+                if(count==1){
+                    int excelRealRow = POIUtils.getExcelRealRow(sheet);
+                    for (int i = 5; i <= excelRealRow; i++) {
+                        Row row = sheet.getRow(i);
+                        if (StringUtils.isBlank(POIUtils.getCellValue(row.getCell(0)))) {
+                            break;
+                        }
+                        Map<String,Object> map=new HashMap<>();
+                        String code = POIUtils.getCellValue(row.getCell(1)).replaceAll(" ", "");
+                        map.put("code",code);
+                        map.put("link",POIUtils.getCellValue(row.getCell(2)));
+                        map.put("comment",POIUtils.getCellValue(row.getCell(3)));
+                        map.put("footprint",POIUtils.getCellValue(row.getCell(4)));
+                        map.put("description",POIUtils.getCellValue(row.getCell(5)));
+                        map.put("parttype",POIUtils.getCellValue(row.getCell(6)));
+                        map.put("designator",POIUtils.getCellValue(row.getCell(7)));
+                        map.put("quantity",POIUtils.getCellValue(row.getCell(8)));
+                        map.put("price",POIUtils.getCellValue(row.getCell(9)));
+                        mList.add(map);
+
+                }
+
+                }else if(count==2){
+                    int excelRealRow = POIUtils.getExcelRealRow(sheet);
+                    for (int i = 5; i <= excelRealRow; i++) {
+                        Row row = sheet.getRow(i);
+                        if (StringUtils.isBlank(POIUtils.getCellValue(row.getCell(0)))) {
+                            break;
+                        }
+                        Map<String,Object> map=new HashMap<>();
+                        String code = POIUtils.getCellValue(row.getCell(1)).replaceAll(" ", "");
+                        map.put("code",code);
+                        map.put("link",POIUtils.getCellValue(row.getCell(2)));
+                        map.put("comment",POIUtils.getCellValue(row.getCell(3)));
+                        map.put("footprint",POIUtils.getCellValue(row.getCell(4)));
+                        map.put("description",POIUtils.getCellValue(row.getCell(5)));
+                        map.put("parttype",POIUtils.getCellValue(row.getCell(6)));
+                        map.put("designator",POIUtils.getCellValue(row.getCell(7)));
+                        map.put("quantity",POIUtils.getCellValue(row.getCell(8)));
+                        map.put("price",POIUtils.getCellValue(row.getCell(9)));
+                        sList.add(map);
+
+                }
+
+             }else{
+                    return AjaxResult.error("操作失败,找不到主从表！");
+                }
+            }
+
+            if(sList.size()>mList.size()){
+               return AjaxResult.error("操作失败,从表物料数量比主表多！");
+            }
+            for (int i = 0; i < mList.size(); i++) {
+                boolean flag=true;
+                for (int i1 = 0; i1 < sList.size(); i1++) {
+
+                    if(mList.get(i).get("code").equals(sList.get(i1).get("code"))){
+                      int count=  Integer.parseInt(mList.get(i).get("quantity").toString())-Integer.parseInt(sList.get(i1).get("quantity").toString());
+                        mList.get(i).put("quantity",count);
+                      contrastList.add(mList.get(i));
+                        flag=false;
+                        break;
+                    }
+
+
+                } if(flag){
+                    contrastList.add(mList.get(i));
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            return AjaxResult.error("操作失败,系统错误！");
+        }
+
+
+        return AjaxResult.success("操作成功！");
+    }
+
+
+
     @GetMapping("download")
     public void download(HttpServletResponse response){
         try {
@@ -341,7 +442,7 @@ public class BomController extends BaseController {
             cellStyle.setAlignment(HorizontalAlignment.CENTER);
             cellStyle.setVerticalAlignment(VerticalAlignment.CENTER);
             cellStyle.setWrapText(true);
-            int index=0;
+            int index=4;
             for (Map<String, Object> map : mapList) {
                 XSSFRow row = sheetAt.createRow(++index);
                 row.createCell(0).setCellValue(index);
@@ -358,7 +459,47 @@ public class BomController extends BaseController {
                     cell.setCellStyle(cellStyle);
                 }
             }
-            mapList.clear();
+            ServletOutputStream outputStream = response.getOutputStream();
+            response.setContentType("application/vnd.ms-excel");
+            response.setHeader("content-Disposition", "attachment;filename="+System.currentTimeMillis()+"BOM_merge.xlsx");
+            workbook.write(outputStream);
+            outputStream.flush();
+            outputStream.close();
+            workbook.close();
+
+        }catch (IOException e){
+            e.printStackTrace();
+        }
+    }
+
+
+    @GetMapping("downloadcontrast")
+    public void downloadcontrast(HttpServletResponse response){
+        try {
+            String filetemp = Global.getProfile() + "/template/BOM_merge.xlsx";
+            XSSFWorkbook workbook = new XSSFWorkbook(new FileInputStream(filetemp));
+            XSSFSheet sheetAt = workbook.getSheetAt(0);
+            CellStyle cellStyle = workbook.createCellStyle();
+            cellStyle.setAlignment(HorizontalAlignment.CENTER);
+            cellStyle.setVerticalAlignment(VerticalAlignment.CENTER);
+            cellStyle.setWrapText(true);
+            int index=4;
+            for (Map<String, Object> map : contrastList) {
+                XSSFRow row = sheetAt.createRow(++index);
+                row.createCell(0).setCellValue(index);
+                row.createCell(1).setCellValue(map.get("code") != null ?map.get("code").toString() : "");
+                row.createCell(2).setCellValue(map.get("link") != null ? map.get("link").toString() : "");
+                row.createCell(3).setCellValue(map.get("comment")!= null ? map.get("comment").toString() : "");
+                row.createCell(4).setCellValue(map.get("footprint")!= null ? map.get("footprint").toString() : "");
+                row.createCell(5).setCellValue(map.get("description") != null ? map.get("description").toString() : "");
+                row.createCell(6).setCellValue(map.get("parttype") != null ? map.get("parttype").toString() : "");
+                row.createCell(7).setCellValue(map.get("designator") != null ? map.get("designator").toString() : "");
+                row.createCell(8).setCellValue(map.get("quantity") != null ? map.get("quantity").toString() : "");
+                row.createCell(9).setCellValue(map.get("price") != null ? map.get("price").toString() : "");
+                for (Cell cell : row) {
+                    cell.setCellStyle(cellStyle);
+                }
+            }
             ServletOutputStream outputStream = response.getOutputStream();
             response.setContentType("application/vnd.ms-excel");
             response.setHeader("content-Disposition", "attachment;filename="+System.currentTimeMillis()+"BOM_merge.xlsx");
@@ -399,7 +540,6 @@ public class BomController extends BaseController {
                     cell.setCellStyle(cellStyle);
                 }
             }
-            mappriceList.clear();
             ServletOutputStream outputStream = response.getOutputStream();
             response.setContentType("application/vnd.ms-excel");
             response.setHeader("content-Disposition", "attachment;filename="+System.currentTimeMillis()+"BOM_exportTemplate.xlsx");

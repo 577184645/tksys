@@ -12,6 +12,7 @@ import com.ruoyi.system.service.IProjectService;
 import com.ruoyi.system.service.IStorageService;
 import com.ruoyi.system.service.ISupplierService;
 import com.ruoyi.system.service.ISysUserService;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.ss.util.CellRangeAddress;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
@@ -26,7 +27,9 @@ import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.IOException;
 import java.util.List;
+import java.util.Map;
 
 /**
  * 库存列表Controller
@@ -122,13 +125,14 @@ public class StorageController extends BaseController
                 Row row1 = sheet.createRow(index);
                 row1.createCell(0).setCellValue(list.get(i1).getMaterialcode());
                 row1.createCell(6).setCellValue(list.get(i1).getStocks());
-                row1.createCell(10).setCellValue(list.get(i1).getUTime());
-                row1.getCell(10).setCellStyle(cellStyle);
-                row1.createCell(8).setCellValue(list.get(i1).getOTime());
-                row1.getCell(8).setCellStyle(cellStyle);
-                row1.createCell(9).setCellValue(list.get(i1).getQTime());
+                row1.createCell(11).setCellValue(list.get(i1).getUTime());
+                row1.getCell(11).setCellStyle(cellStyle);
+                row1.createCell(9).setCellValue(list.get(i1).getOTime());
                 row1.getCell(9).setCellStyle(cellStyle);
-                row1.createCell(7).setCellValue(list.get(i1).getPrice()!=null?list.get(i1).getPrice():0);
+                row1.createCell(10).setCellValue(list.get(i1).getQTime());
+                row1.getCell(10).setCellStyle(cellStyle);
+                row1.createCell(7).setCellValue(list.get(i1).getSecuritystock()!=null?list.get(i1).getSecuritystock():0);
+                row1.createCell(8).setCellValue(list.get(i1).getPrice()!=null?list.get(i1).getPrice():0);
                 List<MaterialChild> materialChildList = list.get(i1).getMaterialChildList();
                 if(materialChildList.size()==1){
                     row1.createCell(1).setCellValue(materialChildList.get(0).getName());
@@ -137,12 +141,12 @@ public class StorageController extends BaseController
                     row1.createCell(4).setCellValue(materialChildList.get(0).getFootprint());
                     row1.createCell(5).setCellValue(materialChildList.get(0).getDescription());
                     for (int i = 0; i < row1.getLastCellNum(); i++) {
-                        if(i<8){
+                        if(i<9){
                             row1.getCell(i).setCellStyle(cellStyle2);
                         }
 
                     }
-                    for (int i = 8; i < row1.getLastCellNum(); i++) {
+                    for (int i = 9; i < row1.getLastCellNum(); i++) {
                         row1.getCell(i).setCellStyle(cellStyle);
                     }
 
@@ -213,6 +217,54 @@ public class StorageController extends BaseController
 
 
     }
+    @RequiresPermissions("system:storage:exporttz")
+    @Log(title = "库存列表", businessType = BusinessType.EXPORT)
+    @GetMapping("/exporttz")
+    public void exporttz(String begindate,String enddate, HttpServletResponse response) {
+        try {
+            List<Map<String, Object>> mapList = storageService.fillExcelStorage(begindate, enddate);
+            String file = Global.getProfile() + "/template/taizhang.xls";
+            Workbook workbook = new HSSFWorkbook(new FileInputStream(new File(file)));
+            CellStyle cellStyle2 = workbook.createCellStyle();
+            cellStyle2.setAlignment(HorizontalAlignment.CENTER);
+            cellStyle2.setVerticalAlignment(VerticalAlignment.CENTER);
+            cellStyle2.setWrapText(true);
+            Sheet sheetAt = workbook.getSheetAt(0);
+            int index = 2;
+            for (Map<String, Object> map : mapList) {
+                Row row = sheetAt.createRow(index++);
+                row.createCell(0).setCellValue(map.get("materialcode") != null ? map.get("materialcode").toString() : "");
+                row.createCell(1).setCellValue(map.get("name") != null ? map.get("name").toString() : "");
+                row.createCell(2).setCellValue(map.get("partnumber") != null ? map.get("partnumber").toString() : "");
+                row.createCell(3).setCellValue(map.get("supplier") != null ? map.get("supplier").toString() : "");
+                row.createCell(4).setCellValue(map.get("unit") != null ? map.get("unit").toString() : "");
+                row.createCell(7).setCellValue(map.get("incount") != null ? Integer.parseInt(map.get("incount").toString()) : 0);
+                row.createCell(8).setCellValue(map.get("inmoney") != null ? Double.parseDouble(map.get("inmoney").toString()) : 0);
+                row.createCell(9).setCellValue(map.get("outcount") != null ? Integer.parseInt(map.get("outcount").toString()) : 0);
+                row.createCell(10).setCellValue(map.get("outmoney") != null ? Double.parseDouble(map.get("outmoney").toString()) : 0);
+                row.createCell(11).setCellValue(map.get("stocks") != null ? Integer.parseInt(map.get("stocks").toString()) : 0);
+                row.createCell(12).setCellValue(map.get("price") != null ? Double.parseDouble(map.get("price").toString()) : 0);
+                row.createCell(13).setCellValue(map.get("money") != null ? Double.parseDouble(map.get("money").toString()) : 0);
+                row.createCell(5).setCellValue(row.getCell(11).getNumericCellValue() - row.getCell(7).getNumericCellValue() + row.getCell(9).getNumericCellValue());
+                row.createCell(6).setCellValue(row.getCell(12).getNumericCellValue() * row.getCell(5).getNumericCellValue());
+                for (Cell cell : row) {
+                    cell.setCellStyle(cellStyle2);
+                }
+            }
+            String filename=begindate+"_"+enddate+"_台账.xls";
+            ServletOutputStream outputStream=response.getOutputStream();
+            response.setContentType("application/vnd.ms-excel");
+            response.setHeader("content-Disposition", "attachment;filename="+new String(filename.getBytes("utf-8"),"iso-8859-1"));
+            workbook.write(outputStream);
+            outputStream.flush();
+            outputStream.close();
+            workbook.close();
+        }catch (IOException e){
+            e.printStackTrace();
+        }
+
+
+    }
 
     /**
      * 新增库存列表
@@ -241,6 +293,21 @@ public class StorageController extends BaseController
             storageService.insertStorage(Storageinbill,StorageinbillList);
             return    toAjax(true);
     }
+
+
+    @GetMapping("/setting/{id}")
+    public String setting(@PathVariable("id") Long id, ModelMap mmap)
+    {
+        Storage storage = storageService.selectStorageById(id);
+        mmap.put("storage", storage);
+        return prefix + "/setting";
+    }
+    @PostMapping("/setting")
+    @ResponseBody
+    public AjaxResult edit(Storage storage)
+    {
+        return toAjax(storageService.settingstock(storage));
+}
 
     /**
      * 修改库存列表

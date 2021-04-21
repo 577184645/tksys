@@ -191,7 +191,7 @@
                     <label class="col-sm-3 control-label">入库类型
                         ：</label>
                     <div class="col-sm-8">
-                        <select name="storageintype" required id="storageintype" th:with="type=${@dict.getType('storageinouttype')}" class="form-control m-b">
+                        <select name="storageintype" required  id="storageintype" th:with="type=${@dict.getType('storageinouttype')}" class="form-control m-b">
                             <option value="">所有</option>
                             <option th:each="dict : ${type}" th:text="${dict.dictLabel}" th:value="${dict.dictValue}"></option>
                         </select>
@@ -209,7 +209,20 @@
                 </div>
 
             </div>
+            <div class="col-sm-6">
+                <div class="form-group">
+                    <label class="col-sm-3 control-label">是否冲账
+                        ：</label>
+                    <div class="col-sm-8">
+                        <select name="cztype"  id="cztype" th:with="type=${@dict.getType('iscztype')}" class="form-control m-b">
+                            <option value=""></option>
+                            <option th:each="dict : ${type}" th:text="${dict.dictLabel}" th:value="${dict.dictValue}"></option>
+                        </select>
+                    </div>
+            </div>
 
+
+        </div>
 
             <div class="col-sm-6">
                 <label class="col-sm-3 control-label">外协库：</label>
@@ -222,8 +235,7 @@
                 </div>
             </div>
         </div>
-
-
+        </div>
     </form>
 
 </div>
@@ -272,6 +284,7 @@
                                 <label>描述：</label>
                                 <input type="text" name="description"/>
                             </li>
+
                             <li>
                                 <a class="btn btn-primary btn-rounded btn-sm" onclick="$.table.search('form2', 'bootstrap-table2')"><i class="fa fa-search"></i>&nbsp;搜索</a>
                                 <a class="btn btn-warning btn-rounded btn-sm" onclick="$.form.reset('form2', 'bootstrap-table2')"><i class="fa fa-refresh"></i>&nbsp;重置</a>
@@ -342,6 +355,7 @@
                     },
                     data: {
                         "StorageinbillList": JSON.stringify(data),
+                        "cztype":$("#cztype").val(),
                         "checknumber":$("#checknumber").val(),
                         "stockinid": $("#stockinid").val(),
                         "outsourcewarehouseid": $("#deptId").val(),
@@ -407,6 +421,7 @@
         id: "bootstrap-table1",
         toolbar: "toolbar1",
         modalName: "入库产品",
+        showFooter: true,
         exportUrl: ctx + "system/storageindetail" + "/export",
         height: 400,
         detailView: true,
@@ -530,7 +545,7 @@
         ] ,onEditableSave: function (field, row, oldValue,$el) {
 
             if(row.counts!=0){
-                row.price = (row.money / row.counts).toFixed(4);
+                row.price = Math.abs((row.money / row.counts).toFixed(4));
             }
 
             if (row.rate != "") {

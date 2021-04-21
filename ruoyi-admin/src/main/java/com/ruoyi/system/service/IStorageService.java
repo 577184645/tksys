@@ -8,6 +8,7 @@ import com.ruoyi.system.domain.Storagequitbill;
 
 import javax.servlet.http.HttpServletResponse;
 import java.util.List;
+import java.util.Map;
 
 /**
  * 库存列表Service接口
@@ -69,8 +70,8 @@ public interface IStorageService
 
 
 
-    public void fillExcelStorage(String date)
-            throws Exception;
+    public List<Map<String, Object>> fillExcelStorage(String begindate,String enddate);
+
 
     /**
      * 删除项目列表信息
@@ -79,4 +80,7 @@ public interface IStorageService
      * @return 结果
      */
     public AjaxResult deleteProjectById(Long id);
+
+
+    int settingstock(Storage storage);
 }

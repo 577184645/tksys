@@ -57,7 +57,7 @@ public  class StorageServiceImpl implements IStorageService {
     private StoragequitdetailMapper storagequitdetailMapper;
     @Autowired
     private WarehouseRecordMapper warehouseRecordMapper;
-    @Autowired
+  /*  @Autowired
     private JavaMailSender javaMailSender;
 
 
@@ -88,7 +88,7 @@ public  class StorageServiceImpl implements IStorageService {
         }
 
 
-    }
+    }*/
 
 
 
@@ -306,40 +306,9 @@ public  class StorageServiceImpl implements IStorageService {
 
     }
 
-    public  void fillExcelStorage(String date) throws  Exception {
-        List<Map<String, Object>> mapList = storageMapper.selectStorageByDate(date);
-        String file = Global.getProfile()+"/template/taizhang.xls";
-        Workbook workbook=new HSSFWorkbook(new FileInputStream(new File(file)));
-        CellStyle cellStyle2=workbook.createCellStyle();
-        cellStyle2.setAlignment(HorizontalAlignment.CENTER);
-        cellStyle2.setVerticalAlignment(VerticalAlignment.CENTER);
-        cellStyle2.setWrapText(true);
-        Sheet sheetAt = workbook.getSheetAt(0);
-        int index=2;
-        for (Map<String, Object> map : mapList) {
-            Row row = sheetAt.createRow(index++);
-            row.createCell(0).setCellValue(map.get("materialcode")!=null?map.get("materialcode").toString():"");
-            row.createCell(1).setCellValue(map.get("name")!=null?map.get("name").toString():"");
-            row.createCell(2).setCellValue(map.get("partnumber")!=null?map.get("partnumber").toString():"");
-            row.createCell(3).setCellValue(map.get("supplier")!=null?map.get("supplier").toString():"");
-            row.createCell(4).setCellValue(map.get("unit")!=null?map.get("unit").toString():"");
-            row.createCell(7).setCellValue(map.get("incount")!=null?Integer.parseInt(map.get("incount").toString()):0);
-            row.createCell(8).setCellValue(map.get("inmoney")!=null?Double.parseDouble(map.get("inmoney").toString()):0);
-            row.createCell(9).setCellValue(map.get("outcount")!=null?Integer.parseInt(map.get("outcount").toString()):0);
-            row.createCell(10).setCellValue(map.get("outmoney")!=null?Double.parseDouble(map.get("outmoney").toString()):0);
-            row.createCell(11).setCellValue(map.get("stocks")!=null?Integer.parseInt(map.get("stocks").toString()):0);
-            row.createCell(12).setCellValue(map.get("price")!=null?Double.parseDouble(map.get("price").toString()):0);
-            row.createCell(13).setCellValue(map.get("money")!=null?Double.parseDouble(map.get("money").toString()):0);
-            row.createCell(5).setCellValue(row.getCell(11).getNumericCellValue()-row.getCell(7).getNumericCellValue()+row.getCell(9).getNumericCellValue());
-            row.createCell(6).setCellValue(row.getCell(12).getNumericCellValue()*row.getCell(5).getNumericCellValue());
-            for (Cell cell : row) {
-                cell.setCellStyle(cellStyle2);
-            }
-        }
-        FileOutputStream fileOut=new FileOutputStream("C:\\ruoyi\\taizhang\\"+date+"仓库出入库台账.xls");
-        workbook.write(fileOut);
-        fileOut.close();
-        SimpleMailMessage("C:\\ruoyi\\taizhang\\"+date+"仓库出入库台账.xls");
+    public  List<Map<String, Object>> fillExcelStorage(String begindate,String enddate) {
+
+        return    storageMapper.selectStorageByDate(begindate,enddate);
     }
 
     @Override
@@ -350,6 +319,11 @@ public  class StorageServiceImpl implements IStorageService {
         }
          storageMapper.deleteStorageById(id);
        return AjaxResult.success("操作成功!");
+    }
+
+    @Override
+    public int settingstock(Storage storage) {
+        return storageMapper.settingStock(storage);
     }
 
 }

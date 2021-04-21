@@ -93,6 +93,14 @@
                                 </select>
 
                             </li>
+                            <li>
+                                <label>是否冲账：</label>
+                                <select name="cztype" th:with="type=${@dict.getType('iscztype')}">
+                                    <option value=""></option>
+                                    <option th:each="dict : ${type}" th:text="${dict.dictLabel}" th:value="${dict.dictValue}"></option>
+                                </select>
+
+                            </li>
                             <li class="select-time">
                                 <label>入库时间： </label>
                                 <input type="text" class="time-input" id="startTime" placeholder="开始时间" name="params[beginTime]"/>

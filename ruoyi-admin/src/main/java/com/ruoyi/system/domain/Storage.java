@@ -47,6 +47,9 @@ public class Storage extends BaseEntity
     private Integer stocks;
 
 
+    private Integer  securitystock;
+
+
     /** 总价 */
     private Double money;
 

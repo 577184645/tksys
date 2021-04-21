@@ -31,6 +31,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="delStatus"    column="del_status"    />
         <result property="storageStatus"    column="storage_status"    />
         <result property="storageintype"    column="storageintype"    />
+        <result property="cztype"    column="cztype"    />
         <collection property="storageindetailList" ofType="com.ruoyi.system.domain.Storageindetail" column="id"
                     select="com.ruoyi.system.mapper.StorageindetailMapper.findByStorageinbillId">
 
@@ -38,7 +39,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </resultMap>
 
     <sql id="selectStorageinbillVo">
-        select id,storageintype,money,checknumber,del_status,storage_status ,applyid,contractid,invoiceid,expressid,instoragecause,projectname,proposer, stockinid,supplier,outsourcewarehouseid,outsourcewarehouse,purchaseid,deliveryman,warehouseadmin,comments,status,c_time from st_inbill
+        select id,cztype,storageintype,money,checknumber,del_status,storage_status ,applyid,contractid,invoiceid,expressid,instoragecause,projectname,proposer, stockinid,supplier,outsourcewarehouseid,outsourcewarehouse,purchaseid,deliveryman,warehouseadmin,comments,status,c_time from st_inbill
 
     </sql>
 
@@ -50,6 +51,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="checknumber != null  and checknumber != ''"> and checknumber like concat('%', #{checknumber}, '%')</if>
             <if test="applyid != null  and applyid != ''"> and applyid like concat('%', #{applyid}, '%')</if>
             <if test="status != null  and status != ''"> and status=#{status}</if>
+            <if test="cztype != null  and cztype != ''"> and cztype=#{cztype}</if>
             <if test="delStatus == 1 "> and del_status =1</if>
             <if test="delStatus == 2 "> and del_status = 2</if>
             <if test="outsourcewarehouse != null  and outsourcewarehouse != ''"> and outsourcewarehouse like concat('%', #{outsourcewarehouse}, '%')</if>
@@ -86,6 +88,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         insert into st_inbill
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="storageStatus != null  and storageStatus != ''">storage_status,</if>
+            <if test="cztype != null  and cztype != ''">cztype,</if>
             <if test="stockinid != null  and stockinid != ''">stockinid,</if>
             <if test="applyid != null  and applyid != ''">applyid,</if>
             <if test="checknumber != null  and checknumber != ''">checknumber,</if>
@@ -109,6 +112,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
          </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="storageStatus != null  and storageStatus != ''">#{storageStatus},</if>
+            <if test="cztype != null  and cztype != ''">#{cztype},</if>
             <if test="stockinid != null  and stockinid != ''">#{stockinid},</if>
             <if test="applyid != null  and applyid != ''">#{applyid},</if>
             <if test="checknumber != null  and checknumber != ''">#{checknumber},</if>

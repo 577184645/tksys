@@ -1,6 +1,7 @@
 package com.ruoyi.system.mapper;
 
 import com.ruoyi.system.domain.Storage;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 import java.util.Map;
@@ -51,7 +52,7 @@ public interface StorageMapper
      * @return
      */
 
-    public List<Map<String,Object>>  selectStorageByDate(String date);
+    public List<Map<String,Object>>  selectStorageByDate(@Param("begindate") String begindate,@Param("enddate") String enddate);
 
 
 
@@ -101,4 +102,5 @@ public interface StorageMapper
     public int deleteStorageById(Long id);
 
 
+    int settingStock(Storage storage);
 }

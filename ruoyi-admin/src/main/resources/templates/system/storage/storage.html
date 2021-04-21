@@ -80,11 +80,28 @@
 
                             <li>
                                 <label>库存为0：</label>
-                                <select name="storageintype" id="storageintype" th:with="type=${@dict.getType('storage_status')}">
+                                <select name="status" id="status" th:with="type=${@dict.getType('storage_status')}">
+                                   <option></option>
                                     <option th:each="dict : ${type}" th:text="${dict.dictLabel}" th:value="${dict.dictValue}"></option>
                                 </select>
                             </li>
-
+                            <li>
+                                <label>库存数量小于：</label>
+                                <input type="number" id="stocks" name="stocks"/>
+                            </li>
+                            <li>
+                                <label>是否安全库存：</label>
+                                <select name="securitystock" id="securitystock" th:with="type=${@dict.getType('issecurityst')}">
+                                   <option value=""></option>
+                                    <option th:each="dict : ${type}" th:text="${dict.dictLabel}" th:value="${dict.dictValue}"></option>
+                                </select>
+                            </li>
+                            <li class="select-time">
+                                <label>台账时间设置： </label>
+                                <input type="text" class="time-input" id="startTime" placeholder="开始时间" name="params[beginTime]"/>
+                                <span>-</span>
+                                <input type="text" class="time-input" id="endTime" placeholder="结束时间" name="params[endTime]"/>
+                            </li>
 
                             <li>
                                 <a class="btn btn-primary btn-rounded btn-sm" onclick="$.table.search()"><i class="fa fa-search"></i>&nbsp;搜索</a>
@@ -121,6 +138,10 @@
               <a class="btn btn-warning" onclick="exportData()" shiro:hasPermission="system:storage:export">
                   <i class="fa fa-download"></i> 导出
               </a>
+
+                <a class="btn btn-warning" onclick="exporttz()" shiro:hasPermission="system:storage:exporttz">
+                    <i class="fa fa-download"></i> 导出(台账)
+                </a>
             </div>
 
             <div class="col-sm-12 select-table table-striped">
@@ -136,6 +157,7 @@
 <script type="text/javascript" th:src="@{/js/bootstrap-table.min.js}"></script>
 <script th:inline="javascript">
     var removeFlag = [[${@permission.hasPermi('system:storage:remove')}]];
+    var settingFlag = [[${@permission.hasPermi('system:storage:setting')}]];
     var prefix = ctx + "system/storage";
     var prefix1 = ctx + "system/materialChild";
 
@@ -164,6 +186,13 @@
       }
 
     })
+    
+    
+    function setting(id) {
+        table.set();
+        $.modal.open("设置安全库存",prefix+"/setting/"+id);
+
+    }
 
 
     function exportData() {
@@ -176,9 +205,23 @@
         var   footprint=$("#footprint").val();
         var   description=$("#description").val();
         var   status=$("#status").val();
-        window.location.href=prefix+"/export?deptId="+deptId+"&parentId="+parentId+"&materialcode="+materialcode+"&name="+name+"&partnumber="+partnumber+"&manufacture="+manufacture+"&footprint="+footprint+"&description="+description+"&status="+status;
+        var   stocks=$("#stocks").val();
+        var   securitystock=$("#securitystock").val();
+        window.location.href=prefix+"/export?deptId="+deptId+"&parentId="+parentId+"&materialcode="+materialcode+"&name="+name+"&partnumber="+partnumber+"&manufacture="+manufacture+"&footprint="+footprint+"&description="+description+"&status="+status+"&stocks="+stocks+"&securitystock="+securitystock;
     };
-
+    function exporttz() {
+        var   startTime=$("#startTime").val();
+        var   endTime=$("#endTime").val();
+        if(startTime==""){
+            $.modal.alertWarning("请输入起始时间！");
+            return;
+        }
+        if(endTime==""){
+            $.modal.alertWarning("请输入结束时间！");
+            return;
+        }
+        window.location.href=prefix+"/exporttz?begindate="+startTime+"&enddate="+endTime;
+    }
 
 
 
@@ -199,7 +242,14 @@
             onExpandRow : function(index, row, $detail) {
                 initChildTable(index, row, $detail);
             },
-
+            rowStyle: function (row, index) {
+                var style = "";
+                if(row.stocks<row.securitystock){
+                    style = 'warning';
+                    return {classes: style}
+                }
+                return {classes: style}
+            },
             detailView: true,
             columns: [
                 {
@@ -225,7 +275,10 @@
                         css:{"color":"#ed5565"}
                     }
                 },
-
+                {
+                    field: 'securitystock',
+                    title: '安全库存'
+                },
 
                  {
                     field: 'price',
@@ -254,6 +307,7 @@
                     align: 'center',
                     formatter: function(value, row, index) {
                         var actions = [];
+                        actions.push('<a class="btn btn-success btn-xs ' + settingFlag + '" href="javascript:void(0)" onclick="setting(\'' + row.id + '\')"><i class="fa fa-edit"></i>设置安全库存</a> ');
                         actions.push('<a class="btn btn-danger btn-xs ' + removeFlag + '" href="javascript:void(0)" onclick="$.operate.remove(\'' + row.id + '\')"><i class="fa fa-remove"></i>删除</a>');
                         return actions.join('');
                     }

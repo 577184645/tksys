@@ -98,6 +98,8 @@ public class Bom extends BaseEntity
 
     private String code;
 
+    private String mdescription;
+
     private String footprint;
 
 }

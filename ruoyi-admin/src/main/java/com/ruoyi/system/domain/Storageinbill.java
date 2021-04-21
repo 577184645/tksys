@@ -96,6 +96,9 @@ public class Storageinbill extends BaseEntity
     /** 删除状态 */
     private Long status;
 
+
+    private Integer  cztype;
+
     /** 创建时间 */
     private Date cTime;
 

@@ -8,7 +8,7 @@ spring:
             master:
                 url: jdbc:mysql://localhost:3306/tksys?useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&useSSL=true&serverTimezone=GMT%2B8
                 username: root
-                password: tksysadmin
+                password: root
             # 阿里云服务器密码 tksysadmin
             # 从库数据源
             slave:

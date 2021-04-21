@@ -40,6 +40,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="version != null  and version != ''"> and version = #{version}</if>
             <if test="name != null  and name != ''"> and name like concat('%', #{name}, '%')</if>
             <if test="partnumber != null  and partnumber != ''"> and partnumber = #{partnumber}</if>
+            <if test="mdescription != null  and mdescription != ''"> and b1.description = #{mdescription}</if>
             <if test="description != null  and description != ''"> and b.description = #{description}</if>
             <if test="project != null  and project != ''"> and project = #{project}</if>
             <if test="producttype != null  and producttype != ''"> and producttype = #{producttype}</if>

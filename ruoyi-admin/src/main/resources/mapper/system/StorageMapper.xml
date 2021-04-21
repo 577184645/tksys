@@ -24,6 +24,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="description"    column="description"    />
         <result property="footprint"    column="footprint"    />
         <result property="manufacture"    column="manufacture"    />
+        <result property="securitystock"    column="securitystock"    />
         <association property="storagetype" column="dept_id" javaType="Storagetype" >
         </association>
         <collection property="materialChildList"
@@ -41,7 +42,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 
 
     <sql id="selectStorageVo">
-        select id, materialcode, price, stocks, money, type_id from st_list
+        select id, materialcode, price, stocks, money, type_id ,securitystock from st_list
     </sql>
 
 
@@ -53,7 +54,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </select>
 
     <select id="selectStorageList" parameterType="Storage" resultMap="StorageResult">
-        select s.material_id,s.id,m.materialcode,price,stocks,money,ancestors,dept_name, s.u_time,o_time,q_time from `st_list`  s
+        select securitystock,s.material_id,s.id,m.materialcode,price,stocks,money,ancestors,dept_name, s.u_time,o_time,q_time from `st_list`  s
         LEFT JOIN st_type s1  on type_id=dept_id
         left JOIN mat_list  m   on m.materialcode=s.materialcode
         left join mat_listchild m1 on m.id=m1.material_id
@@ -66,6 +67,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="materialcode != null  and materialcode != ''"> and s.materialcode = #{materialcode}</if>
             <if test="status==2 "> and stocks > 0</if>
             <if test="status==1 "> and stocks = 0</if>
+            <if test="securitystock != null  and securitystock != ''"> and stocks &lt; securitystock </if>
+            <if test="stocks != null  and stocks != ''"> and s.stocks &lt; #{stocks}</if>
             <if test="deptId != null and deptId != 0">
                 AND (s.type_id = #{deptId} OR s.type_id IN ( SELECT t.dept_id FROM st_type t WHERE FIND_IN_SET (#{deptId},ancestors) ))
             </if>
@@ -123,28 +126,28 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
                  where	m1.materialcode=s.materialcode
                ) unit,
                ( SELECT GROUP_CONCAT(DISTINCT s.supplier) from st_inbill s  INNER JOIN st_indetail s1 on s.id=s1.storageinbill_id
-                 WHERE DATE_FORMAT(#{date}, '%Y%m' ) = DATE_FORMAT(c_time , '%Y%m' )   and del_status=1
+                 WHERE c_time &gt;= #{begindate}  and c_time  &lt;= #{enddate}   and del_status=1
                    and	s1.materialcode=s.materialcode
                ) supplier,
                ( SELECT sum(counts) from st_inbill s  INNER JOIN st_indetail s1 on s.id=s1.storageinbill_id
-                 WHERE DATE_FORMAT(#{date}, '%Y%m' ) = DATE_FORMAT(c_time , '%Y%m' )   and del_status=1
+                 WHERE c_time &gt;= #{begindate}  and c_time  &lt;= #{enddate}   and del_status=1
                    and	s1.materialcode=s.materialcode
                ) incount,
                ( SELECT sum(counts)*s.price from st_inbill s  INNER JOIN st_indetail s1 on s.id=s1.storageinbill_id
-                 WHERE DATE_FORMAT(#{date}, '%Y%m' ) = DATE_FORMAT(c_time , '%Y%m' )   and del_status=1
+                 WHERE c_time &gt;= #{begindate}  and c_time  &lt;= #{enddate}   and del_status=1
                    and	s1.materialcode=s.materialcode
                ) inmoney,
                ( SELECT sum(counts) from st_outbill s  INNER JOIN st_outdetail s1 on s.id=s1.storageoutbill_id
-                 WHERE DATE_FORMAT(#{date}, '%Y%m' ) = DATE_FORMAT(c_time , '%Y%m' )   and del_status=1
+                 WHERE c_time &gt;= #{begindate}  and c_time  &lt;= #{enddate}   and del_status=1
                    and	s1.materialcode=s.materialcode
                ) outcount,
                ( SELECT sum(counts)*s.price from st_outbill s  INNER JOIN st_outdetail s1 on s.id=s1.storageoutbill_id
-                 WHERE DATE_FORMAT(#{date}, '%Y%m' ) = DATE_FORMAT(c_time , '%Y%m' )   and del_status=1
+                 WHERE c_time &gt;= #{begindate}  and c_time  &lt;= #{enddate}   and del_status=1
                    and	s1.materialcode=s.materialcode
                ) outmoney,
                stocks,price,money from st_list s
-        where DATE_FORMAT(#{date}, '%Y%m' ) = DATE_FORMAT(u_time , '%Y%m' )
-           or DATE_FORMAT(#{date}, '%Y%m' ) = DATE_FORMAT(o_time , '%Y%m' )
+        where u_time &gt;= #{begindate}  and u_time  &lt;= #{enddate}
+        or o_time &gt;=#{begindate}  and o_time &lt;= #{enddate}
     </select>
 
 
@@ -170,7 +173,10 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         stocks=#{stocks},money=#{money}
           where id=#{id}
     </update>
-
+    <update id="settingStock">
+        update st_list set securitystock=#{securitystock}
+        where id=#{id}
+    </update>
 
 
 </mapper>
