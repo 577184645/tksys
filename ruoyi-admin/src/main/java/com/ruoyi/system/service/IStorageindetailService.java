@@ -50,4 +50,6 @@ public interface IStorageindetailService
      * @return 结果
      */
     public int deleteStorageindetailById(Long id);
+
+    List<Storageindetail> selectStorageindetailByStorageindetailId(Long id);
 }

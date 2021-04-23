@@ -129,6 +129,9 @@
                 <a class="btn btn-danger single disabled" onclick="reddashed()" shiro:hasPermission="system:storageinbill:reddashed">
                     <i class="fa fa-exclamation"></i> 红冲
                 </a>
+                <a class="btn btn-warning single disabled" onclick="exportExcel()" shiro:hasPermission="system:storageinbill:export">
+                    <i class="fa fa-download"></i> 导出
+                </a>
             </div>
             <div class="col-sm-12 select-table table-striped">
                 <table id="bootstrap-table"></table>
@@ -313,6 +316,11 @@
 
 
         });
+
+        function exportExcel(){
+            var row=$("#bootstrap-table").bootstrapTable('getSelections')[0];
+            window.location.href = prefix+'/export?id='+row.id;
+        }
 
 
 

@@ -56,4 +56,5 @@ public interface StorageindetailMapper
     public int deleteStorageindetailById(Long id);
 
 
+
 }

@@ -72,4 +72,9 @@ public class StorageindetailServiceImpl implements IStorageindetailService
     {
         return storageindetailMapper.deleteStorageindetailById(id);
     }
+
+    @Override
+    public List<Storageindetail> selectStorageindetailByStorageindetailId(Long id) {
+        return storageindetailMapper.findByStorageinbillId(id);
+    }
 }

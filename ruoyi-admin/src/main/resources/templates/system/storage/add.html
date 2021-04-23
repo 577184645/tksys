@@ -339,6 +339,7 @@
                     return;
                 }
                 for(var i=0;i<data.length;i++){
+
                     if(data[i].counts==""||data[i].price==""||data[i].money==""){
                         $.modal.alertWarning("数量,单价和总价不能为空!")
 
@@ -545,7 +546,14 @@
         ] ,onEditableSave: function (field, row, oldValue,$el) {
 
             if(row.counts!=0){
-                row.price = Math.abs((row.money / row.counts).toFixed(4));
+
+           if(row.money==0){
+              row.price =(row.money / row.counts).toFixed(4);
+          }else{
+              row.price = Math.abs((row.money / row.counts).toFixed(4));
+          }
+
+
             }
 
             if (row.rate != "") {

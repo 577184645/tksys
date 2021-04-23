@@ -175,7 +175,7 @@ public class StoragequitbillController extends BaseController
      * 导出bom列表列表
      */
     @RequiresPermissions("system:storagequitbill:export")
-    @Log(title = "bom列表", businessType = BusinessType.EXPORT)
+    @Log(title = "退料单", businessType = BusinessType.EXPORT)
     @GetMapping("/export")
     @ResponseBody
     public AjaxResult export(Long id, HttpServletResponse response)

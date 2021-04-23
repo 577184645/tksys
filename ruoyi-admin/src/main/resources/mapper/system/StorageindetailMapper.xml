@@ -52,6 +52,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         where storageinbill_id=#{id}
     </select>
 
+
     <insert id="insertStorageindetail" parameterType="Storageindetail" useGeneratedKeys="true" keyProperty="id">
         insert into st_indetail
         <trim prefix="(" suffix=")" suffixOverrides=",">

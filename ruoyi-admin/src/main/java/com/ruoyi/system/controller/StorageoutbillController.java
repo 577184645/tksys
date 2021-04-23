@@ -6,7 +6,6 @@ import com.ruoyi.common.core.controller.BaseController;
 import com.ruoyi.common.core.domain.AjaxResult;
 import com.ruoyi.common.core.page.TableDataInfo;
 import com.ruoyi.common.enums.BusinessType;
-import com.ruoyi.common.utils.poi.ExcelUtil;
 import com.ruoyi.system.common.Const;
 import com.ruoyi.system.domain.MaterialChild;
 import com.ruoyi.system.domain.Storageoutbill;
@@ -80,19 +79,8 @@ public class StorageoutbillController extends BaseController
         return getDataTable(list);
     }
 
-    /**
-     * 导出出库单列表列表
-     */
 
-    @Log(title = "出库单列表", businessType = BusinessType.EXPORT)
-    @PostMapping("/export")
-    @ResponseBody
-    public AjaxResult export(Storageoutbill storageoutbill)
-    {
-        List<Storageoutbill> list = storageoutbillService.selectStorageoutbillList(storageoutbill);
-        ExcelUtil<Storageoutbill> util = new ExcelUtil<Storageoutbill>(Storageoutbill.class);
-        return util.exportExcel(list, "storageoutbill");
-    }
+
 
     /**
      * 新增出库单列表
@@ -168,7 +156,7 @@ public class StorageoutbillController extends BaseController
      * 导出bom列表列表
      */
     @RequiresPermissions("system:storageoutbill:export")
-    @Log(title = "bom列表", businessType = BusinessType.EXPORT)
+    @Log(title = "出库单", businessType = BusinessType.EXPORT)
     @GetMapping("/export")
     @ResponseBody
     public AjaxResult export(Long id,HttpServletResponse response)
