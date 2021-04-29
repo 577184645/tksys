@@ -1,6 +1,5 @@
 package com.ruoyi.system.service.impl;
 
-import com.ruoyi.common.config.Global;
 import com.ruoyi.common.core.domain.AjaxResult;
 import com.ruoyi.system.common.Const;
 import com.ruoyi.system.domain.*;
@@ -9,23 +8,14 @@ import com.ruoyi.system.service.IStorageService;
 import com.ruoyi.system.util.BigDecimalUtil;
 import com.ruoyi.system.util.jsonlistUtil;
 import org.apache.commons.lang.StringUtils;
-import org.apache.poi.hssf.usermodel.HSSFFont;
-import org.apache.poi.hssf.usermodel.HSSFWorkbook;
-import org.apache.poi.ss.usermodel.*;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.mail.javamail.JavaMailSender;
-import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.mail.MessagingException;
-import javax.mail.internet.MimeMessage;
 import javax.servlet.http.HttpServletResponse;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -167,9 +157,8 @@ public  class StorageServiceImpl implements IStorageService {
 
         //得到入库的具体位置
         storageinbill.setOutsourcewarehouse(getOutsourcewarehouse(storageinbill.getOutsourcewarehouseid()));
-
         //判断是否为预入库
-        if(storageinbill.getOutsourcewarehouse().indexOf("生产库")!=-1&&StringUtils.isEmpty(storageinbill.getInvoiceid())){
+        if(StringUtils.isEmpty(storageinbill.getInvoiceid())){
             storageinbill.setStorageStatus(Const.Storagestatus.BEFOREHAND.getCode());
         }else{
             storageinbill.setStorageStatus(Const.Storagestatus.OFFICIAL.getCode());
